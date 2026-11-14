@@ -1,0 +1,45 @@
+name: Deploy Personal CIO Desk - Public Market Only
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/**'
+      - 'scripts/validate_public.py'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: jenbao-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Verify public-only directory and JSON
+        run: |
+          python3 scripts/validate_public.py public/market-data.json
+          python3 - <<'PY'
+          from pathlib import Path
+          allowed={'index.html','market-data.json','.nojekyll'}
+          files={p.name for p in Path('public').rglob('*') if p.is_file()}
+          if files-allowed:raise SystemExit('Unsafe unexpected public files: '+repr(files-allowed))
+          if '<script src=' in Path('public/index.html').read_text():raise SystemExit('External script is not allowed')
+          print('Public-only deployment checks: PASS')
+          PY
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload only public files
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./public
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
