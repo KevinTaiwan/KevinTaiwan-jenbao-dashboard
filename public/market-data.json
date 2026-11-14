@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "audience": "public-market",
+  "asOf": "2026-11-13",
+  "dataStatus": "awaiting-verification",
+  "updatedAt": null,
+  "headline": "市場觀察數據待核對",
+  "summary": "已建立市場儀表板；最新正式收盤行情、信用與 AI 指標需完成資料核對後發布。欄位空白不代表零。",
+  "market": {
+    "taiex": null, "taiexChange": null, "ma5": null, "ma10": null, "ma20": null, "ma60": null,
+    "vix": null, "move": null, "usdtwd": null, "dxy": null, "us10y": null, "de10y": null,
+    "cnn": null, "marginBalanceYi": null, "marginDailyYi": null, "marginMaintenance": null,
+    "foreignNetYi": null, "futuresNetContracts": null, "hyOas": null, "singleBOas": null,
+    "sofrMinusIorb": null, "t10yie": null, "t5yie": null, "oil": null, "goldPrice": null
+  },
+  "ai": [
+    {"name":"OpenRouter Token 28D MA","value":null,"trend":"待核對","status":"unknown"},
+    {"name":"Agent Token Share","value":null,"trend":"待核對","status":"unknown"},
+    {"name":"H100 GPU 租金 / hr","value":null,"trend":"待核對","status":"unknown"},
+    {"name":"B200 GPU 租金 / hr","value":null,"trend":"待核對","status":"unknown"},
+    {"name":"MSFT RPO / AWS / Google backlog","value":null,"trend":"待核對","status":"unknown"},
+    {"name":"Hyperscaler CapEx","value":null,"trend":"待核對","status":"unknown"},
+    {"name":"AI 業者 5Y CDS","value":null,"trend":"待核對","status":"unknown"},
+    {"name":"DC 電力／訂單延期／取消／重議價","value":null,"trend":"待核對","status":"unknown"}
+  ],
+  "alerts": [],
+  "sources": [],
+  "marketHistory": [],
+  "notes": ["最新收盤與官方發布時間可能不同，缺值不補造。", "信用利差、流動性及波動率需交叉檢驗，單一訊號不構成交易指令。"]
+}
