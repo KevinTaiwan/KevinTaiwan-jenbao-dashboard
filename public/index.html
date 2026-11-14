@@ -95,7 +95,7 @@ function showPageInterpretations(){
  }
  $('technicalHeadline').textContent=techTitle;
  const techBrief=[
-  ok(m.taiex)?`加權指數 ${fmt(m.taiex,'點')}${ok(m.taiexChange)?`，日漲跌 ${fmt(m.taiexChange,'%')}`:''}`。`:'',
+  ok(m.taiex)?`加權指數 ${fmt(m.taiex,'點')}${ok(m.taiexChange)?`，日漲跌 ${fmt(m.taiexChange,'%')}`:''}。`:'',
   ok(m.foreignNetYi)?`外資現貨 ${m.foreignNetYi>=0?'買超':'賣超'} ${fmt(Math.abs(m.foreignNetYi),'億元')}。`:'',
   ok(m.futuresNetContracts)?`外資期貨淨部位 ${fmt(m.futuresNetContracts,'口',0)}。`:''
  ].filter(Boolean);
