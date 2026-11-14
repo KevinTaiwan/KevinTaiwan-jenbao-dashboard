@@ -1,0 +1,13 @@
+# Never commit individual portfolio or raw research files to this public repository
+private/
+*.xlsx
+*.xls
+*.csv
+*portfolio*.json
+*holdings*.json
+*daily-data*.json
+*.token
+*.env
+.env*
+.DS_Store
+__pycache__/
