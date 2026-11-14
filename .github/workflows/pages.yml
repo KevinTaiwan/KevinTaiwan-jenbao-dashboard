@@ -34,6 +34,17 @@ jobs:
           if '<script src=' in Path('public/index.html').read_text():raise SystemExit('External script is not allowed')
           print('Public-only deployment checks: PASS')
           PY
+      - name: Verify browser JavaScript syntax
+        run: |
+          python3 - <<'PY'
+          import pathlib, re
+          html=pathlib.Path('public/index.html').read_text(encoding='utf-8')
+          inline=re.findall(r'<script(?:\\s[^>]*)?>([\\s\\S]*?)</script>', html)
+          if not inline:
+              raise SystemExit('FAIL: inline browser JavaScript is missing')
+          pathlib.Path('/tmp/jenbao-inline.js').write_text('\\n'.join(inline),encoding='utf-8')
+          PY
+          node --check /tmp/jenbao-inline.js
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload only public files
