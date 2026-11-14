@@ -2,29 +2,185 @@
   "schemaVersion": 2,
   "audience": "public-market",
   "asOf": "2026-11-13",
-  "dataStatus": "awaiting-verification",
-  "updatedAt": null,
-  "headline": "市場觀察數據待核對",
-  "summary": "已建立市場儀表板；最新正式收盤行情、信用與 AI 指標需完成資料核對後發布。欄位空白不代表零。",
+  "dataStatus": "partial",
+  "updatedAt": "2026-11-14",
+  "headline": "台股跌深修復，信用利差收窄；長端利率與半導體波動仍須警戒",
+  "summary": "11/13台股加權收43,675.12（+1.35%），外資買超288.37億元、期貨仍淨空100,870口；11/12美國HY OAS 3.20%、Single-B OAS 3.39%，短端流動性未見顯著緊縮。市場仍低於MA20，屬修復中而非已確立反轉。各欄日期不同，詳細見備註。",
   "market": {
-    "taiex": null, "taiexChange": null, "ma5": null, "ma10": null, "ma20": null, "ma60": null,
-    "vix": null, "move": null, "usdtwd": null, "dxy": null, "us10y": null, "de10y": null,
-    "cnn": null, "marginBalanceYi": null, "marginDailyYi": null, "marginMaintenance": null,
-    "foreignNetYi": null, "futuresNetContracts": null, "hyOas": null, "singleBOas": null,
-    "sofrMinusIorb": null, "t10yie": null, "t5yie": null, "oil": null, "goldPrice": null
+    "taiex": 43675.12,
+    "taiexChange": 1.35,
+    "ma5": 43080,
+    "ma10": 42785,
+    "ma20": 44598,
+    "ma60": 46266,
+    "vix": 19.3,
+    "move": 98.79,
+    "usdtwd": 32.838,
+    "dxy": 103.41,
+    "us10y": 5.153,
+    "de10y": 3.3762,
+    "cnn": null,
+    "marginBalanceYi": 5365.99,
+    "marginDailyYi": 31.24,
+    "marginMaintenance": null,
+    "foreignNetYi": 288.37,
+    "futuresNetContracts": -100870,
+    "hyOas": 3.2,
+    "singleBOas": 3.39,
+    "sofrMinusIorb": 0,
+    "t10yie": 2.24,
+    "t5yie": 2.3,
+    "oil": 88.92,
+    "goldPrice": 3887.6
   },
   "ai": [
-    {"name":"OpenRouter Token 28D MA","value":null,"trend":"待核對","status":"unknown"},
-    {"name":"Agent Token Share","value":null,"trend":"待核對","status":"unknown"},
-    {"name":"H100 GPU 租金 / hr","value":null,"trend":"待核對","status":"unknown"},
-    {"name":"B200 GPU 租金 / hr","value":null,"trend":"待核對","status":"unknown"},
-    {"name":"MSFT RPO / AWS / Google backlog","value":null,"trend":"待核對","status":"unknown"},
-    {"name":"Hyperscaler CapEx","value":null,"trend":"待核對","status":"unknown"},
-    {"name":"AI 業者 5Y CDS","value":null,"trend":"待核對","status":"unknown"},
-    {"name":"DC 電力／訂單延期／取消／重議價","value":null,"trend":"待核對","status":"unknown"}
+    {
+      "name": "OpenRouter Token 28D MA",
+      "value": null,
+      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "status": "unknown"
+    },
+    {
+      "name": "Agent Token Share",
+      "value": null,
+      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "status": "unknown"
+    },
+    {
+      "name": "H100 GPU 租金 / hr",
+      "value": null,
+      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "status": "unknown"
+    },
+    {
+      "name": "B200 GPU 租金 / hr",
+      "value": null,
+      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "status": "unknown"
+    },
+    {
+      "name": "MSFT RPO / AWS / Google backlog",
+      "value": null,
+      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "status": "unknown"
+    },
+    {
+      "name": "Hyperscaler CapEx",
+      "value": null,
+      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "status": "unknown"
+    },
+    {
+      "name": "AI 業者 5Y CDS",
+      "value": null,
+      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "status": "unknown"
+    },
+    {
+      "name": "DC 電力／訂單延期／取消／重議價",
+      "value": null,
+      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "status": "unknown"
+    }
   ],
   "alerts": [],
-  "sources": [],
-  "marketHistory": [],
-  "notes": ["最新收盤與官方發布時間可能不同，缺值不補造。", "信用利差、流動性及波動率需交叉檢驗，單一訊號不構成交易指令。"]
+  "sources": [
+    {
+      "label": "臺灣證券交易所｜加權指數日行情",
+      "url": "https://www.twse.com.tw/en/exchangeReport/FMTQIK",
+      "date": "2026-11-13"
+    },
+    {
+      "label": "永豐期貨｜11/13法人期貨籌碼",
+      "url": "https://www.spf.com.tw/upload/sinopac/researchContent/1a1d3ce94c50000071ba.pdf",
+      "date": "2026-11-13"
+    },
+    {
+      "label": "公開市場籌碼彙整｜11/13融資、外資",
+      "url": "https://zhuang.tw/futchip",
+      "date": "2026-11-13"
+    },
+    {
+      "label": "FRED｜High Yield OAS",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
+      "date": "2026-11-12"
+    },
+    {
+      "label": "FRED｜Single-B OAS",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
+      "date": "2026-11-12"
+    },
+    {
+      "label": "FRED｜10年通膨預期",
+      "url": "https://fred.stlouisfed.org/series/T10YIE",
+      "date": "2026-11-13"
+    },
+    {
+      "label": "FRED｜5年通膨預期",
+      "url": "https://fred.stlouisfed.org/series/T5YIE",
+      "date": "2026-11-13"
+    },
+    {
+      "label": "FRED｜SOFR",
+      "url": "https://fred.stlouisfed.org/series/SOFR",
+      "date": "2026-11-12"
+    },
+    {
+      "label": "FRED｜IORB",
+      "url": "https://fred.stlouisfed.org/series/IORB",
+      "date": "2026-11-12"
+    }
+  ],
+  "marketHistory": [
+    {
+      "date": "2026-11-02",
+      "taiex": 44920.14
+    },
+    {
+      "date": "2026-11-03",
+      "taiex": 43307.54
+    },
+    {
+      "date": "2026-11-04",
+      "taiex": 42948.91
+    },
+    {
+      "date": "2026-11-05",
+      "taiex": 41574.72
+    },
+    {
+      "date": "2026-11-06",
+      "taiex": 39701.64
+    },
+    {
+      "date": "2026-11-09",
+      "taiex": 41661.7
+    },
+    {
+      "date": "2026-11-10",
+      "taiex": 42711.92
+    },
+    {
+      "date": "2026-11-11",
+      "taiex": 44257.15
+    },
+    {
+      "date": "2026-11-12",
+      "taiex": 43091.87
+    },
+    {
+      "date": "2026-11-13",
+      "taiex": 43675.12
+    }
+  ],
+  "notes": [
+    "本頁截至2026/11/13最近完整交易日；11/14為週六，不存在新台美股正式收盤。",
+    "加權、融資餘額、外資現貨及期貨淨部位採11/13資料；投信數據有版本修訂，本頁不展示未一致核實欄位。",
+    "MA5/10/20/60、VIX/MOVE、美元指數與國際報價採11/13使用者提供的市場快照，應依報價供應商再次核實。",
+    "USD/TWD採11/13台灣外匯市場收盤32.838，非較晚的境外盤時點32.892。",
+    "HY OAS 3.20%、Single-B OAS 3.39%、SOFR−IORB 0bp均為11/12最近可查觀測，不代表11/13當日數值。",
+    "10年美債5.153%、原油88.92、黃金3887.60為11/13貼表報價；各市場交易時點可能不同。",
+    "融資維持率（扣ETF）、CNN情緒與AI實際需求等缺乏同步核實數據，一律保留缺值。",
+    "台股低於MA20，期貨淨空仍大；信用利差收窄不等於AI需求或股市低點已確認。"
+  ]
 }
