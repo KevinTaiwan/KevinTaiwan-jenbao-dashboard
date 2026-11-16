@@ -1,28 +1,28 @@
 {
   "schemaVersion": 2,
   "audience": "public-market",
-  "asOf": "2026-11-13",
+  "asOf": "2026-11-16",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-14",
-  "headline": "台股反彈但仍低於月線；美股科技回落，外資期貨偏空尚未解除",
-  "summary": "11/13台股43,675.12點（+1.35%），外資現貨買超288.37億元，扣ETF融資維持率149.75%較前日上升；台股仍低於MA20，外資台指期淨空100,870口。美股11/13 S&P 500 -0.40%、Nasdaq -0.91%、VIX 19.30；美國10Y殖利率升至5.15%。HY OAS與Single-B OAS最近核實值仍為11/12，不可混作同日。",
+  "updatedAt": "2026-11-16 09:48 Asia/Taipei (盤中資料，部分前日)",
+  "headline": "台股盤中跌近3%失守短均線；美債殖利率偏高，信用利差待新值",
+  "summary": "11/16 09:48貼表：台股加權42,371（-2.99%），低於MA5與MA10；亞洲科技市場同步承壓。VIX 19.30、MOVE 98.79及11/13外資融資籌碼均屬前一交易日或舊值，不能當作11/16即時更新。11/12 HY OAS 3.20%、Single-B OAS 3.39%，待最新發布確認。",
   "market": {
-    "taiex": 43675.12,
-    "taiexChange": 1.35,
-    "ma5": 43080,
-    "ma10": 42785,
-    "ma20": 44598,
-    "ma60": 46266,
+    "taiex": 42371,
+    "taiexChange": -2.99,
+    "ma5": 43244,
+    "ma10": 42542,
+    "ma20": 44367,
+    "ma60": 46229,
     "vix": 19.3,
     "move": 98.79,
-    "usdtwd": 32.838,
-    "dxy": 103.41,
-    "us10y": 5.15,
+    "usdtwd": 32.911,
+    "dxy": 103.42,
+    "us10y": 5.143,
     "de10y": 3.3762,
     "cnn": null,
-    "marginBalanceYi": 5365.99,
-    "marginDailyYi": 31.24,
-    "marginMaintenance": 149.75,
+    "marginBalanceYi": 5366,
+    "marginDailyYi": 31.2,
+    "marginMaintenance": null,
     "foreignNetYi": 288.37,
     "futuresNetContracts": -100870,
     "hyOas": 3.2,
@@ -30,78 +30,78 @@
     "sofrMinusIorb": 0,
     "t10yie": 2.24,
     "t5yie": 2.3,
-    "oil": 88.92,
-    "goldPrice": 3887.6
+    "oil": 87.03,
+    "goldPrice": 3876.42
   },
   "ai": [
     {
       "name": "OpenRouter Token 28D MA",
       "value": null,
-      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "trend": "11/16尚無可核實的新觀測值",
       "status": "unknown"
     },
     {
       "name": "Agent Token Share",
       "value": null,
-      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "trend": "11/16尚無可核實的新觀測值",
       "status": "unknown"
     },
     {
       "name": "H100 GPU 租金 / hr",
       "value": null,
-      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "trend": "11/16尚無可核實的新觀測值",
       "status": "unknown"
     },
     {
       "name": "B200 GPU 租金 / hr",
       "value": null,
-      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "trend": "11/16尚無可核實的新觀測值",
       "status": "unknown"
     },
     {
       "name": "MSFT RPO / AWS / Google backlog",
       "value": null,
-      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "trend": "11/16尚無可核實的新觀測值",
       "status": "unknown"
     },
     {
       "name": "Hyperscaler CapEx",
       "value": null,
-      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "trend": "11/16尚無可核實的新觀測值",
       "status": "unknown"
     },
     {
       "name": "AI 業者 5Y CDS",
       "value": null,
-      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "trend": "11/16尚無可核實的新觀測值",
       "status": "unknown"
     },
     {
       "name": "DC 電力／訂單延期／取消／重議價",
       "value": null,
-      "trend": "最新可驗證數值尚未取得；不以舊值代替",
+      "trend": "11/16尚無可核實的新觀測值",
       "status": "unknown"
     }
   ],
   "alerts": [],
   "sources": [
     {
-      "label": "臺灣證券交易所｜加權指數日行情",
+      "label": "台灣證券交易所｜加權指數行情",
       "url": "https://www.twse.com.tw/en/exchangeReport/FMTQIK",
+      "date": "2026-11-16"
+    },
+    {
+      "label": "玩股網｜大盤即時價格與均線",
+      "url": "https://www.wantgoo.com/index/0000",
+      "date": "2026-11-16"
+    },
+    {
+      "label": "玩股網｜融資維持率（扣ETF）",
+      "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
       "date": "2026-11-13"
     },
     {
-      "label": "永豐期貨｜11/13法人期貨籌碼",
-      "url": "https://www.spf.com.tw/upload/sinopac/researchContent/1a1d3ce94c50000071ba.pdf",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "公開市場籌碼彙整｜11/13融資、外資",
-      "url": "https://zhuang.tw/futchip",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "FRED｜High Yield OAS",
+      "label": "FRED｜HY OAS",
       "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
       "date": "2026-11-12"
     },
@@ -111,48 +111,18 @@
       "date": "2026-11-12"
     },
     {
+      "label": "紐約聯準銀行｜隔夜市場利率",
+      "url": "https://www.newyorkfed.org/markets/data-hub/",
+      "date": "2026-11-13"
+    },
+    {
       "label": "FRED｜10年通膨預期",
       "url": "https://fred.stlouisfed.org/series/T10YIE",
       "date": "2026-11-13"
     },
     {
-      "label": "FRED｜5年通膨預期",
-      "url": "https://fred.stlouisfed.org/series/T5YIE",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "FRED｜SOFR",
-      "url": "https://fred.stlouisfed.org/series/SOFR",
-      "date": "2026-11-12"
-    },
-    {
-      "label": "FRED｜IORB",
-      "url": "https://fred.stlouisfed.org/series/IORB",
-      "date": "2026-11-12"
-    },
-    {
-      "label": "玩股網｜11/13扣除ETF融資維持率",
-      "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "鉅亨網｜11/13上市三大法人正式統計",
-      "url": "https://www.cnyes.com/archive/twstock/idx_institutional/0000o.htm",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "Cboe｜11/13 VIX",
-      "url": "https://www.cboe.com/tradable-products/vix",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "美國財政部｜11/13公債殖利率",
-      "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "Reuters｜11/13美股盤後與AI科技股",
-      "url": "https://www.reuters.com/business/nasdaq-futures-dip-nvidia-tumult-keeps-investors-edge-2026-11-13/",
+      "label": "MacroMicro｜SOFR-IORB",
+      "url": "https://www.macromicro.me/charts/141325/us-sofriorb-spread",
       "date": "2026-11-13"
     }
   ],
@@ -199,16 +169,14 @@
     }
   ],
   "notes": [
-    "11/14（週六）無台灣股市新交易日。台股指數、籌碼與匯率採11/13；美股採美東11/13收盤。跨市場日期與報價時點不能直接當成完整同步報酬。",
-    "11/13上市三大法人正式修正：外資+288.37、投信+95.39、自營+68.92，合計+452.68億元；較早的投信+82.37、合計+439.66為未定版數字。",
-    "11/13上市融資餘額5,365.99億元，日增31.24億元（含ETF口徑）；扣ETF融資維持率149.75%，11/12為146.22%，回升3.53個百分點；兩組融資統計不宜混同。",
-    "11/13外資台指期淨空100,870口，單日現貨轉買超不能解讀為期貨空單已解除。",
-    "11/13台股指數43,675.12，高於MA5 43,080、MA10 42,785，但仍低於MA20 44,598及MA60 46,266；均線依先前市場快照，需注意資料商口徑。",
-    "11/13美股標普500收7,561.67（-0.40%）、Nasdaq Composite收25,136.27（-0.91%）、道瓊收52,347.55（+0.10%）；科技股承壓，不能以台股當日反彈推定美股同步走強。",
-    "11/13 VIX收19.30，較11/12的18.70上升0.60（+3.21%）；美國官方10Y公債殖利率11/13為5.15%，11/12為5.10%。",
-    "11/13台北匯市美元對台幣銀行間收盤32.838，前交易日32.889；美股收盤後美元報價不同於台灣匯市正式收盤。",
-    "ICE BofA HY OAS 11/12為3.20%，較11/11的3.30%收窄10bp；Single-B OAS 11/12為3.39%。最新OAS與11/13股市並非同日。",
-    "AI需求10項領先指標與主要公司5Y CDS尚未取得可直接核對的同期原始值；維持缺值，不由股價下跌倒推Token、GPU租金或客戶實際需求轉弱。",
-    "底部判斷仍需連續多日驗證外資現貨與期貨、融資維持率、MA20、VIX/MOVE及HY/Single-B OAS；未見同步訊號之前不將單日反彈稱為底部確立。"
+    "盤中更新時間：2026/11/16 09:48（台灣），加權42,371點、跌2.99%；數值由使用者提供，非交易所正式收盤。",
+    "MA5=43,244、MA10=42,542、MA20=44,367、MA60=46,229，均為11/16盤中截圖／貼表，交易結束後仍可能改變。",
+    "VIX=19.30、MOVE=98.79為上個美股交易日或最近發布值，非11/16即時美股收盤。",
+    "融資5366億、日增31.20億、外資現貨買超288.37億、期貨淨空100870口是11/13資料；11/16法人及融資尚未發布。",
+    "HY OAS=3.20%、Single-B OAS=3.39%為截至11/12已核對值；須等待11/13或11/16新值，不能視為即時信用狀況。",
+    "SOFR-IORB=0bp由11/12 SOFR 3.90%與IORB 3.90%計算，今日尚未更新。",
+    "USD/TWD=32.911及美債10Y=5.143%等為使用者提供11/16 09:48盤中市場報價，待官方收盤確認。",
+    "扣ETF融資維持率、CNN市場情緒與AI領先指標未有可靠新值，保留缺值。",
+    "11/16市場尚未收盤；網頁公開資料與私人投資組合、持倉及D1防守完全隔離。"
   ]
 }
