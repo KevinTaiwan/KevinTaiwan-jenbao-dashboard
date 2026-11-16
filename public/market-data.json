@@ -3,9 +3,9 @@
   "audience": "public-market",
   "asOf": "2026-11-16",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-16 09:48 Asia/Taipei (盤中資料，部分前日)",
-  "headline": "台股盤中跌近3%失守短均線；美債殖利率偏高，信用利差待新值",
-  "summary": "11/16 09:48貼表：台股加權42,371（-2.99%），低於MA5與MA10；亞洲科技市場同步承壓。VIX 19.30、MOVE 98.79及11/13外資融資籌碼均屬前一交易日或舊值，不能當作11/16即時更新。11/12 HY OAS 3.20%、Single-B OAS 3.39%，待最新發布確認。",
+  "updatedAt": "2026-11-16 10:08 Asia/Taipei (盤中+異步官方數據)",
+  "headline": "台股盤中大跌失守短均線，融資維持率回升但科技與高利率風險未解",
+  "summary": "11/16 09:48加權42,371(-2.99%)，低於MA5/MA10/MA20；11/13外資現貨+288.37億但台指期仍淨空100,870口，扣ETF融資維持率回升至149.75%。HY及Single-B利差11/12仍收斂，11/16同步數據尚未發布。NVIDIA管理層交接與美債利率維持高檔是科技估值的主要觀察點。",
   "market": {
     "taiex": 42371,
     "taiexChange": -2.99,
@@ -22,7 +22,7 @@
     "cnn": null,
     "marginBalanceYi": 5365.99,
     "marginDailyYi": 31.24,
-    "marginMaintenance": null,
+    "marginMaintenance": 149.75,
     "foreignNetYi": 288.37,
     "futuresNetContracts": -100870,
     "hyOas": 3.2,
@@ -35,51 +35,69 @@
   },
   "ai": [
     {
-      "name": "OpenRouter Token 28D MA",
+      "name": "OpenRouter Total Tokens 28D MA",
       "value": null,
-      "trend": "11/16尚無可核實的新觀測值",
+      "trend": "尚未取得完整28日逐日序列，不冒充已驗證移動平均",
       "status": "unknown"
     },
     {
-      "name": "Agent Token Share",
-      "value": null,
-      "trend": "11/16尚無可核實的新觀測值",
+      "name": "Coding Agent Token Share（OpenRouter）",
+      "value": "Hermes 24.5%；Claude Code 21.6%",
+      "trend": "11/14近30日Top100編碼App token占比；僅OpenRouter路由流量，不是所有服務市占",
       "status": "unknown"
     },
     {
-      "name": "H100 GPU 租金 / hr",
-      "value": null,
-      "trend": "11/16尚無可核實的新觀測值",
+      "name": "H100 GPU租金（on-demand）",
+      "value": "US$3.95 / GPU-hr",
+      "trend": "11/15多供應商標價中位數，較11/05 +4.8%，非實際成交價",
       "status": "unknown"
     },
     {
-      "name": "B200 GPU 租金 / hr",
-      "value": null,
-      "trend": "11/16尚無可核實的新觀測值",
+      "name": "B200 GPU租金（on-demand）",
+      "value": "US$8.30 / GPU-hr",
+      "trend": "11/15多供應商標價中位數，較11/05 +3.5%，與長約價格區分",
       "status": "unknown"
     },
     {
-      "name": "MSFT RPO / AWS / Google backlog",
-      "value": null,
-      "trend": "11/16尚無可核實的新觀測值",
+      "name": "Microsoft 商業RPO",
+      "value": "US$677B",
+      "trend": "截至2026/09/30；YoY +73%，不是QoQ；Azure營收YoY +48%",
       "status": "unknown"
     },
     {
-      "name": "Hyperscaler CapEx",
-      "value": null,
-      "trend": "11/16尚無可核實的新觀測值",
+      "name": "AWS Backlog",
+      "value": "US$578B",
+      "trend": "截至2026Q3；公司表示年增逾100%，未取得相同口徑QoQ",
       "status": "unknown"
     },
     {
-      "name": "AI 業者 5Y CDS",
-      "value": null,
-      "trend": "11/16尚無可核實的新觀測值",
+      "name": "Google Cloud Backlog",
+      "value": "US$560.8B",
+      "trend": "截至2026/09/30；集團RPO 567.7B，兩者不可加總",
       "status": "unknown"
     },
     {
-      "name": "DC 電力／訂單延期／取消／重議價",
+      "name": "Hyperscaler CapEx QoQ / YoY",
       "value": null,
-      "trend": "11/16尚無可核實的新觀測值",
+      "trend": "四家同期口徑完整表尚未核對",
+      "status": "unknown"
+    },
+    {
+      "name": "NVIDIA治理與財報事件",
+      "value": "11/17公布FY2027 Q3",
+      "trend": "11/12公司公告Colette Kress暫任CEO；等待財報與GPU訂單/現金流指引",
+      "status": "unknown"
+    },
+    {
+      "name": "AI 業者5年CDS",
+      "value": null,
+      "trend": "MSFT、AMZN、GOOG、META、ORCL、CoreWeave可靠同期可比價未取得",
+      "status": "unknown"
+    },
+    {
+      "name": "DC 電力交付／取消／GPU延期／重議價",
+      "value": null,
+      "trend": "尚未驗證足夠同期可比數據，避免單一個案代表整體產業",
       "status": "unknown"
     }
   ],
@@ -96,7 +114,7 @@
       "date": "2026-11-16"
     },
     {
-      "label": "玩股網｜融資維持率（扣ETF）",
+      "label": "玩股網｜11/13扣ETF融資維持率149.75%",
       "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
       "date": "2026-11-13"
     },
@@ -134,6 +152,46 @@
       "label": "Chicago Fed NFCI｜金融情勢指數",
       "url": "https://fred.stlouisfed.org/series/NFCI",
       "date": "2026-11-06"
+    },
+    {
+      "label": "集中市場三大法人｜投信買超95.39億",
+      "url": "https://tw.stock.yahoo.com/institutional-trading",
+      "date": "2026-11-13"
+    },
+    {
+      "label": "BLS｜2026年10月PPI",
+      "url": "https://www.bls.gov/news.release/ppi.nr0.htm",
+      "date": "2026-11-13"
+    },
+    {
+      "label": "NVIDIA｜CEO Transition 11/12",
+      "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-CEO-Transition/default.aspx",
+      "date": "2026-11-12"
+    },
+    {
+      "label": "OpenRouter Coding Agent使用量統計",
+      "url": "https://computescreener.com/coding",
+      "date": "2026-11-14"
+    },
+    {
+      "label": "GPU租金指數｜11/15",
+      "url": "https://mulligancompute.com/price-index/",
+      "date": "2026-11-15"
+    },
+    {
+      "label": "Microsoft 10-Q｜9/30商業RPO",
+      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
+      "date": "2026-09-30"
+    },
+    {
+      "label": "AWS 2026 Q3 Backlog",
+      "url": "https://www.aboutamazon.com/news/company-news/aws-growth-ai-demand-q3-2026-earnings",
+      "date": "2026-10-30"
+    },
+    {
+      "label": "Alphabet 10-Q｜Google Cloud Backlog",
+      "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000084/goog-20260930.htm",
+      "date": "2026-09-30"
     }
   ],
   "marketHistory": [
@@ -179,15 +237,15 @@
     }
   ],
   "notes": [
-    "盤中更新時間：2026/11/16 09:48（台灣），加權42,371點、跌2.99%；數值由使用者提供，非交易所正式收盤。",
-    "MA5=43,244、MA10=42,542、MA20=44,367、MA60=46,229，均為11/16盤中截圖／貼表，交易結束後仍可能改變。",
-    "VIX=19.30、MOVE=98.79為上個美股交易日或最近發布值，非11/16即時美股收盤。",
-    "融資5,365.99億、日增31.24億為證交所11/13已公布數值；外資現貨買超288.37億、期貨淨空100870口亦為11/13資料，11/16盤中未有盤後法人數據。",
-    "HY OAS=3.20%、Single-B OAS=3.39%為截至11/12已核對值；須等待11/13或11/16新值，不能視為即時信用狀況。",
-    "SOFR-IORB=0bp由11/12 SOFR 3.90%與IORB 3.90%計算，今日尚未更新。",
-    "USD/TWD=32.911及美債10Y=5.143%等為使用者提供11/16 09:48盤中市場報價，待官方收盤確認。",
-    "扣ETF融資維持率、CNN市場情緒與AI領先指標未有可靠新值，保留缺值。",
-    "11/16市場尚未收盤；網頁公開資料與私人投資組合、持倉及D1防守完全隔離。",
-    "芝加哥Fed NFCI最新核實觀測為11/06 -0.462（11/12公布）；負值代表整體金融環境較長期平均寬鬆，不能推斷11/16當日股市已止跌。"
+    "11/16 09:48盤中加權42,371(-2.99%)，MA5 43,244、MA10 42,542、MA20 44,367，皆為使用者當日貼表快照，非11/16正式收盤。",
+    "11/13外資現貨+288.37億、投信+95.39億、自營商+68.92億，合計+452.68億；外資台指期淨空100,870口，11/16盤中不能當作當日盤後值。",
+    "11/13上市融資5,365.99億元、日增31.24億；扣ETF融資維持率149.75%（11/12為146.22%），兩種融資餘額因統計口徑不同不可混用。",
+    "VIX 19.30、MOVE 98.79及SKEW 147.14皆為11/13美國市場最新完成觀測，並非11/16美股收盤。",
+    "HY OAS 3.20%、Single-B 3.39%、SOFR-IORB 0bp為11/12最近可核對觀測，11/16信用同步風險仍待新值。",
+    "NFCI 11/06為-0.462（11/12發布），相對長期平均仍偏寬鬆，但周變化呈緩慢收緊。",
+    "USD/TWD 32.911、10Y美債殖利率5.143%、WTI 87.03、黃金3,876.42為使用者11/16 09:48盤中行情，與上周美股收盤非同一時點。",
+    "PPI美國2026/10月增0.3%、年增6.5%，11/13 BLS公布；T10YIE最近11/13 2.24%，不能將名目殖利率變動全當通膨預期。",
+    "Coding Agent 30日使用量與GPU租賃中位標價各有不同供應商/口徑；部分AI基建指標需補入同期比較後才能判斷方向。",
+    "公開網站不含任何私人投組、交易成本、資產權重、資產回撤或D1內容。"
   ]
 }
