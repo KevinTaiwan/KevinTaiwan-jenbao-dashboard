@@ -3,35 +3,35 @@
   "audience": "public-market",
   "asOf": "2026-11-16",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-16 15:02 Asia/Taipei (TAIEX official close, other markets intraday/as dated)",
-  "headline": "台股收跌6.03%並收最低點；科技風險擴散，信用新數據仍待確認",
-  "summary": "11/16台股正式收盤41,040.08(-2,635.04點/-6.03%)，成交8,450.56億元，上漲100家、下跌967家，收在當日最低。MA5 42,955、MA10 42,397、MA20 44,295均失守；11/13融資與法人不應誤當今天數據。10年美債11/16 15:01約5.139%，上次可核實HY OAS 3.20%與Single-B 3.39%均為11/12，尚不能斷定本輪信用壓力已擴散。",
+  "updatedAt": "2026-11-16 16:49 Asia/Taipei｜台股盤後與全球盤中交錯",
+  "headline": "台股重挫6.03%、三大法人賣超1,140.55億：價格與籌碼顯著惡化，信用同步數據仍待公布",
+  "summary": "11/16加權正式收41,040.08，跌2,635.04點(-6.03%)，三大法人賣超1,140.55億元(外資-701.89億)，市場廣度極弱；外資台指期單列淨空96,787口，但較前日減少4,083口。HY OAS與Single-B OAS最新可核實仍為11/12的320/339bp，不能當作11/16信用已改善。",
   "market": {
     "taiex": 41040.08,
     "taiexChange": -6.03,
-    "ma5": 42955.23,
-    "ma10": 42397.07,
-    "ma20": 44294.75,
-    "ma60": 46204.83,
-    "vix": 19.3,
+    "ma5": 42955,
+    "ma10": 42397,
+    "ma20": 44295,
+    "ma60": 46205,
+    "vix": 19.9,
     "move": 98.79,
-    "usdtwd": 32.98,
-    "dxy": 103.46,
-    "us10y": 5.139,
-    "de10y": 3.378,
+    "usdtwd": 32.886,
+    "dxy": 103.38,
+    "us10y": 5.135,
+    "de10y": 3.3735,
     "cnn": null,
     "marginBalanceYi": 5365.99,
     "marginDailyYi": 31.24,
     "marginMaintenance": 149.75,
-    "foreignNetYi": 288.37,
-    "futuresNetContracts": -100870,
+    "foreignNetYi": -701.89,
+    "futuresNetContracts": -96787,
     "hyOas": 3.2,
     "singleBOas": 3.39,
     "sofrMinusIorb": 0,
     "t10yie": 2.24,
     "t5yie": 2.3,
-    "oil": 87.8,
-    "goldPrice": 3852.9
+    "oil": 87.29,
+    "goldPrice": 3865.02
   },
   "ai": [
     {
@@ -104,109 +104,54 @@
   "alerts": [],
   "sources": [
     {
-      "label": "台灣證券交易所｜加權指數行情",
-      "url": "https://www.twse.com.tw/en/exchangeReport/FMTQIK",
+      "label": "TWSE｜11/16正式加權指數",
+      "url": "https://www.twse.com.tw/zh/trading/historical/fmtqik.html",
       "date": "2026-11-16"
     },
     {
-      "label": "玩股網｜大盤即時價格與均線",
-      "url": "https://www.wantgoo.com/index/0000",
+      "label": "三大法人11/16盤後交易統計",
+      "url": "https://stock.wearn.com/fundthree.asp",
       "date": "2026-11-16"
     },
     {
-      "label": "玩股網｜11/13扣ETF融資維持率149.75%",
+      "label": "台灣期貨外資台指期籌碼 11/16",
+      "url": "https://acaiprotocol.com/chips/",
+      "date": "2026-11-16"
+    },
+    {
+      "label": "台股扣ETF融資維持率 11/13",
       "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
       "date": "2026-11-13"
     },
     {
-      "label": "FRED｜HY OAS",
+      "label": "美國HY OAS｜最後11/12",
       "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
       "date": "2026-11-12"
     },
     {
-      "label": "FRED｜Single-B OAS",
+      "label": "美國Single-B OAS｜最後11/12",
       "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
       "date": "2026-11-12"
     },
     {
-      "label": "紐約聯準銀行｜隔夜市場利率",
-      "url": "https://www.newyorkfed.org/markets/data-hub/",
-      "date": "2026-11-13"
+      "label": "SOFR｜短端資金",
+      "url": "https://fred.stlouisfed.org/series/SOFR",
+      "date": "2026-11-12"
     },
     {
-      "label": "FRED｜10年通膨預期",
-      "url": "https://fred.stlouisfed.org/series/T10YIE",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "MacroMicro｜SOFR-IORB",
-      "url": "https://www.macromicro.me/charts/141325/us-sofriorb-spread",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "TWSE｜11/13信用交易官方報表",
-      "url": "https://www.twse.com.tw/exchangeReport/MI_MARGN",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "Chicago Fed NFCI｜金融情勢指數",
-      "url": "https://fred.stlouisfed.org/series/NFCI",
-      "date": "2026-11-06"
-    },
-    {
-      "label": "集中市場三大法人｜投信買超95.39億",
-      "url": "https://tw.stock.yahoo.com/institutional-trading",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "BLS｜2026年10月PPI",
-      "url": "https://www.bls.gov/news.release/ppi.nr0.htm",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "NVIDIA｜CEO Transition 11/12",
+      "label": "NVIDIA｜11/12官方管理層公告",
       "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-CEO-Transition/default.aspx",
       "date": "2026-11-12"
     },
     {
-      "label": "OpenRouter Coding Agent使用量統計",
-      "url": "https://computescreener.com/coding",
-      "date": "2026-11-14"
-    },
-    {
-      "label": "GPU租金指數｜11/15",
-      "url": "https://mulligancompute.com/price-index/",
-      "date": "2026-11-15"
-    },
-    {
-      "label": "Microsoft 10-Q｜9/30商業RPO",
-      "url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436133/msft-20260930.htm",
-      "date": "2026-09-30"
-    },
-    {
-      "label": "AWS 2026 Q3 Backlog",
-      "url": "https://www.aboutamazon.com/news/company-news/aws-growth-ai-demand-q3-2026-earnings",
-      "date": "2026-10-30"
-    },
-    {
-      "label": "Alphabet 10-Q｜Google Cloud Backlog",
-      "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000084/goog-20260930.htm",
-      "date": "2026-09-30"
-    },
-    {
-      "label": "臺灣證券交易所｜2026/11/16收盤指數及個股行情",
-      "url": "https://www.twse.com.tw/exchangeReport/MI_INDEX",
+      "label": "臺銀｜黃金存摺歷史報價",
+      "url": "https://rate.bot.com.tw/gold/chart/ltm/TWD",
       "date": "2026-11-16"
     },
     {
-      "label": "中央社｜11/16台股跌2635點收41040.08",
-      "url": "https://www.cna.com.tw/news/afe/202611160118.aspx",
+      "label": "台灣市場美元即期匯率11/16",
+      "url": "https://money.udn.com/money/story/12509/9882018",
       "date": "2026-11-16"
-    },
-    {
-      "label": "NVIDIA官方｜11/12執行長交接公告",
-      "url": "https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition",
-      "date": "2026-11-12"
     }
   ],
   "marketHistory": [
@@ -256,15 +201,15 @@
     }
   ],
   "notes": [
-    "台灣證交所2026/11/16正式收盤：加權41,040.08(-6.03%)，成交8450.56億元；開盤43,512.42，最高43,512.42，最低與收盤同為41,040.08；上漲100家、下跌967家。",
-    "加權MA5 42,955.23、MA10 42,397.07、MA20 44,294.75、MA60 46,204.83，取11/16收盤計算，均線不是前一日值。",
-    "台指期／現貨三大法人與上市融資/扣ETF維持率最新已核實仍為11/13資料，不能當11/16收盤後資料。",
-    "11/13：外資+288.37億、投信+95.39億、自營商+68.92億，合計+452.68億；外資台指期淨空100,870口；上市融資5365.99億、日增31.24億；扣ETF維持率149.75%。",
-    "11/16約15:02用戶貼表即時價：USD/TWD 32.980、DXY 103.46、美債10Y 5.139%、黃金期貨3852.90、WTI 87.80，非最終紐約收盤或台北外匯市場正式收盤。",
-    "VIX 19.30、MOVE 98.79、SKEW 147.14及美股主要指數/ETF皆以11/13已完成交易日為準。",
-    "HY OAS 3.20%、Single-B OAS 3.39%、SOFR-IORB 0bp截至11/12最新可核實觀測，不能據此確認11/16信用市場已經改善。",
-    "NVIDIA官方11/12公告黃仁勳離任、Colette Kress暫代CEO；11/17美國時間財報與後續指引是關鍵市場事件，不能由管理層變更直接推定AI算力需求下降。",
-    "今日各地市場跨時區、部分為即時期貨、部分為前日收盤，禁止混合視為同一收盤時間；未知資料維持null。",
-    "網站資料僅為公開市場觀察，不含任何個人資產、回撤、防守交易、私人持股及風險統計。"
+    "台股11/16正式收盤41,040.08(-6.03%)，全天高點為開盤43,512.42，低點即收盤；盤後市場廣度極弱。",
+    "11/16集中市場外資-701.89億、投信-179.63億、自營商含避險-259.03億；三大法人合計-1,140.55億元，屬盤後公布。",
+    "11/16外資臺股期貨單列淨部位-96,787口，較前日減少4,083口；含小微臺指換算大台等值-97,225口，與單列數值不可混用。",
+    "上市融資餘額5,365.99億、日增31.24億，扣ETF維持率149.75%均為11/13最新可核實，非11/16盤後新值。",
+    "VIX19.90、10年美債5.135%、美元指數103.38、黃金3,865.02、WTI87.29等是使用者11/16 16:49市場報價；美國正常交易尚未開盤。",
+    "11/16台灣銀行間匯市正式收盤USD/TWD32.886，與境外盤即時報價32.948不同，本站採台灣正式收盤。",
+    "11/16MA5=42,955、MA10=42,397、MA20=44,295、MA60=46,205，來自11/16貼表；部分第三方因計價口徑有細微差異。",
+    "HY OAS=3.20%、Single-B OAS=3.39%及SOFR-IORB=0bp最後同步核實至11/12；仍缺11/13與11/16新觀測，信用狀況不可判為已確定改善。",
+    "MOVE=98.79、SKEW=147.14為11/13最近已完成觀測；VIX19.90為11/16 16:49報價，並非11/16美股正式收盤。",
+    "NVIDIA11/12公告黃仁勳辭任、Colette Kress暫代CEO，11/17美東時間預定公布FY2027 Q3財報；事件已核實，但算力需求受影響仍需觀察。"
   ]
 }
