@@ -1,28 +1,28 @@
 {
   "schemaVersion": 2,
   "audience": "public-market",
-  "asOf": "2026-11-16",
+  "asOf": "2026-11-17",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-16 16:49 Asia/Taipei｜台股盤後與全球盤中交錯",
-  "headline": "台股重挫6.03%、三大法人賣超1,140.55億：價格與籌碼顯著惡化，信用同步數據仍待公布",
-  "summary": "11/16加權正式收41,040.08，跌2,635.04點(-6.03%)，三大法人賣超1,140.55億元(外資-701.89億)，市場廣度極弱；外資台指期單列淨空96,787口，但較前日減少4,083口。HY OAS與Single-B OAS最新可核實仍為11/12的320/339bp，不能當作11/16信用已改善。",
+  "updatedAt": "2026-11-17 15:11 Asia/Taipei｜台股收盤與國際盤中/前美股收盤",
+  "headline": "台股續跌2.31%逼近11/6前低；VIX升至22.91，去槓桿加速、信用最新值待確認",
+  "summary": "11/17加權正式收40,092.11(-2.31%)，接近前低39,701.64；美股11/16 SOX-5.28%、Nasdaq 100-2.67%，VIX22.91、MOVE101.28同步上升。11/16上市融資餘額5,244.98億元、日減121.01億元；法人11/16外資-701.89億、投信-183.02億、自營商-259.03億。HY OAS 320bp與Single-B 339bp仍為11/12最近同步核實值，11/17信用同步與銀行流動性待確認。",
   "market": {
-    "taiex": 41040.08,
-    "taiexChange": -6.03,
-    "ma5": 42955,
-    "ma10": 42397,
-    "ma20": 44295,
-    "ma60": 46205,
-    "vix": 19.9,
-    "move": 98.79,
-    "usdtwd": 32.886,
-    "dxy": 103.38,
-    "us10y": 5.135,
-    "de10y": 3.3735,
+    "taiex": 40092.11,
+    "taiexChange": -2.31,
+    "ma5": 42431,
+    "ma10": 42076,
+    "ma20": 43958,
+    "ma60": 46124,
+    "vix": 22.91,
+    "move": 101.28,
+    "usdtwd": 32.958,
+    "dxy": 103.52,
+    "us10y": 5.122,
+    "de10y": 3.385,
     "cnn": null,
-    "marginBalanceYi": 5365.99,
-    "marginDailyYi": 31.24,
-    "marginMaintenance": 149.75,
+    "marginBalanceYi": 5244.98,
+    "marginDailyYi": -121.01,
+    "marginMaintenance": null,
     "foreignNetYi": -701.89,
     "futuresNetContracts": -96787,
     "hyOas": 3.2,
@@ -30,8 +30,8 @@
     "sofrMinusIorb": 0,
     "t10yie": 2.24,
     "t5yie": 2.3,
-    "oil": 87.29,
-    "goldPrice": 3865.02
+    "oil": 83.53,
+    "goldPrice": 3880.4
   },
   "ai": [
     {
@@ -104,54 +104,49 @@
   "alerts": [],
   "sources": [
     {
-      "label": "TWSE｜11/16正式加權指數",
-      "url": "https://www.twse.com.tw/zh/trading/historical/fmtqik.html",
+      "label": "TWSE｜11/17正式收盤40,092.11",
+      "url": "https://www.twse.com.tw/exchangeReport/MI_INDEX",
+      "date": "2026-11-17"
+    },
+    {
+      "label": "證交所｜11月00631L正式日行情",
+      "url": "https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=20261101&response=html&stockNo=00631L",
+      "date": "2026-11-17"
+    },
+    {
+      "label": "臺灣銀行｜黃金存摺TWD本行買入歷史",
+      "url": "https://rate.bot.com.tw/gold/chart/ltm/TWD",
+      "date": "2026-11-17"
+    },
+    {
+      "label": "11/16信用交易：融資5244.98億",
+      "url": "https://www.istock.tw/post/twadjusteddebitbalancefinancebearish",
       "date": "2026-11-16"
     },
     {
-      "label": "三大法人11/16盤後交易統計",
-      "url": "https://stock.wearn.com/fundthree.asp",
+      "label": "11/16三大法人盤後資料",
+      "url": "https://stock.ezbox.idv.tw/",
       "date": "2026-11-16"
     },
     {
-      "label": "台灣期貨外資台指期籌碼 11/16",
-      "url": "https://acaiprotocol.com/chips/",
-      "date": "2026-11-16"
-    },
-    {
-      "label": "台股扣ETF融資維持率 11/13",
-      "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
-      "date": "2026-11-13"
-    },
-    {
-      "label": "美國HY OAS｜最後11/12",
+      "label": "FRED HY OAS最後同步核實11/12",
       "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
       "date": "2026-11-12"
     },
     {
-      "label": "美國Single-B OAS｜最後11/12",
+      "label": "FRED Single-B OAS最後同步核實11/12",
       "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
       "date": "2026-11-12"
     },
     {
-      "label": "SOFR｜短端資金",
+      "label": "FRED SOFR隔夜短端利率",
       "url": "https://fred.stlouisfed.org/series/SOFR",
       "date": "2026-11-12"
     },
     {
-      "label": "NVIDIA｜11/12官方管理層公告",
-      "url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Announces-CEO-Transition/default.aspx",
+      "label": "NVIDIA｜11/12 CEO轉換聲明",
+      "url": "https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition",
       "date": "2026-11-12"
-    },
-    {
-      "label": "臺銀｜黃金存摺歷史報價",
-      "url": "https://rate.bot.com.tw/gold/chart/ltm/TWD",
-      "date": "2026-11-16"
-    },
-    {
-      "label": "台灣市場美元即期匯率11/16",
-      "url": "https://money.udn.com/money/story/12509/9882018",
-      "date": "2026-11-16"
     }
   ],
   "marketHistory": [
@@ -198,18 +193,23 @@
     {
       "date": "2026-11-16",
       "taiex": 41040.08
+    },
+    {
+      "date": "2026-11-17",
+      "taiex": 40092.11
     }
   ],
   "notes": [
-    "台股11/16正式收盤41,040.08(-6.03%)，全天高點為開盤43,512.42，低點即收盤；盤後市場廣度極弱。",
-    "11/16集中市場外資-701.89億、投信-179.63億、自營商含避險-259.03億；三大法人合計-1,140.55億元，屬盤後公布。",
-    "11/16外資臺股期貨單列淨部位-96,787口，較前日減少4,083口；含小微臺指換算大台等值-97,225口，與單列數值不可混用。",
-    "上市融資餘額5,365.99億、日增31.24億，扣ETF維持率149.75%均為11/13最新可核實，非11/16盤後新值。",
-    "VIX19.90、10年美債5.135%、美元指數103.38、黃金3,865.02、WTI87.29等是使用者11/16 16:49市場報價；美國正常交易尚未開盤。",
-    "11/16台灣銀行間匯市正式收盤USD/TWD32.886，與境外盤即時報價32.948不同，本站採台灣正式收盤。",
-    "11/16MA5=42,955、MA10=42,397、MA20=44,295、MA60=46,205，來自11/16貼表；部分第三方因計價口徑有細微差異。",
-    "HY OAS=3.20%、Single-B OAS=3.39%及SOFR-IORB=0bp最後同步核實至11/12；仍缺11/13與11/16新觀測，信用狀況不可判為已確定改善。",
-    "MOVE=98.79、SKEW=147.14為11/13最近已完成觀測；VIX19.90為11/16 16:49報價，並非11/16美股正式收盤。",
-    "NVIDIA11/12公告黃仁勳辭任、Colette Kress暫代CEO，11/17美東時間預定公布FY2027 Q3財報；事件已核實，但算力需求受影響仍需觀察。"
+    "11/17台股加權已正式收盤40,092.11(-2.31%)；當日指數與MA5/MA10/MA20/MA60採使用者提供的15:11收盤表，均線依第三方口徑。",
+    "11/16美股收盤：SP500 7416.59(-1.92%)、NDX 27197.15(-2.67%)、費半9610.7(-5.28%)；台灣11/17下午美股現貨尚未開盤。",
+    "VIX22.91為11/16美股交易日收盤，MOVE101.28觀測日為11/16；不是11/17美股新收盤。",
+    "上市融資5,244.98億元及日減121.01億元截至11/16；11/17收盤融資與三大法人尚未同步取得，勿將11/16冒充當日。",
+    "11/16法人外資-701.89億、投信-183.02億、自營商-259.03億。投信採定版183.02億，前版179.63億失效。",
+    "11/16外資臺指期單列淨空96,787口，11/17最新未驗證；不可與今日市場價格混用。",
+    "HY OAS=3.20%與Single-B=3.39%、SOFR−IORB=0bp為截至11/12最近可核實同步觀測，11/16或11/17的信用新值待查，不表示信用安全。",
+    "11/17 15:11國際現貨/期貨報價：美債10Y5.122%、美元指數103.52、WTI83.53、黃金3880.40、美元/台幣32.958；並非同一交易所或官方收盤時點。",
+    "USD/TWD32.958是市場報價商15:11數據，與個人投組貼表使用的32.892不同；公開頁使用市場報價並警告匯率時差。",
+    "NVIDIA已於11/12官方公告CEO交接，11/17美東時間下午將發布財報；在財報公布前不能預先斷言業績。",
+    "公開網頁僅市場行情、信用、流動性與AI公共數據，不含任何私人持股/資產回撤/D1交易資訊。"
   ]
 }
