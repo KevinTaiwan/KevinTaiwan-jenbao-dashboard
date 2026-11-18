@@ -1,37 +1,37 @@
 {
   "schemaVersion": 2,
   "audience": "public-market",
-  "asOf": "2026-11-17",
-  "dataStatus": "partial",
-  "updatedAt": "2026-11-17 15:11 Asia/Taipei｜台股收盤與國際盤中/前美股收盤",
-  "headline": "台股續跌、波動率上升；HY及Single-B利差11/13回擴，後續信用趨勢待新觀測",
-  "summary": "11/17加權40,092.11(-2.31%)、11/16美股半導體領跌與VIX22.91。重新核對FRED原始觀測：HY OAS 11/13為3.23%(323bp)，較11/12的3.20%擴大3bp；Single-B OAS 11/13為3.44%(344bp)，較11/12的3.39%擴大5bp。FRED頁面11/16更新是公布11/13觀測，而非11/16當日觀測；11/16信用利差尚未核實。11/16台股融資餘額5,244.98億元、日減121.01億元。",
+  "asOf": "2026-11-18",
+  "dataStatus": "intraday",
+  "updatedAt": "2026-11-18 09:48 Asia/Taipei｜台股盤中；美股11/17正式收盤",
+  "headline": "信用利差回擴、VIX升至25.46，市場去槓桿；NVIDIA財報顯示AI需求仍強",
+  "summary": "11/18 09:48加權40,461(+0.92%，盤中)；11/17美股VIX25.46、S&P500 -1.02%、IGV -3.29%。FRED/ICE至11/16 HY OAS 334bp(較11/13+11bp)、Single-B 357bp(+13bp)，SOFR 3.93%與IORB 3.90%(差+3bp)。11/17融資5,087.21億元、日減157.77億；NVIDIA公布FY27Q3營收1158億美元、Q4指引1260–1340億美元。所有指標以各自觀測日為準。",
   "market": {
-    "taiex": 40092.11,
-    "taiexChange": -2.31,
-    "ma5": 42431,
-    "ma10": 42076,
-    "ma20": 43958,
-    "ma60": 46124,
-    "vix": 22.91,
-    "move": 101.28,
-    "usdtwd": 32.958,
-    "dxy": 103.52,
-    "us10y": 5.122,
-    "de10y": 3.385,
+    "taiex": 40461,
+    "taiexChange": 0.92,
+    "ma5": 41672,
+    "ma10": 41827,
+    "ma20": 43667,
+    "ma60": 46045,
+    "vix": 25.46,
+    "move": 101.88,
+    "usdtwd": 32.953,
+    "dxy": 103.63,
+    "us10y": 5.1,
+    "de10y": 3.3806,
     "cnn": null,
-    "marginBalanceYi": 5244.98,
-    "marginDailyYi": -121.01,
+    "marginBalanceYi": 5087.21,
+    "marginDailyYi": -157.77,
     "marginMaintenance": null,
-    "foreignNetYi": -701.89,
-    "futuresNetContracts": -96787,
-    "hyOas": 3.23,
-    "singleBOas": 3.44,
-    "sofrMinusIorb": 0,
-    "t10yie": 2.24,
-    "t5yie": 2.3,
-    "oil": 83.53,
-    "goldPrice": 3880.4
+    "foreignNetYi": -380.94,
+    "futuresNetContracts": -97896,
+    "hyOas": 3.34,
+    "singleBOas": 3.57,
+    "sofrMinusIorb": 3,
+    "t10yie": null,
+    "t5yie": null,
+    "oil": 84.25,
+    "goldPrice": 3808.77
   },
   "ai": [
     {
@@ -129,9 +129,9 @@
       "date": "2026-11-16"
     },
     {
-      "label": "FRED SOFR隔夜短端利率",
+      "label": "SOFR／FRED",
       "url": "https://fred.stlouisfed.org/series/SOFR",
-      "date": "2026-11-12"
+      "date": "2026-11-16"
     },
     {
       "label": "NVIDIA｜11/12 CEO轉換聲明",
@@ -147,6 +147,31 @@
       "label": "FRED｜Single-B 11/13 3.44%（11/16更新）",
       "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB/addemailnotification",
       "date": "2026-11-13"
+    },
+    {
+      "label": "ICE BofA HY OAS／FRED",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
+      "date": "2026-11-16"
+    },
+    {
+      "label": "ICE BofA Single-B OAS／FRED",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
+      "date": "2026-11-16"
+    },
+    {
+      "label": "IORB／FRED",
+      "url": "https://fred.stlouisfed.org/series/IORB",
+      "date": "2026-11-16"
+    },
+    {
+      "label": "TWSE上市融資交易統計",
+      "url": "https://www.twse.com.tw/zh/trading/credit/mi-margn.html",
+      "date": "2026-11-17"
+    },
+    {
+      "label": "NVIDIA投資人關係財報",
+      "url": "https://investor.nvidia.com/financial-info/quarterly-results/default.aspx",
+      "date": "2026-11-17"
     }
   ],
   "marketHistory": [
@@ -200,16 +225,13 @@
     }
   ],
   "notes": [
-    "FRED信用資料已更正：2026/11/13 HY OAS=3.23%(323bp)、Single-B OAS=3.44%(344bp)，各較11/12擴大3bp及5bp；兩個序列2026/11/16 09:41 CST最後更新，並非11/16的觀測。11/16及11/17的信用數據尚未核實。",
-    "11/17台股加權已正式收盤40,092.11(-2.31%)；當日指數與MA5/MA10/MA20/MA60採使用者提供的15:11收盤表，均線依第三方口徑。",
-    "11/16美股收盤：SP500 7416.59(-1.92%)、NDX 27197.15(-2.67%)、費半9610.7(-5.28%)；台灣11/17下午美股現貨尚未開盤。",
-    "VIX22.91為11/16美股交易日收盤，MOVE101.28觀測日為11/16；不是11/17美股新收盤。",
-    "上市融資5,244.98億元及日減121.01億元截至11/16；11/17收盤融資與三大法人尚未同步取得，勿將11/16冒充當日。",
-    "11/16法人外資-701.89億、投信-183.02億、自營商-259.03億。投信採定版183.02億，前版179.63億失效。",
-    "11/16外資臺指期單列淨空96,787口，11/17最新未驗證；不可與今日市場價格混用。",
-    "11/17 15:11國際現貨/期貨報價：美債10Y5.122%、美元指數103.52、WTI83.53、黃金3880.40、美元/台幣32.958；並非同一交易所或官方收盤時點。",
-    "USD/TWD32.958是市場報價商15:11數據，與個人投組貼表使用的32.892不同；公開頁使用市場報價並警告匯率時差。",
-    "NVIDIA已於11/12官方公告CEO交接，11/17美東時間下午將發布財報；在財報公布前不能預先斷言業績。",
-    "公開網頁僅市場行情、信用、流動性與AI公共數據，不含任何私人持股/資產回撤/D1交易資訊。"
+    "加權40,461點+0.92%、MA5 41,672、MA10 41,827、MA20 43,667與美元匯率32.953取自11/18 09:48使用者盤中貼表，不是正式收盤。",
+    "美股指數/ETF、VIX25.46為11/17美股正式收盤；MOVE101.88觀測日11/17。不能將與11/18台股盤中價格的漲跌拼作同一日報酬。",
+    "HY OAS 3.34%(334bp)、Single-B OAS 3.57%(357bp)為11/16觀測；11/13分別323/344bp，擴大11/13bp；不是11/18即時數字。",
+    "SOFR 11/16為3.93%、IORB為3.90%，利差+3bp，屬邊際惡化，不能視為短端全面失序。",
+    "上市融資11/17餘額5,087.21億元、日減157.77億(約-3.01%)；扣ETF融資維持率最新未取得可靠同日數字。",
+    "外資現貨-380.94億、期貨淨空97,896口、投信-38.21億、自營商-156.96億為11/17盤後貼表，不是11/18盤後籌碼。",
+    "NVIDIA 11/17盤後財報FY27Q3營收115.8B美元、年增103%、FY27Q4營收指引126–134B美元；11/17正式收盤NVDA155.46美元是在財報前，不能視為財報反應。",
+    "公開頁嚴禁含私人持股、私人回撤或D1交易指示。"
   ]
 }
