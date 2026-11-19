@@ -15,6 +15,8 @@ import datetime as dt
 import urllib.parse
 import urllib.request
 import zipfile
+import re
+from html.parser import HTMLParser
 from zoneinfo import ZoneInfo
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -23,7 +25,7 @@ SEED = ROOT / "scripts" / "market_seed.json"
 TODAY = dt.datetime.now(ZoneInfo("Asia/Taipei")).date()
 CUTOFF = TODAY - dt.timedelta(days=1)  # no intraday price in daily-close chart
 EARLIEST = TODAY - dt.timedelta(days=300)
-FIELDS = ("taiex", "dxy", "usdtwd", "vix", "hyOas")
+FIELDS = ("taiex", "dxy", "usdtwd", "vix", "hyOas", "marginDailyYi", "foreignNetYi", "marginMaintenanceExEtf")
 SOURCE = {}
 OBS = {key: {} for key in FIELDS}
 SUCCESS = {}
@@ -35,6 +37,9 @@ URLS = {
     "vix": "https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv",
     "vix_fred": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS",
     "hyOas": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAMLH0A0HYM2",
+    "foreignNetYi":"https://www.twse.com.tw/rwd/zh/fund/BFI82U",
+    "marginDailyYi":"https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN",
+    "marginMaintenanceExEtf":"https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
 }
 
 def get(url, timeout=22):
@@ -65,7 +70,7 @@ def add(key, day, value):
     try:
         v=float(str(value).replace(",","").replace("%","").strip())
     except (ValueError,TypeError):return
-    bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40)}
+    bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-2500,2500),"marginMaintenanceExEtf":(80,500)}
     a,b=bounds[key]
     if math.isfinite(v) and a<=v<=b:
         OBS[key][day.isoformat()]=round(v,4)
@@ -179,6 +184,115 @@ def fetch_fred(key,series):
     SOURCE[key]={"name":f"FRED {series} daily observations"+(" (ICE BofA HY OAS, percent)" if key=="hyOas" else ""),"url":f"https://fred.stlouisfed.org/series/{series}"}
     return count
 
+
+def _twse_tables(payload):
+    tables = payload.get("tables") or payload.get("stat") or []
+    if isinstance(tables,list):
+        for table in tables:
+            if isinstance(table,dict) and isinstance(table.get("data"),list):
+                yield table.get("fields") or [],table["data"]
+    if isinstance(payload.get("data"),list):
+        yield payload.get("fields") or [], payload["data"]
+
+def _number(v):
+    return float(str(v).replace(",","").replace(" ","").replace("+","").strip())
+
+def fetch_foreign_daily():
+    found=0
+    # Backfill only within current 120 calendar days, then daily incremental maintenance.
+    for delta in range(121):
+        date=CUTOFF-dt.timedelta(days=delta)
+        if date.weekday()>=5:continue
+        stamp=date.strftime("%Y%m%d")
+        try:
+            u=URLS["foreignNetYi"]+"?type=day&dayDate="+stamp+"&response=json"
+            payload=json.loads(get(u,timeout=12))
+            for fields,rows in _twse_tables(payload):
+                for row in rows:
+                    if not row or "外資及陸資" not in str(row[0]) or "自營商" not in str(row[0]):continue
+                    # BFI82U units are TWD, with net in 4th column.
+                    if len(row)<4:continue
+                    raw=str(row[3])
+                    val=_number(raw)/1e8
+                    if abs(val)>2500:continue
+                    add("foreignNetYi",date.isoformat(),val)
+                    found+=1
+                    break
+            if found>=70:break
+        except Exception as e:
+            if delta<4:print("WARN foreign",stamp,str(e)[:80])
+        time.sleep(0.22)
+    SOURCE["foreignNetYi"]={"name":"TWSE BFI82U foreign cash investment net amount, TWD 100m","url":URLS["foreignNetYi"]}
+    if found<1:raise ValueError("No verified BFI82U daily foreign observations")
+    return found
+
+def fetch_margin_daily():
+    found=0
+    for delta in range(121):
+        date=CUTOFF-dt.timedelta(days=delta)
+        if date.weekday()>=5:continue
+        stamp=date.strftime("%Y%m%d")
+        try:
+            u=URLS["marginDailyYi"]+"?date="+stamp+"&selectType=MS&response=json"
+            d=json.loads(get(u,timeout=12))
+            for fields,rows in _twse_tables(d):
+                for row in rows:
+                    if len(row)<6 or "融資金額" not in str(row[0]):continue
+                    # TWSE: row[4] is today's outstanding TWD 1000; row[5] is yesterday.
+                    # Keep only when descriptions and both positive balances are available.
+                    cur,prev=_number(row[4]),_number(row[5])
+                    if cur<1e6 or prev<1e6:continue
+                    val=(cur-prev)/1e5
+                    if abs(val)>2000:continue
+                    add("marginDailyYi",date.isoformat(),val)
+                    found+=1
+                    break
+            if found>=70:break
+        except Exception as e:
+            if delta<4:print("WARN margin",stamp,str(e)[:80])
+        time.sleep(0.22)
+    SOURCE["marginDailyYi"]={"name":"TWSE MI_MARGN finance outstanding daily change, includes ETFs, TWD 100m","url":URLS["marginDailyYi"]}
+    if found<1:raise ValueError("No verified MI_MARGN daily financing observations")
+    return found
+
+class _WantgooRows(HTMLParser):
+    def __init__(self):
+        super().__init__();self.rows=[];self.inside_tr=False;self.inside_cell=False;self.cell=[];self.cells=[]
+    def handle_starttag(self,tag,attrs):
+        if tag=="tr":self.inside_tr=True;self.cells=[]
+        if tag in ("td","th") and self.inside_tr:self.inside_cell=True;self.cell=[]
+    def handle_data(self,data):
+        if self.inside_cell:self.cell.append(data)
+    def handle_endtag(self,tag):
+        if tag in ("td","th") and self.inside_cell:
+            self.cells.append("".join(self.cell).strip());self.inside_cell=False
+        if tag=="tr" and self.inside_tr:
+            if self.cells:self.rows.append(self.cells)
+            self.inside_tr=False
+
+def fetch_wantgoo_ex_etf():
+    html=get(URLS["marginMaintenanceExEtf"],timeout=25)
+    parser=_WantgooRows();parser.feed(html)
+    found=0
+    for row in parser.rows:
+        if len(row)<4:continue
+        mmdd=re.fullmatch(r"(\d{1,2})/(\d{1,2})",row[0].strip())
+        if not mmdd:continue
+        # The row columns explicitly describe financing balance, change, maintenance rate.
+        try:
+            month,day=map(int,mmdd.groups())
+            year=CUTOFF.year-(1 if month>CUTOFF.month+2 else 0)
+            date=dt.date(year,month,day).isoformat()
+            maint=row[3].replace("%","").strip()
+            value=_number(maint)
+            if not 80<=value<=500:continue
+            add("marginMaintenanceExEtf",date,value)
+            found+=1
+        except (ValueError,TypeError):continue
+    SOURCE["marginMaintenanceExEtf"]={"name":"Wantgoo TAIEX margin trading excludes ETFs, financing maintenance (%)","url":URLS["marginMaintenanceExEtf"]}
+    if found<1:raise ValueError("Wantgoo HTML has no verifiable dated ETF-excluded maintenance rows")
+    return found
+
 def main():
     load_seed()
     attempt("TWSE_TAIEX",fetch_twse)
@@ -192,6 +306,9 @@ def main():
     if not attempt("VIX_Cboe",fetch_cboe):
         attempt("VIX_FRED",lambda:fetch_fred("vix","VIXCLS"))
     attempt("HY_OAS_FRED",lambda:fetch_fred("hyOas","BAMLH0A0HYM2"))
+    attempt("TWSE_FOREIGN",fetch_foreign_daily)
+    attempt("TWSE_MARGIN",fetch_margin_daily)
+    attempt("WANTGOO_EX_ETF",fetch_wantgoo_ex_etf)
     dates=sorted({day for ser in OBS.values() for day in ser})
     rows=[]
     for day in dates:
@@ -217,7 +334,7 @@ def main():
       "generatedAt":dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
       "cutoff":CUTOFF.isoformat(),
       "calendar":"source observation dates; never forward-fill; latest intraday excluded",
-      "units":{"taiex":"index pts","dxy":"ICE US Dollar Index points","usdtwd":"TWD per USD","vix":"index pts","hyOas":"percent"},
+      "units":{"taiex":"index pts","dxy":"ICE US Dollar Index points","usdtwd":"TWD per USD","vix":"index pts","hyOas":"percent","marginDailyYi":"TWD 100 million daily finance balance change, including ETF","foreignNetYi":"TWD 100 million, TWSE foreign institution cash net","marginMaintenanceExEtf":"percent, Wantgoo margin maintenance excludes ETF"},
       "stats":stats,
       "rows":rows
     }
