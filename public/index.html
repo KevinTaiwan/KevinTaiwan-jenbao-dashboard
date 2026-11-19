@@ -229,7 +229,7 @@ function selectCursorAtPointer(evt,svg){
  if(!Number.isFinite(svgX)){
   const rect=svg.getBoundingClientRect();
   if(!rect?.width)return;
-  svgX=38+(evt.clientX-rect.left)/rect.width*720;
+  svgX=(evt.clientX-rect.left)/rect.width*780;
  }
  svgX=Math.max(38,Math.min(758,svgX));
  const ts=state.start+(svgX-38)/720*(state.end-state.start);
