@@ -5,10 +5,15 @@ on:
     paths:
       - 'public/**'
       - 'scripts/validate_public.py'
+      - 'scripts/refresh_market_history.py'
+      - 'scripts/market_seed.json'
+      - 'scripts/validate_market_history.py'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
+  schedule:
+    - cron: '25 1,13 * * 1-5'
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
@@ -23,12 +28,26 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+      - name: Refresh public market-history from official and attributable sources
+        run: |
+          python3 scripts/refresh_market_history.py
+          python3 scripts/validate_market_history.py public/market-history.json
+      - name: Commit validated public market-history snapshot
+        run: |
+          git config user.name "jenbao-market-bot"
+          git config user.email "jenbao-market-bot@users.noreply.github.com"
+          git add public/market-history.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh public TAIEX DXY USD-TWD VIX HY-OAS history [skip ci]"
+            git push origin HEAD:main
+          fi
       - name: Verify public-only directory and JSON
         run: |
           python3 scripts/validate_public.py public/market-data.json
+          python3 scripts/validate_market_history.py public/market-history.json
           python3 - <<'PY'
           from pathlib import Path
-          allowed={'index.html','market-data.json','.nojekyll'}
+          allowed={'index.html','market-data.json','market-history.json','.nojekyll'}
           files={p.name for p in Path('public').rglob('*') if p.is_file()}
           if files-allowed:raise SystemExit('Unsafe unexpected public files: '+repr(files-allowed))
           if '<script src=' in Path('public/index.html').read_text():raise SystemExit('External script is not allowed')
