@@ -12,7 +12,8 @@ on:
       - '.github/workflows/pages.yml'
   workflow_dispatch:
   schedule:
-    - cron: '25 1,13 * * 1-5'
+    - cron: '0 22 * * *' # 06:00 Asia/Taipei, refresh before the 06:10 daily report
+    - cron: '25 1,13 * * 1-5' # additional intraday update
 permissions:
   contents: write
   pages: write
