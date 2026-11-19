@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Backfill and refresh PUBLIC TAIEX/DXY/USD-TWD/VIX/HY-OAS history.
+"""Backfill and refresh PUBLIC TAIEX/DXY/USD-TWD/VIX/HY-OAS plus UST 10Y / 10Y-2Y history.
 
 No personal positions, allocations, account details, or raw Library files.
 Source dates are preserved. Failed fetches never become fabricated zeros.
