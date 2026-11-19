@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "audience": "public-market-seed",
+  "series": "marginMaintenanceExEtf",
+  "unit": "percent",
+  "provenance": {
+    "publisher": "Wantgoo",
+    "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
+    "description": "Published TAIEX listed-market financing maintenance ratio explicitly excluding ETFs, daily history as indexed on 2026-11-19; no estimates or interpolation"
+  },
+  "rows": [
+    {
+      "date": "2026-10-05",
+      "value": 176.91
+    },
+    {
+      "date": "2026-10-06",
+      "value": 175.52
+    },
+    {
+      "date": "2026-10-07",
+      "value": 175.31
+    },
+    {
+      "date": "2026-10-08",
+      "value": 173.84
+    },
+    {
+      "date": "2026-10-12",
+      "value": 173.18
+    },
+    {
+      "date": "2026-10-13",
+      "value": 167.37
+    },
+    {
+      "date": "2026-10-14",
+      "value": 169.05
+    },
+    {
+      "date": "2026-10-15",
+      "value": 160.15
+    },
+    {
+      "date": "2026-10-16",
+      "value": 161.64
+    },
+    {
+      "date": "2026-10-19",
+      "value": 159.62
+    },
+    {
+      "date": "2026-10-20",
+      "value": 157.49
+    },
+    {
+      "date": "2026-10-21",
+      "value": 161.21
+    },
+    {
+      "date": "2026-10-22",
+      "value": 155.76
+    },
+    {
+      "date": "2026-10-27",
+      "value": 154.77
+    },
+    {
+      "date": "2026-10-28",
+      "value": 161.51
+    },
+    {
+      "date": "2026-10-29",
+      "value": 157.21
+    },
+    {
+      "date": "2026-10-30",
+      "value": 150.94
+    },
+    {
+      "date": "2026-11-02",
+      "value": 150.96
+    },
+    {
+      "date": "2026-11-03",
+      "value": 142.09
+    },
+    {
+      "date": "2026-11-04",
+      "value": 143.56
+    },
+    {
+      "date": "2026-11-05",
+      "value": 134.86
+    },
+    {
+      "date": "2026-11-06",
+      "value": 129.68
+    },
+    {
+      "date": "2026-11-09",
+      "value": 139.43
+    },
+    {
+      "date": "2026-11-10",
+      "value": 145.32
+    },
+    {
+      "date": "2026-11-11",
+      "value": 151.56
+    },
+    {
+      "date": "2026-11-12",
+      "value": 146.22
+    },
+    {
+      "date": "2026-11-13",
+      "value": 149.75
+    },
+    {
+      "date": "2026-11-16",
+      "value": 138.96
+    },
+    {
+      "date": "2026-11-17",
+      "value": 134.24
+    },
+    {
+      "date": "2026-11-18",
+      "value": 136.69
+    }
+  ]
+}
