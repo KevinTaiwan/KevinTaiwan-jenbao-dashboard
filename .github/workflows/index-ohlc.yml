@@ -1,0 +1,45 @@
+name: Permanent TAIEX and S&P 500 Daily OHLC Archive
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/refresh_index_ohlc.py'
+      - 'scripts/validate_index_ohlc.py'
+      - '.github/workflows/index-ohlc.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '55 21 * * *' # 05:55 Asia/Taipei; daily after US closing session, before 06:10 report
+permissions:
+  contents: write
+concurrency:
+  group: jenbao-index-ohlc-permanent
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - name: Checkout permanent archive
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Backfill or increment 240-plus true-index OHLC sessions
+        run: |
+          python3 scripts/refresh_index_ohlc.py
+          python3 scripts/validate_index_ohlc.py public/index-ohlc-history.json
+      - name: Persist entire nontruncated verified OHLC history
+        run: |
+          git config user.name "jenbao-market-bot"
+          git config user.email "jenbao-market-bot@users.noreply.github.com"
+          git add public/index-ohlc-history.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Append permanent TAIEX and S&P 500 OHLC data [skip ci]"
+            # Rebase cleanly on new main commits; do not overwrite with force-push.
+            for i in 1 2 3; do
+              if git push origin HEAD:main; then exit 0; fi
+              git fetch origin main
+              git rebase origin/main
+            done
+            echo "FAIL: could not safely push OHLC archive"
+            exit 1
+          fi
