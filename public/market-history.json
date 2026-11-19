@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-19T04:42:01+00:00",
+  "generatedAt": "2026-11-19T04:43:26+00:00",
   "cutoff": "2026-11-18",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -27,7 +27,7 @@
       "count": 208,
       "first": "2026-01-23",
       "last": "2026-11-18",
-      "lastValue": 103.924,
+      "lastValue": 103.921,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance DX-Y.NYB daily market close (not ICE licensed feed)",
@@ -38,7 +38,7 @@
       "count": 175,
       "first": "2026-01-26",
       "last": "2026-11-18",
-      "lastValue": 32.955,
+      "lastValue": 32.953,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance TWD=X daily indicative FX quote; Library values override on overlapping dates",
@@ -1672,8 +1672,8 @@
     {
       "date": "2026-11-18",
       "taiex": 40194.91,
-      "dxy": 103.924,
-      "usdtwd": 32.955,
+      "dxy": 103.921,
+      "usdtwd": 32.953,
       "vix": 24.56
     }
   ]
