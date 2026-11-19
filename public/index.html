@@ -136,7 +136,7 @@ function syncChartCursor(date){
   const x=selectedX.toFixed(2);
   if(line){line.setAttribute("x1",x);line.setAttribute("x2",x)}
   const val=observation&&s.kind!=="flow"&&s.first>0&&(chartMode==="indexed")?100*observation[s.key]/s.first:observation?.[s.key];
-  const isValid=Number.isFinite(val);
+  const isValid=Number.isFinite(val)&&s.rows.length>=2;
   const y=isValid?s.y(val):0;
   for(const circle of [point,halo])if(circle){circle.setAttribute("cx",x);circle.setAttribute("cy",String(y));circle.setAttribute("visibility",isValid?"visible":"hidden")}
   const tooltipX=Math.max(38,Math.min(618,selectedX-69));
@@ -178,7 +178,7 @@ function showHistory(){
    const val=last?historyFormat(last[key],digits)+(unit==="%"?"%":unit==="點"?" 點":unit==="億元"?" 億":""):"—";
    if(length<2){
     s.y=()=>0;
-    return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label"><strong>'+esc(label)+'</strong><small>缺少可靠逐日數列</small></div><div class="cross-empty">至少需要 2 筆觀測值，不能繪圖。</div><div class="cross-last"><strong data-cross-value="'+key+'">無資料</strong><small data-cross-date="'+key+'">該期間資料待補</small></div></div>';
+    return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label"><strong>'+esc(label)+'</strong><small>歷史資料不足，尚不繪製價格曲線</small></div><svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' 對齊日期但尚無足夠資料"><line x1="38" y1="112" x2="758" y2="112" stroke="#28455d"/><text x="400" y="80" text-anchor="middle" fill="#9cb8cc" font-size="13">資料待核對 · 缺值不補</text><line class="cross-cursor-line" x1="38" y1="24" x2="38" y2="112"/><circle class="cross-cursor-halo" cx="38" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="38" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">無資料</text></g></svg><div class="cross-last"><strong data-cross-value="'+key+'">無資料</strong><small data-cross-date="'+key+'">該期間資料待補</small></div></div>';
    }
    const chartRows=rows.map(r=>({ts:marketChartDate(r.date),v:chartMode==="indexed"&&s.kind!=="flow"&&s.first>0?100*r[key]/s.first:r[key]}));
    const vals=chartRows.map(r=>r.v),range=Math.max(...vals)-Math.min(...vals);
