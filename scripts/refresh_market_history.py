@@ -4,6 +4,7 @@
 No personal positions, allocations, account details, or raw Library files.
 Source dates are preserved. Failed fetches never become fabricated zeros.
 VOO and QQQ use publicly accessible USD share prices; not user-specific positions.
+DFF observations are the effective overnight rate, distinct from the FOMC target range.
 """
 import csv
 import io
