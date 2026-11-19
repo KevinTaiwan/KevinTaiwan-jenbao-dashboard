@@ -71,6 +71,37 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 .cross-compare-summary{font-size:11px;color:#acc8d9;line-height:1.8}
 @media(max-width:950px){.cross-svg{height:220px}.cross-row{min-height:235px}}
 @media(max-width:650px){.cross-svg{height:190px}.cross-row{min-height:225px}.cross-compare-selectors,.cross-compare-readouts{grid-template-columns:repeat(2,minmax(0,1fr))}.cross-compare-svg{height:215px}.cross-compare-row{padding:13px}}
+
+/* Wide two-column market panels: all text and data on the left, trend chart on the right. */
+.cross-row:not(.cross-compare-row){display:grid;grid-template-columns:205px minmax(0,1fr);align-items:start;gap:12px;min-height:448px;padding:14px 15px}
+.cross-row:not(.cross-compare-row)>.cross-label{grid-column:1;grid-row:1;min-width:0;align-self:start;text-align:left}
+.cross-row:not(.cross-compare-row)>.cross-svg{grid-column:2;grid-row:1;min-width:0;width:100%;height:440px;max-width:none;overflow:visible;preserveAspectRatio:none}
+.cross-row:not(.cross-compare-row) .cross-last{grid-column:auto;grid-row:auto;text-align:left;margin-top:15px;padding-top:12px;border-top:1px solid #31506a}
+.cross-row:not(.cross-compare-row) .cross-last strong{font-size:23px;line-height:1.2;overflow-wrap:anywhere}
+.cross-row:not(.cross-compare-row) .cross-last small{font-size:11px;line-height:1.6}
+.cross-row:not(.cross-compare-row) .cross-ma-values{margin-top:10px;font-size:11px;line-height:1.8}
+.cross-ma-switches{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+.cross-ma-toggle{display:inline-flex;align-items:center;gap:5px;border:1px solid #50667c;border-radius:6px;padding:6px 8px;background:#13263a;color:#9aadc0;font-size:11px;cursor:pointer;opacity:.67}
+.cross-ma-toggle i{display:inline-block;width:13px;height:0;border-top:3px dashed var(--ma-color)}
+.cross-ma-toggle.active{border-color:var(--ma-color);color:#f4f9fb;background:#23415c;opacity:1}
+.cross-ma-toggle.ma-not-ready{border-style:dashed}
+.cross-ma-toggle:hover{filter:brightness(1.25)}
+.cross-ma-toggle:focus-visible{outline:2px solid #96ebe8;outline-offset:2px}
+.cross-compare-row{min-height:unset;padding:18px 21px}
+.cross-compare-row>.cross-compare-svg{height:440px;width:100%}
+@media(max-width:950px){
+ .cross-row:not(.cross-compare-row){grid-template-columns:170px minmax(0,1fr);gap:8px;padding:10px;min-height:410px}
+ .cross-row:not(.cross-compare-row)>.cross-svg{height:400px}
+ .cross-row:not(.cross-compare-row) .cross-last strong{font-size:19px}
+ .cross-compare-row>.cross-compare-svg{height:400px}
+}
+@media(max-width:650px){
+ .cross-row:not(.cross-compare-row){grid-template-columns:1fr;min-height:unset;gap:8px}
+ .cross-row:not(.cross-compare-row)>.cross-label{grid-column:1;grid-row:1}
+ .cross-row:not(.cross-compare-row)>.cross-svg{grid-column:1;grid-row:2;height:350px}
+ .cross-row:not(.cross-compare-row) .cross-last{margin-top:8px;padding-top:8px}
+ .cross-compare-row>.cross-compare-svg{height:345px}
+}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -155,6 +186,38 @@ function readChartOrder(){
 }
 let chartOrder=readChartOrder(), draggingChart=null;
 const MA_PERIODS=[5,20,60],MA_COLORS={"5":"#ffcf78","20":"#ff8fb2","60":"#afaaff"};
+const maVisibilityKey="jb-ma-per-chart-v1";
+function loadMaVisibility(){
+ try{
+  const parsed=JSON.parse(localStorage.getItem(maVisibilityKey)||"null");
+  if(parsed&&typeof parsed==="object"&&!Array.isArray(parsed)){
+   const safe={};
+   for(const [key,settings] of Object.entries(parsed)){
+    if(!seriesConfig.some(s=>s[0]===key)||!settings||typeof settings!=="object")continue;
+    safe[key]={};
+    for(const n of MA_PERIODS)if(typeof settings[n]==="boolean")safe[key][n]=settings[n];
+   }
+   return safe;
+  }
+ }catch(e){}
+ return {};
+}
+let maVisibility=loadMaVisibility();
+function maIsOn(key,n){return maVisibility[key]?.[n]!==false}
+function toggleChartMa(key,n){
+ if(!seriesConfig.some(s=>s[0]===key)||!MA_PERIODS.includes(n))return false;
+ maVisibility={...maVisibility,[key]:{...(maVisibility[key]||{}),[n]:!maIsOn(key,n)}};
+ try{localStorage.setItem(maVisibilityKey,JSON.stringify(maVisibility))}catch(e){}
+ showHistory();return true;
+}
+function maControls(s){
+ return '<div class="cross-ma-switches" role="group" aria-label="'+esc(s.label)+'移動平均線開關">'+MA_PERIODS.map(n=>{
+  const active=maIsOn(s.key,n);
+  const hasLine=s.ma[n].length>=2;
+  return '<button type="button" class="cross-ma-toggle'+(active?' active':'')+(hasLine?'':' ma-not-ready')+'" data-ma-key="'+s.key+'" data-ma-period="'+n+'" aria-label="'+esc(s.label)+' MA'+n+' '+(active?'開啟':'關閉')+'" aria-pressed="'+active+'" title="MA'+n+'：'+(hasLine?'':'資料筆數不足；')+'按一下'+(active?'隱藏':'顯示')+'平均線" style="--ma-color:'+MA_COLORS[n]+'"><i></i>MA'+n+'</button>';
+ }).join("")+'</div>';
+}
+
 const COMPARISON_COLORS=["#62dce9","#ffc078","#d0a3ff","#93e9b4"];
 const comparisonStorageKey="jb-four-normalize-compare-v1";
 function readComparisonKeys(){
@@ -477,6 +540,11 @@ crossHost.addEventListener("change",event=>{
  }
 });
 crossHost.addEventListener("click",event=>{
+ const maBtn=event.target.closest?.("[data-ma-key][data-ma-period]");
+ if(maBtn){
+  toggleChartMa(maBtn.dataset.maKey,Number(maBtn.dataset.maPeriod));
+  event.preventDefault();event.stopPropagation();return;
+ }
  const btn=event.target.closest?.("[data-chart-move]");
  if(btn){nudgeChart(btn.dataset.chartMove,Number(btn.dataset.direction));event.stopPropagation()}
 });
