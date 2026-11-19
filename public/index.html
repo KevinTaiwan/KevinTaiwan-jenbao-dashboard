@@ -102,6 +102,28 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
  .cross-row:not(.cross-compare-row) .cross-last{margin-top:8px;padding-top:8px}
  .cross-compare-row>.cross-compare-svg{height:490px}
 }
+
+/* Desktop: name, MA buttons, metrics and annotations share a single left-side rail. */
+.cross-row:not(.cross-compare-row)>.cross-last{
+ grid-column:1;grid-row:1;align-self:end;text-align:left;
+ margin:0 0 10px;padding-top:11px;border-top:1px solid #31506a;
+ min-width:0
+}
+.cross-row:not(.cross-compare-row)>.cross-label{padding-bottom:182px}
+.cross-row:not(.cross-compare-row)>.cross-svg{justify-self:stretch}
+.cross-ma-toggle{min-width:51px;justify-content:center}
+.cross-row:not(.cross-compare-row) .cross-ma-values{overflow-wrap:anywhere}
+@media(max-width:950px){
+ .cross-row:not(.cross-compare-row)>.cross-label{padding-bottom:205px}
+}
+@media(max-width:650px){
+ .cross-row:not(.cross-compare-row)>.cross-label{grid-row:1;padding-bottom:0}
+ .cross-row:not(.cross-compare-row)>.cross-last{
+  grid-column:1;grid-row:2;align-self:start;margin:0;padding:9px 0;
+  border-top:1px solid #31506a
+ }
+ .cross-row:not(.cross-compare-row)>.cross-svg{grid-column:1;grid-row:3;height:490px}
+}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -410,7 +432,7 @@ function showHistory(){
   const lastValue=last?unitValue(s,last[key]):"—";
   if(length<2){
    s.y=()=>0;
-   return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>少於 2 筆有效資料，暫不繪製趨勢</small><div class="cross-ma-legend"><span class="ma-muted">MA5／20／60 資料不足</span></div></div><svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 414" role="img" aria-label="'+esc(label)+' 無足夠資料">'+guide(BOTTOM)+svgText(400,120,"資料不足 · 不推估","middle")+cursor(color)+'</svg><div class="cross-last"><strong data-cross-value="'+key+'">無資料</strong><small data-cross-date="'+key+'">等待核對歷史值</small><div class="cross-ma-values" data-ma-values="'+key+'">MA5 — · MA20 — · MA60 —</div></div></div>';
+   return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>少於 2 筆有效資料，暫不繪製趨勢</small><div class="cross-ma-legend"><span class="ma-muted">MA5／20／60 資料不足</span></div></div><svg class="cross-svg" preserveAspectRatio="none" data-series-svg="'+key+'" viewBox="0 0 780 414" role="img" aria-label="'+esc(label)+' 無足夠資料">'+guide(BOTTOM)+svgText(400,120,"資料不足 · 不推估","middle")+cursor(color)+'</svg><div class="cross-last"><strong data-cross-value="'+key+'">無資料</strong><small data-cross-date="'+key+'">等待核對歷史值</small><div class="cross-ma-values" data-ma-values="'+key+'">MA5 — · MA20 — · MA60 —</div></div></div>';
   }
   const chartRows=rows.map(r=>({ts:marketChartDate(r.date),v:transformedValue(s,r[key])}));
   const maVals=MA_PERIODS.filter(n=>maIsOn(s.key,n)).flatMap(n=>s.ma[n].map(p=>transformedValue(s,p.value)));
@@ -434,7 +456,7 @@ function showHistory(){
    return pts.length<2?"":'<polyline class="ma-plot" data-ma-line="'+n+'" stroke="'+MA_COLORS[n]+'" points="'+pts.join(" ")+'"/>';
   }).join("");
   const maLegend=maControls(s);
-  const svg='<svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 414" role="img" aria-label="'+esc(label)+'：原始值及 5、20、60 筆有效觀測均線">'+guides+baseline+main+maCurves+cursor(color)+ylabels+dates()+'</svg>';
+  const svg='<svg class="cross-svg" preserveAspectRatio="none" data-series-svg="'+key+'" viewBox="0 0 780 414" role="img" aria-label="'+esc(label)+'：原始值及 5、20、60 筆有效觀測均線">'+guides+baseline+main+maCurves+cursor(color)+ylabels+dates()+'</svg>';
   return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>'+length+' 筆 · '+esc(rows[0].date)+' 至 '+esc(last.date)+'</small>'+maLegend+'<div class="cross-stat">'+(s.kind==="flow"?"區間合計 ":s.kind==="cumulative"?"從 "+rows[0].date+" 起累積 ":s.kind==="spread"?"利差變動 ":"區間變化 ")+esc(delta)+'</div></div>'+svg+'<div class="cross-last"><strong data-cross-value="'+key+'">'+esc(lastValue)+'</strong><small data-cross-date="'+key+'">觀測日 '+esc(last.date)+'</small><div class="cross-ma-values" data-ma-values="'+key+'">MA5／20／60：依選定日期</div></div></div>';
  };
  const comparisonInfo=comparisonSeriesInfo(series);
@@ -450,7 +472,7 @@ function showHistory(){
    return '<polyline points="'+p+'" stroke="'+o.color+'" stroke-width="3" fill="none" stroke-linejoin="round" stroke-linecap="round"/>';
   }).join("");
   const selectedLines=comparisonInfo.map((o,i)=>'<line data-compare-hline="'+i+'" x1="'+LEFT+'" y1="0" x2="'+RIGHT+'" y2="0" stroke="'+o.color+'" stroke-width="1.4" stroke-dasharray="4 5" visibility="hidden"/><circle data-compare-point="'+i+'" cx="38" cy="0" r="4.5" stroke="#f8f8fa" stroke-width="1.2" fill="'+o.color+'" visibility="hidden"/>').join("");
-  const svg='<svg class="cross-svg cross-compare-svg" data-compare-svg="1" viewBox="0 0 780 414" role="img" aria-label="四項指標 Min-Max 標準化比較，共用時間軸，無移動平均線">'+guidelines+lines+selectedLines+'<line class="cross-cursor-line" x1="'+LEFT+'" y1="24" x2="'+LEFT+'" y2="'+BOTTOM+'"/>'+svgText(33,38,"100","end")+svgText(33,Yratio(50,0,100)+4,"50","end")+svgText(33,BOTTOM+3,"0","end")+dates()+'</svg>';
+  const svg='<svg class="cross-svg cross-compare-svg" preserveAspectRatio="none" data-compare-svg="1" viewBox="0 0 780 414" role="img" aria-label="四項指標 Min-Max 標準化比較，共用時間軸，無移動平均線">'+guidelines+lines+selectedLines+'<line class="cross-cursor-line" x1="'+LEFT+'" y1="24" x2="'+LEFT+'" y2="'+BOTTOM+'"/>'+svgText(33,38,"100","end")+svgText(33,Yratio(50,0,100)+4,"50","end")+svgText(33,BOTTOM+3,"0","end")+dates()+'</svg>';
   const readouts='<div class="cross-compare-readouts">'+comparisonInfo.map((o,i)=>'<div class="cross-compare-readout" data-compare-readout="'+i+'"><strong style="color:'+o.color+'">'+esc(o.s?.label||"空白（不選）")+'</strong><span data-compare-value="'+i+'">'+(o.s?"選擇日期以查看原始值":"未選取指標") + '</span><small data-compare-normalized="'+i+'">Normalize：—</small></div>').join("")+'</div>';
   const legend='<div class="cross-compare-summary">Normalize＝(當日數值－所選期間最小值)／(最大值－最小值) × 100；每條線各自計算，全部對齊相同日期。若期間值不變，畫在 50。適用負值指標；此圖不繪 MA5／20／60。<span id="comparisonCoverage"></span></div>';
   return '<div class="cross-row cross-compare-row" data-cross-row="comparison"><div class="cross-compare-heading"><div><strong>四指標自選比較｜Normalize 0–100</strong><div class="cross-compare-sub">四個欄位可分別選擇其他 14 張圖，或選「空白（不選）」；空白不繪線，選取的指標不可重複。不同單位使用相同刻度比較變化方向。</div></div>'+chartSortControls("comparison","四指標 Normalize 比較")+'</div>'+selectors+svg+readouts+legend+'</div>';
