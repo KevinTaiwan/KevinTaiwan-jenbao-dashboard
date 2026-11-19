@@ -20,9 +20,9 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 .cross-cursor-summary{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 18px;margin-top:15px;border:1px solid #43677e;border-radius:10px;padding:10px 14px;background:#163249;color:#d5e9f5;font-size:12px}
 .cross-cursor-summary strong{font-size:16px;color:#92f1ef;padding-left:5px;font-variant-numeric:tabular-nums}
 #crossCursorCoverage{color:#b7d0df;font-size:12px}
-.cross-svg{cursor:crosshair;touch-action:none;user-select:none;-webkit-user-select:none}
+.cross-svg{cursor:default;touch-action:none;user-select:none;-webkit-user-select:none}
 .cross-cursor-line,.cross-cursor-point,.cross-cursor-tooltip{pointer-events:none}
-.cross-cursor-line{stroke:#ffe29a;stroke-width:1.8;stroke-dasharray:5 4;opacity:0.96}
+.cross-cursor-line{stroke:#ffe29a;stroke-width:2.4;stroke-dasharray:5 4;opacity:0.96}
 .cross-cursor-halo{fill:none;stroke:#f5f8ff;stroke-width:1.5;opacity:.85;pointer-events:none}
 .cross-cursor-point{stroke:#f6faff;stroke-width:1.6}
 .cross-cursor-tooltip rect{fill:#234b69;stroke:#7298b4;stroke-width:.8;rx:5}
@@ -54,7 +54,7 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 <div class="card market-cross">
 <div class="cross-head"><div><div class="subhead">五指標市場風險交叉比對｜同一時間軸</div><div class="small">加權指數 · DXY · USD/TWD · VIX · HY OAS。各圖按實際觀測日期對齊；不補值、不把盤中當收盤。</div></div>
 <div class="cross-controls" aria-label="歷史圖切換"><button class="button" type="button" data-window="20">20日</button><button class="button" type="button" data-window="60">60日</button><button class="button active" type="button" data-window="120">120日</button><button class="button" type="button" data-mode="raw">原始值</button><button class="button" type="button" data-mode="indexed">起點=100</button></div></div>
-<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">移到任一圖表查看同一天的五項數值</span></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="五張圖的同步時間游標，滑鼠或觸控選取日期，鍵盤左右鍵逐日移動" aria-describedby="crossCursorDate"></div>
+<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">按住垂直黃色時間線（滑鼠左鍵）左右拖曳，其他圖會同步</span></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="五張圖同步時間游標，需在黃線按滑鼠左鍵拖曳，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
 <div id="historynote" class="small cross-note">歷史資料正在載入…</div></div>
 <div class="sectionhead"><h2>市場狀態與信用溫度｜最新觀測</h2><span class="small">保留個別指標原始單位</span></div><div class="grid two"><div class="card"><div id="coreSignals"></div></div><div class="card"><div class="subhead">跨市場解讀原則</div><p class="small" style="line-height:2">股市下跌若與 DXY、USD/TWD、VIX 同時走高，應留意跨境資金與避險需求；只有 HY OAS 也連續擴大，信用風險的證據才更完整。不同市場休市日、報價時段及利差發布延遲都會產生時間差。</p><div class="separator"></div><p class="small">原始值模式：各張圖獨立縱軸，便於觀察自身轉折。起點=100：五圖共用同一縱軸比例，適合比較相對變化幅度。</p></div></div>
 <div class="sectionhead"><h2>今日市場注意事項</h2></div><div class="card"><ul class="bullet-list" id="notes"></ul></div>
@@ -101,7 +101,7 @@ function card(title,value,sub='',tone=''){return `<div class="card"><div class="
 function toast(message){const t=$('toast');t.textContent=message;t.style.display='block';clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.style.display='none',3600)}
 function validate(d){if(!d||d.schemaVersion!==2||d.audience!=='public-market'||typeof d.market!=='object'||!Array.isArray(d.ai)||!/^\d{4}-\d{2}-\d{2}$/.test(d.asOf))throw Error('公開市場 JSON 格式不符合規範');if(['portfolio','holdings','defense','rollingRisk','personal','account'].some(k=>Object.prototype.hasOwnProperty.call(d,k)))throw Error('公開資料包含不應出現的私人欄位');return d}
 let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
-let chartCursorDate=null,chartContext=null,chartPointerSvg=null;
+let chartCursorDate=null,chartContext=null,chartPointerSvg=null,chartPointerId=null;
 const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2]];
 function marketChartDate(t){return new Date(String(t).slice(0,10)+"T00:00:00Z").getTime()}
 function historyFormat(v,d){return Number.isFinite(v)?v.toLocaleString("zh-TW",{minimumFractionDigits:d,maximumFractionDigits:d}):"—"}
@@ -151,7 +151,7 @@ function syncChartCursor(date){
  }
  const title=$("crossCursorDate"),coverage=$("crossCursorCoverage");
  if(title)title.textContent=marketViewDate(selected);
- if(coverage)coverage.textContent="同日資料："+exactCount+"/5 項｜其餘不沿用前日數值｜可拖曳、點選或按 ← →";
+ if(coverage)coverage.textContent="同日資料："+exactCount+"/5 項｜其餘不沿用前日數值｜僅按住黃色時間線可拖曳；鍵盤 ← → 仍可操作";
 }
 function showHistory(){
  const host=$("marketCrossCharts"),note=$("historynote");
@@ -236,18 +236,37 @@ function selectCursorAtPointer(evt,svg){
  syncChartCursor(nearestHistoryDate(ts,state.dates));
 }
 const crossHost=$("marketCrossCharts");
+function chartPointerX(evt,svg){
+ let x=null;
+ try{const ctm=svg.getScreenCTM?.();if(ctm&&typeof svg.createSVGPoint==="function"){const pt=svg.createSVGPoint();pt.x=evt.clientX;pt.y=evt.clientY||0;x=pt.matrixTransform(ctm.inverse()).x}}catch(e){}
+ if(!Number.isFinite(x)){const rect=svg.getBoundingClientRect();if(!rect?.width)return null;x=(evt.clientX-rect.left)/rect.width*780}
+ return x;
+}
+function chartStopDrag(){
+ if(chartPointerId!==null&&crossHost.releasePointerCapture){try{crossHost.releasePointerCapture(chartPointerId)}catch(e){}}
+ chartPointerId=null;chartPointerSvg=null;
+}
 crossHost.addEventListener("pointerdown",event=>{
- const svg=event.target.closest?.("svg.cross-svg");if(!svg)return;
- chartPointerSvg=svg;
+ if(event.pointerType==="mouse"&&event.button!==0)return;
+ const svg=event.target.closest?.("svg.cross-svg");
+ if(!svg||!chartContext||!chartCursorDate)return;
+ const x=chartPointerX(event,svg);
+ if(x===null)return;
+ const cursorX=chartContext.x(marketChartDate(chartCursorDate));
+ const width=svg.getBoundingClientRect?.().width||780;
+ const allowed=Math.max(11,Math.min(48,22*780/width));
+ if(Math.abs(x-cursorX)>allowed)return;
+ chartPointerSvg=svg;chartPointerId=event.pointerId;
  if(crossHost.setPointerCapture){try{crossHost.setPointerCapture(event.pointerId)}catch(e){}}
- selectCursorAtPointer(event,svg);
+ if(typeof event.preventDefault==="function")event.preventDefault();
 });
 crossHost.addEventListener("pointermove",event=>{
- if(event.pointerType==="touch"&&!chartPointerSvg)return;
- const svg=event.target.closest?.("svg.cross-svg")||chartPointerSvg;
- if(svg)selectCursorAtPointer(event,svg);
+ if(chartPointerSvg===null||chartPointerId!==event.pointerId)return;
+ if(event.pointerType==="mouse"&&(event.buttons&1)===0){chartStopDrag();return}
+ selectCursorAtPointer(event,chartPointerSvg);
 });
-for(const eventName of ["pointerup","pointercancel"])crossHost.addEventListener(eventName,()=>{chartPointerSvg=null});
+crossHost.addEventListener("pointerup",chartStopDrag);
+crossHost.addEventListener("pointercancel",chartStopDrag);
 crossHost.addEventListener("keydown",event=>{
  if(!chartContext?.dates?.length)return;
  const dates=chartContext.dates;
