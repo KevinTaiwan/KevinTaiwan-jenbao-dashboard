@@ -30,12 +30,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
       - name: Refresh public market-history from official and attributable sources
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[refresh-yields]')
+        env:
+          JENBAO_YIELD_ONLY: ${{ contains(github.event.head_commit.message, '[refresh-yields]') && '1' || '0' }}
         run: |
           python3 scripts/refresh_market_history.py
           python3 scripts/validate_market_history.py public/market-history.json
       - name: Commit validated public market-history snapshot
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[refresh-yields]')
         run: |
           git config user.name "jenbao-market-bot"
           git config user.email "jenbao-market-bot@users.noreply.github.com"
