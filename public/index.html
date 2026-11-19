@@ -22,8 +22,8 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 #crossCursorCoverage{color:#b7d0df;font-size:12px}
 .cross-svg{cursor:default;touch-action:none;user-select:none;-webkit-user-select:none}
 .cross-cursor-line,.cross-cursor-point,.cross-cursor-tooltip{pointer-events:none}
-.cross-cursor-line{stroke:#ffe29a;stroke-width:2.4;stroke-dasharray:5 4;opacity:0.96}
-.cross-cursor-horizontal{stroke:#a6f0df;stroke-width:1.5;stroke-dasharray:4 4;opacity:.92;pointer-events:none;vector-effect:non-scaling-stroke}
+.cross-cursor-line{stroke:#ffe29a;stroke-width:.7;stroke-dasharray:none;opacity:.96;vector-effect:non-scaling-stroke}
+.cross-cursor-horizontal{stroke:#a6f0df;stroke-width:.7;stroke-dasharray:none;opacity:.92;pointer-events:none;vector-effect:non-scaling-stroke}
 .cross-cursor-halo{fill:none;stroke:#f5f8ff;stroke-width:1.5;opacity:.85;pointer-events:none}
 .cross-cursor-point{stroke:#f6faff;stroke-width:1.6}
 .cross-cursor-tooltip rect{fill:#234b69;stroke:#7298b4;stroke-width:.8;rx:5}
@@ -148,7 +148,7 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 .technical-stack-readouts small{display:block;color:#91b9cd}
 .technical-stack-txt{font-size:11px;color:#9dbfd0;line-height:1.8}
 .technical-stack-line{fill:none;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
-.technical-stack-hline{stroke-width:1.4;stroke-dasharray:5 5;pointer-events:none;opacity:.85}
+.technical-stack-hline{stroke-width:.7;stroke-dasharray:none;vector-effect:non-scaling-stroke;pointer-events:none;opacity:.9}
 .technical-stack-dot{stroke:#fff;stroke-width:1.4;pointer-events:none}
 @media(max-width:950px){
  .cross-row:not(.technical-stack-row){grid-template-columns:158px minmax(0,1fr);padding:10px;gap:8px;min-height:210px}
@@ -273,7 +273,7 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 /* White canvas for the three-layer technical plot only; the main CIO dashboard stays dark. */
 .technical-stack-plot{background:#fff;border:1px solid #d9e0e6;border-radius:5px}
 .technical-stack-plot>.technical-stack-svg{background:#fff}
-.technical-stack-plot .cross-cursor-line{stroke:#af7200;stroke-width:2;stroke-dasharray:5 4}
+.technical-stack-plot .cross-cursor-line{stroke:#af7200;stroke-width:.7;stroke-dasharray:none;vector-effect:non-scaling-stroke}
 .technical-stack-readouts>div,.technical-stack-compact .technical-stack-readouts>div{
   background:#fff;border:1px solid #d9e0e6;color:#263748
 }
@@ -1109,7 +1109,7 @@ function showHistory(){
   } else if(c.oscillator==="KD"){
    oscLines=kdAvailable?line(oscDisplay,"k",ys[2],"#0879ad",2.5)+line(oscDisplay,"d",ys[2],"#ce8100",2.3)+[20,80].map(v=>'<line x1="38" x2="758" y1="'+ys[2](v)+'" y2="'+ys[2](v)+'" stroke="#bcb5c3" stroke-dasharray="5 5"/>').join(""):'<text x="42" y="'+((panel[2].start+panel[2].end)/2)+'" fill="#80502c" font-size="12">KD 需要加權或 S&amp;P 500 指數的完整 OHLC</text>';
   } else oscLines=line(oscDisplay,"value",ys[2],"#7943c2",2.5)+[30,70].map(v=>'<line x1="38" x2="758" y1="'+ys[2](v)+'" y2="'+ys[2](v)+'" stroke="#c3b8aa" stroke-dasharray="5 5"/>').join("");
-  const cross=panel.map((a,i)=>'<line data-tech-hline="'+i+'" x1="38" x2="758" y1="0" y2="0" visibility="hidden" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'" stroke-dasharray="5 5"/><circle data-tech-point="'+i+'" cx="38" cy="0" r="4" visibility="hidden" fill="#ffffff" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'"/>').join("");
+  const cross=panel.map((a,i)=>'<line data-tech-hline="'+i+'" x1="38" x2="758" y1="0" y2="0" visibility="hidden" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'" stroke-width=".7" vector-effect="non-scaling-stroke"/><circle data-tech-point="'+i+'" cx="38" cy="0" r="4" visibility="hidden" fill="#ffffff" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'"/>').join("");
   const label=(name,code,selected,opts)=>'<label>'+name+'<select data-tech-field="'+code+'" aria-label="'+name+'">'+opts+'</select></label>';
   const controls='<div class="technical-stack-selectors">'+
    label("上層來源｜價格","top",c.top,techOptions(TECH_PRICE_KEYS,c.top))+
