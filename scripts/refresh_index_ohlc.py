@@ -39,7 +39,8 @@ SOURCE_REGISTRY = {
     "YAHOO_TWII": {"name": "Yahoo Finance ^TWII TAIEX index OHLC fallback", "url": "https://finance.yahoo.com/quote/%5ETWII/history/"},
     "YAHOO_GSPC": {"name": "Yahoo Finance ^GSPC S&P 500 index OHLC", "url": "https://finance.yahoo.com/quote/%5EGSPC/history/"},
     "STOOQ_SPX": {"name": "Stooq ^SPX S&P 500 cash index OHLC fallback (not SPY)", "url": "https://stooq.com/q/d/?s=%5Espx&i=d"},
-    "GITHUB_SPX_DATASET": {"name": "Public S&P 500 index OHLC historical dataset by jingerzz, based on Stooq ^SPX and Yahoo ^SPX (baseline only)", "url": "https://github.com/jingerzz/historical-index-api/tree/main/data/sp500"}
+    "GITHUB_SPX_DATASET": {"name": "Public S&P 500 index OHLC historical dataset by jingerzz, based on Stooq ^SPX and Yahoo ^SPX (baseline only)", "url": "https://github.com/jingerzz/historical-index-api/tree/main/data/sp500"},
+    "CBOE_SPX": {"name": "Cboe official SPX cash-index delayed historical daily OHLC", "url": "https://cdn.cboe.com/api/global/delayed_quotes/charts/historical/_SPX.json"}
 }
 ARCHIVE = {k: {} for k in SERIES}
 ERRORS = []
@@ -94,7 +95,9 @@ def save_record(key,date,op,hi,lo,cl,source):
     # Prefer the official TWSE value, then the existing verified row.
     if old and old["source"]=="TWSE" and source!="TWSE":
         return False
-    if old and old["source"]!=source and source not in ("TWSE","YAHOO_GSPC"):
+    if old and old["source"]=="CBOE_SPX" and source!="CBOE_SPX":
+        return False
+    if old and old["source"]!=source and source not in ("TWSE","CBOE_SPX","YAHOO_GSPC"):
         return False
     ARCHIVE[key][date_key]=row
     return True
@@ -229,6 +232,33 @@ def fetch_stooq_spx():
         print("WARN Stooq",str(exc)[:190],flush=True)
         return 0
 
+def fetch_cboe_spx():
+    """Cboe index-level historical SPX cash index OHLC (not SPX options or ETFs)."""
+    source="CBOE_SPX"
+    try:
+        payload=get_json(SOURCE_REGISTRY[source]["url"],timeout=30)
+        entries=payload.get("data") if isinstance(payload,dict) else None
+        if not isinstance(entries,list):
+            raise ValueError("Unexpected Cboe historical daily SPX schema; refusing inferred data")
+        count=0
+        for row in entries:
+            if not isinstance(row,dict):
+                continue
+            date=row.get("date")
+            if save_record("sp500",date,row.get("open"),row.get("high"),row.get("low"),row.get("close"),source):
+                count+=1
+        if count<1:
+            raise ValueError("No valid Cboe daily SPX index OHLC entries")
+        FETCHED[source]=count
+        print("CBOE_SPX",count,"daily cash-index OHLC, last",
+              max(ARCHIVE["sp500"]) if ARCHIVE["sp500"] else "none",flush=True)
+        return count
+    except Exception as exc:
+        ERRORS.append("CBOE_SPX: "+str(exc)[:190])
+        print("WARN CBOE_SPX",str(exc)[:190],flush=True)
+        FETCHED[source]=0
+        return 0
+
 def fetch_public_sp500_duckdb():
     """Transparent archival S&P 500 cash-index baseline, only if live daily sources fail.
 
@@ -296,6 +326,8 @@ def main():
     # without overwriting any official observation.
     if len(ARCHIVE["taiex"])<MIN_DAYS:
         fetch_yahoo("^TWII","taiex","YAHOO_TWII")
+    fetch_cboe_spx()
+    # Unavailable Cboe observations can be augmented from Yahoo; official bars win.
     fetch_yahoo("^GSPC","sp500","YAHOO_GSPC")
     if len(ARCHIVE["sp500"])<MIN_DAYS:
         fetch_stooq_spx()
