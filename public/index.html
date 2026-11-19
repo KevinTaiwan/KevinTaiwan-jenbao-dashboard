@@ -470,6 +470,46 @@ function readTechnicalStackSettings(){
  return defaults;
 }
 let techSettings=readTechnicalStackSettings();
+let techFullscreen=false;
+let techControlsHidden=true;
+function refreshTechnicalFullscreenChrome(){
+ document.body.classList.toggle("technical-fullscreen-active",techFullscreen);
+ const card=document.querySelector('[data-cross-row="technicalStack"]');
+ if(!card)return;
+ card.classList.toggle("technical-stack-fullscreen",techFullscreen);
+ card.classList.toggle("technical-stack-controls-hidden",techFullscreen&&techControlsHidden);
+ const full=card.querySelector("[data-tech-fullscreen]");
+ if(full){full.textContent=techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕";full.setAttribute("aria-pressed",String(techFullscreen))}
+ const opt=card.querySelector("[data-tech-controls-toggle]");
+ if(opt){opt.textContent=techControlsHidden?"顯示選單":"隱藏選單";opt.setAttribute("aria-pressed",String(!techControlsHidden))}
+}
+function leaveTechnicalFullscreen(){
+ if(!techFullscreen)return;
+ techFullscreen=false;refreshTechnicalFullscreenChrome();
+ if(document.fullscreenElement&&typeof document.exitFullscreen==="function"){
+  try{const result=document.exitFullscreen();if(result?.catch)result.catch(()=>{})}catch(e){}
+ }
+}
+function toggleTechnicalFullscreen(){
+ if(techFullscreen){leaveTechnicalFullscreen();return}
+ techFullscreen=true;techControlsHidden=true;
+ refreshTechnicalFullscreenChrome();
+ try{
+  const result=document.documentElement?.requestFullscreen?.({navigationUI:"hide"});
+  if(result?.catch)result.catch(()=>{});
+ }catch(e){}
+}
+function toggleTechnicalControls(){
+ if(!techFullscreen)return;
+ techControlsHidden=!techControlsHidden;refreshTechnicalFullscreenChrome();
+}
+document.addEventListener("fullscreenchange",()=>{
+ if(!document.fullscreenElement&&techFullscreen)leaveTechnicalFullscreen();
+});
+document.addEventListener("keydown",event=>{
+ if(event.key==="Escape"&&techFullscreen&&!document.fullscreenElement)leaveTechnicalFullscreen();
+});
+
 function updateTechnicalSetting(field,value){
  const valid=field==="top"?TECH_PRICE_KEYS.includes(value):field==="middle"?TECH_MIDDLE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI","KD"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
  if(!valid)return false;
