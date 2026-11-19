@@ -13,6 +13,9 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 @media(max-width:1020px){.interpret-points{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){.interpret-points{grid-template-columns:1fr}.page-hero .heroaside{align-self:flex-start;text-align:left}}
 @media(max-width:1020px){.topbar{flex-wrap:wrap;height:auto;padding:13px 20px;gap:10px}.brand{min-width:0}.nav{order:3;flex-basis:100%;overflow:auto}.sync{margin-left:auto}.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:24px 20px}}
 @media(max-width:650px){.brand{font-size:15px}.brand small{font-size:8px}.hero{flex-direction:column;padding:21px}.hero h1{font-size:25px}.heroaside{text-align:left}.grid.four,.grid.three,.grid.two{grid-template-columns:1fr}.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.big{font-size:25px}main{padding:20px 14px}.rule{grid-template-columns:1fr auto}.rule>.status{grid-column:2}.rule>div:nth-child(2){grid-row:1;grid-column:2}.topbar{padding:11px 14px}.tag{display:none}}
+
+.market-cross{margin-bottom:4px}.cross-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}.cross-head .subhead{font-size:17px;margin-bottom:6px}.cross-controls{display:flex;gap:7px;flex-wrap:wrap}.cross-controls .button{font-size:12px;padding:7px 11px}.cross-controls .button.active{background:#25516a;color:#b4ffff;border-color:#76dce6}.cross-charts{display:grid;grid-template-columns:1fr;gap:7px;margin-top:17px}.cross-row{display:grid;grid-template-columns:185px minmax(0,1fr) 146px;gap:12px;align-items:center;background:linear-gradient(90deg,#0e2034,#122842);border:1px solid #26445e;border-radius:12px;padding:11px 15px}.cross-label strong{font-size:14px;display:block}.cross-label small{color:#99b6cd;font-size:11px;display:block;margin-top:4px}.cross-last{text-align:right}.cross-last strong{display:block;color:#91e9ed;font-size:20px}.cross-last small{font-size:11px;color:#9bb5ca}.cross-svg{display:block;width:100%;height:117px;overflow:visible}.cross-note{margin-top:13px;line-height:1.7}.cross-legend{display:flex;gap:9px;align-items:center;font-size:11px;color:#a7bed3}.cross-legend i{display:inline-block;width:10px;height:10px;border-radius:3px}.cross-empty{color:#adc5d5;font-size:12px}.cross-stat{font-size:11px;color:#9fbad0;margin-top:5px}
+@media(max-width:950px){.cross-row{grid-template-columns:132px minmax(0,1fr) 100px;gap:6px;padding:9px}.cross-last strong{font-size:16px}.cross-svg{height:100px}}@media(max-width:650px){.cross-row{grid-template-columns:1fr 85px;gap:2px}.cross-label{grid-column:1}.cross-last{grid-row:1;grid-column:2}.cross-svg{grid-column:1 / -1;height:110px}.cross-label strong{font-size:13px}.cross-head .subhead{font-size:15px}}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -31,7 +34,12 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 
 <div class="grid four" id="topmetrics"></div>
 <div class="sectionhead"><h2>市場核心監控</h2><span class="small">多因子交叉觀察，不代表買賣訊號</span></div>
-<div class="grid two"><div class="card"><div class="subhead">市場狀態與信用溫度</div><div id="coreSignals"></div></div><div class="card"><div class="subhead">加權指數／公開市場歷史</div><svg class="chart" id="marketChart" viewBox="0 0 610 190" aria-label="加權指數歷史圖"></svg><div class="small" id="historynote">等待已核對歷史數據</div></div></div>
+<div class="card market-cross">
+<div class="cross-head"><div><div class="subhead">五指標市場風險交叉比對｜同一時間軸</div><div class="small">加權指數 · DXY · USD/TWD · VIX · HY OAS。各圖按實際觀測日期對齊；不補值、不把盤中當收盤。</div></div>
+<div class="cross-controls" aria-label="歷史圖切換"><button class="button" type="button" data-window="20">20日</button><button class="button" type="button" data-window="60">60日</button><button class="button active" type="button" data-window="120">120日</button><button class="button" type="button" data-mode="raw">原始值</button><button class="button" type="button" data-mode="indexed">起點=100</button></div></div>
+<div id="marketCrossCharts" class="cross-charts" aria-live="polite"></div>
+<div id="historynote" class="small cross-note">歷史資料正在載入…</div></div>
+<div class="sectionhead"><h2>市場狀態與信用溫度｜最新觀測</h2><span class="small">保留個別指標原始單位</span></div><div class="grid two"><div class="card"><div id="coreSignals"></div></div><div class="card"><div class="subhead">跨市場解讀原則</div><p class="small" style="line-height:2">股市下跌若與 DXY、USD/TWD、VIX 同時走高，應留意跨境資金與避險需求；只有 HY OAS 也連續擴大，信用風險的證據才更完整。不同市場休市日、報價時段及利差發布延遲都會產生時間差。</p><div class="separator"></div><p class="small">原始值模式：各張圖獨立縱軸，便於觀察自身轉折。起點=100：五圖共用同一縱軸比例，適合比較相對變化幅度。</p></div></div>
 <div class="sectionhead"><h2>今日市場注意事項</h2></div><div class="card"><ul class="bullet-list" id="notes"></ul></div>
 </div>
 <div class="tabscreen" id="technical">
@@ -75,7 +83,70 @@ function fmt(v,u='',d=2){return typeof v==='number'&&Number.isFinite(v)?v.toLoca
 function card(title,value,sub='',tone=''){return `<div class="card"><div class="label">${esc(title)}</div><div class="big ${tone}">${esc(value)}</div><div class="small">${esc(sub)}</div></div>`}
 function toast(message){const t=$('toast');t.textContent=message;t.style.display='block';clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.style.display='none',3600)}
 function validate(d){if(!d||d.schemaVersion!==2||d.audience!=='public-market'||typeof d.market!=='object'||!Array.isArray(d.ai)||!/^\d{4}-\d{2}-\d{2}$/.test(d.asOf))throw Error('公開市場 JSON 格式不符合規範');if(['portfolio','holdings','defense','rollingRisk','personal','account'].some(k=>Object.prototype.hasOwnProperty.call(d,k)))throw Error('公開資料包含不應出現的私人欄位');return d}
-function showHistory(){const points=(data.marketHistory||[]).filter(h=>h&&typeof h.taiex==='number'&&Number.isFinite(h.taiex));const el=$('marketChart');if(points.length<2){el.innerHTML='<text x="305" y="100" text-anchor="middle" fill="#97b0c9" font-size="15">歷史點數不足 · 不產生假趨勢</text>';$('historynote').textContent='等待已核對歷史指數資料（至少 2 筆）';return}const vals=points.map(p=>p.taiex),lo=Math.min(...vals),hi=Math.max(...vals),span=Math.max(1,hi-lo);const xy=points.map((p,i)=>`${38+i*540/(points.length-1)},${151-(p.taiex-lo)/span*116}`).join(' ');el.innerHTML=`<line x1="37" y1="151" x2="581" y2="151" stroke="#3e5c76"/><polyline points="${xy}" stroke="#6ad8e0" fill="none" stroke-width="3" stroke-linejoin="round"/><text x="38" y="18" font-size="12" fill="#c1d7eb">${fmt(hi)}</text><text x="38" y="177" font-size="12" fill="#9db7ce">${esc(points[0].date||'')}</text><text x="580" y="177" text-anchor="end" font-size="12" fill="#9db7ce">${esc(points[points.length-1].date||'')}</text>`;$('historynote').textContent=`${points.length} 筆市場指數記錄（請核對各市場交易日）`}
+let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
+const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2]];
+function marketChartDate(t){return new Date(String(t).slice(0,10)+"T00:00:00Z").getTime()}
+function historyFormat(v,d){return Number.isFinite(v)?v.toLocaleString("zh-TW",{minimumFractionDigits:d,maximumFractionDigits:d}):"—"}
+function showHistory(){
+ const host=$("marketCrossCharts"),note=$("historynote");
+ const raw=marketHistoryData&&Array.isArray(marketHistoryData.rows)?marketHistoryData.rows:[],
+       reference=data&&data.asOf?marketChartDate(data.asOf):Date.now(),
+       cutoff=Math.min(reference,Date.now()),
+       start=cutoff-(chartDays-1)*86400000, end=cutoff;
+ const series=seriesConfig.map(([key,label,unit,color,digits])=>{
+   const rows=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date));
+   return {key,label,unit,color,digits,rows,first:rows[0]?.[key]};
+ });
+ let commonLo=Infinity,commonHi=-Infinity;
+ if(chartMode==="indexed"){
+   for(const s of series)if(s.rows.length>1&&s.first>0)for(const r of s.rows){const v=100*r[s.key]/s.first;commonLo=Math.min(commonLo,v);commonHi=Math.max(commonHi,v)}
+   if(!Number.isFinite(commonLo)){commonLo=90;commonHi=110}
+   const span=Math.max(commonHi-commonLo,1);commonLo=Math.min(commonLo-0.08*span,99);commonHi=Math.max(commonHi+0.08*span,101);
+ }
+ const svgText=(x,y,str,anchor="start",tone="#a8c0d5")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" fill="'+tone+'" font-size="11">'+esc(str)+'</text>';
+ const renderRow=(s)=>{
+   const {rows,key,label,unit,color,digits}=s, last=rows.at(-1), length=rows.length;
+   const val=last?historyFormat(last[key],digits)+(unit==="%"?"%":unit==="點"?" 點":""):"—";
+   if(length<2)return '<div class="cross-row"><div class="cross-label"><strong>'+esc(label)+'</strong><small>缺少可靠逐日數列</small></div><div class="cross-empty">至少需要 2 筆觀測值，不能繪圖。</div><div class="cross-last"><strong>—</strong><small>資料待補</small></div></div>';
+   const chartRows=rows.map(r=>({ts:marketChartDate(r.date),v:chartMode==="indexed"?100*r[key]/s.first:r[key]}));
+   const vals=chartRows.map(r=>r.v),range=Math.max(...vals)-Math.min(...vals);
+   let lo=chartMode==="indexed"?commonLo:Math.min(...vals)-Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
+   let hi=chartMode==="indexed"?commonHi:Math.max(...vals)+Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
+   if(hi===lo){hi+=1;lo-=1}
+   const X=t=>38+(t-start)/(end-start)*720, Y=v=>112-(v-lo)/(hi-lo)*79;
+   const p=chartRows.map(r=>X(r.ts).toFixed(1)+","+Y(r.v).toFixed(1)).join(" ");
+   const latestDate=last.date;
+   const stats=marketHistoryData?.stats?.[key],sourceLast=stats?.last||latestDate;
+   const totalChange=chartMode==="indexed"?(chartRows.at(-1).v-100):((last[key]-s.first)/Math.abs(s.first)*100);
+   const delta=(totalChange>0?"+":"")+historyFormat(totalChange,2)+"%";
+   const axes=[0,0.5,1].map(r=>'<line x1="38" y1="'+(33+r*79)+'" x2="758" y2="'+(33+r*79)+'" stroke="#28455d" stroke-width="1"/>').join("");
+   const ylabels=svgText(33,38,historyFormat(hi,chartMode==="indexed"?1:digits),"end")+svgText(33,115,historyFormat(lo,chartMode==="indexed"?1:digits),"end");
+   const ticks=[0,.25,.5,.75,1].map(n=>{const ts=start+(end-start)*n,day=new Date(ts).toISOString().slice(5,10);return '<line x1="'+X(ts)+'" y1="112" x2="'+X(ts)+'" y2="117" stroke="#57748d"/>'+svgText(X(ts),137,day,"middle")}).join("");
+   const baseline=chartMode==="indexed"?'<line x1="38" y1="'+Y(100)+'" x2="758" y2="'+Y(100)+'" stroke="#c7b27b" stroke-dasharray="4,6" opacity=".7"/>':"";
+   const svg='<svg class="cross-svg" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' '+chartDays+'日歷史走勢">'+axes+baseline+'<polyline points="'+p+'" fill="none" stroke="'+color+'" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>'+ylabels+ticks+'</svg>';
+   return '<div class="cross-row"><div class="cross-label"><strong>'+esc(label)+'</strong><small>'+length+' 筆 · '+esc(rows[0].date)+' 至 '+esc(latestDate)+'</small><div class="cross-stat">區間變化 '+esc(delta)+'</div></div>'+svg+'<div class="cross-last"><strong>'+esc(val)+'</strong><small>觀測日 '+esc(sourceLast)+'</small><div class="cross-legend"><i style="background:'+color+'"></i>歷史值</div></div></div>';
+ };
+ host.innerHTML=series.map(renderRow).join("");
+ const counts=series.map(s=>s.label+":"+s.rows.length).join("｜");
+ note.textContent="時間視窗：截至 "+new Date(end).toISOString().slice(0,10)+" 的 "+chartDays+" 日曆日；"+(chartMode==="indexed"?"共用標準化刻度（各系列首個有效值=100）":"每圖獨立縱軸、共用橫軸")+"。數據筆數 "+counts+"。缺值不補，休市及時間差按原始觀測日顯示。"+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
+}
+async function fetchMarketHistory(){
+ try{
+  const resp=await fetch("./market-history.json?c="+Date.now(),{cache:"no-store"});
+  if(!resp.ok)throw Error("HTTP "+resp.status);
+  const obj=await resp.json();
+  if(obj?.audience!=="public-market-history"||!Array.isArray(obj.rows))throw Error("歷史資料格式不符");
+  marketHistoryData=obj;marketHistoryError="";
+ }catch(e){marketHistoryError="無法取得獨立歷史資料："+e.message;marketHistoryData={rows:(data?.marketHistory||[]),stats:{}}}
+ showHistory();
+}
+document.querySelectorAll("[data-window]").forEach(btn=>btn.addEventListener("click",()=>{
+ chartDays=Number(btn.dataset.window);document.querySelectorAll("[data-window]").forEach(b=>b.classList.toggle("active",b===btn));showHistory()
+}));
+document.querySelectorAll("[data-mode]").forEach(btn=>btn.addEventListener("click",()=>{
+ chartMode=btn.dataset.mode;document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("active",b===btn));showHistory()
+}));
+
 function showRules(){const m=data.market;let checked=0, hits=0; $('rules').innerHTML=rules.map((r,i)=>{const lhs=m[r.key],rhs=r.op==='>field'?m[r.value]:Number(r.value);let yes=null;if(typeof lhs==='number'&&typeof rhs==='number'&&Number.isFinite(lhs)&&Number.isFinite(rhs)){checked++;yes=r.op==='<'?lhs<rhs:r.op==='≤'?lhs<=rhs:r.op==='>'||r.op==='>field'?lhs>rhs:lhs>=rhs;if(yes)hits++}const state=yes===null?'缺資料':yes?'條件符合':'未符合';return `<div class="rule"><div><div class="rulelabel">${esc(r.name)}</div><div class="ruleval">目前：${fmt(lhs)} · 門檻：${r.op==='>field'?esc(r.value):fmt(rhs)}</div></div><div><select data-idx="${i}" data-kind="op" aria-label="比較方向"><option value="<" ${r.op==='<'?'selected':''}>&lt;</option><option value="≤" ${r.op==='≤'?'selected':''}>≤</option><option value=">" ${r.op==='>'?'selected':''}>&gt;</option><option value="≥" ${r.op==='≥'?'selected':''}>≥</option><option value=">field" ${r.op==='>field'?'selected':''}>大於市場欄位</option></select><input data-idx="${i}" data-kind="value" aria-label="門檻數值" value="${esc(r.value)}"></div><span class="status ${yes===null?'missing':yes?'ok':''}">${state}</span></div>`}).join('');$('rules').querySelectorAll('[data-idx]').forEach(el=>el.addEventListener('change',()=>{const i=Number(el.dataset.idx),k=el.dataset.kind;const v=el.value;const next=rules.map(x=>({...x}));if(k==='op')next[i].op=v;else next[i].value=next[i].op==='>field'?v:Number(v);if(!Number.isFinite(next[i].value)&&next[i].op!=='>field'){toast('請輸入有效數字');return}rules=next;try{localStorage.setItem('jb-public-rules-v2',JSON.stringify(rules))}catch(e){}showRules();showPageInterpretations()}));$('riskInterpret').textContent=checked<6?`已確認 ${checked}/${rules.length} 項條件；資料不足，不判定市場底部。`:`目前 ${hits}/${checked} 個可確認條件符合；需綜合風險、信用、流動性及技術面，不等於買進指令。`}
 
 function showPageInterpretations(){
@@ -187,13 +258,13 @@ function showPageInterpretations(){
 function render(){const d=data,m=d.market; $('headline').textContent=d.headline||'待核對';$('summary').textContent=d.summary||'最新資料待更新';$('asof').textContent=d.asOf||'—';$('syncstate').textContent=d.dataStatus==='verified'?'核對版資料':'待驗證版本';
 const age=Math.max(0,Math.floor((Date.now()-new Date(d.asOf+'T23:59:59+08:00').getTime())/86400000));const stale=d.dataStatus!=='verified'||age>4;$('stale').classList.toggle('show',stale);$('stale').textContent=`資料狀態：${d.dataStatus==='verified'?'已標示核對':'尚待核對'}；市場資料日期 ${d.asOf}${age>4?`（距今天約 ${age} 天）`:''}。沒有可核實的數據時一律顯示「—」。`;
 $('topmetrics').innerHTML=card('台股加權指數',fmt(m.taiex,'點',2),'TAIEX','cyan')+card('市場波動率 VIX',fmt(m.vix,'',2),'Risk sentiment','blue')+card('美元 / 台幣',fmt(m.usdtwd,'',3),'USD/TWD spot','gold')+card('美國高收益債利差',fmt(m.hyOas,'%',2),'ICE BofA HY OAS','green');
-const core=[['加權指數日漲跌','taiexChange','%'],['MOVE 債市波動','move',''],['信用利差：Single-B','singleBOas','%'],['SOFR − IORB','sofrMinusIorb','bp'],['美國 10Y 公債殖利率','us10y','%']];$('coreSignals').innerHTML=core.map(([l,k,u])=>`<div class="statrow"><div><strong>${esc(l)}</strong><div class="small">${esc(k)}</div></div><span class="value">${fmt(m[k],u)}</span></div>`).join('');$('notes').innerHTML=(d.notes||[]).map(s=>`<li>${esc(s)}</li>`).join('')||'<li>尚無備註</li>';showHistory();
+const core=[['加權指數日漲跌','taiexChange','%'],['美元指數 DXY','dxy',''],['USD/TWD','usdtwd',''],['VIX 波動率','vix',''],['HY OAS','hyOas','%'],['MOVE 債市波動','move',''],['信用利差：Single-B','singleBOas','%'],['SOFR − IORB','sofrMinusIorb','bp'],['美國 10Y 公債殖利率','us10y','%']];$('coreSignals').innerHTML=core.map(([l,k,u])=>`<div class="statrow"><div><strong>${esc(l)}</strong><div class="small">${esc(k)}</div></div><span class="value">${fmt(m[k],u)}</span></div>`).join('');$('notes').innerHTML=(d.notes||[]).map(s=>`<li>${esc(s)}</li>`).join('')||'<li>尚無備註</li>';showHistory();
 $('technicalCards').innerHTML=[['台股指數','taiex','點'],['MA5','ma5','點'],['MA20','ma20','點'],['MA60','ma60','點'],['MA120','ma120','點'],['MA240','ma240','點']].map(([n,k,u])=>card(n,fmt(m[k],u),k)).join('');$('chipSignals').innerHTML='<div class="subhead">籌碼觀察</div>'+[['融資餘額','marginBalanceYi','億元'],['融資日變動','marginDailyYi','億元'],['融資維持率','marginMaintenance','%'],['外資現貨買賣超','foreignNetYi','億元'],['外資期貨淨部位','futuresNetContracts','口']].map(([l,k,u])=>`<div class="statrow"><strong>${esc(l)}</strong><span class="value">${fmt(m[k],u)}</span></div>`).join('');
 $('macroCards').innerHTML=[['美國 10 年債','us10y','%'],['USD / TWD','usdtwd',''],['VIX','vix',''],['MOVE','move',''],['HY OAS','hyOas','%'],['Single-B OAS','singleBOas','%'],['SOFR−IORB','sofrMinusIorb','bp'],['T10YIE','t10yie','%'],['T5YIE','t5yie','%'],['DXY','dxy',''],['德國 10Y','de10y','%'],['原油','oil','']].map(([n,k,u])=>card(n,fmt(m[k],u),k)).join('');showRules();
 $('aiRows').innerHTML=(d.ai||[]).map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.value??'—')}</td><td>${esc(a.trend||'')}</td><td><span class="status ${a.status==='ok'?'ok':a.status==='alert'?'alert':'missing'}">${a.status==='ok'?'正常':a.status==='alert'?'警戒':'缺資料'}</span></td></tr>`).join('');
 $('sources').innerHTML=(d.sources||[]).filter(s=>s&&typeof s.url==='string'&&/^https:\/\//.test(s.url)).map(s=>`<a class="source" rel="noopener noreferrer" target="_blank" href="${esc(s.url)}">${esc(s.label||s.url)}</a>`).join('')||'<span class="small">尚未附上公開來源</span>'; $('lastLoaded').textContent=`最後讀取：${new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})}`;
 showPageInterpretations();
 }
-async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
+async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();await fetchMarketHistory();loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
 $('reload').addEventListener('click',()=>sync(false));document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.tabscreen').forEach(s=>s.classList.toggle('visible',s.id===btn.dataset.tab))}));document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync(true)});sync(true);setInterval(()=>{if(!document.hidden)sync(true)},300000);
 </script></body></html>
