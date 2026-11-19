@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "description": "Public market data only: historical TAIEX and USD/TWD from user Library price CSV; latest intraday observation excluded; prices require final close verification.",
+  "updatedAt": "2026-11-19",
+  "rows": [
+    {
+      "date": "2026-10-13",
+      "taiex": 48341.31,
+      "usdtwd": 32.085
+    },
+    {
+      "date": "2026-10-14",
+      "taiex": 48625.83,
+      "usdtwd": 32.073
+    },
+    {
+      "date": "2026-10-15",
+      "taiex": 46969.87,
+      "usdtwd": 32.265
+    },
+    {
+      "date": "2026-10-16",
+      "taiex": 47111.26,
+      "usdtwd": 32.338
+    },
+    {
+      "date": "2026-10-19",
+      "taiex": 46822.08,
+      "usdtwd": 32.445
+    },
+    {
+      "date": "2026-10-20",
+      "taiex": 46292.93,
+      "usdtwd": 32.617
+    },
+    {
+      "date": "2026-10-21",
+      "taiex": 46887.77,
+      "usdtwd": 32.488
+    },
+    {
+      "date": "2026-10-22",
+      "taiex": 46041.43,
+      "usdtwd": 32.508
+    },
+    {
+      "date": "2026-10-27",
+      "taiex": 46096.23,
+      "usdtwd": 32.452
+    },
+    {
+      "date": "2026-10-28",
+      "taiex": 47035.58,
+      "usdtwd": 32.418
+    },
+    {
+      "date": "2026-10-29",
+      "taiex": 46368.33,
+      "usdtwd": 32.492
+    },
+    {
+      "date": "2026-10-30",
+      "taiex": 45211.83,
+      "usdtwd": 32.478
+    },
+    {
+      "date": "2026-11-02",
+      "taiex": 44920.14,
+      "usdtwd": 32.592
+    },
+    {
+      "date": "2026-11-03",
+      "taiex": 43307.54,
+      "usdtwd": 32.76
+    },
+    {
+      "date": "2026-11-04",
+      "taiex": 42948.91,
+      "usdtwd": 32.821
+    },
+    {
+      "date": "2026-11-05",
+      "taiex": 41574.72,
+      "usdtwd": 32.876
+    },
+    {
+      "date": "2026-11-06",
+      "taiex": 39701.64,
+      "usdtwd": 32.768
+    },
+    {
+      "date": "2026-11-09",
+      "taiex": 41661.7,
+      "usdtwd": 32.882
+    },
+    {
+      "date": "2026-11-10",
+      "taiex": 42711.92,
+      "usdtwd": 32.865
+    },
+    {
+      "date": "2026-11-11",
+      "taiex": 44257.15,
+      "usdtwd": 32.86
+    },
+    {
+      "date": "2026-11-12",
+      "taiex": 43091.87,
+      "usdtwd": 32.889
+    },
+    {
+      "date": "2026-11-13",
+      "taiex": 43675.12,
+      "usdtwd": 32.838
+    },
+    {
+      "date": "2026-11-16",
+      "taiex": 41040.08,
+      "usdtwd": 32.886
+    },
+    {
+      "date": "2026-11-17",
+      "taiex": 40092.11,
+      "usdtwd": 32.892
+    },
+    {
+      "date": "2026-11-18",
+      "taiex": 40194.91
+    }
+  ]
+}
