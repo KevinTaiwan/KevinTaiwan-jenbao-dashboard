@@ -25,7 +25,8 @@ DEST = ROOT / "public" / "market-history.json"
 SEED = ROOT / "scripts" / "market_seed.json"
 TODAY = dt.datetime.now(ZoneInfo("Asia/Taipei")).date()
 CUTOFF = TODAY - dt.timedelta(days=1)  # no intraday price in daily-close chart
-EARLIEST = TODAY - dt.timedelta(days=300)
+EARLIEST = dt.date(1900,1,1)  # archive floor: retained historical observations do not expire
+FETCH_START = TODAY - dt.timedelta(days=300)  # incremental source fetch horizon only
 FIELDS = ("taiex", "dxy", "usdtwd", "vix", "hyOas", "marginDailyYi", "foreignNetYi", "marginMaintenanceExEtf", "us10yYield", "us10y2ySpread", "voo", "qqq", "fedFundsEffective")
 SOURCE = {}
 OBS = {key: {} for key in FIELDS}
@@ -191,7 +192,7 @@ def fetch_cboe():
     return count
 
 def fetch_fred(key,series):
-    raw=get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}&cosd={EARLIEST.isoformat()}&coed={CUTOFF.isoformat()}")
+    raw=get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}&cosd={FETCH_START.isoformat()}&coed={CUTOFF.isoformat()}")
     rows=csvrows(raw)
     count=0
     for row in rows:
@@ -353,7 +354,8 @@ def finalize_history():
         for key in FIELDS:
             if day in OBS[key]:item[key]=OBS[key][day]
         rows.append(item)
-    rows=rows[-260:]  # ~120 trading days, preserve cross-market extra days
+    # Permanent archive: NEVER truncate stored market history based on chart lookback windows.
+    # Chart windows 20/60/120/240 days are presentation filters only.
     stats={}
     for key in FIELDS:
         values=[(r["date"],r[key]) for r in rows if key in r]
