@@ -25,7 +25,7 @@ SEED = ROOT / "scripts" / "market_seed.json"
 TODAY = dt.datetime.now(ZoneInfo("Asia/Taipei")).date()
 CUTOFF = TODAY - dt.timedelta(days=1)  # no intraday price in daily-close chart
 EARLIEST = TODAY - dt.timedelta(days=300)
-FIELDS = ("taiex", "dxy", "usdtwd", "vix", "hyOas", "marginDailyYi", "foreignNetYi", "marginMaintenanceExEtf", "us10yYield", "us10y2ySpread")
+FIELDS = ("taiex", "dxy", "usdtwd", "vix", "hyOas", "marginDailyYi", "foreignNetYi", "marginMaintenanceExEtf", "us10yYield", "us10y2ySpread", "voo", "qqq")
 SOURCE = {}
 OBS = {key: {} for key in FIELDS}
 SUCCESS = {}
@@ -42,6 +42,8 @@ URLS = {
     "marginMaintenanceExEtf":"https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
     "us10yYield":"https://fred.stlouisfed.org/series/DGS10",
     "us10y2ySpread":"https://fred.stlouisfed.org/series/T10Y2Y",
+    "voo":"https://finance.yahoo.com/quote/VOO/history/",
+    "qqq":"https://finance.yahoo.com/quote/QQQ/history/",
 }
 
 def get(url, timeout=22):
@@ -72,7 +74,7 @@ def add(key, day, value):
     try:
         v=float(str(value).replace(",","").replace("%","").strip())
     except (ValueError,TypeError):return
-    bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-2500,2500),"marginMaintenanceExEtf":(80,500),"us10yYield":(0,25),"us10y2ySpread":(-6,7)}
+    bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-2500,2500),"marginMaintenanceExEtf":(80,500),"us10yYield":(0,25),"us10y2ySpread":(-6,7),"voo":(20,2000),"qqq":(20,2000)}
     a,b=bounds[key]
     if math.isfinite(v) and a<=v<=b:
         OBS[key][day.isoformat()]=round(v,4)
@@ -155,8 +157,10 @@ def fetch_yahoo(symbol, key):
         add(key,day,close)
         count+=1
     if count<50:raise ValueError(f"Yahoo {symbol} returned only {count} rows")
-    SOURCE[key]={"name":f"Yahoo Finance {symbol} daily market close (not ICE licensed feed)" if key=="dxy" else "Yahoo Finance TWD=X daily indicative FX quote; Library values override on overlapping dates",
-                  "url":URLS[key]}
+    name=(f"Yahoo Finance {symbol} daily ETF Close, USD, unadjusted; excludes distributions" if key in ("voo","qqq")
+          else f"Yahoo Finance {symbol} daily market close (not ICE licensed feed)" if key=="dxy"
+          else "Yahoo Finance TWD=X daily indicative FX quote; Library values override on overlapping dates")
+    SOURCE[key]={"name":name,"url":URLS[key]}
     return count
 
 def fetch_dxy_backup():
@@ -308,7 +312,10 @@ def fetch_wantgoo_ex_etf():
 
 def main():
     load_seed()
-    if os.environ.get("JENBAO_YIELD_ONLY")=="1":
+    if os.environ.get("JENBAO_ETF_ONLY")=="1":
+        attempt("VOO_Yahoo",lambda:fetch_yahoo("VOO","voo"))
+        attempt("QQQ_Yahoo",lambda:fetch_yahoo("QQQ","qqq"))
+    elif os.environ.get("JENBAO_YIELD_ONLY")=="1":
         attempt("US10Y_FRED",lambda:fetch_fred("us10yYield","DGS10"))
         attempt("US10Y_MINUS_US2Y_FRED",lambda:fetch_fred("us10y2ySpread","T10Y2Y"))
     else:
@@ -329,6 +336,8 @@ def full_refresh():
     attempt("HY_OAS_FRED",lambda:fetch_fred("hyOas","BAMLH0A0HYM2"))
     attempt("US10Y_FRED",lambda:fetch_fred("us10yYield","DGS10"))
     attempt("US10Y_MINUS_US2Y_FRED",lambda:fetch_fred("us10y2ySpread","T10Y2Y"))
+    attempt("VOO_Yahoo",lambda:fetch_yahoo("VOO","voo"))
+    attempt("QQQ_Yahoo",lambda:fetch_yahoo("QQQ","qqq"))
     attempt("TWSE_FOREIGN",fetch_foreign_daily)
     attempt("TWSE_MARGIN",fetch_margin_daily)
     attempt("WANTGOO_EX_ETF",fetch_wantgoo_ex_etf)
@@ -358,7 +367,7 @@ def finalize_history():
       "generatedAt":dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
       "cutoff":CUTOFF.isoformat(),
       "calendar":"source observation dates; never forward-fill; latest intraday excluded",
-      "units":{"taiex":"index pts","dxy":"ICE US Dollar Index points","usdtwd":"TWD per USD","vix":"index pts","hyOas":"percent","marginDailyYi":"TWD 100 million daily finance balance change, including ETF","foreignNetYi":"TWD 100 million, TWSE foreign institution cash net","marginMaintenanceExEtf":"percent, Wantgoo margin maintenance excludes ETF","us10yYield":"percent, 10-year Treasury constant maturity yield (FRED DGS10)","us10y2ySpread":"percentage points, 10-year minus 2-year Treasury constant maturity spread (FRED T10Y2Y)"},
+      "units":{"taiex":"index pts","dxy":"ICE US Dollar Index points","usdtwd":"TWD per USD","vix":"index pts","hyOas":"percent","marginDailyYi":"TWD 100 million daily finance balance change, including ETF","foreignNetYi":"TWD 100 million, TWSE foreign institution cash net","marginMaintenanceExEtf":"percent, Wantgoo margin maintenance excludes ETF","us10yYield":"percent, 10-year Treasury constant maturity yield (FRED DGS10)","us10y2ySpread":"percentage points, 10-year minus 2-year Treasury constant maturity spread (FRED T10Y2Y)","voo":"USD per VOO share, Yahoo Finance daily unadjusted Close; distributions excluded","qqq":"USD per QQQ share, Yahoo Finance daily unadjusted Close; distributions excluded"},
       "stats":stats,
       "rows":rows
     }
