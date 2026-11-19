@@ -12,7 +12,7 @@
     "hyOas": "percent",
     "marginDailyYi": "TWD 100 million daily finance balance change, including ETF",
     "foreignNetYi": "TWD 100 million, TWSE foreign institution cash net",
-    "marginMaintenanceExEtf": "percent, Wantgoo margin maintenance excludes ETF"
+    "marginMaintenanceExEtf": "percent, Wantgoo maintenance explicitly excluding ETF"
   },
   "stats": {
     "taiex": {
@@ -93,14 +93,14 @@
       }
     },
     "marginMaintenanceExEtf": {
-      "count": 0,
-      "first": null,
-      "last": null,
-      "lastValue": null,
+      "count": 30,
+      "first": "2026-10-05",
+      "last": "2026-11-18",
+      "lastValue": 136.69,
       "status": "partial",
       "source": {
-        "name": "Previously verified market observations",
-        "url": null
+        "name": "Wantgoo TAIEX margin maintenance excluding ETFs; verified dated market snapshot (source page may block automated refresh)",
+        "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
       }
     }
   },
@@ -1543,7 +1543,8 @@
       "vix": 15.52,
       "hyOas": 3.12,
       "marginDailyYi": -17.527,
-      "foreignNetYi": 718.9661
+      "foreignNetYi": 718.9661,
+      "marginMaintenanceExEtf": 176.91
     },
     {
       "date": "2026-10-06",
@@ -1553,7 +1554,8 @@
       "vix": 15.01,
       "hyOas": 3.03,
       "marginDailyYi": 43.0532,
-      "foreignNetYi": -66.5734
+      "foreignNetYi": -66.5734,
+      "marginMaintenanceExEtf": 175.52
     },
     {
       "date": "2026-10-07",
@@ -1563,7 +1565,8 @@
       "vix": 15.08,
       "hyOas": 3.09,
       "marginDailyYi": 23.4373,
-      "foreignNetYi": -130.4389
+      "foreignNetYi": -130.4389,
+      "marginMaintenanceExEtf": 175.31
     },
     {
       "date": "2026-10-08",
@@ -1573,7 +1576,8 @@
       "vix": 15.41,
       "hyOas": 3.15,
       "marginDailyYi": 64.0499,
-      "foreignNetYi": -758.5229
+      "foreignNetYi": -758.5229,
+      "marginMaintenanceExEtf": 173.84
     },
     {
       "date": "2026-10-09",
@@ -1589,7 +1593,8 @@
       "vix": 15.21,
       "hyOas": 3.11,
       "marginDailyYi": 69.2373,
-      "foreignNetYi": -521.9815
+      "foreignNetYi": -521.9815,
+      "marginMaintenanceExEtf": 173.18
     },
     {
       "date": "2026-10-13",
@@ -1599,7 +1604,8 @@
       "vix": 15.27,
       "hyOas": 3.16,
       "marginDailyYi": -83.5088,
-      "foreignNetYi": -1652.9051
+      "foreignNetYi": -1652.9051,
+      "marginMaintenanceExEtf": 167.37
     },
     {
       "date": "2026-10-14",
@@ -1609,7 +1615,8 @@
       "vix": 16.87,
       "hyOas": 3.25,
       "marginDailyYi": 65.8876,
-      "foreignNetYi": -200.3734
+      "foreignNetYi": -200.3734,
+      "marginMaintenanceExEtf": 169.05
     },
     {
       "date": "2026-10-15",
@@ -1618,7 +1625,8 @@
       "usdtwd": 32.265,
       "vix": 16.46,
       "hyOas": 3.23,
-      "marginDailyYi": -51.4134
+      "marginDailyYi": -51.4134,
+      "marginMaintenanceExEtf": 160.15
     },
     {
       "date": "2026-10-16",
@@ -1628,7 +1636,8 @@
       "vix": 19.99,
       "hyOas": 3.31,
       "marginDailyYi": -8.2182,
-      "foreignNetYi": -461.4716
+      "foreignNetYi": -461.4716,
+      "marginMaintenanceExEtf": 161.64
     },
     {
       "date": "2026-10-19",
@@ -1638,7 +1647,8 @@
       "vix": 18.44,
       "hyOas": 3.29,
       "marginDailyYi": -49.7562,
-      "foreignNetYi": -767.4274
+      "foreignNetYi": -767.4274,
+      "marginMaintenanceExEtf": 159.62
     },
     {
       "date": "2026-10-20",
@@ -1648,7 +1658,8 @@
       "vix": 17.31,
       "hyOas": 3.33,
       "marginDailyYi": -25.1782,
-      "foreignNetYi": -795.3969
+      "foreignNetYi": -795.3969,
+      "marginMaintenanceExEtf": 157.49
     },
     {
       "date": "2026-10-21",
@@ -1658,7 +1669,8 @@
       "vix": 16.68,
       "hyOas": 3.27,
       "marginDailyYi": 62.7345,
-      "foreignNetYi": 22.3891
+      "foreignNetYi": 22.3891,
+      "marginMaintenanceExEtf": 161.21
     },
     {
       "date": "2026-10-22",
@@ -1668,7 +1680,8 @@
       "vix": 19.03,
       "hyOas": 3.4,
       "marginDailyYi": -104.9345,
-      "foreignNetYi": -815.821
+      "foreignNetYi": -815.821,
+      "marginMaintenanceExEtf": 155.76
     },
     {
       "date": "2026-10-23",
@@ -1691,7 +1704,8 @@
       "vix": 17.52,
       "hyOas": 3.18,
       "marginDailyYi": -104.9331,
-      "foreignNetYi": -80.3887
+      "foreignNetYi": -80.3887,
+      "marginMaintenanceExEtf": 154.77
     },
     {
       "date": "2026-10-28",
@@ -1701,7 +1715,8 @@
       "vix": 16.91,
       "hyOas": 3.14,
       "marginDailyYi": 89.1272,
-      "foreignNetYi": 159.5662
+      "foreignNetYi": 159.5662,
+      "marginMaintenanceExEtf": 161.51
     },
     {
       "date": "2026-10-29",
@@ -1711,7 +1726,8 @@
       "vix": 17.2,
       "hyOas": 3.26,
       "marginDailyYi": 16.113,
-      "foreignNetYi": -688.1528
+      "foreignNetYi": -688.1528,
+      "marginMaintenanceExEtf": 157.21
     },
     {
       "date": "2026-10-30",
@@ -1721,7 +1737,8 @@
       "vix": 19.42,
       "hyOas": 3.44,
       "marginDailyYi": -104.4296,
-      "foreignNetYi": -1124.6725
+      "foreignNetYi": -1124.6725,
+      "marginMaintenanceExEtf": 150.94
     },
     {
       "date": "2026-11-02",
@@ -1731,7 +1748,8 @@
       "vix": 21.15,
       "hyOas": 3.43,
       "marginDailyYi": -7.6852,
-      "foreignNetYi": -735.2081
+      "foreignNetYi": -735.2081,
+      "marginMaintenanceExEtf": 150.96
     },
     {
       "date": "2026-11-03",
@@ -1741,7 +1759,8 @@
       "vix": 20.83,
       "hyOas": 3.4,
       "marginDailyYi": -229.249,
-      "foreignNetYi": -1073.0672
+      "foreignNetYi": -1073.0672,
+      "marginMaintenanceExEtf": 142.09
     },
     {
       "date": "2026-11-04",
@@ -1751,7 +1770,8 @@
       "vix": 16.61,
       "hyOas": 3.32,
       "marginDailyYi": -28.286,
-      "foreignNetYi": -1498.9983
+      "foreignNetYi": -1498.9983,
+      "marginMaintenanceExEtf": 143.56
     },
     {
       "date": "2026-11-05",
@@ -1761,7 +1781,8 @@
       "vix": 28.18,
       "hyOas": 3.48,
       "marginDailyYi": -205.368,
-      "foreignNetYi": -1024.6062
+      "foreignNetYi": -1024.6062,
+      "marginMaintenanceExEtf": 134.86
     },
     {
       "date": "2026-11-06",
@@ -1771,7 +1792,8 @@
       "vix": 25.64,
       "hyOas": 3.42,
       "marginDailyYi": -423.5641,
-      "foreignNetYi": -911.8825
+      "foreignNetYi": -911.8825,
+      "marginMaintenanceExEtf": 129.68
     },
     {
       "date": "2026-11-09",
@@ -1781,7 +1803,8 @@
       "vix": 19.92,
       "hyOas": 3.34,
       "marginDailyYi": 58.6299,
-      "foreignNetYi": -900.5637
+      "foreignNetYi": -900.5637,
+      "marginMaintenanceExEtf": 139.43
     },
     {
       "date": "2026-11-10",
@@ -1791,7 +1814,8 @@
       "vix": 19.46,
       "hyOas": 3.3,
       "marginDailyYi": -32.3701,
-      "foreignNetYi": -341.1669
+      "foreignNetYi": -341.1669,
+      "marginMaintenanceExEtf": 145.32
     },
     {
       "date": "2026-11-11",
@@ -1801,7 +1825,8 @@
       "vix": 17.49,
       "hyOas": 3.3,
       "marginDailyYi": 44.7936,
-      "foreignNetYi": -7.6644
+      "foreignNetYi": -7.6644,
+      "marginMaintenanceExEtf": 151.56
     },
     {
       "date": "2026-11-12",
@@ -1811,7 +1836,8 @@
       "vix": 18.7,
       "hyOas": 3.2,
       "marginDailyYi": -76.8346,
-      "foreignNetYi": -6.845
+      "foreignNetYi": -6.845,
+      "marginMaintenanceExEtf": 146.22
     },
     {
       "date": "2026-11-13",
@@ -1821,7 +1847,8 @@
       "vix": 19.3,
       "hyOas": 3.23,
       "marginDailyYi": 31.2431,
-      "foreignNetYi": 288.3669
+      "foreignNetYi": 288.3669,
+      "marginMaintenanceExEtf": 149.75
     },
     {
       "date": "2026-11-16",
@@ -1831,7 +1858,8 @@
       "vix": 22.91,
       "hyOas": 3.34,
       "marginDailyYi": -121.0091,
-      "foreignNetYi": -701.8921
+      "foreignNetYi": -701.8921,
+      "marginMaintenanceExEtf": 138.96
     },
     {
       "date": "2026-11-17",
@@ -1841,7 +1869,8 @@
       "vix": 25.46,
       "hyOas": 3.43,
       "marginDailyYi": -157.7676,
-      "foreignNetYi": -380.9364
+      "foreignNetYi": -380.9364,
+      "marginMaintenanceExEtf": 134.24
     },
     {
       "date": "2026-11-18",
@@ -1850,7 +1879,8 @@
       "usdtwd": 32.959,
       "vix": 24.56,
       "marginDailyYi": -6.9488,
-      "foreignNetYi": -765.6368
+      "foreignNetYi": -765.6368,
+      "marginMaintenanceExEtf": 136.69
     }
   ]
 }
