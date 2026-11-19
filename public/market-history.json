@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-19T04:59:50+00:00",
+  "generatedAt": "2026-11-19T05:05:49+00:00",
   "cutoff": "2026-11-18",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -9,7 +9,10 @@
     "dxy": "ICE US Dollar Index points",
     "usdtwd": "TWD per USD",
     "vix": "index pts",
-    "hyOas": "percent"
+    "hyOas": "percent",
+    "marginDailyYi": "TWD 100 million daily finance balance change, including ETF",
+    "foreignNetYi": "TWD 100 million, TWSE foreign institution cash net",
+    "marginMaintenanceExEtf": "percent, Wantgoo margin maintenance excludes ETF"
   },
   "stats": {
     "taiex": {
@@ -27,7 +30,7 @@
       "count": 208,
       "first": "2026-01-23",
       "last": "2026-11-18",
-      "lastValue": 103.909,
+      "lastValue": 103.86,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance DX-Y.NYB daily market close (not ICE licensed feed)",
@@ -38,7 +41,7 @@
       "count": 175,
       "first": "2026-01-26",
       "last": "2026-11-18",
-      "lastValue": 32.954,
+      "lastValue": 32.959,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance TWD=X daily indicative FX quote; Library values override on overlapping dates",
@@ -65,6 +68,39 @@
       "source": {
         "name": "FRED BAMLH0A0HYM2 daily observations (ICE BofA HY OAS, percent)",
         "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2"
+      }
+    },
+    "marginDailyYi": {
+      "count": 70,
+      "first": "2026-08-06",
+      "last": "2026-11-18",
+      "lastValue": 6.9488,
+      "status": "ready",
+      "source": {
+        "name": "TWSE MI_MARGN finance outstanding daily change, includes ETFs, TWD 100m",
+        "url": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN"
+      }
+    },
+    "foreignNetYi": {
+      "count": 70,
+      "first": "2026-08-05",
+      "last": "2026-11-18",
+      "lastValue": -765.6368,
+      "status": "ready",
+      "source": {
+        "name": "TWSE BFI82U foreign cash investment net amount, TWD 100m",
+        "url": "https://www.twse.com.tw/rwd/zh/fund/BFI82U"
+      }
+    },
+    "marginMaintenanceExEtf": {
+      "count": 0,
+      "first": null,
+      "last": null,
+      "lastValue": null,
+      "status": "partial",
+      "source": {
+        "name": "Previously verified market observations",
+        "url": null
       }
     }
   },
@@ -1092,7 +1128,8 @@
       "dxy": 99.69,
       "usdtwd": 32.2648,
       "vix": 15.81,
-      "hyOas": 2.75
+      "hyOas": 2.75,
+      "foreignNetYi": 903.0833
     },
     {
       "date": "2026-08-06",
@@ -1100,14 +1137,18 @@
       "dxy": 99.97,
       "usdtwd": 32.2068,
       "vix": 15.15,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "marginDailyYi": -93.1266,
+      "foreignNetYi": 20.1982
     },
     {
       "date": "2026-08-07",
       "taiex": 44225.91,
       "dxy": 99.6,
       "vix": 14.9,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "marginDailyYi": -48.5953,
+      "foreignNetYi": -407.1574
     },
     {
       "date": "2026-08-10",
@@ -1115,7 +1156,9 @@
       "dxy": 99.81,
       "usdtwd": 32.2271,
       "vix": 15.46,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "marginDailyYi": -76.3105,
+      "foreignNetYi": 517.4052
     },
     {
       "date": "2026-08-11",
@@ -1123,7 +1166,9 @@
       "dxy": 99.82,
       "usdtwd": 32.2091,
       "vix": 15.28,
-      "hyOas": 2.72
+      "hyOas": 2.72,
+      "marginDailyYi": 11.4358,
+      "foreignNetYi": 223.2868
     },
     {
       "date": "2026-08-12",
@@ -1131,7 +1176,9 @@
       "dxy": 100.01,
       "usdtwd": 32.2023,
       "vix": 14.55,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "marginDailyYi": -39.3194,
+      "foreignNetYi": 110.2081
     },
     {
       "date": "2026-08-13",
@@ -1139,14 +1186,18 @@
       "dxy": 99.96,
       "usdtwd": 32.1241,
       "vix": 14.63,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "marginDailyYi": -16.9674,
+      "foreignNetYi": 756.9452
     },
     {
       "date": "2026-08-14",
       "taiex": 45811.01,
       "dxy": 99.67,
       "vix": 14.25,
-      "hyOas": 2.67
+      "hyOas": 2.67,
+      "marginDailyYi": 27.2134,
+      "foreignNetYi": 453.5133
     },
     {
       "date": "2026-08-17",
@@ -1154,7 +1205,9 @@
       "dxy": 99.64,
       "usdtwd": 31.8503,
       "vix": 15.19,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "marginDailyYi": -30.4235,
+      "foreignNetYi": 454.4729
     },
     {
       "date": "2026-08-18",
@@ -1162,7 +1215,9 @@
       "dxy": 99.65,
       "usdtwd": 31.8819,
       "vix": 15.84,
-      "hyOas": 2.75
+      "hyOas": 2.75,
+      "marginDailyYi": 30.9029,
+      "foreignNetYi": -119.8581
     },
     {
       "date": "2026-08-19",
@@ -1170,7 +1225,9 @@
       "dxy": 98.83,
       "usdtwd": 31.8151,
       "vix": 14.89,
-      "hyOas": 2.73
+      "hyOas": 2.73,
+      "marginDailyYi": -11.7838,
+      "foreignNetYi": -416.3944
     },
     {
       "date": "2026-08-20",
@@ -1178,14 +1235,18 @@
       "dxy": 98.9,
       "usdtwd": 31.8383,
       "vix": 16.01,
-      "hyOas": 2.75
+      "hyOas": 2.75,
+      "marginDailyYi": -2.1739,
+      "foreignNetYi": 73.1763
     },
     {
       "date": "2026-08-21",
       "taiex": 45224.29,
       "dxy": 98.8,
       "vix": 15.13,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "marginDailyYi": 14.6841,
+      "foreignNetYi": 283.0542
     },
     {
       "date": "2026-08-24",
@@ -1193,7 +1254,9 @@
       "dxy": 99.0,
       "usdtwd": 31.812,
       "vix": 15.85,
-      "hyOas": 2.69
+      "hyOas": 2.69,
+      "marginDailyYi": 16.7989,
+      "foreignNetYi": -157.3613
     },
     {
       "date": "2026-08-25",
@@ -1201,7 +1264,9 @@
       "dxy": 98.92,
       "usdtwd": 31.8419,
       "vix": 15.45,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "marginDailyYi": -16.7811,
+      "foreignNetYi": -7.8658
     },
     {
       "date": "2026-08-26",
@@ -1209,7 +1274,9 @@
       "dxy": 99.17,
       "usdtwd": 31.8059,
       "vix": 15.21,
-      "hyOas": 2.67
+      "hyOas": 2.67,
+      "marginDailyYi": -78.6489,
+      "foreignNetYi": 366.1319
     },
     {
       "date": "2026-08-27",
@@ -1217,14 +1284,18 @@
       "dxy": 99.16,
       "usdtwd": 31.6609,
       "vix": 14.51,
-      "hyOas": 2.63
+      "hyOas": 2.63,
+      "marginDailyYi": -51.162,
+      "foreignNetYi": 490.9421
     },
     {
       "date": "2026-08-28",
       "taiex": 46331.45,
       "dxy": 99.7,
       "vix": 14.43,
-      "hyOas": 2.6
+      "hyOas": 2.6,
+      "marginDailyYi": -72.5875,
+      "foreignNetYi": 417.541
     },
     {
       "date": "2026-08-31",
@@ -1232,7 +1303,9 @@
       "dxy": 99.43,
       "usdtwd": 31.688,
       "vix": 14.92,
-      "hyOas": 2.63
+      "hyOas": 2.63,
+      "marginDailyYi": -26.9937,
+      "foreignNetYi": -143.9234
     },
     {
       "date": "2026-09-01",
@@ -1240,7 +1313,9 @@
       "dxy": 99.67,
       "usdtwd": 31.675,
       "vix": 16.34,
-      "hyOas": 2.65
+      "hyOas": 2.65,
+      "marginDailyYi": -82.3855,
+      "foreignNetYi": 267.076
     },
     {
       "date": "2026-09-02",
@@ -1248,7 +1323,9 @@
       "dxy": 99.56,
       "usdtwd": 31.7262,
       "vix": 15.2,
-      "hyOas": 2.66
+      "hyOas": 2.66,
+      "marginDailyYi": -75.5983,
+      "foreignNetYi": -913.5454
     },
     {
       "date": "2026-09-03",
@@ -1256,21 +1333,27 @@
       "dxy": 99.0,
       "usdtwd": 31.6954,
       "vix": 14.32,
-      "hyOas": 2.65
+      "hyOas": 2.65,
+      "marginDailyYi": 69.3598,
+      "foreignNetYi": -481.4593
     },
     {
       "date": "2026-09-04",
       "taiex": 46551.13,
       "dxy": 99.16,
       "vix": 14.53,
-      "hyOas": 2.68
+      "hyOas": 2.68,
+      "marginDailyYi": -31.5528,
+      "foreignNetYi": 562.1295
     },
     {
       "date": "2026-09-07",
       "taiex": 47326.27,
       "usdtwd": 31.5049,
       "vix": 15.3,
-      "hyOas": 2.68
+      "hyOas": 2.68,
+      "marginDailyYi": -63.7699,
+      "foreignNetYi": 883.0774
     },
     {
       "date": "2026-09-08",
@@ -1278,7 +1361,9 @@
       "dxy": 98.84,
       "usdtwd": 31.4992,
       "vix": 15.72,
-      "hyOas": 2.67
+      "hyOas": 2.67,
+      "marginDailyYi": 20.046,
+      "foreignNetYi": 132.6856
     },
     {
       "date": "2026-09-09",
@@ -1286,7 +1371,9 @@
       "dxy": 98.77,
       "usdtwd": 31.464,
       "vix": 16.46,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "marginDailyYi": -8.9984,
+      "foreignNetYi": 209.2438
     },
     {
       "date": "2026-09-10",
@@ -1294,14 +1381,18 @@
       "dxy": 99.09,
       "usdtwd": 31.635,
       "vix": 17.84,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "marginDailyYi": -47.3088,
+      "foreignNetYi": -383.3416
     },
     {
       "date": "2026-09-11",
       "taiex": 46184.85,
       "dxy": 99.12,
       "vix": 15.84,
-      "hyOas": 2.65
+      "hyOas": 2.65,
+      "marginDailyYi": 40.2651,
+      "foreignNetYi": -892.7044
     },
     {
       "date": "2026-09-14",
@@ -1309,7 +1400,9 @@
       "dxy": 99.46,
       "usdtwd": 31.7176,
       "vix": 17.1,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "marginDailyYi": 39.9357,
+      "foreignNetYi": -369.6357
     },
     {
       "date": "2026-09-15",
@@ -1317,7 +1410,9 @@
       "dxy": 99.65,
       "usdtwd": 31.7734,
       "vix": 17.2,
-      "hyOas": 2.76
+      "hyOas": 2.76,
+      "marginDailyYi": 16.3714,
+      "foreignNetYi": -626.989
     },
     {
       "date": "2026-09-16",
@@ -1325,7 +1420,9 @@
       "dxy": 100.31,
       "usdtwd": 31.8596,
       "vix": 17.71,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "marginDailyYi": -39.2619,
+      "foreignNetYi": -179.8048
     },
     {
       "date": "2026-09-17",
@@ -1333,14 +1430,18 @@
       "dxy": 100.22,
       "usdtwd": 31.8511,
       "vix": 15.44,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "marginDailyYi": -32.2872,
+      "foreignNetYi": 121.85
     },
     {
       "date": "2026-09-18",
       "taiex": 47180.75,
       "dxy": 100.22,
       "vix": 14.81,
-      "hyOas": 2.68
+      "hyOas": 2.68,
+      "marginDailyYi": -46.4221,
+      "foreignNetYi": 869.9436
     },
     {
       "date": "2026-09-21",
@@ -1348,7 +1449,9 @@
       "dxy": 100.43,
       "usdtwd": 31.7384,
       "vix": 14.87,
-      "hyOas": 2.66
+      "hyOas": 2.66,
+      "marginDailyYi": -89.983,
+      "foreignNetYi": 204.7894
     },
     {
       "date": "2026-09-22",
@@ -1356,7 +1459,9 @@
       "dxy": 100.6,
       "usdtwd": 31.6795,
       "vix": 14.21,
-      "hyOas": 2.68
+      "hyOas": 2.68,
+      "marginDailyYi": -18.2364,
+      "foreignNetYi": 453.2093
     },
     {
       "date": "2026-09-23",
@@ -1364,7 +1469,9 @@
       "dxy": 101.1,
       "usdtwd": 31.7895,
       "vix": 15.18,
-      "hyOas": 2.73
+      "hyOas": 2.73,
+      "marginDailyYi": -15.0642,
+      "foreignNetYi": 373.1336
     },
     {
       "date": "2026-09-24",
@@ -1372,7 +1479,9 @@
       "dxy": 101.29,
       "usdtwd": 31.8062,
       "vix": 15.67,
-      "hyOas": 2.8
+      "hyOas": 2.8,
+      "marginDailyYi": -87.3557,
+      "foreignNetYi": -329.6461
     },
     {
       "date": "2026-09-25",
@@ -1393,7 +1502,9 @@
       "dxy": 101.37,
       "usdtwd": 31.85,
       "vix": 16.04,
-      "hyOas": 3.08
+      "hyOas": 3.08,
+      "marginDailyYi": -35.4994,
+      "foreignNetYi": -625.8255
     },
     {
       "date": "2026-09-30",
@@ -1401,7 +1512,9 @@
       "dxy": 101.45,
       "usdtwd": 31.8679,
       "vix": 16.34,
-      "hyOas": 3.12
+      "hyOas": 3.12,
+      "marginDailyYi": -35.9911,
+      "foreignNetYi": 308.5656
     },
     {
       "date": "2026-10-01",
@@ -1409,14 +1522,18 @@
       "dxy": 102.1,
       "usdtwd": 31.8868,
       "vix": 16.39,
-      "hyOas": 3.24
+      "hyOas": 3.24,
+      "marginDailyYi": -75.7061,
+      "foreignNetYi": 219.3733
     },
     {
       "date": "2026-10-02",
       "taiex": 48475.74,
       "dxy": 101.93,
       "vix": 15.31,
-      "hyOas": 3.1
+      "hyOas": 3.1,
+      "marginDailyYi": -52.3723,
+      "foreignNetYi": 26.218
     },
     {
       "date": "2026-10-05",
@@ -1424,7 +1541,9 @@
       "dxy": 102.17,
       "usdtwd": 31.7514,
       "vix": 15.52,
-      "hyOas": 3.12
+      "hyOas": 3.12,
+      "marginDailyYi": 17.527,
+      "foreignNetYi": 718.9661
     },
     {
       "date": "2026-10-06",
@@ -1432,7 +1551,9 @@
       "dxy": 101.83,
       "usdtwd": 31.7769,
       "vix": 15.01,
-      "hyOas": 3.03
+      "hyOas": 3.03,
+      "marginDailyYi": -43.0532,
+      "foreignNetYi": -66.5734
     },
     {
       "date": "2026-10-07",
@@ -1440,7 +1561,9 @@
       "dxy": 102.24,
       "usdtwd": 31.8483,
       "vix": 15.08,
-      "hyOas": 3.09
+      "hyOas": 3.09,
+      "marginDailyYi": -23.4373,
+      "foreignNetYi": -130.4389
     },
     {
       "date": "2026-10-08",
@@ -1448,7 +1571,9 @@
       "dxy": 102.14,
       "usdtwd": 31.9254,
       "vix": 15.41,
-      "hyOas": 3.15
+      "hyOas": 3.15,
+      "marginDailyYi": -64.0499,
+      "foreignNetYi": -758.5229
     },
     {
       "date": "2026-10-09",
@@ -1462,7 +1587,9 @@
       "dxy": 102.58,
       "usdtwd": 31.9278,
       "vix": 15.21,
-      "hyOas": 3.11
+      "hyOas": 3.11,
+      "marginDailyYi": -69.2373,
+      "foreignNetYi": -521.9815
     },
     {
       "date": "2026-10-13",
@@ -1470,7 +1597,9 @@
       "dxy": 102.18,
       "usdtwd": 32.085,
       "vix": 15.27,
-      "hyOas": 3.16
+      "hyOas": 3.16,
+      "marginDailyYi": 83.5088,
+      "foreignNetYi": -1652.9051
     },
     {
       "date": "2026-10-14",
@@ -1478,7 +1607,9 @@
       "dxy": 102.55,
       "usdtwd": 32.073,
       "vix": 16.87,
-      "hyOas": 3.25
+      "hyOas": 3.25,
+      "marginDailyYi": -65.8876,
+      "foreignNetYi": -200.3734
     },
     {
       "date": "2026-10-15",
@@ -1486,7 +1617,8 @@
       "dxy": 102.0,
       "usdtwd": 32.265,
       "vix": 16.46,
-      "hyOas": 3.23
+      "hyOas": 3.23,
+      "marginDailyYi": 51.4134
     },
     {
       "date": "2026-10-16",
@@ -1494,7 +1626,9 @@
       "dxy": 101.84,
       "usdtwd": 32.338,
       "vix": 19.99,
-      "hyOas": 3.31
+      "hyOas": 3.31,
+      "marginDailyYi": 8.2182,
+      "foreignNetYi": -461.4716
     },
     {
       "date": "2026-10-19",
@@ -1502,7 +1636,9 @@
       "dxy": 101.98,
       "usdtwd": 32.445,
       "vix": 18.44,
-      "hyOas": 3.29
+      "hyOas": 3.29,
+      "marginDailyYi": 49.7562,
+      "foreignNetYi": -767.4274
     },
     {
       "date": "2026-10-20",
@@ -1510,7 +1646,9 @@
       "dxy": 101.73,
       "usdtwd": 32.617,
       "vix": 17.31,
-      "hyOas": 3.33
+      "hyOas": 3.33,
+      "marginDailyYi": 25.1782,
+      "foreignNetYi": -795.3969
     },
     {
       "date": "2026-10-21",
@@ -1518,7 +1656,9 @@
       "dxy": 101.78,
       "usdtwd": 32.488,
       "vix": 16.68,
-      "hyOas": 3.27
+      "hyOas": 3.27,
+      "marginDailyYi": -62.7345,
+      "foreignNetYi": 22.3891
     },
     {
       "date": "2026-10-22",
@@ -1526,7 +1666,9 @@
       "dxy": 101.61,
       "usdtwd": 32.508,
       "vix": 19.03,
-      "hyOas": 3.4
+      "hyOas": 3.4,
+      "marginDailyYi": 104.9345,
+      "foreignNetYi": -815.821
     },
     {
       "date": "2026-10-23",
@@ -1547,7 +1689,9 @@
       "dxy": 102.32,
       "usdtwd": 32.452,
       "vix": 17.52,
-      "hyOas": 3.18
+      "hyOas": 3.18,
+      "marginDailyYi": 104.9331,
+      "foreignNetYi": -80.3887
     },
     {
       "date": "2026-10-28",
@@ -1555,7 +1699,9 @@
       "dxy": 102.19,
       "usdtwd": 32.418,
       "vix": 16.91,
-      "hyOas": 3.14
+      "hyOas": 3.14,
+      "marginDailyYi": -89.1272,
+      "foreignNetYi": 159.5662
     },
     {
       "date": "2026-10-29",
@@ -1563,7 +1709,9 @@
       "dxy": 102.04,
       "usdtwd": 32.492,
       "vix": 17.2,
-      "hyOas": 3.26
+      "hyOas": 3.26,
+      "marginDailyYi": -16.113,
+      "foreignNetYi": -688.1528
     },
     {
       "date": "2026-10-30",
@@ -1571,7 +1719,9 @@
       "dxy": 101.88,
       "usdtwd": 32.478,
       "vix": 19.42,
-      "hyOas": 3.44
+      "hyOas": 3.44,
+      "marginDailyYi": 104.4296,
+      "foreignNetYi": -1124.6725
     },
     {
       "date": "2026-11-02",
@@ -1579,7 +1729,9 @@
       "dxy": 101.75,
       "usdtwd": 32.592,
       "vix": 21.15,
-      "hyOas": 3.43
+      "hyOas": 3.43,
+      "marginDailyYi": 7.6852,
+      "foreignNetYi": -735.2081
     },
     {
       "date": "2026-11-03",
@@ -1587,7 +1739,9 @@
       "dxy": 101.87,
       "usdtwd": 32.76,
       "vix": 20.83,
-      "hyOas": 3.4
+      "hyOas": 3.4,
+      "marginDailyYi": 229.249,
+      "foreignNetYi": -1073.0672
     },
     {
       "date": "2026-11-04",
@@ -1595,7 +1749,9 @@
       "dxy": 101.51,
       "usdtwd": 32.821,
       "vix": 16.61,
-      "hyOas": 3.32
+      "hyOas": 3.32,
+      "marginDailyYi": 28.286,
+      "foreignNetYi": -1498.9983
     },
     {
       "date": "2026-11-05",
@@ -1603,7 +1759,9 @@
       "dxy": 101.55,
       "usdtwd": 32.876,
       "vix": 28.18,
-      "hyOas": 3.48
+      "hyOas": 3.48,
+      "marginDailyYi": 205.368,
+      "foreignNetYi": -1024.6062
     },
     {
       "date": "2026-11-06",
@@ -1611,7 +1769,9 @@
       "dxy": 102.3,
       "usdtwd": 32.768,
       "vix": 25.64,
-      "hyOas": 3.42
+      "hyOas": 3.42,
+      "marginDailyYi": 423.5641,
+      "foreignNetYi": -911.8825
     },
     {
       "date": "2026-11-09",
@@ -1619,7 +1779,9 @@
       "dxy": 101.65,
       "usdtwd": 32.882,
       "vix": 19.92,
-      "hyOas": 3.34
+      "hyOas": 3.34,
+      "marginDailyYi": -58.6299,
+      "foreignNetYi": -900.5637
     },
     {
       "date": "2026-11-10",
@@ -1627,7 +1789,9 @@
       "dxy": 102.23,
       "usdtwd": 32.865,
       "vix": 19.46,
-      "hyOas": 3.3
+      "hyOas": 3.3,
+      "marginDailyYi": 32.3701,
+      "foreignNetYi": -341.1669
     },
     {
       "date": "2026-11-11",
@@ -1635,7 +1799,9 @@
       "dxy": 102.91,
       "usdtwd": 32.86,
       "vix": 17.49,
-      "hyOas": 3.3
+      "hyOas": 3.3,
+      "marginDailyYi": -44.7936,
+      "foreignNetYi": -7.6644
     },
     {
       "date": "2026-11-12",
@@ -1643,7 +1809,9 @@
       "dxy": 103.17,
       "usdtwd": 32.889,
       "vix": 18.7,
-      "hyOas": 3.2
+      "hyOas": 3.2,
+      "marginDailyYi": 76.8346,
+      "foreignNetYi": -6.845
     },
     {
       "date": "2026-11-13",
@@ -1651,7 +1819,9 @@
       "dxy": 103.41,
       "usdtwd": 32.838,
       "vix": 19.3,
-      "hyOas": 3.23
+      "hyOas": 3.23,
+      "marginDailyYi": -31.2431,
+      "foreignNetYi": 288.3669
     },
     {
       "date": "2026-11-16",
@@ -1659,7 +1829,9 @@
       "dxy": 103.55,
       "usdtwd": 32.886,
       "vix": 22.91,
-      "hyOas": 3.34
+      "hyOas": 3.34,
+      "marginDailyYi": 121.0091,
+      "foreignNetYi": -701.8921
     },
     {
       "date": "2026-11-17",
@@ -1667,14 +1839,18 @@
       "dxy": 103.49,
       "usdtwd": 32.892,
       "vix": 25.46,
-      "hyOas": 3.43
+      "hyOas": 3.43,
+      "marginDailyYi": 157.7676,
+      "foreignNetYi": -380.9364
     },
     {
       "date": "2026-11-18",
       "taiex": 40194.91,
-      "dxy": 103.909,
-      "usdtwd": 32.954,
-      "vix": 24.56
+      "dxy": 103.86,
+      "usdtwd": 32.959,
+      "vix": 24.56,
+      "marginDailyYi": 6.9488,
+      "foreignNetYi": -765.6368
     }
   ]
 }
