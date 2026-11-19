@@ -4,8 +4,8 @@
   "asOf": "2026-11-19",
   "dataStatus": "intraday",
   "updatedAt": "2026-11-19 10:21 Asia/Taipei｜盤中快照與跨市場異步觀測",
-  "headline": "台股跌破前低，HY OAS與Single-B信用利差連續擴大；盤中逼近MA260",
-  "summary": "11/19 10:21台股加權39,118(-2.68%，非正式收盤)，低於前波低點39,701.64，接近MA260 38,985；VIX24.56與MOVE98.15回落。FRED最新可核實11/17 HY OAS 343bp(較11/16+9bp)、Single-B 368bp(+11bp)，SOFR 3.92%、IORB3.90%、短端+2bp。11/18上市融資約5,080億元(日減約6.9億)，11/18外資賣超765.64億元；各市場日期嚴格分開。",
+  "headline": "台股跌破前低，HY OAS與Single-B信用利差連續擴大；盤中逼近MA240（待核實）",
+  "summary": "11/19 10:21台股加權39,118(-2.68%，非正式收盤)，低於前波低點39,701.64，長期MA240尚未核實；VIX24.56與MOVE98.15回落。FRED最新可核實11/17 HY OAS 343bp(較11/16+9bp)、Single-B 368bp(+11bp)，SOFR 3.92%、IORB3.90%、短端+2bp。11/18上市融資約5,080億元(日減約6.9億)，11/18外資賣超765.64億元；各市場日期嚴格分開。",
   "market": {
     "taiex": 39118,
     "taiexChange": -2.68,
@@ -31,7 +31,9 @@
     "t10yie": null,
     "t5yie": null,
     "oil": 82.34,
-    "goldPrice": 3748.67
+    "goldPrice": 3748.67,
+    "ma120": null,
+    "ma240": null
   },
   "ai": [
     {
@@ -105,22 +107,22 @@
   "sources": [
     {
       "label": "FRED｜HY OAS觀測日11/17（3.43%）",
-      "url": "https://fred.stlouisfed.org/graph/?graph_id=1575706",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
       "date": "2026-11-17"
     },
     {
       "label": "FRED｜Single-B OAS觀測日11/17（3.68%）",
-      "url": "https://fred.stlouisfed.org/graph/?graph_id=1506817",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
       "date": "2026-11-17"
     },
     {
       "label": "FRED｜SOFR 11/17（3.92%）",
-      "url": "https://fred.stlouisfed.org/graph/?graph_id=1557315",
+      "url": "https://fred.stlouisfed.org/series/SOFR",
       "date": "2026-11-17"
     },
     {
       "label": "FRED｜IORB 11/18（3.90%）",
-      "url": "https://fred.stlouisfed.org/graph/?graph_id=1295911",
+      "url": "https://fred.stlouisfed.org/series/IORB",
       "date": "2026-11-18"
     },
     {
@@ -199,7 +201,7 @@
     }
   ],
   "notes": [
-    "11/19 10:21使用者盤中加權39,118(-2.68%)、MA5 40,824、MA10 41,554、MA20 43,265、MA60 45,946、MA260 38,985；不能當作11/19正式收盤。",
+    "11/19 10:21使用者盤中加權39,118(-2.68%)、MA5 40,824、MA10 41,554、MA20 43,265、MA60 45,946、MA240尚待以240個正式交易日收盤價核實；不能當作11/19正式收盤。",
     "11/18加權正式收盤40,194.91(+0.26%)已核對，公開歷史收盤表只加入此點，不加入11/19盤中價；11/18先前貼表40,461是盤中值，已更正。",
     "HY OAS 11/17=3.43%=343bp，比11/16 334bp增加9bp；Single-B 11/17=3.68%=368bp，比11/16 357bp增加11bp。FRED原網址可出現舊快取，本次用同源FRED圖表與同期歷史來源核對。",
     "SOFR 11/17=3.92%，IORB當日3.90%，利差+2bp；IORB 11/18已知3.90%，但SOFR 11/18於台灣11/19 10:21尚未可靠發布，不可捏造。",
