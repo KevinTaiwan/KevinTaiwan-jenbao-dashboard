@@ -7,6 +7,7 @@ S&P 500: Yahoo Finance ^GSPC INDEX, not SPY or VOO ETF.
 Initial backfill verifies >=240 complete trading sessions per index; incremental
 updates merge by date and NEVER truncate or discard valid historical records.
 """
+import csv
 import datetime as dt
 import io
 import json
@@ -36,7 +37,8 @@ SERIES = {
 SOURCE_REGISTRY = {
     "TWSE": {"name": "Taiwan Stock Exchange MI_5MINS_HIST official TAIEX OHLC", "url": TWSE_URL},
     "YAHOO_TWII": {"name": "Yahoo Finance ^TWII TAIEX index OHLC fallback", "url": "https://finance.yahoo.com/quote/%5ETWII/history/"},
-    "YAHOO_GSPC": {"name": "Yahoo Finance ^GSPC S&P 500 index OHLC", "url": "https://finance.yahoo.com/quote/%5EGSPC/history/"}
+    "YAHOO_GSPC": {"name": "Yahoo Finance ^GSPC S&P 500 index OHLC", "url": "https://finance.yahoo.com/quote/%5EGSPC/history/"},
+    "STOOQ_SPX": {"name": "Stooq ^SPX S&P 500 cash index OHLC fallback (not SPY)", "url": "https://stooq.com/q/d/?s=%5Espx&i=d"}
 }
 ARCHIVE = {k: {} for k in SERIES}
 ERRORS = []
@@ -91,7 +93,7 @@ def save_record(key,date,op,hi,lo,cl,source):
     # Prefer the official TWSE value, then the existing verified row.
     if old and old["source"]=="TWSE" and source!="TWSE":
         return False
-    if old and old["source"]!=source and source!="TWSE":
+    if old and old["source"]!=source and source not in ("TWSE","YAHOO_GSPC"):
         return False
     ARCHIVE[key][date_key]=row
     return True
@@ -202,6 +204,30 @@ def fetch_yahoo(symbol,key,source):
     FETCHED[source]=0
     return 0
 
+def fetch_stooq_spx():
+    """Best-effort backup for true cash S&P 500, never ETFs."""
+    d1=(CUTOFF-dt.timedelta(days=900)).strftime("%Y%m%d")
+    d2=CUTOFF.strftime("%Y%m%d")
+    url="https://stooq.com/q/d/l/?s=%5Espx&i=d&d1="+d1+"&d2="+d2
+    req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Accept":"text/csv,text/plain"})
+    try:
+        with urllib.request.urlopen(req,timeout=28) as response:
+            txt=response.read(3_000_000).decode("utf-8-sig")
+        count=0
+        for row in csv.DictReader(io.StringIO(txt)):
+            try:
+                if save_record("sp500",row.get("Date"),row.get("Open"),row.get("High"),row.get("Low"),row.get("Close"),"STOOQ_SPX"):
+                    count+=1
+            except (ValueError,TypeError):
+                continue
+        FETCHED["STOOQ_SPX"]=count
+        print("STOOQ_SPX",count,"valid cash S&P 500 sessions",flush=True)
+        return count
+    except Exception as exc:
+        ERRORS.append("Stooq ^SPX: "+str(exc)[:190])
+        print("WARN Stooq",str(exc)[:190],flush=True)
+        return 0
+
 def finish():
     obj={"schemaVersion":1,"audience":"public-index-ohlc",
          "generatedAt":dt.datetime.now(dt.timezone.utc).isoformat(),
@@ -228,6 +254,8 @@ def main():
     if len(ARCHIVE["taiex"])<MIN_DAYS:
         fetch_yahoo("^TWII","taiex","YAHOO_TWII")
     fetch_yahoo("^GSPC","sp500","YAHOO_GSPC")
+    if len(ARCHIVE["sp500"])<MIN_DAYS:
+        fetch_stooq_spx()
     finish()
 
 if __name__=="__main__":
