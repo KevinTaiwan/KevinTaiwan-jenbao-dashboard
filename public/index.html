@@ -387,6 +387,94 @@ body.technical-fullscreen-active{overflow:hidden!important}
  .technical-stack-fullscreen .technical-stack-body{grid-template-columns:minmax(0,1fr) 126px!important}
  .technical-stack-fullscreen .technical-stack-readouts{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+/* White professional trading chart inspired by compact exchange dashboards.
+   The full-screen controls stay visible and are arranged ABOVE the enlarged
+   canvas; changing any selector/MA does not exit browser fullscreen. */
+.technical-stack-row .technical-stack-overlay-btn{
+  border-radius:3px;box-shadow:none;background:#fff;
+}
+.technical-stack-row .technical-stack-overlay-btn.enabled{
+  background:#fff;border-color:#dde1e6;color:var(--tech-overlay-color);font-weight:700
+}
+.technical-stack-overlay-check{font-size:13px;line-height:1;color:#8c98a3;display:inline-block}
+.technical-stack-overlay-btn.enabled .technical-stack-overlay-check{color:var(--tech-overlay-color)}
+.technical-stack-overlay-value{display:none;font-size:10px;white-space:nowrap;letter-spacing:-.1px}
+.technical-stack-fullscreen .technical-stack-overlay-btn.enabled .technical-stack-overlay-value{display:inline}
+.technical-stack-fullscreen .technical-stack-body{
+  display:flex!important;flex-direction:column!important;
+  flex:1 1 0%!important;min-height:0!important;height:auto!important;
+  align-items:stretch!important;gap:3px!important
+}
+.technical-stack-fullscreen .technical-stack-sidebar{
+  order:-1!important;
+  display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;
+  flex:0 0 auto!important;width:100%!important;
+  height:auto!important;max-height:none!important;min-height:0!important;
+  overflow:visible!important;margin:0!important;padding:4px 6px!important;
+  background:#fff!important;
+  border:0!important;border-bottom:1px solid #dfe5ea!important;
+  border-radius:0!important;align-items:center!important;gap:5px 11px!important
+}
+.technical-stack-fullscreen.technical-stack-controls-hidden .technical-stack-sidebar{display:none!important}
+.technical-stack-fullscreen .technical-stack-sidebar>.technical-stack-selectors{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  flex:1 1 660px!important;min-width:0!important;max-width:none!important;
+  gap:5px!important;align-items:center!important
+}
+.technical-stack-fullscreen .technical-stack-sidebar>.technical-stack-selectors label{
+  font-size:10px!important;color:#476073!important;
+  display:flex!important;flex-direction:column!important;min-width:0!important;
+  gap:2px!important
+}
+.technical-stack-fullscreen .technical-stack-sidebar>.technical-stack-selectors select{
+  height:27px!important;min-width:0!important;width:100%!important;
+  font-size:11px!important;background:#fff!important;border:1px solid #cbd6df!important;
+  padding:3px 5px!important
+}
+.technical-stack-fullscreen .technical-stack-sidebar>.technical-stack-overlays{
+  display:flex!important;flex:1 1 360px!important;
+  margin:0!important;padding:0!important;
+  gap:3px 5px!important;align-items:center!important;flex-wrap:wrap!important
+}
+.technical-stack-fullscreen .technical-stack-sidebar .technical-stack-overlay-btn{
+  display:inline-flex!important;flex:0 0 auto!important;
+  min-width:0!important;min-height:26px!important;
+  font-size:11px!important;gap:3px!important;
+  padding:3px 6px!important;white-space:nowrap!important;
+  justify-content:flex-start!important
+}
+.technical-stack-fullscreen .technical-stack-sidebar .technical-stack-overlay-btn i{
+  width:12px!important;border-top-style:solid!important;border-top-width:1.5px!important
+}
+.technical-stack-fullscreen .technical-stack-plot{
+  order:1!important;flex:1 1 0%!important;min-height:0!important;
+  height:auto!important;max-height:none!important;overflow:hidden!important
+}
+.technical-stack-fullscreen .technical-stack-plot>.technical-stack-svg{
+  display:block!important;height:100%!important;width:100%!important;
+  max-height:none!important;min-height:0!important
+}
+.technical-stack-fullscreen .technical-stack-readouts{
+  order:2!important;flex:0 0 auto!important
+}
+.technical-stack-fullscreen .technical-stack-head{border-bottom:1px solid #e2e6e9;padding-bottom:3px}
+.technical-stack-row .technical-stack-plot{border-color:#e3e6e9}
+.technical-stack-row .technical-stack-readouts>div{border-color:#e5e8eb}
+@media(max-width:980px){
+ .technical-stack-fullscreen .technical-stack-sidebar>.technical-stack-selectors{flex:1 1 100%!important}
+ .technical-stack-fullscreen .technical-stack-sidebar>.technical-stack-overlays{flex:1 1 100%!important}
+ .technical-stack-fullscreen .technical-stack-sidebar{gap:3px!important}
+}
+@media(max-width:520px){
+ .technical-stack-fullscreen .technical-stack-sidebar>.technical-stack-selectors{
+   grid-template-columns:repeat(2,minmax(0,1fr))!important
+ }
+ .technical-stack-fullscreen .technical-stack-sidebar .technical-stack-overlay-btn{
+   padding:2px 4px!important;font-size:10px!important
+ }
+}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -545,7 +633,7 @@ function readTechnicalStackSettings(){
 }
 let techSettings=readTechnicalStackSettings();
 let techFullscreen=false;
-let techControlsHidden=true;
+let techControlsHidden=false;
 function refreshTechnicalFullscreenChrome(){
  document.body.classList.toggle("technical-fullscreen-active",techFullscreen);
  const card=document.querySelector('[data-cross-row="technicalStack"]');
@@ -566,7 +654,7 @@ function leaveTechnicalFullscreen(){
 }
 function toggleTechnicalFullscreen(){
  if(techFullscreen){leaveTechnicalFullscreen();return}
- techFullscreen=true;techControlsHidden=true;
+ techFullscreen=true;techControlsHidden=false;
  refreshTechnicalFullscreenChrome();
  try{
   const result=document.documentElement?.requestFullscreen?.({navigationUI:"hide"});
@@ -822,6 +910,10 @@ function syncChartCursor(date){
   const candle=tech.topCandles.find(r=>r.date===selected);
   put('[data-tech-readout="top"]',candle?("開 "+historyFormat(candle.open,2)+" · 高 "+historyFormat(candle.high,2)+" · 低 "+historyFormat(candle.low,2)+" · 收 "+historyFormat(candle.close,2)):top?historyFormat(top.value,2)+" · "+selected:"當日無數值");
   put('[data-tech-extra="top"]', [...tech.ma.filter(m=>tech.c.overlays["ma"+m.n]).map(m=>{const p=m.rows.find(r=>r.date===selected);return "MA"+m.n+" "+(p?historyFormat(p.value,2):"—")}),...(tech.c.overlays.bb?["BB20 "+(bb?historyFormat(bb.lower,2)+"–"+historyFormat(bb.upper,2):"—")]:[])].join(" · ")||"MA／BB 已全部關閉");
+  for(const m of tech.ma){
+   const item=m.rows.find(r=>r.date===selected);
+   put('[data-tech-ma-value="'+m.n+'"]',item?historyFormat(item.value,2):"—");
+  }
   put('[data-tech-readout="middle"]',mid?historyFormat(mid.value,2)+" · "+selected:"當日無數值");
   put('[data-tech-readout="bottom"]',bottom?(tech.c.oscillator==="RSI"?"RSI14 "+historyFormat(bottom.value,2):tech.c.oscillator==="KD"?"K "+historyFormat(bottom.k,2)+" · D "+historyFormat(bottom.d,2):"MACD "+historyFormat(bottom.macd,3)):(tech.c.oscillator==="KD"&&!techOhlcRecords(tech.bottomKey).length?"KD 需要完整 OHLC 來源":"暖機不足／當日無數值"));
   put('[data-tech-extra="bottom"]',bottom&&tech.c.oscillator==="MACD"?"Signal "+historyFormat(bottom.signal,3)+" · Histogram "+historyFormat(bottom.hist,3):bottom&&tech.c.oscillator==="KD"?"RSV "+historyFormat(bottom.rsv,2)+" · KD(9,3,3)": "");
@@ -957,6 +1049,7 @@ function showHistory(){
    const bound=[[t0,t1],[m0,m1],[o0,o1]][i];
    return '<rect x="38" y="'+a.start+'" width="720" height="'+(a.end-a.start)+'" fill="none" stroke="#d0d7de"/>'+[0,.5,1].map(k=>{const y=a.start+(a.end-a.start)*k;return '<line x1="38" x2="758" y1="'+y+'" y2="'+y+'" stroke="#e7ebef" stroke-width=".7"/><text x="33" y="'+(y+3)+'" fill="#41566b" text-anchor="end" font-size="10">'+historyFormat(bound[1]-(bound[1]-bound[0])*k,2)+'</text>'}).join("");
   }).join("");
+  const verticalGrid=Array.from({length:13},(_,i)=>38+i*60).map(px=>panel.map(a=>'<line x1="'+px+'" x2="'+px+'" y1="'+a.start+'" y2="'+a.end+'" stroke="#edf0f3" stroke-width=".65"/>').join("")).join("");
   const upper=bb.map(r=>({date:r.date,value:r.upper})),lower=bb.map(r=>({date:r.date,value:r.lower}));
   const candleWidth=Math.max(2,Math.min(11,720/Math.max(10,topCandles.length)*.80));
   const candleSvg=topCandles.map(r=>{
@@ -969,7 +1062,7 @@ function showHistory(){
    return '<g class="technical-k-candle'+(up?' technical-k-up':' technical-k-down')+'" data-k-date="'+r.date+'"><line x1="'+xp+'" x2="'+xp+'" y1="'+ys[0](r.high)+'" y2="'+ys[0](r.low)+'" stroke="'+color+'" stroke-width="1.3"/><rect x="'+(xp-candleWidth/2)+'" y="'+bodyY+'" width="'+candleWidth+'" height="'+bodyHeight+'" fill="'+candleFill+'" fill-opacity="1" stroke="'+color+'" stroke-width="1.4"/></g>';
   }).join("");
   const priceLines=(c.top==="taiexK"||c.top==="sp500K"?candleSvg:line(top,"value",ys[0],"#1178a1",2.8))+(c.overlays.bb?line(upper,"value",ys[0],"#9d4edd",1.4,"5 4")+line(lower,"value",ys[0],"#9d4edd",1.4,"5 4"):"")+
-   ma.map((m,i)=>c.overlays["ma"+m.n]?line(m.rows,"value",ys[0],["#e59c00","#dc4b6a","#2869cc","#26813e","#7741ca"][i],1.7,"6 3"):"").join("");
+   ma.map((m,i)=>c.overlays["ma"+m.n]?line(m.rows,"value",ys[0],["#e59c00","#dc4b6a","#2869cc","#26813e","#7741ca"][i],1.15,""):"").join("");
   const middleDisplay=middle.filter(r=>sessionScale.positions.has(r.date));
   const oscDisplay=osc.filter(r=>sessionScale.positions.has(r.date));
   const midBars=["foreignNetYi","marginDailyYi"].includes(c.middle);
@@ -991,7 +1084,7 @@ function showHistory(){
    label("下層指標類型","oscillator",c.oscillator,["MACD","RSI","KD"].map(k=>'<option value="'+k+'"'+(c.oscillator===k?' selected':'')+'>'+k+'</option>').join(""))+'</div>';
   const overlayButtons='<div class="technical-stack-overlays" role="group" aria-label="均線和布林通道顯示開關">'+
    [["ma5","MA5","#e59c00"],["ma10","MA10","#dc4b6a"],["ma20","MA20","#2869cc"],["ma60","MA60","#26813e"],["ma240","MA240","#7741ca"],["bb","BBands","#9d4edd"]].map(([key,label,color])=>
-    '<button type="button" class="technical-stack-overlay-btn'+(c.overlays[key]?' enabled':'')+'" data-tech-overlay="'+key+'" aria-pressed="'+(c.overlays[key]?'true':'false')+'" style="--tech-overlay-color:'+color+'"><i></i>'+label+'</button>'
+    '<button type="button" class="technical-stack-overlay-btn'+(c.overlays[key]?' enabled':'')+'" data-tech-overlay="'+key+'" aria-pressed="'+(c.overlays[key]?'true':'false')+'" style="--tech-overlay-color:'+color+'"><span class="technical-stack-overlay-check" aria-hidden="true">'+(c.overlays[key]?'☑':'□')+'</span><i></i>'+label+(key==="bb"?'':'<span class="technical-stack-overlay-value" data-tech-ma-value="'+key.slice(2)+'"></span>')+'</button>'
    ).join("")+'</div>';
   const labels=[["上層｜"+(c.top==="taiexK"||c.top==="sp500K"?"真實 OHLC K 線":"價格折線")+(Object.values(c.overlays).some(Boolean)?"＋選用技術線":""),compact?17:20],["中層｜"+techSeriesName(c.middle)+"（籌碼代理，非成交量）",compact?203:297],["下層｜"+c.oscillator+"（"+techSeriesName(bottomKey)+"）",compact?290:422]].map(([text,y])=>'<text x="40" y="'+y+'" fill="#26394b" font-size="12">'+esc(text)+'</text>').join("");
   const xticks=[0,.25,.5,.75,1].map(k=>{
@@ -999,10 +1092,10 @@ function showHistory(){
    const day=days[Math.round((days.length-1)*k)]||new Date(start).toISOString().slice(0,10);
    return '<text x="'+x(day)+'" y="'+(compact?384:559)+'" fill="#526475" text-anchor="middle" font-size="11">'+day.slice(5)+'</text>';
   }).join("");
-  const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="780" height="'+svgBottom+'" fill="#ffffff"/>'+grid+labels+priceLines+midLines+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+'</svg>';
+  const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="780" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+priceLines+midLines+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+'</svg>';
   const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。中層籌碼並非成交量。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
-  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底 K 線版 · 11/19 v2</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions"><div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button></div></div>'+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys};
+  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 11/20</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions"><div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button></div></div>'+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
