@@ -33,6 +33,17 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 .cross-value-missing{color:#f3c18f!important}
 #marketCrossCharts:focus-visible{outline:2px solid var(--cyan);outline-offset:5px;border-radius:10px}
 @media(max-width:650px){.cross-cursor-summary{align-items:flex-start;flex-direction:column;gap:3px}.cross-cursor-summary strong{font-size:14px}.cross-last strong{font-size:15px}.cross-svg{height:135px}}
+
+.cross-sort-controls{display:flex;gap:5px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.cross-drag-handle{display:inline-flex;align-items:center;gap:4px;cursor:grab;user-select:none;-webkit-user-select:none;border:1px solid #4e7791;border-radius:7px;padding:3px 8px;background:#1b3a54;color:#b4e9f5;font-size:11px;font-weight:700;touch-action:pan-y}
+.cross-drag-handle:active{cursor:grabbing;background:#326282}
+.cross-drag-handle:focus-visible,.cross-sort-step:focus-visible{outline:2px solid #92e7e4;outline-offset:2px}
+.cross-sort-step{cursor:pointer;background:#182e44;border:1px solid #385a75;color:#bdd9e7;border-radius:6px;font-size:10px;width:25px;height:25px;line-height:1}
+.cross-sort-step:hover{background:#294a66;color:white}
+.cross-row.cross-being-dragged{opacity:.55}
+.cross-row.cross-drop-before{border-top:3px solid var(--cyan);padding-top:9px}
+.cross-row.cross-drop-after{border-bottom:3px solid var(--cyan);padding-bottom:9px}
+@media(max-width:650px){.cross-drag-handle{font-size:11px;padding:5px 7px}.cross-sort-controls{margin-bottom:5px}}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -52,9 +63,9 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 <div class="grid four" id="topmetrics"></div>
 <div class="sectionhead"><h2>市場核心監控</h2><span class="small">多因子交叉觀察，不代表買賣訊號</span></div>
 <div class="card market-cross">
-<div class="cross-head"><div><div class="subhead">八指標市場與籌碼交叉比對｜同一時間軸</div><div class="small">加權指數 · DXY · USD/TWD · VIX · HY OAS · 融資日增減（上市含 ETF）· 外資買賣超 · 融資維持率（扣 ETF）。左鍵按住黃線拖曳，所有圖同步；不同口徑不混用。</div></div>
+<div class="cross-head"><div><div class="subhead">九指標市場與籌碼交叉比對｜自訂排列順序</div><div class="small">加權指數 · DXY · USD/TWD · VIX · HY OAS · 融資日增減 · 外資單日買賣超 · 外資期間累積買賣超 · 扣 ETF 融資維持率。拖動各圖左側「⠿ 排序」把手改變上下順序；黃線仍須按住左鍵才會移動。</div></div>
 <div class="cross-controls" aria-label="歷史圖切換"><button class="button" type="button" data-window="20">20日</button><button class="button" type="button" data-window="60">60日</button><button class="button active" type="button" data-window="120">120日</button><button class="button" type="button" data-mode="raw">原始值</button><button class="button" type="button" data-mode="indexed">起點=100</button></div></div>
-<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">按住垂直黃色時間線（滑鼠左鍵）左右拖曳，其他圖會同步</span></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="八張圖同步時間游標，需在黃線按滑鼠左鍵拖曳，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
+<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">按住垂直黃色時間線（滑鼠左鍵）左右拖曳，其他圖會同步</span></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="九張圖同步時間游標，需在黃線按滑鼠左鍵拖曳，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
 <div id="historynote" class="small cross-note">歷史資料正在載入…</div></div>
 <div class="sectionhead"><h2>市場狀態與信用溫度｜最新觀測</h2><span class="small">保留個別指標原始單位</span></div><div class="grid two"><div class="card"><div id="coreSignals"></div></div><div class="card"><div class="subhead">跨市場解讀原則</div><p class="small" style="line-height:2">股市下跌若與 DXY、USD/TWD、VIX 同時走高，應留意跨境資金與避險需求；只有 HY OAS 也連續擴大，信用風險的證據才更完整。不同市場休市日、報價時段及利差發布延遲都會產生時間差。</p><div class="separator"></div><p class="small">原始值模式：各張圖獨立縱軸，便於觀察自身轉折。起點=100：五圖共用同一縱軸比例，適合比較相對變化幅度。</p></div></div>
 <div class="sectionhead"><h2>今日市場注意事項</h2></div><div class="card"><ul class="bullet-list" id="notes"></ul></div>
@@ -102,7 +113,44 @@ function toast(message){const t=$('toast');t.textContent=message;t.style.display
 function validate(d){if(!d||d.schemaVersion!==2||d.audience!=='public-market'||typeof d.market!=='object'||!Array.isArray(d.ai)||!/^\d{4}-\d{2}-\d{2}$/.test(d.asOf))throw Error('公開市場 JSON 格式不符合規範');if(['portfolio','holdings','defense','rollingRisk','personal','account'].some(k=>Object.prototype.hasOwnProperty.call(d,k)))throw Error('公開資料包含不應出現的私人欄位');return d}
 let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
 let chartCursorDate=null,chartContext=null,chartPointerSvg=null,chartPointerId=null;
-const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2]];
+const orderKeys=seriesConfig.map(c=>c[0]);
+const chartOrderKey="jb-public-chart-order-v1";
+function readChartOrder(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(chartOrderKey)||"null");
+  if(Array.isArray(saved)&&new Set(saved).size===saved.length&&saved.every(k=>orderKeys.includes(k))){
+   return [...saved,...orderKeys.filter(k=>!saved.includes(k))];
+  }
+ }catch(e){}
+ return [...orderKeys];
+}
+let chartOrder=readChartOrder(), draggingChart=null;
+function saveChartOrder(){
+ try{localStorage.setItem(chartOrderKey,JSON.stringify(chartOrder))}catch(e){}
+}
+function reorderChart(key,target,after=false){
+ if(!orderKeys.includes(key)||!orderKeys.includes(target)||key===target)return false;
+ const rest=chartOrder.filter(k=>k!==key);
+ const dest=rest.indexOf(target);
+ if(dest<0)return false;
+ rest.splice(dest+(after?1:0),0,key);
+ chartOrder=rest;saveChartOrder();showHistory();return true;
+}
+function nudgeChart(key,direction){
+ const index=chartOrder.indexOf(key),target=chartOrder[index+direction];
+ if(!target)return false;
+ if(reorderChart(key,target,direction>0)){
+  const handle=$("marketCrossCharts").querySelector('[data-chart-handle="'+key+'"]');
+  if(handle&&typeof handle.focus==="function")handle.focus();
+  return true;
+ }
+ return false;
+}
+function chartSortControls(key,label){
+ return '<div class="cross-sort-controls"><span class="cross-drag-handle" data-chart-handle="'+key+'" draggable="true" tabindex="0" role="button" aria-label="拖曳'+esc(label)+'調整圖表順序" title="抓住此把手，往上或往下拖動圖表">⠿ 排序</span><button class="cross-sort-step" type="button" data-chart-move="'+key+'" data-direction="-1" aria-label="'+esc(label)+'向上移動一格" title="向上移動">▲</button><button class="cross-sort-step" type="button" data-chart-move="'+key+'" data-direction="1" aria-label="'+esc(label)+'向下移動一格" title="向下移動">▼</button></div>';
+}
+
+const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2]];
 function marketChartDate(t){return new Date(String(t).slice(0,10)+"T00:00:00Z").getTime()}
 function historyFormat(v,d){return Number.isFinite(v)?v.toLocaleString("zh-TW",{minimumFractionDigits:d,maximumFractionDigits:d}):"—"}
 function marketViewDate(v){return String(v).replace(/-/g,"/")}
@@ -135,7 +183,7 @@ function syncChartCursor(date){
   const line=svg.querySelector(".cross-cursor-line"),point=svg.querySelector(".cross-cursor-point"),halo=svg.querySelector(".cross-cursor-halo"),tooltip=svg.querySelector(".cross-cursor-tooltip");
   const x=selectedX.toFixed(2);
   if(line){line.setAttribute("x1",x);line.setAttribute("x2",x)}
-  const val=observation&&s.kind!=="flow"&&s.first>0&&(chartMode==="indexed")?100*observation[s.key]/s.first:observation?.[s.key];
+  const val=observation&&s.kind==="line"&&s.first>0&&(chartMode==="indexed")?100*observation[s.key]/s.first:observation?.[s.key];
   const isValid=Number.isFinite(val)&&s.rows.length>=2;
   const y=isValid?s.y(val):0;
   for(const circle of [point,halo])if(circle){circle.setAttribute("cx",x);circle.setAttribute("cy",String(y));circle.setAttribute("visibility",isValid?"visible":"hidden")}
@@ -151,7 +199,7 @@ function syncChartCursor(date){
  }
  const title=$("crossCursorDate"),coverage=$("crossCursorCoverage");
  if(title)title.textContent=marketViewDate(selected);
- if(coverage)coverage.textContent="同日資料："+exactCount+"/"+seriesConfig.length+" 項｜其餘不沿用前日數值｜僅按住黃色時間線可拖曳；鍵盤 ← → 仍可操作";
+ if(coverage)coverage.textContent="同日資料："+exactCount+"/"+seriesConfig.length+" 項｜黃色時間線：按住左鍵拖動｜⠿：拖動調整圖表順序";
 }
 function showHistory(){
  const host=$("marketCrossCharts"),note=$("historynote");
@@ -160,15 +208,18 @@ function showHistory(){
        lastPublished=raw.length?Math.max(...raw.map(r=>marketChartDate(r.date))):reference,
        cutoff=Math.min(reference,Date.now(),lastPublished),
        start=cutoff-(chartDays-1)*86400000,end=cutoff;
+ const foreignDaily=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r.foreignNetYi)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date));
+ let acc=0;
+ const foreignCumulative=foreignDaily.map(r=>({date:r.date,foreignCumulativeYi:Math.round((acc+=r.foreignNetYi)*10000)/10000}));
  const series=seriesConfig.map(([key,label,unit,color,digits])=>{
-   const rows=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date));
+   const rows=key==="foreignCumulativeYi"?foreignCumulative:raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date));
    return {key,label,unit,color,digits,kind:seriesConfig.find(v=>v[0]===key)?.[5]||"line",rows,first:rows[0]?.[key]};
  });
- const uniqueDays=[...new Set(series.flatMap(s=>s.rows.map(r=>r.date)))].sort();
+ const uniqueDays=[...new Set(series.filter(s=>s.key!=="foreignCumulativeYi").flatMap(s=>s.rows.map(r=>r.date)))].sort();
  const X=t=>38+(t-start)/(end-start)*720;
  let commonLo=Infinity,commonHi=-Infinity;
  if(chartMode==="indexed"){
-   for(const s of series)if(s.kind!=="flow"&&s.rows.length>1&&s.first>0)for(const r of s.rows){const v=100*r[s.key]/s.first;commonLo=Math.min(commonLo,v);commonHi=Math.max(commonHi,v)}
+   for(const s of series)if(s.kind==="line"&&s.rows.length>1&&s.first>0)for(const r of s.rows){const v=100*r[s.key]/s.first;commonLo=Math.min(commonLo,v);commonHi=Math.max(commonHi,v)}
    if(!Number.isFinite(commonLo)){commonLo=90;commonHi=110}
    const span=Math.max(commonHi-commonLo,1);commonLo=Math.min(commonLo-0.08*span,99);commonHi=Math.max(commonHi+0.08*span,101);
  }
@@ -178,32 +229,32 @@ function showHistory(){
    const val=last?historyFormat(last[key],digits)+(unit==="%"?"%":unit==="點"?" 點":unit==="億元"?" 億":""):"—";
    if(length<2){
     s.y=()=>0;
-    return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label"><strong>'+esc(label)+'</strong><small>歷史資料不足，尚不繪製價格曲線</small></div><svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' 對齊日期但尚無足夠資料"><line x1="38" y1="112" x2="758" y2="112" stroke="#28455d"/><text x="400" y="80" text-anchor="middle" fill="#9cb8cc" font-size="13">資料待核對 · 缺值不補</text><line class="cross-cursor-line" x1="38" y1="24" x2="38" y2="112"/><circle class="cross-cursor-halo" cx="38" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="38" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">無資料</text></g></svg><div class="cross-last"><strong data-cross-value="'+key+'">無資料</strong><small data-cross-date="'+key+'">該期間資料待補</small></div></div>';
+    return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>歷史資料不足，尚不繪製價格曲線</small></div><svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' 對齊日期但尚無足夠資料"><line x1="38" y1="112" x2="758" y2="112" stroke="#28455d"/><text x="400" y="80" text-anchor="middle" fill="#9cb8cc" font-size="13">資料待核對 · 缺值不補</text><line class="cross-cursor-line" x1="38" y1="24" x2="38" y2="112"/><circle class="cross-cursor-halo" cx="38" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="38" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">無資料</text></g></svg><div class="cross-last"><strong data-cross-value="'+key+'">無資料</strong><small data-cross-date="'+key+'">該期間資料待補</small></div></div>';
    }
-   const chartRows=rows.map(r=>({ts:marketChartDate(r.date),v:chartMode==="indexed"&&s.kind!=="flow"&&s.first>0?100*r[key]/s.first:r[key]}));
+   const chartRows=rows.map(r=>({ts:marketChartDate(r.date),v:chartMode==="indexed"&&s.kind==="line"&&s.first>0?100*r[key]/s.first:r[key]}));
    const vals=chartRows.map(r=>r.v),range=Math.max(...vals)-Math.min(...vals);
-   let lo=s.kind==="flow"?-Math.max(1,Math.max(...vals.map(Math.abs))*1.12):chartMode==="indexed"?commonLo:Math.min(...vals)-Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
-   let hi=s.kind==="flow"?Math.max(1,Math.max(...vals.map(Math.abs))*1.12):chartMode==="indexed"?commonHi:Math.max(...vals)+Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
+   let lo=s.kind==="flow"?-Math.max(1,Math.max(...vals.map(Math.abs))*1.12):s.kind==="cumulative"?Math.min(0,...vals)-Math.max(1,range*0.08):chartMode==="indexed"?commonLo:Math.min(...vals)-Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
+   let hi=s.kind==="flow"?Math.max(1,Math.max(...vals.map(Math.abs))*1.12):s.kind==="cumulative"?Math.max(0,...vals)+Math.max(1,range*0.08):chartMode==="indexed"?commonHi:Math.max(...vals)+Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
    if(hi===lo){hi+=1;lo-=1}
    const Y=v=>112-(v-lo)/(hi-lo)*79;
    s.y=Y;
    const poly=chartRows.map(r=>X(r.ts).toFixed(1)+","+Y(r.v).toFixed(1)).join(" ");
    const latestDate=last.date;
-   const totalChange=s.kind==="flow"?rows.reduce((sum,r)=>sum+r[key],0):chartMode==="indexed"?(chartRows.at(-1).v-100):((last[key]-s.first)/Math.abs(s.first)*100);
-   const delta=(totalChange>0?"+":"")+historyFormat(totalChange,2)+(s.kind==="flow"?" 億元":"%");
+   const totalChange=s.kind==="flow"?rows.reduce((sum,r)=>sum+r[key],0):s.kind==="cumulative"?last[key]:chartMode==="indexed"?(chartRows.at(-1).v-100):((last[key]-s.first)/Math.abs(s.first)*100);
+   const delta=(totalChange>0?"+":"")+historyFormat(totalChange,2)+(s.kind==="flow"||s.kind==="cumulative"?" 億元":"%");
    const axes=[0,0.5,1].map(r=>'<line x1="38" y1="'+(33+r*79)+'" x2="758" y2="'+(33+r*79)+'" stroke="#28455d" stroke-width="1"/>').join("");
-   const ylabels=svgText(33,38,historyFormat(hi,chartMode==="indexed"?1:digits),"end")+svgText(33,115,historyFormat(lo,chartMode==="indexed"?1:digits),"end");
+   const ylabels=svgText(33,38,historyFormat(hi,chartMode==="indexed"&&s.kind==="line"?1:digits),"end")+svgText(33,115,historyFormat(lo,chartMode==="indexed"&&s.kind==="line"?1:digits),"end");
    const ticks=[0,.25,.5,.75,1].map(n=>{const ts=start+(end-start)*n,day=new Date(ts).toISOString().slice(5,10);return '<line x1="'+X(ts)+'" y1="112" x2="'+X(ts)+'" y2="117" stroke="#57748d"/>'+svgText(X(ts),137,day,"middle")}).join("");
-   const baseline=s.kind==="flow"?'<line x1="38" y1="'+Y(0)+'" x2="758" y2="'+Y(0)+'" stroke="#a9bdce" stroke-dasharray="4,5"/>':chartMode==="indexed"?'<line x1="38" y1="'+Y(100)+'" x2="758" y2="'+Y(100)+'" stroke="#c7b27b" stroke-dasharray="4,6" opacity=".7"/>':"";
+   const baseline=s.kind==="cumulative"?'<line x1="38" y1="'+Y(0)+'" x2="758" y2="'+Y(0)+'" stroke="#a9bdce" stroke-dasharray="3,5"/>':s.kind==="flow"?'<line x1="38" y1="'+Y(0)+'" x2="758" y2="'+Y(0)+'" stroke="#a9bdce" stroke-dasharray="4,5"/>':chartMode==="indexed"?'<line x1="38" y1="'+Y(100)+'" x2="758" y2="'+Y(100)+'" stroke="#c7b27b" stroke-dasharray="4,6" opacity=".7"/>':"";
    const cursor='<line class="cross-cursor-line" x1="38" y1="24" x2="38" y2="112"/><circle class="cross-cursor-halo" cx="38" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="38" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">選取日期</text></g>';
    const flowBars=s.kind==="flow"?chartRows.map(r=>'<line x1="'+X(r.ts).toFixed(1)+'" x2="'+X(r.ts).toFixed(1)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(r.v).toFixed(1)+'" stroke="'+(r.v>=0?"#f0a6b5":"#75d6a7")+'" stroke-width="'+Math.max(2,Math.min(12,600/chartDays)).toFixed(1)+'" stroke-linecap="round"/>').join(""):"";
    const svg='<svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' '+chartDays+'日歷史走勢，按住黃線拖動同步查看八項資料">'+axes+baseline+(s.kind==="flow"?flowBars:'<polyline points="'+poly+'" stroke="'+color+'" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>')+cursor+ylabels+ticks+'</svg>';
-   return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label"><strong>'+esc(label)+'</strong><small>'+length+' 筆 · '+esc(rows[0].date)+' 至 '+esc(latestDate)+'</small><div class="cross-stat">'+(s.kind==="flow"?"區間合計 ":"區間變化 ")+esc(delta)+'</div></div>'+svg+'<div class="cross-last"><strong data-cross-value="'+key+'">'+esc(val)+'</strong><small data-cross-date="'+key+'">觀測日 '+esc(latestDate)+'</small><div class="cross-legend"><i style="background:'+color+'"></i>同步選日數值</div></div></div>';
+   return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>'+length+' 筆 · '+esc(rows[0].date)+' 至 '+esc(latestDate)+'</small><div class="cross-stat">'+(s.kind==="flow"?"區間合計 ":s.kind==="cumulative"?"從 "+rows[0].date+" 起累積 ":"區間變化 ")+esc(delta)+'</div></div>'+svg+'<div class="cross-last"><strong data-cross-value="'+key+'">'+esc(val)+'</strong><small data-cross-date="'+key+'">觀測日 '+esc(latestDate)+'</small><div class="cross-legend"><i style="background:'+color+'"></i>同步選日數值</div></div></div>';
  };
- host.innerHTML=series.map(renderRow).join("");
+ host.innerHTML=chartOrder.map(k=>series.find(s=>s.key===k)).filter(Boolean).map(renderRow).join("");
  chartContext={start,end,series,dates:uniqueDays,x:X};
  const counts=series.map(s=>s.label+":"+s.rows.length).join("｜");
- note.textContent="時間視窗：截至 "+new Date(end).toISOString().slice(0,10)+" 的 "+chartDays+" 日曆日；"+(chartMode==="indexed"?"共用標準化刻度（各系列首個有效值=100）":"每圖獨立縱軸、共用橫軸")+"。數據筆數 "+counts+"。週末與假日不補值；每個游標的數字是該日期真正的觀測值。"+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
+ note.textContent="時間視窗：截至 "+new Date(end).toISOString().slice(0,10)+" 的 "+chartDays+" 日曆日；"+(chartMode==="indexed"?"價格／比率起點=100；買賣超與累積量保留億元零軸":"各圖獨立縱軸、共用時間軸")+"。數據筆數 "+counts+"。外資累積值以此視窗首筆有效買賣超開始加總（基準0），若資料不足則只計已知交易日；缺值不補。"+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
  if(uniqueDays.length){syncChartCursor(chartCursorDate||uniqueDays.at(-1))}
  else{$("crossCursorDate").textContent="無可比較日期";$("crossCursorCoverage").textContent="等待歷史資料"}
 }
@@ -237,6 +288,58 @@ function selectCursorAtPointer(evt,svg){
  syncChartCursor(nearestHistoryDate(ts,state.dates));
 }
 const crossHost=$("marketCrossCharts");
+function clearChartDropTarget(){
+ crossHost.querySelectorAll(".cross-row").forEach(row=>{
+  row.classList.remove("cross-drop-before","cross-drop-after","cross-being-dragged");
+ });
+}
+crossHost.addEventListener("dragstart",event=>{
+ const handle=event.target.closest?.("[data-chart-handle]");
+ if(!handle)return;
+ const key=handle.dataset.chartHandle;
+ if(!orderKeys.includes(key)){event.preventDefault();return}
+ draggingChart=key;
+ if(event.dataTransfer){event.dataTransfer.effectAllowed="move";event.dataTransfer.setData("text/plain",key)}
+ const row=handle.closest(".cross-row");
+ if(row)row.classList.add("cross-being-dragged");
+});
+crossHost.addEventListener("dragover",event=>{
+ if(!draggingChart)return;
+ const row=event.target.closest?.("[data-cross-row]");
+ if(!row||row.dataset.crossRow===draggingChart)return;
+ event.preventDefault();
+ if(event.dataTransfer)event.dataTransfer.dropEffect="move";
+ clearChartDropTarget();
+ const box=row.getBoundingClientRect(),after=event.clientY>box.top+box.height/2;
+ row.classList.add(after?"cross-drop-after":"cross-drop-before");
+});
+crossHost.addEventListener("drop",event=>{
+ if(!draggingChart)return;
+ const row=event.target.closest?.("[data-cross-row]");
+ event.preventDefault();
+ if(row){
+  const box=row.getBoundingClientRect();
+  const after=event.clientY>box.top+box.height/2;
+  const key=draggingChart;
+  draggingChart=null;
+  reorderChart(key,row.dataset.crossRow,after);
+ }
+ draggingChart=null;clearChartDropTarget();
+});
+crossHost.addEventListener("dragend",()=>{draggingChart=null;clearChartDropTarget()});
+crossHost.addEventListener("click",event=>{
+ const btn=event.target.closest?.("[data-chart-move]");
+ if(btn){nudgeChart(btn.dataset.chartMove,Number(btn.dataset.direction));event.stopPropagation()}
+});
+crossHost.addEventListener("keydown",event=>{
+ const handle=event.target.closest?.("[data-chart-handle]");
+ if(!handle)return;
+ if(event.key==="ArrowUp"||event.key==="ArrowDown"){
+  event.preventDefault();event.stopPropagation();
+  nudgeChart(handle.dataset.chartHandle,event.key==="ArrowUp"?-1:1);
+ }
+});
+
 function chartPointerX(evt,svg){
  let x=null;
  try{const ctm=svg.getScreenCTM?.();if(ctm&&typeof svg.createSVGPoint==="function"){const pt=svg.createSVGPoint();pt.x=evt.clientX;pt.y=evt.clientY||0;x=pt.matrixTransform(ctm.inverse()).x}}catch(e){}
