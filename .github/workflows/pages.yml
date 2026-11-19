@@ -7,6 +7,7 @@ on:
       - 'scripts/validate_public.py'
       - 'scripts/refresh_market_history.py'
       - 'scripts/market_seed.json'
+      - 'scripts/ex_etf_maintenance_seed.json'
       - 'scripts/validate_market_history.py'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
