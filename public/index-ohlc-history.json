@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "audience": "public-index-ohlc",
-  "generatedAt": "2026-11-19T13:35:00.820750+00:00",
-  "cutoff": "2026-11-18",
+  "generatedAt": "2026-11-19T22:37:35.002512+00:00",
+  "cutoff": "2026-11-19",
   "retention": "permanent-no-date-limit",
   "minimumTradingSessions": 240,
   "sourceRegistry": {
@@ -36,9 +36,9 @@
       "label": "Taiwan Stock Exchange Capitalization Weighted Stock Index",
       "symbol": "TAIEX",
       "unit": "index points",
-      "count": 399,
+      "count": 400,
       "first": "2025-04-01",
-      "last": "2026-11-18",
+      "last": "2026-11-19",
       "rows": [
         {
           "date": "2025-04-01",
@@ -3230,6 +3230,14 @@
           "high": 40938.2,
           "low": 39260.99,
           "close": 40194.91,
+          "source": "TWSE"
+        },
+        {
+          "date": "2026-11-19",
+          "open": 40145.73,
+          "high": 40315.53,
+          "low": 38259.7,
+          "close": 38426.89,
           "source": "TWSE"
         }
       ]
