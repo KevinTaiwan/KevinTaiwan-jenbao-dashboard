@@ -269,6 +269,17 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
  .technical-stack-compact .technical-stack-readouts{gap:4px}
  .technical-stack-compact .technical-stack-readouts>div{padding:4px 6px}
 }
+
+/* White canvas for the three-layer technical plot only; the main CIO dashboard stays dark. */
+.technical-stack-plot{background:#fff;border:1px solid #d9e0e6;border-radius:5px}
+.technical-stack-plot>.technical-stack-svg{background:#fff}
+.technical-stack-plot .cross-cursor-line{stroke:#af7200;stroke-width:2;stroke-dasharray:5 4}
+.technical-stack-readouts>div,.technical-stack-compact .technical-stack-readouts>div{
+  background:#fff;border:1px solid #d9e0e6;color:#263748
+}
+.technical-stack-readouts strong,.technical-stack-compact .technical-stack-readouts strong{color:#24384c}
+.technical-stack-readouts span,.technical-stack-compact .technical-stack-readouts span{color:#203448}
+.technical-stack-readouts small,.technical-stack-compact .technical-stack-readouts small{color:#4b6274}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -797,34 +808,34 @@ function showHistory(){
   const line=(rows,key,y,color,stroke=2,dash="")=>rows.filter(r=>Number.isFinite(r[key])).length<2?"":'<polyline points="'+rows.filter(r=>Number.isFinite(r[key])).map(r=>x(r.date).toFixed(1)+","+y(r[key]).toFixed(1)).join(" ")+'" fill="none" stroke="'+color+'" stroke-width="'+stroke+'" stroke-linecap="round" stroke-linejoin="round"'+(dash?' stroke-dasharray="'+dash+'"':"")+'/>';
   const grid=panel.map((a,i)=>{
    const bound=[[t0,t1],[m0,m1],[o0,o1]][i];
-   return '<rect x="38" y="'+a.start+'" width="720" height="'+(a.end-a.start)+'" fill="none" stroke="#3b5b73"/>'+[0,.5,1].map(k=>{const y=a.start+(a.end-a.start)*k;return '<line x1="38" x2="758" y1="'+y+'" y2="'+y+'" stroke="#2f4a60" stroke-width=".7"/><text x="33" y="'+(y+3)+'" fill="#bad0e0" text-anchor="end" font-size="10">'+historyFormat(bound[1]-(bound[1]-bound[0])*k,2)+'</text>'}).join("");
+   return '<rect x="38" y="'+a.start+'" width="720" height="'+(a.end-a.start)+'" fill="none" stroke="#d0d7de"/>'+[0,.5,1].map(k=>{const y=a.start+(a.end-a.start)*k;return '<line x1="38" x2="758" y1="'+y+'" y2="'+y+'" stroke="#e7ebef" stroke-width=".7"/><text x="33" y="'+(y+3)+'" fill="#41566b" text-anchor="end" font-size="10">'+historyFormat(bound[1]-(bound[1]-bound[0])*k,2)+'</text>'}).join("");
   }).join("");
   const upper=bb.map(r=>({date:r.date,value:r.upper})),lower=bb.map(r=>({date:r.date,value:r.lower}));
   const candleWidth=Math.max(1.6,Math.min(10,720/Math.max(10,topCandles.length)*.60));
   const candleSvg=topCandles.map(r=>{
    const xp=x(r.date),up=r.close>=r.open;
-   const color=up?"#f5a6ad":"#68dabb";
+   const color=up?"#d41c1c":"#65b206";
    const yOpen=ys[0](r.open),yClose=ys[0](r.close);
    const bodyY=Math.min(yOpen,yClose),bodyHeight=Math.max(1.5,Math.abs(yClose-yOpen));
    // Red rising candles stay hollow; green falling candles are always solid-filled.
    const candleFill=color;
    return '<g class="technical-k-candle'+(up?' technical-k-up':' technical-k-down')+'" data-k-date="'+r.date+'"><line x1="'+xp+'" x2="'+xp+'" y1="'+ys[0](r.high)+'" y2="'+ys[0](r.low)+'" stroke="'+color+'" stroke-width="1.3"/><rect x="'+(xp-candleWidth/2)+'" y="'+bodyY+'" width="'+candleWidth+'" height="'+bodyHeight+'" fill="'+candleFill+'" fill-opacity="1" stroke="'+color+'" stroke-width="1.25"/></g>';
   }).join("");
-  const priceLines=(c.top==="taiexK"||c.top==="sp500K"?candleSvg:line(top,"value",ys[0],"#6ae0ed",2.8))+(c.overlays.bb?line(upper,"value",ys[0],"#daa5fb",1.4,"5 4")+line(lower,"value",ys[0],"#daa5fb",1.4,"5 4"):"")+
-   ma.map((m,i)=>c.overlays["ma"+m.n]?line(m.rows,"value",ys[0],["#ffce77","#ffa2a6","#99c7ff","#96d6a2","#a69efa"][i],1.7,"6 3"):"").join("");
+  const priceLines=(c.top==="taiexK"||c.top==="sp500K"?candleSvg:line(top,"value",ys[0],"#1178a1",2.8))+(c.overlays.bb?line(upper,"value",ys[0],"#9d4edd",1.4,"5 4")+line(lower,"value",ys[0],"#9d4edd",1.4,"5 4"):"")+
+   ma.map((m,i)=>c.overlays["ma"+m.n]?line(m.rows,"value",ys[0],["#e59c00","#dc4b6a","#2869cc","#26813e","#7741ca"][i],1.7,"6 3"):"").join("");
   const middleDisplay=middle.filter(r=>sessionScale.positions.has(r.date));
   const oscDisplay=osc.filter(r=>sessionScale.positions.has(r.date));
   const midBars=["foreignNetYi","marginDailyYi"].includes(c.middle);
-  const midLines=midBars?middleDisplay.map(r=>'<line x1="'+x(r.date)+'" x2="'+x(r.date)+'" y1="'+ys[1](0)+'" y2="'+ys[1](r.value)+'" stroke="'+(r.value>=0?"#f5a4a6":"#74dfb3")+'" stroke-width="'+Math.max(2,Math.min(9,600/chartDays))+'"/>').join(""):line(middleDisplay,"value",ys[1],"#ffba76",2.3);
+  const midLines=midBars?middleDisplay.map(r=>'<line x1="'+x(r.date)+'" x2="'+x(r.date)+'" y1="'+ys[1](0)+'" y2="'+ys[1](r.value)+'" stroke="'+(r.value>=0?"#d41c1c":"#65b206")+'" stroke-width="'+Math.max(2,Math.min(9,600/chartDays))+'"/>').join(""):line(middleDisplay,"value",ys[1],"#bf6810",2.3);
   let oscLines;
   if(c.oscillator==="MACD"){
-   oscLines='<line x1="38" x2="758" y1="'+ys[2](0)+'" y2="'+ys[2](0)+'" stroke="#94aabd" stroke-dasharray="5 4"/>'+
-   oscDisplay.filter(r=>Number.isFinite(r.hist)).map(r=>'<line x1="'+x(r.date)+'" x2="'+x(r.date)+'" y1="'+ys[2](0)+'" y2="'+ys[2](r.hist)+'" stroke="'+(r.hist>=0?"#7cdeb9":"#f3a1b2")+'" stroke-width="'+Math.max(2,Math.min(8,600/chartDays))+'"/>').join("")+
-   line(oscDisplay,"macd",ys[2],"#8de7f0",2)+line(oscDisplay,"signal",ys[2],"#ffc977",2);
+   oscLines='<line x1="38" x2="758" y1="'+ys[2](0)+'" y2="'+ys[2](0)+'" stroke="#7b8794" stroke-dasharray="5 4"/>'+
+   oscDisplay.filter(r=>Number.isFinite(r.hist)).map(r=>'<line x1="'+x(r.date)+'" x2="'+x(r.date)+'" y1="'+ys[2](0)+'" y2="'+ys[2](r.hist)+'" stroke="'+(r.hist>=0?"#2f9c4d":"#d94a4a")+'" stroke-width="'+Math.max(2,Math.min(8,600/chartDays))+'"/>').join("")+
+   line(oscDisplay,"macd",ys[2],"#0879ad",2)+line(oscDisplay,"signal",ys[2],"#d08100",2);
   } else if(c.oscillator==="KD"){
-   oscLines=kdAvailable?line(oscDisplay,"k",ys[2],"#8de7f0",2.5)+line(oscDisplay,"d",ys[2],"#ffce77",2.3)+[20,80].map(v=>'<line x1="38" x2="758" y1="'+ys[2](v)+'" y2="'+ys[2](v)+'" stroke="#c9b59d" stroke-dasharray="5 5"/>').join(""):'<text x="42" y="'+((panel[2].start+panel[2].end)/2)+'" fill="#ffcf9d" font-size="12">KD 需要加權或 S&amp;P 500 指數的完整 OHLC</text>';
-  } else oscLines=line(oscDisplay,"value",ys[2],"#d0a0ff",2.5)+[30,70].map(v=>'<line x1="38" x2="758" y1="'+ys[2](v)+'" y2="'+ys[2](v)+'" stroke="#deb999" stroke-dasharray="5 5"/>').join("");
-  const cross=panel.map((a,i)=>'<line data-tech-hline="'+i+'" x1="38" x2="758" y1="0" y2="0" visibility="hidden" stroke="'+["#75e8e4","#ffc17f","#d0a0ff"][i]+'" stroke-dasharray="5 5"/><circle data-tech-point="'+i+'" cx="38" cy="0" r="4" visibility="hidden" fill="#e9ffff" stroke="'+["#75e8e4","#ffc17f","#d0a0ff"][i]+'"/>').join("");
+   oscLines=kdAvailable?line(oscDisplay,"k",ys[2],"#0879ad",2.5)+line(oscDisplay,"d",ys[2],"#ce8100",2.3)+[20,80].map(v=>'<line x1="38" x2="758" y1="'+ys[2](v)+'" y2="'+ys[2](v)+'" stroke="#bcb5c3" stroke-dasharray="5 5"/>').join(""):'<text x="42" y="'+((panel[2].start+panel[2].end)/2)+'" fill="#80502c" font-size="12">KD 需要加權或 S&amp;P 500 指數的完整 OHLC</text>';
+  } else oscLines=line(oscDisplay,"value",ys[2],"#7943c2",2.5)+[30,70].map(v=>'<line x1="38" x2="758" y1="'+ys[2](v)+'" y2="'+ys[2](v)+'" stroke="#c3b8aa" stroke-dasharray="5 5"/>').join("");
+  const cross=panel.map((a,i)=>'<line data-tech-hline="'+i+'" x1="38" x2="758" y1="0" y2="0" visibility="hidden" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'" stroke-dasharray="5 5"/><circle data-tech-point="'+i+'" cx="38" cy="0" r="4" visibility="hidden" fill="#ffffff" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'"/>').join("");
   const label=(name,code,selected,opts)=>'<label>'+name+'<select data-tech-field="'+code+'" aria-label="'+name+'">'+opts+'</select></label>';
   const controls='<div class="technical-stack-selectors">'+
    label("上層來源｜價格","top",c.top,techOptions(TECH_PRICE_KEYS,c.top))+
@@ -832,16 +843,16 @@ function showHistory(){
    label("下層指標來源","bottomSource",c.bottomSource,'<option value="follow"'+(c.bottomSource==="follow"?' selected':'')+'>跟隨上層</option>'+techOptions(TECH_PRICE_KEYS,c.bottomSource))+
    label("下層指標類型","oscillator",c.oscillator,["MACD","RSI","KD"].map(k=>'<option value="'+k+'"'+(c.oscillator===k?' selected':'')+'>'+k+'</option>').join(""))+'</div>';
   const overlayButtons='<div class="technical-stack-overlays" role="group" aria-label="均線和布林通道顯示開關">'+
-   [["ma5","MA5","#ffce77"],["ma10","MA10","#ffa2a6"],["ma20","MA20","#99c7ff"],["ma60","MA60","#96d6a2"],["ma240","MA240","#a69efa"],["bb","BBands","#daa5fb"]].map(([key,label,color])=>
+   [["ma5","MA5","#e59c00"],["ma10","MA10","#dc4b6a"],["ma20","MA20","#2869cc"],["ma60","MA60","#26813e"],["ma240","MA240","#7741ca"],["bb","BBands","#9d4edd"]].map(([key,label,color])=>
     '<button type="button" class="technical-stack-overlay-btn'+(c.overlays[key]?' enabled':'')+'" data-tech-overlay="'+key+'" aria-pressed="'+(c.overlays[key]?'true':'false')+'" style="--tech-overlay-color:'+color+'"><i></i>'+label+'</button>'
    ).join("")+'</div>';
-  const labels=[["上層｜"+(c.top==="taiexK"||c.top==="sp500K"?"真實 OHLC K 線":"價格折線")+(Object.values(c.overlays).some(Boolean)?"＋選用技術線":""),compact?17:20],["中層｜"+techSeriesName(c.middle)+"（籌碼代理，非成交量）",compact?203:297],["下層｜"+c.oscillator+"（"+techSeriesName(bottomKey)+"）",compact?290:422]].map(([text,y])=>'<text x="40" y="'+y+'" fill="#d9f1fc" font-size="12">'+esc(text)+'</text>').join("");
+  const labels=[["上層｜"+(c.top==="taiexK"||c.top==="sp500K"?"真實 OHLC K 線":"價格折線")+(Object.values(c.overlays).some(Boolean)?"＋選用技術線":""),compact?17:20],["中層｜"+techSeriesName(c.middle)+"（籌碼代理，非成交量）",compact?203:297],["下層｜"+c.oscillator+"（"+techSeriesName(bottomKey)+"）",compact?290:422]].map(([text,y])=>'<text x="40" y="'+y+'" fill="#26394b" font-size="12">'+esc(text)+'</text>').join("");
   const xticks=[0,.25,.5,.75,1].map(k=>{
    const days=sessionDates.length?sessionDates:timelineDays;
    const day=days[Math.round((days.length-1)*k)]||new Date(start).toISOString().slice(0,10);
-   return '<text x="'+x(day)+'" y="'+(compact?384:559)+'" fill="#9ebdce" text-anchor="middle" font-size="11">'+day.slice(5)+'</text>';
+   return '<text x="'+x(day)+'" y="'+(compact?384:559)+'" fill="#526475" text-anchor="middle" font-size="11">'+day.slice(5)+'</text>';
   }).join("");
-  const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標">'+grid+labels+priceLines+midLines+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+'</svg>';
+  const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="780" height="'+svgBottom+'" fill="#ffffff"/>'+grid+labels+priceLines+midLines+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+'</svg>';
   const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。中層籌碼並非成交量。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
   return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div></div>'+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys};
