@@ -246,11 +246,11 @@ def fetch_margin_daily():
             for fields,rows in _twse_tables(d):
                 for row in rows:
                     if len(row)<6 or "融資金額" not in str(row[0]):continue
-                    # TWSE: row[4] is today's outstanding TWD 1000; row[5] is yesterday.
+                    # TWSE MI_MARGN row[4] is preceding balance, row[5] is current outstanding (TWD 1000).
                     # Keep only when descriptions and both positive balances are available.
                     cur,prev=_number(row[4]),_number(row[5])
                     if cur<1e6 or prev<1e6:continue
-                    val=(cur-prev)/1e5
+                    val=(prev-cur)/1e5
                     if abs(val)>2000:continue
                     add("marginDailyYi",date.isoformat(),val)
                     found+=1
