@@ -23,6 +23,7 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 .cross-svg{cursor:default;touch-action:none;user-select:none;-webkit-user-select:none}
 .cross-cursor-line,.cross-cursor-point,.cross-cursor-tooltip{pointer-events:none}
 .cross-cursor-line{stroke:#ffe29a;stroke-width:2.4;stroke-dasharray:5 4;opacity:0.96}
+.cross-cursor-horizontal{stroke:#a6f0df;stroke-width:1.5;stroke-dasharray:4 4;opacity:.92;pointer-events:none;vector-effect:non-scaling-stroke}
 .cross-cursor-halo{fill:none;stroke:#f5f8ff;stroke-width:1.5;opacity:.85;pointer-events:none}
 .cross-cursor-point{stroke:#f6faff;stroke-width:1.6}
 .cross-cursor-tooltip rect{fill:#234b69;stroke:#7298b4;stroke-width:.8;rx:5}
@@ -63,9 +64,9 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 <div class="grid four" id="topmetrics"></div>
 <div class="sectionhead"><h2>市場核心監控</h2><span class="small">多因子交叉觀察，不代表買賣訊號</span></div>
 <div class="card market-cross">
-<div class="cross-head"><div><div class="subhead">十一指標市場、利率與籌碼交叉比對｜自訂排列順序</div><div class="small">加權、DXY、USD/TWD、VIX、HY OAS、外資與融資籌碼、美債10年殖利率及10Y－2Y利差。抓住「⠿ 排序」上下拖動圖表；按住黃色時間線可同步選日。</div></div>
+<div class="cross-head"><div><div class="subhead">十三指標市場、利率、ETF 與籌碼交叉比對｜自訂排列順序</div><div class="small">加權、DXY、USD/TWD、VIX、HY OAS、外資與融資籌碼、美債10Y及10Y－2Y、VOO、QQQ。抓住「⠿ 排序」上下拖動圖表；按住黃色時間線可同步選日，交叉水平線則標示所選日期的該圖價格。</div></div>
 <div class="cross-controls" aria-label="歷史圖切換"><button class="button" type="button" data-window="20">20日</button><button class="button" type="button" data-window="60">60日</button><button class="button active" type="button" data-window="120">120日</button><button class="button" type="button" data-mode="raw">原始值</button><button class="button" type="button" data-mode="indexed">起點=100</button></div></div>
-<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">按住垂直黃色時間線（滑鼠左鍵）左右拖曳，其他圖會同步</span></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="十一張圖同步時間游標，需在黃線按滑鼠左鍵拖曳，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
+<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">按住垂直黃色時間線（滑鼠左鍵）左右拖曳，其他圖會同步</span></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="十三張圖同步時間游標，需在黃線按滑鼠左鍵拖曳，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
 <div id="historynote" class="small cross-note">歷史資料正在載入…</div></div>
 <div class="sectionhead"><h2>市場狀態與信用溫度｜最新觀測</h2><span class="small">保留個別指標原始單位</span></div><div class="grid two"><div class="card"><div id="coreSignals"></div></div><div class="card"><div class="subhead">跨市場解讀原則</div><p class="small" style="line-height:2">股市下跌若與 DXY、USD/TWD、VIX 同時走高，應留意跨境資金與避險需求；只有 HY OAS 也連續擴大，信用風險的證據才更完整。不同市場休市日、報價時段及利差發布延遲都會產生時間差。</p><div class="separator"></div><p class="small">原始值模式：各張圖獨立縱軸，便於觀察自身轉折。起點=100：五圖共用同一縱軸比例，適合比較相對變化幅度。</p></div></div>
 <div class="sectionhead"><h2>今日市場注意事項</h2></div><div class="card"><ul class="bullet-list" id="notes"></ul></div>
@@ -113,7 +114,7 @@ function toast(message){const t=$('toast');t.textContent=message;t.style.display
 function validate(d){if(!d||d.schemaVersion!==2||d.audience!=='public-market'||typeof d.market!=='object'||!Array.isArray(d.ai)||!/^\d{4}-\d{2}-\d{2}$/.test(d.asOf))throw Error('公開市場 JSON 格式不符合規範');if(['portfolio','holdings','defense','rollingRisk','personal','account'].some(k=>Object.prototype.hasOwnProperty.call(d,k)))throw Error('公開資料包含不應出現的私人欄位');return d}
 let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
 let chartCursorDate=null,chartContext=null,chartPointerSvg=null,chartPointerId=null;
-const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2],["us10yYield","美國 10 年公債殖利率","%","#9dbdff",3],["us10y2ySpread","美國 10Y－2Y 公債利差","百分點","#ddc18f",3,"spread"]];
+const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2],["us10yYield","美國 10 年公債殖利率","%","#9dbdff",3],["us10y2ySpread","美國 10Y－2Y 公債利差","百分點","#ddc18f",3,"spread"],["voo","VOO｜S&P 500 ETF（美元）","美元","#79d4f2",2],["qqq","QQQ｜Nasdaq-100 ETF（美元）","美元","#ffbc8b",2]];
 
 const orderKeys=seriesConfig.map(c=>c[0]);
 const chartOrderKey="jb-public-chart-order-v1";
@@ -172,7 +173,7 @@ function syncChartCursor(date){
  for(const s of state.series){
   const observation=s.rows.find(r=>r.date===selected);
   if(observation)exactCount++;
-  const display=observation?historyFormat(observation[s.key],s.digits)+(s.unit==="%"?"%":s.unit==="點"?" 點":s.unit==="億元"?" 億":s.unit==="百分點"?" 個百分點":""):"—";
+  const display=observation?historyFormat(observation[s.key],s.digits)+(s.unit==="%"?"%":s.unit==="點"?" 點":s.unit==="億元"?" 億":s.unit==="百分點"?" 個百分點":s.unit==="美元"?" 美元":""):"—";
   const label=host.querySelector('[data-cross-value="'+s.key+'"]');
   const asof=host.querySelector('[data-cross-date="'+s.key+'"]');
   const row=host.querySelector('[data-cross-row="'+s.key+'"]');
@@ -181,12 +182,13 @@ function syncChartCursor(date){
   if(row)row.setAttribute("aria-label",s.label+" "+marketViewDate(selected)+" "+(observation?display:"沒有同日觀測值"));
   const svg=host.querySelector('[data-series-svg="'+s.key+'"]');
   if(!svg)continue;
-  const line=svg.querySelector(".cross-cursor-line"),point=svg.querySelector(".cross-cursor-point"),halo=svg.querySelector(".cross-cursor-halo"),tooltip=svg.querySelector(".cross-cursor-tooltip");
+  const line=svg.querySelector(".cross-cursor-line"),hline=svg.querySelector(".cross-cursor-horizontal"),point=svg.querySelector(".cross-cursor-point"),halo=svg.querySelector(".cross-cursor-halo"),tooltip=svg.querySelector(".cross-cursor-tooltip");
   const x=selectedX.toFixed(2);
   if(line){line.setAttribute("x1",x);line.setAttribute("x2",x)}
   const val=observation&&s.kind==="line"&&s.first>0&&(chartMode==="indexed")?100*observation[s.key]/s.first:observation?.[s.key];
   const isValid=Number.isFinite(val)&&s.rows.length>=2;
   const y=isValid?s.y(val):0;
+  if(hline){hline.setAttribute("y1",String(y));hline.setAttribute("y2",String(y));hline.setAttribute("visibility",isValid?"visible":"hidden")}
   for(const circle of [point,halo])if(circle){circle.setAttribute("cx",x);circle.setAttribute("cy",String(y));circle.setAttribute("visibility",isValid?"visible":"hidden")}
   const tooltipX=Math.max(38,Math.min(618,selectedX-69));
   if(tooltip){
@@ -227,10 +229,10 @@ function showHistory(){
  const svgText=(x,y,str,anchor="start",tone="#a8c0d5")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" fill="'+tone+'" font-size="11">'+esc(str)+'</text>';
  const renderRow=(s)=>{
    const {rows,key,label,unit,color,digits}=s, last=rows.at(-1),length=rows.length;
-   const val=last?historyFormat(last[key],digits)+(unit==="%"?"%":unit==="點"?" 點":unit==="億元"?" 億":unit==="百分點"?" 個百分點":""):"—";
+   const val=last?historyFormat(last[key],digits)+(unit==="%"?"%":unit==="點"?" 點":unit==="億元"?" 億":unit==="百分點"?" 個百分點":unit==="美元"?" 美元":""):"—";
    if(length<2){
     s.y=()=>0;
-    return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>歷史資料不足，尚不繪製價格曲線</small></div><svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' 對齊日期但尚無足夠資料"><line x1="38" y1="112" x2="758" y2="112" stroke="#28455d"/><text x="400" y="80" text-anchor="middle" fill="#9cb8cc" font-size="13">資料待核對 · 缺值不補</text><line class="cross-cursor-line" x1="38" y1="24" x2="38" y2="112"/><circle class="cross-cursor-halo" cx="38" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="38" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">無資料</text></g></svg><div class="cross-last"><strong data-cross-value="'+key+'">無資料</strong><small data-cross-date="'+key+'">該期間資料待補</small></div></div>';
+    return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>歷史資料不足，尚不繪製價格曲線</small></div><svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' 對齊日期但尚無足夠資料"><line x1="38" y1="112" x2="758" y2="112" stroke="#28455d"/><text x="400" y="80" text-anchor="middle" fill="#9cb8cc" font-size="13">資料待核對 · 缺值不補</text><line class="cross-cursor-horizontal" x1="38" y1="0" x2="758" y2="0" visibility="hidden"/><line class="cross-cursor-line" x1="38" y1="24" x2="38" y2="112"/><circle class="cross-cursor-halo" cx="38" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="38" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">無資料</text></g></svg><div class="cross-last"><strong data-cross-value="'+key+'">無資料</strong><small data-cross-date="'+key+'">該期間資料待補</small></div></div>';
    }
    const chartRows=rows.map(r=>({ts:marketChartDate(r.date),v:chartMode==="indexed"&&s.kind==="line"&&s.first>0?100*r[key]/s.first:r[key]}));
    const vals=chartRows.map(r=>r.v),range=Math.max(...vals)-Math.min(...vals);
@@ -247,9 +249,9 @@ function showHistory(){
    const ylabels=svgText(33,38,historyFormat(hi,chartMode==="indexed"&&s.kind==="line"?1:digits),"end")+svgText(33,115,historyFormat(lo,chartMode==="indexed"&&s.kind==="line"?1:digits),"end");
    const ticks=[0,.25,.5,.75,1].map(n=>{const ts=start+(end-start)*n,day=new Date(ts).toISOString().slice(5,10);return '<line x1="'+X(ts)+'" y1="112" x2="'+X(ts)+'" y2="117" stroke="#57748d"/>'+svgText(X(ts),137,day,"middle")}).join("");
    const baseline=s.kind==="spread"?'<line x1="38" y1="'+Y(0)+'" x2="758" y2="'+Y(0)+'" stroke="#d2bb8f" stroke-dasharray="4,5"/>':s.kind==="cumulative"?'<line x1="38" y1="'+Y(0)+'" x2="758" y2="'+Y(0)+'" stroke="#a9bdce" stroke-dasharray="3,5"/>':s.kind==="flow"?'<line x1="38" y1="'+Y(0)+'" x2="758" y2="'+Y(0)+'" stroke="#a9bdce" stroke-dasharray="4,5"/>':chartMode==="indexed"?'<line x1="38" y1="'+Y(100)+'" x2="758" y2="'+Y(100)+'" stroke="#c7b27b" stroke-dasharray="4,6" opacity=".7"/>':"";
-   const cursor='<line class="cross-cursor-line" x1="38" y1="24" x2="38" y2="112"/><circle class="cross-cursor-halo" cx="38" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="38" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">選取日期</text></g>';
+   const cursor='<line class="cross-cursor-horizontal" x1="38" y1="0" x2="758" y2="0" visibility="hidden"/><line class="cross-cursor-line" x1="38" y1="24" x2="38" y2="112"/><circle class="cross-cursor-halo" cx="38" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="38" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">選取日期</text></g>';
    const flowBars=s.kind==="flow"?chartRows.map(r=>'<line x1="'+X(r.ts).toFixed(1)+'" x2="'+X(r.ts).toFixed(1)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(r.v).toFixed(1)+'" stroke="'+(r.v>=0?"#f0a6b5":"#75d6a7")+'" stroke-width="'+Math.max(2,Math.min(12,600/chartDays)).toFixed(1)+'" stroke-linecap="round"/>').join(""):"";
-   const svg='<svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' '+chartDays+'日歷史走勢，按住黃線拖動同步查看十一項資料">'+axes+baseline+(s.kind==="flow"?flowBars:'<polyline points="'+poly+'" stroke="'+color+'" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>')+cursor+ylabels+ticks+'</svg>';
+   const svg='<svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' '+chartDays+'日歷史走勢，按住黃線拖動同步查看十三項資料">'+axes+baseline+(s.kind==="flow"?flowBars:'<polyline points="'+poly+'" stroke="'+color+'" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>')+cursor+ylabels+ticks+'</svg>';
    return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>'+length+' 筆 · '+esc(rows[0].date)+' 至 '+esc(latestDate)+'</small><div class="cross-stat">'+(s.kind==="flow"?"區間合計 ":s.kind==="cumulative"?"從 "+rows[0].date+" 起累積 ":s.kind==="spread"?"利差變動 ":"區間變化 ")+esc(delta)+'</div></div>'+svg+'<div class="cross-last"><strong data-cross-value="'+key+'">'+esc(val)+'</strong><small data-cross-date="'+key+'">觀測日 '+esc(latestDate)+'</small><div class="cross-legend"><i style="background:'+color+'"></i>同步選日數值</div></div></div>';
  };
  host.innerHTML=chartOrder.map(k=>series.find(s=>s.key===k)).filter(Boolean).map(renderRow).join("");
