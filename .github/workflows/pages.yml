@@ -19,7 +19,7 @@ permissions:
   id-token: write
 concurrency:
   group: jenbao-pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -30,10 +30,12 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
       - name: Refresh public market-history from official and attributable sources
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: |
           python3 scripts/refresh_market_history.py
           python3 scripts/validate_market_history.py public/market-history.json
       - name: Commit validated public market-history snapshot
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: |
           git config user.name "jenbao-market-bot"
           git config user.email "jenbao-market-bot@users.noreply.github.com"
