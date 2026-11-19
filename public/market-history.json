@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-19T05:05:49+00:00",
+  "generatedAt": "2026-11-19T06:52:08+00:00",
   "cutoff": "2026-11-18",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -12,7 +12,9 @@
     "hyOas": "percent",
     "marginDailyYi": "TWD 100 million daily finance balance change, including ETF",
     "foreignNetYi": "TWD 100 million, TWSE foreign institution cash net",
-    "marginMaintenanceExEtf": "percent, Wantgoo maintenance explicitly excluding ETF"
+    "marginMaintenanceExEtf": "percent, Wantgoo margin maintenance excludes ETF",
+    "us10yYield": "percent, 10-year Treasury constant maturity yield (FRED DGS10)",
+    "us10y2ySpread": "percentage points, 10-year minus 2-year Treasury constant maturity spread (FRED T10Y2Y)"
   },
   "stats": {
     "taiex": {
@@ -22,7 +24,7 @@
       "lastValue": 40194.91,
       "status": "ready",
       "source": {
-        "name": "TWSE FMTQIK daily index level; Library market-only seed",
+        "name": "TAIEX official TWSE; Library closing prices as fallback",
         "url": "https://www.twse.com.tw/exchangeReport/FMTQIK"
       }
     },
@@ -44,7 +46,7 @@
       "lastValue": 32.959,
       "status": "ready",
       "source": {
-        "name": "Yahoo Finance TWD=X daily indicative FX quote; Library values override on overlapping dates",
+        "name": "USD/TWD indicative market close; Library historical price input",
         "url": "https://query1.finance.yahoo.com/v8/finance/chart/TWD=X"
       }
     },
@@ -99,8 +101,30 @@
       "lastValue": 136.69,
       "status": "partial",
       "source": {
-        "name": "Wantgoo TAIEX margin maintenance excluding ETFs; verified dated market snapshot (source page may block automated refresh)",
+        "name": "Wantgoo: TAIEX financing maintenance EXCLUDING ETF, dated historical seed",
         "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
+      }
+    },
+    "us10yYield": {
+      "count": 206,
+      "first": "2026-01-23",
+      "last": "2026-11-17",
+      "lastValue": 5.1,
+      "status": "ready",
+      "source": {
+        "name": "FRED DGS10 daily observations",
+        "url": "https://fred.stlouisfed.org/series/DGS10"
+      }
+    },
+    "us10y2ySpread": {
+      "count": 207,
+      "first": "2026-01-23",
+      "last": "2026-11-18",
+      "lastValue": 0.27,
+      "status": "ready",
+      "source": {
+        "name": "FRED T10Y2Y daily observations",
+        "url": "https://fred.stlouisfed.org/series/T10Y2Y"
       }
     }
   },
@@ -109,109 +133,141 @@
       "date": "2026-01-23",
       "dxy": 97.6,
       "vix": 16.09,
-      "hyOas": 2.68
+      "hyOas": 2.68,
+      "us10yYield": 4.24,
+      "us10y2ySpread": 0.64
     },
     {
       "date": "2026-01-26",
       "dxy": 97.04,
       "usdtwd": 31.4405,
       "vix": 16.15,
-      "hyOas": 2.69
+      "hyOas": 2.69,
+      "us10yYield": 4.22,
+      "us10y2ySpread": 0.66
     },
     {
       "date": "2026-01-27",
       "dxy": 96.22,
       "usdtwd": 31.1103,
       "vix": 16.35,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "us10yYield": 4.24,
+      "us10y2ySpread": 0.71
     },
     {
       "date": "2026-01-28",
       "dxy": 96.45,
       "usdtwd": 31.2696,
       "vix": 16.35,
-      "hyOas": 2.72
+      "hyOas": 2.72,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.7
     },
     {
       "date": "2026-01-29",
       "dxy": 96.28,
       "usdtwd": 31.3617,
       "vix": 16.88,
-      "hyOas": 2.77
+      "hyOas": 2.77,
+      "us10yYield": 4.24,
+      "us10y2ySpread": 0.71
     },
     {
       "date": "2026-01-30",
       "dxy": 96.99,
       "vix": 17.44,
-      "hyOas": 2.8
+      "hyOas": 2.8,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.74
     },
     {
       "date": "2026-02-02",
       "dxy": 97.61,
       "usdtwd": 31.5771,
       "vix": 16.34,
-      "hyOas": 2.81
+      "hyOas": 2.81,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.72
     },
     {
       "date": "2026-02-03",
       "dxy": 97.44,
       "usdtwd": 31.5732,
-      "vix": 18,
-      "hyOas": 2.85
+      "vix": 18.0,
+      "hyOas": 2.85,
+      "us10yYield": 4.28,
+      "us10y2ySpread": 0.71
     },
     {
       "date": "2026-02-04",
       "dxy": 97.62,
       "usdtwd": 31.6571,
       "vix": 18.64,
-      "hyOas": 2.86
+      "hyOas": 2.86,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.72
     },
     {
       "date": "2026-02-05",
       "dxy": 97.82,
       "usdtwd": 31.6488,
       "vix": 21.77,
-      "hyOas": 2.97
+      "hyOas": 2.97,
+      "us10yYield": 4.21,
+      "us10y2ySpread": 0.74
     },
     {
       "date": "2026-02-06",
       "dxy": 97.63,
       "vix": 17.76,
-      "hyOas": 2.87
+      "hyOas": 2.87,
+      "us10yYield": 4.22,
+      "us10y2ySpread": 0.72
     },
     {
       "date": "2026-02-09",
       "dxy": 96.82,
       "usdtwd": 31.5612,
       "vix": 17.36,
-      "hyOas": 2.84
+      "hyOas": 2.84,
+      "us10yYield": 4.22,
+      "us10y2ySpread": 0.74
     },
     {
       "date": "2026-02-10",
       "dxy": 96.8,
       "usdtwd": 31.4787,
       "vix": 17.79,
-      "hyOas": 2.86
+      "hyOas": 2.86,
+      "us10yYield": 4.16,
+      "us10y2ySpread": 0.71
     },
     {
       "date": "2026-02-11",
       "dxy": 96.83,
       "usdtwd": 31.337,
       "vix": 17.65,
-      "hyOas": 2.84
+      "hyOas": 2.84,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.66
     },
     {
       "date": "2026-02-12",
       "dxy": 96.93,
       "usdtwd": 31.4169,
       "vix": 20.82,
-      "hyOas": 2.92
+      "hyOas": 2.92,
+      "us10yYield": 4.09,
+      "us10y2ySpread": 0.62
     },
     {
       "date": "2026-02-13",
       "dxy": 96.88,
       "vix": 20.6,
-      "hyOas": 2.95
+      "hyOas": 2.95,
+      "us10yYield": 4.04,
+      "us10y2ySpread": 0.64
     },
     {
       "date": "2026-02-16",
@@ -224,211 +280,273 @@
       "dxy": 97.16,
       "usdtwd": 31.376,
       "vix": 20.29,
-      "hyOas": 2.94
+      "hyOas": 2.94,
+      "us10yYield": 4.05,
+      "us10y2ySpread": 0.62
     },
     {
       "date": "2026-02-18",
       "dxy": 97.7,
       "usdtwd": 31.5291,
       "vix": 19.62,
-      "hyOas": 2.86
+      "hyOas": 2.86,
+      "us10yYield": 4.09,
+      "us10y2ySpread": 0.62
     },
     {
       "date": "2026-02-19",
       "dxy": 97.93,
       "usdtwd": 31.579,
       "vix": 20.23,
-      "hyOas": 2.88
+      "hyOas": 2.88,
+      "us10yYield": 4.08,
+      "us10y2ySpread": 0.61
     },
     {
       "date": "2026-02-20",
       "dxy": 97.8,
       "vix": 19.09,
-      "hyOas": 2.86
+      "hyOas": 2.86,
+      "us10yYield": 4.08,
+      "us10y2ySpread": 0.6
     },
     {
       "date": "2026-02-23",
       "dxy": 97.7,
       "usdtwd": 31.4348,
       "vix": 21.01,
-      "hyOas": 2.95
+      "hyOas": 2.95,
+      "us10yYield": 4.03,
+      "us10y2ySpread": 0.6
     },
     {
       "date": "2026-02-24",
       "dxy": 97.88,
       "usdtwd": 31.3771,
       "vix": 19.55,
-      "hyOas": 2.97
+      "hyOas": 2.97,
+      "us10yYield": 4.04,
+      "us10y2ySpread": 0.61
     },
     {
       "date": "2026-02-25",
       "dxy": 97.7,
       "usdtwd": 31.2691,
       "vix": 17.93,
-      "hyOas": 2.94
+      "hyOas": 2.94,
+      "us10yYield": 4.05,
+      "us10y2ySpread": 0.6
     },
     {
       "date": "2026-02-26",
       "dxy": 97.79,
       "usdtwd": 31.2468,
       "vix": 18.63,
-      "hyOas": 2.98
+      "hyOas": 2.98,
+      "us10yYield": 4.02,
+      "us10y2ySpread": 0.6
     },
     {
       "date": "2026-02-27",
       "dxy": 97.61,
       "vix": 19.86,
-      "hyOas": 3.1
+      "hyOas": 3.1,
+      "us10yYield": 3.97,
+      "us10y2ySpread": 0.59
     },
     {
       "date": "2026-03-02",
       "dxy": 98.38,
       "usdtwd": 31.535,
       "vix": 21.44,
-      "hyOas": 3.03
+      "hyOas": 3.03,
+      "us10yYield": 4.05,
+      "us10y2ySpread": 0.58
     },
     {
       "date": "2026-03-03",
       "dxy": 99.05,
       "usdtwd": 31.734,
       "vix": 23.57,
-      "hyOas": 3.08
+      "hyOas": 3.08,
+      "us10yYield": 4.06,
+      "us10y2ySpread": 0.55
     },
     {
       "date": "2026-03-04",
       "dxy": 98.77,
       "usdtwd": 31.63,
       "vix": 21.15,
-      "hyOas": 2.97
+      "hyOas": 2.97,
+      "us10yYield": 4.09,
+      "us10y2ySpread": 0.55
     },
     {
       "date": "2026-03-05",
       "dxy": 99.32,
       "usdtwd": 31.9059,
       "vix": 23.75,
-      "hyOas": 3
+      "hyOas": 3.0,
+      "us10yYield": 4.13,
+      "us10y2ySpread": 0.56
     },
     {
       "date": "2026-03-06",
       "dxy": 98.99,
       "vix": 29.49,
-      "hyOas": 3.13
+      "hyOas": 3.13,
+      "us10yYield": 4.15,
+      "us10y2ySpread": 0.59
     },
     {
       "date": "2026-03-09",
       "dxy": 99.18,
       "usdtwd": 31.802,
       "vix": 25.5,
-      "hyOas": 3.19
+      "hyOas": 3.19,
+      "us10yYield": 4.12,
+      "us10y2ySpread": 0.56
     },
     {
       "date": "2026-03-10",
       "dxy": 98.83,
       "usdtwd": 31.7739,
       "vix": 24.93,
-      "hyOas": 3.06
+      "hyOas": 3.06,
+      "us10yYield": 4.15,
+      "us10y2ySpread": 0.58
     },
     {
       "date": "2026-03-11",
       "dxy": 99.23,
       "usdtwd": 31.8115,
       "vix": 24.23,
-      "hyOas": 3.09
+      "hyOas": 3.09,
+      "us10yYield": 4.21,
+      "us10y2ySpread": 0.57
     },
     {
       "date": "2026-03-12",
       "dxy": 99.74,
       "usdtwd": 31.8958,
       "vix": 27.29,
-      "hyOas": 3.17
+      "hyOas": 3.17,
+      "us10yYield": 4.27,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-03-13",
       "dxy": 100.36,
       "vix": 27.19,
-      "hyOas": 3.28
+      "hyOas": 3.28,
+      "us10yYield": 4.28,
+      "us10y2ySpread": 0.55
     },
     {
       "date": "2026-03-16",
       "dxy": 99.71,
       "usdtwd": 31.945,
       "vix": 23.51,
-      "hyOas": 3.27
+      "hyOas": 3.27,
+      "us10yYield": 4.23,
+      "us10y2ySpread": 0.55
     },
     {
       "date": "2026-03-17",
       "dxy": 99.58,
       "usdtwd": 31.885,
       "vix": 22.37,
-      "hyOas": 3.22
+      "hyOas": 3.22,
+      "us10yYield": 4.2,
+      "us10y2ySpread": 0.52
     },
     {
       "date": "2026-03-18",
       "dxy": 100.09,
       "usdtwd": 32.0312,
       "vix": 25.09,
-      "hyOas": 3.2
+      "hyOas": 3.2,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-03-19",
       "dxy": 99.23,
       "usdtwd": 31.8021,
       "vix": 24.06,
-      "hyOas": 3.27
+      "hyOas": 3.27,
+      "us10yYield": 4.25,
+      "us10y2ySpread": 0.46
     },
     {
       "date": "2026-03-20",
       "dxy": 99.65,
       "vix": 26.78,
-      "hyOas": 3.24
+      "hyOas": 3.24,
+      "us10yYield": 4.39,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-03-23",
       "dxy": 98.95,
       "usdtwd": 31.862,
       "vix": 26.15,
-      "hyOas": 3.19
+      "hyOas": 3.19,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-03-24",
       "dxy": 99.43,
       "usdtwd": 31.9258,
       "vix": 26.95,
-      "hyOas": 3.19
+      "hyOas": 3.19,
+      "us10yYield": 4.39,
+      "us10y2ySpread": 0.49
     },
     {
       "date": "2026-03-25",
       "dxy": 99.6,
       "usdtwd": 31.9359,
       "vix": 25.33,
-      "hyOas": 3.17
+      "hyOas": 3.17,
+      "us10yYield": 4.33,
+      "us10y2ySpread": 0.49
     },
     {
       "date": "2026-03-26",
       "dxy": 99.9,
       "usdtwd": 31.93,
       "vix": 27.44,
-      "hyOas": 3.21
+      "hyOas": 3.21,
+      "us10yYield": 4.42,
+      "us10y2ySpread": 0.46
     },
     {
       "date": "2026-03-27",
       "dxy": 100.15,
       "vix": 31.05,
-      "hyOas": 3.42
+      "hyOas": 3.42,
+      "us10yYield": 4.44,
+      "us10y2ySpread": 0.56
     },
     {
       "date": "2026-03-30",
       "dxy": 100.51,
       "usdtwd": 32.039,
       "vix": 30.61,
-      "hyOas": 3.46
+      "hyOas": 3.46,
+      "us10yYield": 4.35,
+      "us10y2ySpread": 0.53
     },
     {
       "date": "2026-03-31",
       "dxy": 99.96,
       "usdtwd": 31.9379,
       "vix": 25.25,
-      "hyOas": 3.28
+      "hyOas": 3.28,
+      "us10yYield": 4.3,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-04-01",
@@ -436,7 +554,9 @@
       "dxy": 99.65,
       "usdtwd": 32.002,
       "vix": 24.54,
-      "hyOas": 3.16
+      "hyOas": 3.16,
+      "us10yYield": 4.33,
+      "us10y2ySpread": 0.52
     },
     {
       "date": "2026-04-02",
@@ -444,18 +564,24 @@
       "dxy": 100.03,
       "usdtwd": 31.9381,
       "vix": 23.87,
-      "hyOas": 3.17
+      "hyOas": 3.17,
+      "us10yYield": 4.31,
+      "us10y2ySpread": 0.52
     },
     {
       "date": "2026-04-03",
-      "hyOas": 3.13
+      "hyOas": 3.13,
+      "us10yYield": 4.35,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-04-06",
       "dxy": 99.98,
       "usdtwd": 31.914,
       "vix": 24.17,
-      "hyOas": 3.05
+      "hyOas": 3.05,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-04-07",
@@ -463,7 +589,9 @@
       "dxy": 99.64,
       "usdtwd": 31.894,
       "vix": 25.78,
-      "hyOas": 3.12
+      "hyOas": 3.12,
+      "us10yYield": 4.33,
+      "us10y2ySpread": 0.52
     },
     {
       "date": "2026-04-08",
@@ -471,7 +599,9 @@
       "dxy": 99.13,
       "usdtwd": 31.7204,
       "vix": 21.04,
-      "hyOas": 2.94
+      "hyOas": 2.94,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-04-09",
@@ -479,14 +609,18 @@
       "dxy": 98.82,
       "usdtwd": 31.7258,
       "vix": 19.49,
-      "hyOas": 2.9
+      "hyOas": 2.9,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-04-10",
       "taiex": 35417.83,
       "dxy": 98.65,
       "vix": 19.23,
-      "hyOas": 2.94
+      "hyOas": 2.94,
+      "us10yYield": 4.31,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-04-13",
@@ -494,7 +628,9 @@
       "dxy": 98.37,
       "usdtwd": 31.6412,
       "vix": 19.12,
-      "hyOas": 2.95
+      "hyOas": 2.95,
+      "us10yYield": 4.3,
+      "us10y2ySpread": 0.52
     },
     {
       "date": "2026-04-14",
@@ -502,7 +638,9 @@
       "dxy": 98.12,
       "usdtwd": 31.517,
       "vix": 18.36,
-      "hyOas": 2.84
+      "hyOas": 2.84,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-04-15",
@@ -510,7 +648,9 @@
       "dxy": 98.06,
       "usdtwd": 31.587,
       "vix": 18.17,
-      "hyOas": 2.85
+      "hyOas": 2.85,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.53
     },
     {
       "date": "2026-04-16",
@@ -518,14 +658,18 @@
       "dxy": 98.22,
       "usdtwd": 31.558,
       "vix": 17.94,
-      "hyOas": 2.86
+      "hyOas": 2.86,
+      "us10yYield": 4.32,
+      "us10y2ySpread": 0.54
     },
     {
       "date": "2026-04-17",
       "taiex": 36804.34,
       "dxy": 98.1,
       "vix": 17.48,
-      "hyOas": 2.83
+      "hyOas": 2.83,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.55
     },
     {
       "date": "2026-04-20",
@@ -533,7 +677,9 @@
       "dxy": 98.05,
       "usdtwd": 31.419,
       "vix": 18.87,
-      "hyOas": 2.87
+      "hyOas": 2.87,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.54
     },
     {
       "date": "2026-04-21",
@@ -541,7 +687,9 @@
       "dxy": 98.41,
       "usdtwd": 31.482,
       "vix": 19.5,
-      "hyOas": 2.85
+      "hyOas": 2.85,
+      "us10yYield": 4.3,
+      "us10y2ySpread": 0.52
     },
     {
       "date": "2026-04-22",
@@ -549,7 +697,9 @@
       "dxy": 98.59,
       "usdtwd": 31.4668,
       "vix": 18.92,
-      "hyOas": 2.84
+      "hyOas": 2.84,
+      "us10yYield": 4.3,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-04-23",
@@ -557,14 +707,18 @@
       "dxy": 98.8,
       "usdtwd": 31.53,
       "vix": 19.31,
-      "hyOas": 2.86
+      "hyOas": 2.86,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-04-24",
       "taiex": 38932.4,
       "dxy": 98.51,
       "vix": 18.71,
-      "hyOas": 2.86
+      "hyOas": 2.86,
+      "us10yYield": 4.31,
+      "us10y2ySpread": 0.53
     },
     {
       "date": "2026-04-27",
@@ -572,7 +726,9 @@
       "dxy": 98.48,
       "usdtwd": 31.4557,
       "vix": 18.02,
-      "hyOas": 2.84
+      "hyOas": 2.84,
+      "us10yYield": 4.35,
+      "us10y2ySpread": 0.57
     },
     {
       "date": "2026-04-28",
@@ -580,7 +736,9 @@
       "dxy": 98.62,
       "usdtwd": 31.513,
       "vix": 17.83,
-      "hyOas": 2.85
+      "hyOas": 2.85,
+      "us10yYield": 4.36,
+      "us10y2ySpread": 0.52
     },
     {
       "date": "2026-04-29",
@@ -588,7 +746,9 @@
       "dxy": 98.92,
       "usdtwd": 31.6265,
       "vix": 18.81,
-      "hyOas": 2.82
+      "hyOas": 2.82,
+      "us10yYield": 4.42,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-04-30",
@@ -596,13 +756,17 @@
       "dxy": 98.08,
       "usdtwd": 31.569,
       "vix": 16.89,
-      "hyOas": 2.83
+      "hyOas": 2.83,
+      "us10yYield": 4.4,
+      "us10y2ySpread": 0.52
     },
     {
       "date": "2026-05-01",
       "dxy": 98.21,
       "vix": 16.99,
-      "hyOas": 2.77
+      "hyOas": 2.77,
+      "us10yYield": 4.39,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-05-04",
@@ -610,7 +774,9 @@
       "dxy": 98.47,
       "usdtwd": 31.598,
       "vix": 18.29,
-      "hyOas": 2.78
+      "hyOas": 2.78,
+      "us10yYield": 4.45,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-05-05",
@@ -618,7 +784,9 @@
       "dxy": 98.48,
       "usdtwd": 31.545,
       "vix": 17.38,
-      "hyOas": 2.77
+      "hyOas": 2.77,
+      "us10yYield": 4.43,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-05-06",
@@ -626,7 +794,9 @@
       "dxy": 98.02,
       "usdtwd": 31.3985,
       "vix": 17.39,
-      "hyOas": 2.75
+      "hyOas": 2.75,
+      "us10yYield": 4.36,
+      "us10y2ySpread": 0.49
     },
     {
       "date": "2026-05-07",
@@ -634,14 +804,18 @@
       "dxy": 98.25,
       "usdtwd": 31.3921,
       "vix": 17.08,
-      "hyOas": 2.79
+      "hyOas": 2.79,
+      "us10yYield": 4.41,
+      "us10y2ySpread": 0.49
     },
     {
       "date": "2026-05-08",
       "taiex": 41603.94,
       "dxy": 97.84,
       "vix": 17.19,
-      "hyOas": 2.81
+      "hyOas": 2.81,
+      "us10yYield": 4.38,
+      "us10y2ySpread": 0.48
     },
     {
       "date": "2026-05-11",
@@ -649,7 +823,9 @@
       "dxy": 97.94,
       "usdtwd": 31.3518,
       "vix": 18.38,
-      "hyOas": 2.79
+      "hyOas": 2.79,
+      "us10yYield": 4.42,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-05-12",
@@ -657,7 +833,9 @@
       "dxy": 98.29,
       "usdtwd": 31.5011,
       "vix": 17.99,
-      "hyOas": 2.82
+      "hyOas": 2.82,
+      "us10yYield": 4.46,
+      "us10y2ySpread": 0.46
     },
     {
       "date": "2026-05-13",
@@ -665,7 +843,9 @@
       "dxy": 98.48,
       "usdtwd": 31.559,
       "vix": 17.87,
-      "hyOas": 2.82
+      "hyOas": 2.82,
+      "us10yYield": 4.46,
+      "us10y2ySpread": 0.48
     },
     {
       "date": "2026-05-14",
@@ -673,14 +853,18 @@
       "dxy": 98.88,
       "usdtwd": 31.5644,
       "vix": 17.26,
-      "hyOas": 2.76
+      "hyOas": 2.76,
+      "us10yYield": 4.47,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-05-15",
       "taiex": 41172.36,
       "dxy": 99.27,
       "vix": 18.43,
-      "hyOas": 2.8
+      "hyOas": 2.8,
+      "us10yYield": 4.59,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-05-18",
@@ -688,7 +872,9 @@
       "dxy": 98.97,
       "usdtwd": 31.5541,
       "vix": 17.82,
-      "hyOas": 2.83
+      "hyOas": 2.83,
+      "us10yYield": 4.61,
+      "us10y2ySpread": 0.54
     },
     {
       "date": "2026-05-19",
@@ -696,7 +882,9 @@
       "dxy": 99.3,
       "usdtwd": 31.7292,
       "vix": 18.06,
-      "hyOas": 2.86
+      "hyOas": 2.86,
+      "us10yYield": 4.67,
+      "us10y2ySpread": 0.54
     },
     {
       "date": "2026-05-20",
@@ -704,7 +892,9 @@
       "dxy": 99.11,
       "usdtwd": 31.5912,
       "vix": 17.44,
-      "hyOas": 2.8
+      "hyOas": 2.8,
+      "us10yYield": 4.57,
+      "us10y2ySpread": 0.53
     },
     {
       "date": "2026-05-21",
@@ -712,14 +902,18 @@
       "dxy": 99.19,
       "usdtwd": 31.5508,
       "vix": 16.76,
-      "hyOas": 2.78
+      "hyOas": 2.78,
+      "us10yYield": 4.57,
+      "us10y2ySpread": 0.49
     },
     {
       "date": "2026-05-22",
       "taiex": 42267.97,
       "dxy": 99.32,
       "vix": 16.7,
-      "hyOas": 2.74
+      "hyOas": 2.74,
+      "us10yYield": 4.56,
+      "us10y2ySpread": 0.43
     },
     {
       "date": "2026-05-25",
@@ -734,7 +928,9 @@
       "dxy": 99.17,
       "usdtwd": 31.4459,
       "vix": 17.01,
-      "hyOas": 2.72
+      "hyOas": 2.72,
+      "us10yYield": 4.5,
+      "us10y2ySpread": 0.49
     },
     {
       "date": "2026-05-27",
@@ -742,7 +938,9 @@
       "dxy": 99.21,
       "usdtwd": 31.4659,
       "vix": 16.29,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "us10yYield": 4.48,
+      "us10y2ySpread": 0.48
     },
     {
       "date": "2026-05-28",
@@ -750,14 +948,18 @@
       "dxy": 99.02,
       "usdtwd": 31.424,
       "vix": 15.74,
-      "hyOas": 2.72
+      "hyOas": 2.72,
+      "us10yYield": 4.45,
+      "us10y2ySpread": 0.46
     },
     {
       "date": "2026-05-29",
       "taiex": 44732.94,
       "dxy": 98.91,
       "vix": 15.32,
-      "hyOas": 2.72
+      "hyOas": 2.72,
+      "us10yYield": 4.45,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-06-01",
@@ -765,7 +967,9 @@
       "dxy": 99.2,
       "usdtwd": 31.3305,
       "vix": 16.05,
-      "hyOas": 2.72
+      "hyOas": 2.72,
+      "us10yYield": 4.47,
+      "us10y2ySpread": 0.42
     },
     {
       "date": "2026-06-02",
@@ -773,7 +977,9 @@
       "dxy": 99.22,
       "usdtwd": 31.4782,
       "vix": 15.77,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "us10yYield": 4.46,
+      "us10y2ySpread": 0.41
     },
     {
       "date": "2026-06-03",
@@ -781,7 +987,9 @@
       "dxy": 99.53,
       "usdtwd": 31.5055,
       "vix": 16.06,
-      "hyOas": 2.75
+      "hyOas": 2.75,
+      "us10yYield": 4.49,
+      "us10y2ySpread": 0.41
     },
     {
       "date": "2026-06-04",
@@ -789,14 +997,18 @@
       "dxy": 99.41,
       "usdtwd": 31.503,
       "vix": 15.4,
-      "hyOas": 2.74
+      "hyOas": 2.74,
+      "us10yYield": 4.47,
+      "us10y2ySpread": 0.42
     },
     {
       "date": "2026-06-05",
       "taiex": 45070.94,
       "dxy": 100.07,
       "vix": 21.51,
-      "hyOas": 2.76
+      "hyOas": 2.76,
+      "us10yYield": 4.55,
+      "us10y2ySpread": 0.38
     },
     {
       "date": "2026-06-08",
@@ -804,7 +1016,9 @@
       "dxy": 100.05,
       "usdtwd": 31.582,
       "vix": 18.92,
-      "hyOas": 2.75
+      "hyOas": 2.75,
+      "us10yYield": 4.56,
+      "us10y2ySpread": 0.41
     },
     {
       "date": "2026-06-09",
@@ -812,7 +1026,9 @@
       "dxy": 99.91,
       "usdtwd": 31.5409,
       "vix": 19.87,
-      "hyOas": 2.78
+      "hyOas": 2.78,
+      "us10yYield": 4.53,
+      "us10y2ySpread": 0.4
     },
     {
       "date": "2026-06-10",
@@ -820,7 +1036,9 @@
       "dxy": 99.95,
       "usdtwd": 31.6498,
       "vix": 22.22,
-      "hyOas": 2.8
+      "hyOas": 2.8,
+      "us10yYield": 4.55,
+      "us10y2ySpread": 0.42
     },
     {
       "date": "2026-06-11",
@@ -828,14 +1046,18 @@
       "dxy": 99.86,
       "usdtwd": 31.579,
       "vix": 19.44,
-      "hyOas": 2.78
+      "hyOas": 2.78,
+      "us10yYield": 4.45,
+      "us10y2ySpread": 0.4
     },
     {
       "date": "2026-06-12",
       "taiex": 44169.04,
       "dxy": 99.75,
       "vix": 17.68,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "us10yYield": 4.48,
+      "us10y2ySpread": 0.39
     },
     {
       "date": "2026-06-15",
@@ -843,7 +1065,9 @@
       "dxy": 99.63,
       "usdtwd": 31.5186,
       "vix": 16.2,
-      "hyOas": 2.66
+      "hyOas": 2.66,
+      "us10yYield": 4.47,
+      "us10y2ySpread": 0.4
     },
     {
       "date": "2026-06-16",
@@ -851,7 +1075,9 @@
       "dxy": 99.54,
       "usdtwd": 31.5639,
       "vix": 16.41,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "us10yYield": 4.43,
+      "us10y2ySpread": 0.38
     },
     {
       "date": "2026-06-17",
@@ -859,7 +1085,9 @@
       "dxy": 100.09,
       "usdtwd": 31.6384,
       "vix": 18.44,
-      "hyOas": 2.63
+      "hyOas": 2.63,
+      "us10yYield": 4.49,
+      "us10y2ySpread": 0.29
     },
     {
       "date": "2026-06-18",
@@ -867,7 +1095,9 @@
       "dxy": 100.85,
       "usdtwd": 31.6359,
       "vix": 16.4,
-      "hyOas": 2.66
+      "hyOas": 2.66,
+      "us10yYield": 4.46,
+      "us10y2ySpread": 0.27
     },
     {
       "date": "2026-06-19",
@@ -880,7 +1110,9 @@
       "dxy": 101.02,
       "usdtwd": 31.687,
       "vix": 17.28,
-      "hyOas": 2.65
+      "hyOas": 2.65,
+      "us10yYield": 4.51,
+      "us10y2ySpread": 0.27
     },
     {
       "date": "2026-06-23",
@@ -888,7 +1120,9 @@
       "dxy": 101.41,
       "usdtwd": 31.7021,
       "vix": 19.49,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "us10yYield": 4.5,
+      "us10y2ySpread": 0.34
     },
     {
       "date": "2026-06-24",
@@ -896,7 +1130,9 @@
       "dxy": 101.61,
       "usdtwd": 31.808,
       "vix": 18.63,
-      "hyOas": 2.76
+      "hyOas": 2.76,
+      "us10yYield": 4.41,
+      "us10y2ySpread": 0.3
     },
     {
       "date": "2026-06-25",
@@ -904,14 +1140,18 @@
       "dxy": 101.43,
       "usdtwd": 31.86,
       "vix": 18.89,
-      "hyOas": 2.78
+      "hyOas": 2.78,
+      "us10yYield": 4.4,
+      "us10y2ySpread": 0.31
     },
     {
       "date": "2026-06-26",
       "taiex": 44571.76,
       "dxy": 101.36,
       "vix": 18.41,
-      "hyOas": 2.83
+      "hyOas": 2.83,
+      "us10yYield": 4.38,
+      "us10y2ySpread": 0.31
     },
     {
       "date": "2026-06-29",
@@ -919,7 +1159,9 @@
       "dxy": 101.11,
       "usdtwd": 31.8659,
       "vix": 17.65,
-      "hyOas": 2.8
+      "hyOas": 2.8,
+      "us10yYield": 4.38,
+      "us10y2ySpread": 0.28
     },
     {
       "date": "2026-06-30",
@@ -927,7 +1169,9 @@
       "dxy": 101.19,
       "usdtwd": 31.8344,
       "vix": 16.45,
-      "hyOas": 2.75
+      "hyOas": 2.75,
+      "us10yYield": 4.44,
+      "us10y2ySpread": 0.3
     },
     {
       "date": "2026-07-01",
@@ -935,7 +1179,9 @@
       "dxy": 101.39,
       "usdtwd": 31.8948,
       "vix": 16.59,
-      "hyOas": 2.74
+      "hyOas": 2.74,
+      "us10yYield": 4.48,
+      "us10y2ySpread": 0.31
     },
     {
       "date": "2026-07-02",
@@ -943,7 +1189,9 @@
       "dxy": 100.86,
       "usdtwd": 31.9309,
       "vix": 16.15,
-      "hyOas": 2.75
+      "hyOas": 2.75,
+      "us10yYield": 4.49,
+      "us10y2ySpread": 0.35
     },
     {
       "date": "2026-07-03",
@@ -957,7 +1205,9 @@
       "dxy": 100.85,
       "usdtwd": 32.0549,
       "vix": 15.57,
-      "hyOas": 2.72
+      "hyOas": 2.72,
+      "us10yYield": 4.48,
+      "us10y2ySpread": 0.35
     },
     {
       "date": "2026-07-07",
@@ -965,7 +1215,9 @@
       "dxy": 101.14,
       "usdtwd": 32.1359,
       "vix": 16.13,
-      "hyOas": 2.67
+      "hyOas": 2.67,
+      "us10yYield": 4.55,
+      "us10y2ySpread": 0.36
     },
     {
       "date": "2026-07-08",
@@ -973,7 +1225,9 @@
       "dxy": 101.05,
       "usdtwd": 32.1092,
       "vix": 16.9,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "us10yYield": 4.56,
+      "us10y2ySpread": 0.35
     },
     {
       "date": "2026-07-09",
@@ -981,13 +1235,17 @@
       "dxy": 100.94,
       "usdtwd": 32.0972,
       "vix": 15.84,
-      "hyOas": 2.7
+      "hyOas": 2.7,
+      "us10yYield": 4.54,
+      "us10y2ySpread": 0.38
     },
     {
       "date": "2026-07-10",
       "dxy": 100.97,
       "vix": 15.03,
-      "hyOas": 2.69
+      "hyOas": 2.69,
+      "us10yYield": 4.56,
+      "us10y2ySpread": 0.35
     },
     {
       "date": "2026-07-13",
@@ -995,7 +1253,9 @@
       "dxy": 101.28,
       "usdtwd": 32.162,
       "vix": 17.16,
-      "hyOas": 2.69
+      "hyOas": 2.69,
+      "us10yYield": 4.62,
+      "us10y2ySpread": 0.36
     },
     {
       "date": "2026-07-14",
@@ -1003,7 +1263,9 @@
       "dxy": 100.94,
       "usdtwd": 32.1339,
       "vix": 16.5,
-      "hyOas": 2.72
+      "hyOas": 2.72,
+      "us10yYield": 4.58,
+      "us10y2ySpread": 0.4
     },
     {
       "date": "2026-07-15",
@@ -1011,7 +1273,9 @@
       "dxy": 100.5,
       "usdtwd": 32.2109,
       "vix": 15.67,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "us10yYield": 4.55,
+      "us10y2ySpread": 0.42
     },
     {
       "date": "2026-07-16",
@@ -1019,14 +1283,18 @@
       "dxy": 100.73,
       "usdtwd": 32.2643,
       "vix": 16.73,
-      "hyOas": 2.71
+      "hyOas": 2.71,
+      "us10yYield": 4.57,
+      "us10y2ySpread": 0.41
     },
     {
       "date": "2026-07-17",
       "taiex": 42671.27,
       "dxy": 100.75,
       "vix": 18.77,
-      "hyOas": 2.73
+      "hyOas": 2.73,
+      "us10yYield": 4.55,
+      "us10y2ySpread": 0.37
     },
     {
       "date": "2026-07-20",
@@ -1034,7 +1302,9 @@
       "dxy": 100.99,
       "usdtwd": 32.2759,
       "vix": 18.65,
-      "hyOas": 2.69
+      "hyOas": 2.69,
+      "us10yYield": 4.6,
+      "us10y2ySpread": 0.39
     },
     {
       "date": "2026-07-21",
@@ -1042,7 +1312,9 @@
       "dxy": 101.18,
       "usdtwd": 32.3254,
       "vix": 17.05,
-      "hyOas": 2.69
+      "hyOas": 2.69,
+      "us10yYield": 4.63,
+      "us10y2ySpread": 0.37
     },
     {
       "date": "2026-07-22",
@@ -1050,7 +1322,9 @@
       "dxy": 101.14,
       "usdtwd": 32.3791,
       "vix": 16.64,
-      "hyOas": 2.68
+      "hyOas": 2.68,
+      "us10yYield": 4.67,
+      "us10y2ySpread": 0.36
     },
     {
       "date": "2026-07-23",
@@ -1058,14 +1332,18 @@
       "dxy": 101.43,
       "usdtwd": 32.299,
       "vix": 18.7,
-      "hyOas": 2.77
+      "hyOas": 2.77,
+      "us10yYield": 4.71,
+      "us10y2ySpread": 0.34
     },
     {
       "date": "2026-07-24",
       "taiex": 43654.84,
       "dxy": 101.47,
       "vix": 18.58,
-      "hyOas": 2.79
+      "hyOas": 2.79,
+      "us10yYield": 4.69,
+      "us10y2ySpread": 0.36
     },
     {
       "date": "2026-07-27",
@@ -1073,7 +1351,9 @@
       "dxy": 101.51,
       "usdtwd": 32.302,
       "vix": 18.67,
-      "hyOas": 2.81
+      "hyOas": 2.81,
+      "us10yYield": 4.65,
+      "us10y2ySpread": 0.34
     },
     {
       "date": "2026-07-28",
@@ -1081,7 +1361,9 @@
       "dxy": 101.38,
       "usdtwd": 32.3638,
       "vix": 18.21,
-      "hyOas": 2.84
+      "hyOas": 2.84,
+      "us10yYield": 4.61,
+      "us10y2ySpread": 0.35
     },
     {
       "date": "2026-07-29",
@@ -1089,7 +1371,9 @@
       "dxy": 100.8,
       "usdtwd": 32.3489,
       "vix": 20.66,
-      "hyOas": 2.87
+      "hyOas": 2.87,
+      "us10yYield": 4.67,
+      "us10y2ySpread": 0.45
     },
     {
       "date": "2026-07-30",
@@ -1097,14 +1381,18 @@
       "dxy": 100.01,
       "usdtwd": 32.395,
       "vix": 17.09,
-      "hyOas": 2.84
+      "hyOas": 2.84,
+      "us10yYield": 4.68,
+      "us10y2ySpread": 0.45
     },
     {
       "date": "2026-07-31",
       "taiex": 43119.75,
       "dxy": 99.8,
       "vix": 15.99,
-      "hyOas": 2.85
+      "hyOas": 2.85,
+      "us10yYield": 4.75,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-08-03",
@@ -1112,7 +1400,9 @@
       "dxy": 99.96,
       "usdtwd": 32.396,
       "vix": 15.86,
-      "hyOas": 2.78
+      "hyOas": 2.78,
+      "us10yYield": 4.7,
+      "us10y2ySpread": 0.45
     },
     {
       "date": "2026-08-04",
@@ -1120,7 +1410,9 @@
       "dxy": 99.89,
       "usdtwd": 32.3951,
       "vix": 16.5,
-      "hyOas": 2.73
+      "hyOas": 2.73,
+      "us10yYield": 4.63,
+      "us10y2ySpread": 0.43
     },
     {
       "date": "2026-08-05",
@@ -1129,7 +1421,9 @@
       "usdtwd": 32.2648,
       "vix": 15.81,
       "hyOas": 2.75,
-      "foreignNetYi": 903.0833
+      "foreignNetYi": 903.0833,
+      "us10yYield": 4.63,
+      "us10y2ySpread": 0.45
     },
     {
       "date": "2026-08-06",
@@ -1139,7 +1433,9 @@
       "vix": 15.15,
       "hyOas": 2.71,
       "marginDailyYi": 93.1266,
-      "foreignNetYi": 20.1982
+      "foreignNetYi": 20.1982,
+      "us10yYield": 4.69,
+      "us10y2ySpread": 0.44
     },
     {
       "date": "2026-08-07",
@@ -1148,7 +1444,9 @@
       "vix": 14.9,
       "hyOas": 2.7,
       "marginDailyYi": 48.5953,
-      "foreignNetYi": -407.1574
+      "foreignNetYi": -407.1574,
+      "us10yYield": 4.65,
+      "us10y2ySpread": 0.46
     },
     {
       "date": "2026-08-10",
@@ -1158,7 +1456,9 @@
       "vix": 15.46,
       "hyOas": 2.7,
       "marginDailyYi": 76.3105,
-      "foreignNetYi": 517.4052
+      "foreignNetYi": 517.4052,
+      "us10yYield": 4.72,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-08-11",
@@ -1168,7 +1468,9 @@
       "vix": 15.28,
       "hyOas": 2.72,
       "marginDailyYi": -11.4358,
-      "foreignNetYi": 223.2868
+      "foreignNetYi": 223.2868,
+      "us10yYield": 4.7,
+      "us10y2ySpread": 0.48
     },
     {
       "date": "2026-08-12",
@@ -1178,7 +1480,9 @@
       "vix": 14.55,
       "hyOas": 2.71,
       "marginDailyYi": 39.3194,
-      "foreignNetYi": 110.2081
+      "foreignNetYi": 110.2081,
+      "us10yYield": 4.68,
+      "us10y2ySpread": 0.48
     },
     {
       "date": "2026-08-13",
@@ -1188,7 +1492,9 @@
       "vix": 14.63,
       "hyOas": 2.71,
       "marginDailyYi": 16.9674,
-      "foreignNetYi": 756.9452
+      "foreignNetYi": 756.9452,
+      "us10yYield": 4.63,
+      "us10y2ySpread": 0.48
     },
     {
       "date": "2026-08-14",
@@ -1197,7 +1503,9 @@
       "vix": 14.25,
       "hyOas": 2.67,
       "marginDailyYi": -27.2134,
-      "foreignNetYi": 453.5133
+      "foreignNetYi": 453.5133,
+      "us10yYield": 4.68,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-08-17",
@@ -1207,7 +1515,9 @@
       "vix": 15.19,
       "hyOas": 2.7,
       "marginDailyYi": 30.4235,
-      "foreignNetYi": 454.4729
+      "foreignNetYi": 454.4729,
+      "us10yYield": 4.72,
+      "us10y2ySpread": 0.53
     },
     {
       "date": "2026-08-18",
@@ -1217,7 +1527,9 @@
       "vix": 15.84,
       "hyOas": 2.75,
       "marginDailyYi": -30.9029,
-      "foreignNetYi": -119.8581
+      "foreignNetYi": -119.8581,
+      "us10yYield": 4.71,
+      "us10y2ySpread": 0.52
     },
     {
       "date": "2026-08-19",
@@ -1227,7 +1539,9 @@
       "vix": 14.89,
       "hyOas": 2.73,
       "marginDailyYi": 11.7838,
-      "foreignNetYi": -416.3944
+      "foreignNetYi": -416.3944,
+      "us10yYield": 4.65,
+      "us10y2ySpread": 0.46
     },
     {
       "date": "2026-08-20",
@@ -1237,7 +1551,9 @@
       "vix": 16.01,
       "hyOas": 2.75,
       "marginDailyYi": 2.1739,
-      "foreignNetYi": 73.1763
+      "foreignNetYi": 73.1763,
+      "us10yYield": 4.69,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-08-21",
@@ -1246,17 +1562,21 @@
       "vix": 15.13,
       "hyOas": 2.7,
       "marginDailyYi": -14.6841,
-      "foreignNetYi": 283.0542
+      "foreignNetYi": 283.0542,
+      "us10yYield": 4.74,
+      "us10y2ySpread": 0.5
     },
     {
       "date": "2026-08-24",
       "taiex": 44762.32,
-      "dxy": 99,
+      "dxy": 99.0,
       "usdtwd": 31.812,
       "vix": 15.85,
       "hyOas": 2.69,
       "marginDailyYi": -16.7989,
-      "foreignNetYi": -157.3613
+      "foreignNetYi": -157.3613,
+      "us10yYield": 4.7,
+      "us10y2ySpread": 0.46
     },
     {
       "date": "2026-08-25",
@@ -1266,7 +1586,9 @@
       "vix": 15.45,
       "hyOas": 2.7,
       "marginDailyYi": 16.7811,
-      "foreignNetYi": -7.8658
+      "foreignNetYi": -7.8658,
+      "us10yYield": 4.64,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-08-26",
@@ -1276,7 +1598,9 @@
       "vix": 15.21,
       "hyOas": 2.67,
       "marginDailyYi": 78.6489,
-      "foreignNetYi": 366.1319
+      "foreignNetYi": 366.1319,
+      "us10yYield": 4.66,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-08-27",
@@ -1286,7 +1610,9 @@
       "vix": 14.51,
       "hyOas": 2.63,
       "marginDailyYi": 51.162,
-      "foreignNetYi": 490.9421
+      "foreignNetYi": 490.9421,
+      "us10yYield": 4.67,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-08-28",
@@ -1295,7 +1621,9 @@
       "vix": 14.43,
       "hyOas": 2.6,
       "marginDailyYi": 72.5875,
-      "foreignNetYi": 417.541
+      "foreignNetYi": 417.541,
+      "us10yYield": 4.73,
+      "us10y2ySpread": 0.39
     },
     {
       "date": "2026-08-31",
@@ -1305,7 +1633,9 @@
       "vix": 14.92,
       "hyOas": 2.63,
       "marginDailyYi": 26.9937,
-      "foreignNetYi": -143.9234
+      "foreignNetYi": -143.9234,
+      "us10yYield": 4.75,
+      "us10y2ySpread": 0.41
     },
     {
       "date": "2026-09-01",
@@ -1315,7 +1645,9 @@
       "vix": 16.34,
       "hyOas": 2.65,
       "marginDailyYi": 82.3855,
-      "foreignNetYi": 267.076
+      "foreignNetYi": 267.076,
+      "us10yYield": 4.79,
+      "us10y2ySpread": 0.4
     },
     {
       "date": "2026-09-02",
@@ -1325,17 +1657,21 @@
       "vix": 15.2,
       "hyOas": 2.66,
       "marginDailyYi": 75.5983,
-      "foreignNetYi": -913.5454
+      "foreignNetYi": -913.5454,
+      "us10yYield": 4.79,
+      "us10y2ySpread": 0.4
     },
     {
       "date": "2026-09-03",
       "taiex": 45857.66,
-      "dxy": 99,
+      "dxy": 99.0,
       "usdtwd": 31.6954,
       "vix": 14.32,
       "hyOas": 2.65,
       "marginDailyYi": -69.3598,
-      "foreignNetYi": -481.4593
+      "foreignNetYi": -481.4593,
+      "us10yYield": 4.77,
+      "us10y2ySpread": 0.43
     },
     {
       "date": "2026-09-04",
@@ -1344,7 +1680,9 @@
       "vix": 14.53,
       "hyOas": 2.68,
       "marginDailyYi": 31.5528,
-      "foreignNetYi": 562.1295
+      "foreignNetYi": 562.1295,
+      "us10yYield": 4.78,
+      "us10y2ySpread": 0.41
     },
     {
       "date": "2026-09-07",
@@ -1363,7 +1701,9 @@
       "vix": 15.72,
       "hyOas": 2.67,
       "marginDailyYi": -20.046,
-      "foreignNetYi": 132.6856
+      "foreignNetYi": 132.6856,
+      "us10yYield": 4.8,
+      "us10y2ySpread": 0.41
     },
     {
       "date": "2026-09-09",
@@ -1373,7 +1713,9 @@
       "vix": 16.46,
       "hyOas": 2.71,
       "marginDailyYi": 8.9984,
-      "foreignNetYi": 209.2438
+      "foreignNetYi": 209.2438,
+      "us10yYield": 4.83,
+      "us10y2ySpread": 0.4
     },
     {
       "date": "2026-09-10",
@@ -1383,7 +1725,9 @@
       "vix": 17.84,
       "hyOas": 2.7,
       "marginDailyYi": 47.3088,
-      "foreignNetYi": -383.3416
+      "foreignNetYi": -383.3416,
+      "us10yYield": 4.95,
+      "us10y2ySpread": 0.39
     },
     {
       "date": "2026-09-11",
@@ -1392,7 +1736,9 @@
       "vix": 15.84,
       "hyOas": 2.65,
       "marginDailyYi": -40.2651,
-      "foreignNetYi": -892.7044
+      "foreignNetYi": -892.7044,
+      "us10yYield": 4.96,
+      "us10y2ySpread": 0.33
     },
     {
       "date": "2026-09-14",
@@ -1402,7 +1748,9 @@
       "vix": 17.1,
       "hyOas": 2.71,
       "marginDailyYi": -39.9357,
-      "foreignNetYi": -369.6357
+      "foreignNetYi": -369.6357,
+      "us10yYield": 4.97,
+      "us10y2ySpread": 0.32
     },
     {
       "date": "2026-09-15",
@@ -1412,7 +1760,9 @@
       "vix": 17.2,
       "hyOas": 2.76,
       "marginDailyYi": -16.3714,
-      "foreignNetYi": -626.989
+      "foreignNetYi": -626.989,
+      "us10yYield": 5.0,
+      "us10y2ySpread": 0.33
     },
     {
       "date": "2026-09-16",
@@ -1422,17 +1772,21 @@
       "vix": 17.71,
       "hyOas": 2.7,
       "marginDailyYi": 39.2619,
-      "foreignNetYi": -179.8048
+      "foreignNetYi": -179.8048,
+      "us10yYield": 5.01,
+      "us10y2ySpread": 0.27
     },
     {
       "date": "2026-09-17",
-      "taiex": 46288,
+      "taiex": 46288.0,
       "dxy": 100.22,
       "usdtwd": 31.8511,
       "vix": 15.44,
       "hyOas": 2.7,
       "marginDailyYi": 32.2872,
-      "foreignNetYi": 121.85
+      "foreignNetYi": 121.85,
+      "us10yYield": 4.94,
+      "us10y2ySpread": 0.27
     },
     {
       "date": "2026-09-18",
@@ -1441,7 +1795,9 @@
       "vix": 14.81,
       "hyOas": 2.68,
       "marginDailyYi": 46.4221,
-      "foreignNetYi": 869.9436
+      "foreignNetYi": 869.9436,
+      "us10yYield": 5.01,
+      "us10y2ySpread": 0.25
     },
     {
       "date": "2026-09-21",
@@ -1451,7 +1807,9 @@
       "vix": 14.87,
       "hyOas": 2.66,
       "marginDailyYi": 89.983,
-      "foreignNetYi": 204.7894
+      "foreignNetYi": 204.7894,
+      "us10yYield": 4.96,
+      "us10y2ySpread": 0.2
     },
     {
       "date": "2026-09-22",
@@ -1461,7 +1819,9 @@
       "vix": 14.21,
       "hyOas": 2.68,
       "marginDailyYi": 18.2364,
-      "foreignNetYi": 453.2093
+      "foreignNetYi": 453.2093,
+      "us10yYield": 4.96,
+      "us10y2ySpread": 0.25
     },
     {
       "date": "2026-09-23",
@@ -1471,7 +1831,9 @@
       "vix": 15.18,
       "hyOas": 2.73,
       "marginDailyYi": 15.0642,
-      "foreignNetYi": 373.1336
+      "foreignNetYi": 373.1336,
+      "us10yYield": 5.11,
+      "us10y2ySpread": 0.26
     },
     {
       "date": "2026-09-24",
@@ -1481,20 +1843,26 @@
       "vix": 15.67,
       "hyOas": 2.8,
       "marginDailyYi": 87.3557,
-      "foreignNetYi": -329.6461
+      "foreignNetYi": -329.6461,
+      "us10yYield": 5.18,
+      "us10y2ySpread": 0.31
     },
     {
       "date": "2026-09-25",
       "dxy": 100.97,
       "vix": 14.87,
-      "hyOas": 2.93
+      "hyOas": 2.93,
+      "us10yYield": 5.17,
+      "us10y2ySpread": 0.36
     },
     {
       "date": "2026-09-28",
       "dxy": 101.2,
       "usdtwd": 31.7822,
       "vix": 16.07,
-      "hyOas": 3.02
+      "hyOas": 3.02,
+      "us10yYield": 5.24,
+      "us10y2ySpread": 0.32
     },
     {
       "date": "2026-09-29",
@@ -1504,7 +1872,9 @@
       "vix": 16.04,
       "hyOas": 3.08,
       "marginDailyYi": 35.4994,
-      "foreignNetYi": -625.8255
+      "foreignNetYi": -625.8255,
+      "us10yYield": 5.26,
+      "us10y2ySpread": 0.37
     },
     {
       "date": "2026-09-30",
@@ -1514,7 +1884,9 @@
       "vix": 16.34,
       "hyOas": 3.12,
       "marginDailyYi": 35.9911,
-      "foreignNetYi": 308.5656
+      "foreignNetYi": 308.5656,
+      "us10yYield": 5.29,
+      "us10y2ySpread": 0.41
     },
     {
       "date": "2026-10-01",
@@ -1524,7 +1896,9 @@
       "vix": 16.39,
       "hyOas": 3.24,
       "marginDailyYi": 75.7061,
-      "foreignNetYi": 219.3733
+      "foreignNetYi": 219.3733,
+      "us10yYield": 5.24,
+      "us10y2ySpread": 0.46
     },
     {
       "date": "2026-10-02",
@@ -1533,7 +1907,9 @@
       "vix": 15.31,
       "hyOas": 3.1,
       "marginDailyYi": 52.3723,
-      "foreignNetYi": 26.218
+      "foreignNetYi": 26.218,
+      "us10yYield": 5.28,
+      "us10y2ySpread": 0.45
     },
     {
       "date": "2026-10-05",
@@ -1544,7 +1920,9 @@
       "hyOas": 3.12,
       "marginDailyYi": -17.527,
       "foreignNetYi": 718.9661,
-      "marginMaintenanceExEtf": 176.91
+      "marginMaintenanceExEtf": 176.91,
+      "us10yYield": 5.31,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-10-06",
@@ -1555,7 +1933,9 @@
       "hyOas": 3.03,
       "marginDailyYi": 43.0532,
       "foreignNetYi": -66.5734,
-      "marginMaintenanceExEtf": 175.52
+      "marginMaintenanceExEtf": 175.52,
+      "us10yYield": 5.27,
+      "us10y2ySpread": 0.48
     },
     {
       "date": "2026-10-07",
@@ -1566,7 +1946,9 @@
       "hyOas": 3.09,
       "marginDailyYi": 23.4373,
       "foreignNetYi": -130.4389,
-      "marginMaintenanceExEtf": 175.31
+      "marginMaintenanceExEtf": 175.31,
+      "us10yYield": 5.28,
+      "us10y2ySpread": 0.51
     },
     {
       "date": "2026-10-08",
@@ -1577,13 +1959,17 @@
       "hyOas": 3.15,
       "marginDailyYi": 64.0499,
       "foreignNetYi": -758.5229,
-      "marginMaintenanceExEtf": 173.84
+      "marginMaintenanceExEtf": 173.84,
+      "us10yYield": 5.22,
+      "us10y2ySpread": 0.47
     },
     {
       "date": "2026-10-09",
       "dxy": 102.21,
       "vix": 14.84,
-      "hyOas": 3.11
+      "hyOas": 3.11,
+      "us10yYield": 5.24,
+      "us10y2ySpread": 0.44
     },
     {
       "date": "2026-10-12",
@@ -1605,7 +1991,9 @@
       "hyOas": 3.16,
       "marginDailyYi": -83.5088,
       "foreignNetYi": -1652.9051,
-      "marginMaintenanceExEtf": 167.37
+      "marginMaintenanceExEtf": 167.37,
+      "us10yYield": 5.21,
+      "us10y2ySpread": 0.42
     },
     {
       "date": "2026-10-14",
@@ -1616,17 +2004,21 @@
       "hyOas": 3.25,
       "marginDailyYi": 65.8876,
       "foreignNetYi": -200.3734,
-      "marginMaintenanceExEtf": 169.05
+      "marginMaintenanceExEtf": 169.05,
+      "us10yYield": 5.19,
+      "us10y2ySpread": 0.37
     },
     {
       "date": "2026-10-15",
       "taiex": 46969.87,
-      "dxy": 102,
+      "dxy": 102.0,
       "usdtwd": 32.265,
       "vix": 16.46,
       "hyOas": 3.23,
       "marginDailyYi": -51.4134,
-      "marginMaintenanceExEtf": 160.15
+      "marginMaintenanceExEtf": 160.15,
+      "us10yYield": 5.1,
+      "us10y2ySpread": 0.33
     },
     {
       "date": "2026-10-16",
@@ -1637,7 +2029,9 @@
       "hyOas": 3.31,
       "marginDailyYi": -8.2182,
       "foreignNetYi": -461.4716,
-      "marginMaintenanceExEtf": 161.64
+      "marginMaintenanceExEtf": 161.64,
+      "us10yYield": 5.09,
+      "us10y2ySpread": 0.35
     },
     {
       "date": "2026-10-19",
@@ -1648,7 +2042,9 @@
       "hyOas": 3.29,
       "marginDailyYi": -49.7562,
       "foreignNetYi": -767.4274,
-      "marginMaintenanceExEtf": 159.62
+      "marginMaintenanceExEtf": 159.62,
+      "us10yYield": 5.15,
+      "us10y2ySpread": 0.38
     },
     {
       "date": "2026-10-20",
@@ -1659,7 +2055,9 @@
       "hyOas": 3.33,
       "marginDailyYi": -25.1782,
       "foreignNetYi": -795.3969,
-      "marginMaintenanceExEtf": 157.49
+      "marginMaintenanceExEtf": 157.49,
+      "us10yYield": 5.12,
+      "us10y2ySpread": 0.33
     },
     {
       "date": "2026-10-21",
@@ -1670,7 +2068,9 @@
       "hyOas": 3.27,
       "marginDailyYi": 62.7345,
       "foreignNetYi": 22.3891,
-      "marginMaintenanceExEtf": 161.21
+      "marginMaintenanceExEtf": 161.21,
+      "us10yYield": 5.13,
+      "us10y2ySpread": 0.32
     },
     {
       "date": "2026-10-22",
@@ -1681,20 +2081,26 @@
       "hyOas": 3.4,
       "marginDailyYi": -104.9345,
       "foreignNetYi": -815.821,
-      "marginMaintenanceExEtf": 155.76
+      "marginMaintenanceExEtf": 155.76,
+      "us10yYield": 4.96,
+      "us10y2ySpread": 0.31
     },
     {
       "date": "2026-10-23",
       "dxy": 101.81,
       "vix": 19.45,
-      "hyOas": 3.38
+      "hyOas": 3.38,
+      "us10yYield": 5.0,
+      "us10y2ySpread": 0.31
     },
     {
       "date": "2026-10-26",
       "dxy": 101.96,
       "usdtwd": 32.5348,
       "vix": 18.39,
-      "hyOas": 3.3
+      "hyOas": 3.3,
+      "us10yYield": 5.0,
+      "us10y2ySpread": 0.32
     },
     {
       "date": "2026-10-27",
@@ -1705,7 +2111,9 @@
       "hyOas": 3.18,
       "marginDailyYi": -104.9331,
       "foreignNetYi": -80.3887,
-      "marginMaintenanceExEtf": 154.77
+      "marginMaintenanceExEtf": 154.77,
+      "us10yYield": 4.99,
+      "us10y2ySpread": 0.29
     },
     {
       "date": "2026-10-28",
@@ -1716,7 +2124,9 @@
       "hyOas": 3.14,
       "marginDailyYi": 89.1272,
       "foreignNetYi": 159.5662,
-      "marginMaintenanceExEtf": 161.51
+      "marginMaintenanceExEtf": 161.51,
+      "us10yYield": 5.05,
+      "us10y2ySpread": 0.38
     },
     {
       "date": "2026-10-29",
@@ -1727,7 +2137,9 @@
       "hyOas": 3.26,
       "marginDailyYi": 16.113,
       "foreignNetYi": -688.1528,
-      "marginMaintenanceExEtf": 157.21
+      "marginMaintenanceExEtf": 157.21,
+      "us10yYield": 4.98,
+      "us10y2ySpread": 0.37
     },
     {
       "date": "2026-10-30",
@@ -1738,7 +2150,9 @@
       "hyOas": 3.44,
       "marginDailyYi": -104.4296,
       "foreignNetYi": -1124.6725,
-      "marginMaintenanceExEtf": 150.94
+      "marginMaintenanceExEtf": 150.94,
+      "us10yYield": 4.94,
+      "us10y2ySpread": 0.38
     },
     {
       "date": "2026-11-02",
@@ -1749,7 +2163,9 @@
       "hyOas": 3.43,
       "marginDailyYi": -7.6852,
       "foreignNetYi": -735.2081,
-      "marginMaintenanceExEtf": 150.96
+      "marginMaintenanceExEtf": 150.96,
+      "us10yYield": 4.91,
+      "us10y2ySpread": 0.32
     },
     {
       "date": "2026-11-03",
@@ -1760,7 +2176,9 @@
       "hyOas": 3.4,
       "marginDailyYi": -229.249,
       "foreignNetYi": -1073.0672,
-      "marginMaintenanceExEtf": 142.09
+      "marginMaintenanceExEtf": 142.09,
+      "us10yYield": 4.95,
+      "us10y2ySpread": 0.34
     },
     {
       "date": "2026-11-04",
@@ -1771,7 +2189,9 @@
       "hyOas": 3.32,
       "marginDailyYi": -28.286,
       "foreignNetYi": -1498.9983,
-      "marginMaintenanceExEtf": 143.56
+      "marginMaintenanceExEtf": 143.56,
+      "us10yYield": 4.9,
+      "us10y2ySpread": 0.32
     },
     {
       "date": "2026-11-05",
@@ -1782,7 +2202,9 @@
       "hyOas": 3.48,
       "marginDailyYi": -205.368,
       "foreignNetYi": -1024.6062,
-      "marginMaintenanceExEtf": 134.86
+      "marginMaintenanceExEtf": 134.86,
+      "us10yYield": 4.84,
+      "us10y2ySpread": 0.38
     },
     {
       "date": "2026-11-06",
@@ -1793,7 +2215,9 @@
       "hyOas": 3.42,
       "marginDailyYi": -423.5641,
       "foreignNetYi": -911.8825,
-      "marginMaintenanceExEtf": 129.68
+      "marginMaintenanceExEtf": 129.68,
+      "us10yYield": 4.86,
+      "us10y2ySpread": 0.35
     },
     {
       "date": "2026-11-09",
@@ -1804,7 +2228,9 @@
       "hyOas": 3.34,
       "marginDailyYi": 58.6299,
       "foreignNetYi": -900.5637,
-      "marginMaintenanceExEtf": 139.43
+      "marginMaintenanceExEtf": 139.43,
+      "us10yYield": 4.88,
+      "us10y2ySpread": 0.32
     },
     {
       "date": "2026-11-10",
@@ -1815,7 +2241,9 @@
       "hyOas": 3.3,
       "marginDailyYi": -32.3701,
       "foreignNetYi": -341.1669,
-      "marginMaintenanceExEtf": 145.32
+      "marginMaintenanceExEtf": 145.32,
+      "us10yYield": 4.98,
+      "us10y2ySpread": 0.25
     },
     {
       "date": "2026-11-11",
@@ -1837,7 +2265,9 @@
       "hyOas": 3.2,
       "marginDailyYi": -76.8346,
       "foreignNetYi": -6.845,
-      "marginMaintenanceExEtf": 146.22
+      "marginMaintenanceExEtf": 146.22,
+      "us10yYield": 5.1,
+      "us10y2ySpread": 0.24
     },
     {
       "date": "2026-11-13",
@@ -1848,7 +2278,9 @@
       "hyOas": 3.23,
       "marginDailyYi": 31.2431,
       "foreignNetYi": 288.3669,
-      "marginMaintenanceExEtf": 149.75
+      "marginMaintenanceExEtf": 149.75,
+      "us10yYield": 5.15,
+      "us10y2ySpread": 0.27
     },
     {
       "date": "2026-11-16",
@@ -1859,7 +2291,9 @@
       "hyOas": 3.34,
       "marginDailyYi": -121.0091,
       "foreignNetYi": -701.8921,
-      "marginMaintenanceExEtf": 138.96
+      "marginMaintenanceExEtf": 138.96,
+      "us10yYield": 5.12,
+      "us10y2ySpread": 0.29
     },
     {
       "date": "2026-11-17",
@@ -1870,7 +2304,9 @@
       "hyOas": 3.43,
       "marginDailyYi": -157.7676,
       "foreignNetYi": -380.9364,
-      "marginMaintenanceExEtf": 134.24
+      "marginMaintenanceExEtf": 134.24,
+      "us10yYield": 5.1,
+      "us10y2ySpread": 0.3
     },
     {
       "date": "2026-11-18",
@@ -1880,7 +2316,8 @@
       "vix": 24.56,
       "marginDailyYi": -6.9488,
       "foreignNetYi": -765.6368,
-      "marginMaintenanceExEtf": 136.69
+      "marginMaintenanceExEtf": 136.69,
+      "us10y2ySpread": 0.27
     }
   ]
 }
