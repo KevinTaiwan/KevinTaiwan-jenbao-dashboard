@@ -165,6 +165,42 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
  .technical-stack-readouts{grid-template-columns:1fr}
  .technical-stack-svg{height:485px}
 }
+
+/* Three-panel workbench has two user-switchable layouts. Compact fits a ~900px-tall laptop viewport when scrolled into view. */
+.technical-stack-row.technical-stack-compact{gap:6px;padding:9px 13px}
+.technical-stack-layout-switch{display:flex;gap:5px;align-items:center}
+.technical-stack-layout-switch button{border:1px solid #436883;border-radius:6px;background:#112b45;color:#c2d9e9;padding:5px 10px;cursor:pointer;font-size:12px}
+.technical-stack-layout-switch button.active{color:#061e30;background:#8ce4e5;border-color:#8ce4e5;font-weight:700}
+.technical-stack-overlays{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.technical-stack-overlay-btn{border:1px solid #3e5a70;border-radius:6px;padding:4px 9px;background:#102538;color:#95adbc;opacity:.76;cursor:pointer;font-size:11px;display:inline-flex;gap:5px;align-items:center}
+.technical-stack-overlay-btn i{height:0;width:14px;border-top:3px dashed var(--tech-overlay-color)}
+.technical-stack-overlay-btn.enabled{background:#28445c;border-color:var(--tech-overlay-color);color:#f1fbff;opacity:1;font-weight:700}
+.technical-stack-overlay-btn:focus-visible,.technical-stack-layout-switch button:focus-visible{outline:2px solid #aae9ee;outline-offset:2px}
+.technical-stack-compact .technical-stack-selectors{gap:6px}
+.technical-stack-compact .technical-stack-selectors label{font-size:10px;gap:3px}
+.technical-stack-compact .technical-stack-selectors select{padding:4px 7px;font-size:12px;height:29px}
+.technical-stack-compact .technical-stack-head strong{font-size:15px}
+.technical-stack-compact .technical-stack-instructions{font-size:10px;line-height:1.3}
+.technical-stack-compact .technical-stack-svg{height:320px}
+.technical-stack-standard .technical-stack-svg{height:520px}
+.technical-stack-compact .technical-stack-readouts{gap:5px}
+.technical-stack-compact .technical-stack-readouts>div{padding:5px 8px;font-size:10px;line-height:1.3}
+.technical-stack-compact .technical-stack-readouts strong{font-size:11px;display:inline}
+.technical-stack-compact .technical-stack-readouts span{display:inline;padding-left:6px}
+.technical-stack-compact .technical-stack-readouts small{font-size:10px;line-height:1.4}
+.technical-stack-compact .technical-stack-txt{display:none}
+.technical-stack-standard .technical-stack-txt{display:block}
+@media(max-width:950px){
+ .technical-stack-compact .technical-stack-selectors{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .technical-stack-compact .technical-stack-svg{height:315px}
+}
+@media(max-width:650px){
+ .technical-stack-compact .technical-stack-selectors,.technical-stack-standard .technical-stack-selectors{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .technical-stack-compact .technical-stack-svg{height:315px}
+ .technical-stack-standard .technical-stack-svg{height:440px}
+ .technical-stack-compact .technical-stack-readouts{grid-template-columns:1fr}
+ .technical-stack-layout-switch button{padding:5px 8px}
+}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -304,7 +340,7 @@ const TECH_PRICE_KEYS=["taiex","voo","qqq","dxy","usdtwd","vix","hyOas","us10yYi
 const TECH_MIDDLE_KEYS=["foreignNetYi","marginDailyYi","foreignCumulativeYi","marginMaintenanceExEtf"];
 const TECH_STACK_KEY="jb-technical-stack-v1";
 function readTechnicalStackSettings(){
- const defaults={top:"taiex",middle:"foreignNetYi",bottomSource:"follow",oscillator:"MACD"};
+ const defaults={top:"taiex",middle:"foreignNetYi",bottomSource:"follow",oscillator:"MACD",layout:"compact",overlays:{ma5:false,ma10:false,ma20:false,ma60:false,bb:false}};
  try{
   const x=JSON.parse(localStorage.getItem(TECH_STACK_KEY)||"null");
   if(x&&typeof x==="object"&&!Array.isArray(x)){
@@ -312,7 +348,9 @@ function readTechnicalStackSettings(){
     top:TECH_PRICE_KEYS.includes(x.top)?x.top:defaults.top,
     middle:TECH_MIDDLE_KEYS.includes(x.middle)?x.middle:defaults.middle,
     bottomSource:x.bottomSource==="follow"||TECH_PRICE_KEYS.includes(x.bottomSource)?x.bottomSource:defaults.bottomSource,
-    oscillator:["MACD","RSI"].includes(x.oscillator)?x.oscillator:defaults.oscillator
+    oscillator:["MACD","RSI"].includes(x.oscillator)?x.oscillator:defaults.oscillator,
+    layout:["compact","standard"].includes(x.layout)?x.layout:defaults.layout,
+    overlays:Object.fromEntries(Object.keys(defaults.overlays).map(k=>[k,x.overlays?.[k]===true]))
    };
   }
  }catch(e){}
@@ -320,9 +358,15 @@ function readTechnicalStackSettings(){
 }
 let techSettings=readTechnicalStackSettings();
 function updateTechnicalSetting(field,value){
- const valid=field==="top"?TECH_PRICE_KEYS.includes(value):field==="middle"?TECH_MIDDLE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI"].includes(value):false;
+ const valid=field==="top"?TECH_PRICE_KEYS.includes(value):field==="middle"?TECH_MIDDLE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
  if(!valid)return false;
  techSettings={...techSettings,[field]:value};
+ try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
+ showHistory();return true;
+}
+function toggleTechnicalOverlay(key){
+ if(!["ma5","ma10","ma20","ma60","bb"].includes(key))return false;
+ techSettings={...techSettings,overlays:{...techSettings.overlays,[key]:!techSettings.overlays[key]}};
  try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
  showHistory();return true;
 }
@@ -489,7 +533,7 @@ function syncChartCursor(date){
   }
   const put=(q,v)=>{const element=host.querySelector(q);if(element)element.textContent=v};
   put('[data-tech-readout="top"]',top?historyFormat(top.value,2)+" · "+selected:"當日無數值");
-  put('[data-tech-extra="top"]',tech.ma.map(m=>{const p=m.rows.find(r=>r.date===selected);return "MA"+m.n+" "+(p?historyFormat(p.value,2):"—")}).join(" · ")+"｜BB20 "+(bb?historyFormat(bb.lower,2)+"–"+historyFormat(bb.upper,2):"—"));
+  put('[data-tech-extra="top"]', [...tech.ma.filter(m=>tech.c.overlays["ma"+m.n]).map(m=>{const p=m.rows.find(r=>r.date===selected);return "MA"+m.n+" "+(p?historyFormat(p.value,2):"—")}),...(tech.c.overlays.bb?["BB20 "+(bb?historyFormat(bb.lower,2)+"–"+historyFormat(bb.upper,2):"—")]:[])].join(" · ")||"MA／BB 已全部關閉");
   put('[data-tech-readout="middle"]',mid?historyFormat(mid.value,2)+" · "+selected:"當日無數值");
   put('[data-tech-readout="bottom"]',bottom?(tech.c.oscillator==="RSI"?"RSI14 "+historyFormat(bottom.value,2):"MACD "+historyFormat(bottom.macd,3)):"暖機不足／當日無數值");
   put('[data-tech-extra="bottom"]',bottom&&tech.c.oscillator==="MACD"?"Signal "+historyFormat(bottom.signal,3)+" · Histogram "+historyFormat(bottom.hist,3):"");
@@ -580,14 +624,17 @@ function showHistory(){
   let middle;
   if(c.middle==="foreignCumulativeYi"){let total=0;middle=raw.filter(r=>Number.isFinite(r.foreignNetYi)&&r.date&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:(total+=r.foreignNetYi)}));}
   else middle=techFiltered(techPriceObservations(raw,c.middle),start,end);
-  const panel=[{start:30,end:270},{start:306,end:394},{start:430,end:535}],x=d=>X(marketChartDate(d));
+  const compact=c.layout!=="standard";
+  const panel=compact?[{start:27,end:185},{start:212,end:271},{start:299,end:365}]:[{start:30,end:270},{start:306,end:394},{start:430,end:535}];
+  const svgBottom=compact?391:571;
+  const x=d=>X(marketChartDate(d));
   const bounds=(values,zero=false)=>{
    const nums=values.filter(Number.isFinite);
    const a=nums.length?Math.min(...nums):0,b=nums.length?Math.max(...nums):1,lo=zero?Math.min(a,0):a,hi=zero?Math.max(b,0):b;
    const pad=Math.max((hi-lo)*.07,Math.abs(hi)*.002,.0001);
    return [lo-pad,hi+pad];
   };
-  const [t0,t1]=bounds([...top.map(r=>r.value),...bb.flatMap(r=>[r.upper,r.lower]),...ma.flatMap(m=>m.rows.map(r=>r.value))]);
+  const [t0,t1]=bounds([...top.map(r=>r.value),...(c.overlays.bb?bb.flatMap(r=>[r.upper,r.lower]):[]),...ma.filter(m=>c.overlays["ma"+m.n]).flatMap(m=>m.rows.map(r=>r.value))]);
   const [m0,m1]=bounds(middle.map(r=>r.value),true);
   const oscillatorValues=c.oscillator==="RSI"?[0,100]:osc.flatMap(r=>[r.macd,r.signal,r.hist]);
   const [o0,o1]=c.oscillator==="RSI"?[0,100]:bounds(oscillatorValues,true);
@@ -598,8 +645,8 @@ function showHistory(){
    return '<rect x="38" y="'+a.start+'" width="720" height="'+(a.end-a.start)+'" fill="none" stroke="#3b5b73"/>'+[0,.5,1].map(k=>{const y=a.start+(a.end-a.start)*k;return '<line x1="38" x2="758" y1="'+y+'" y2="'+y+'" stroke="#2f4a60" stroke-width=".7"/><text x="33" y="'+(y+3)+'" fill="#bad0e0" text-anchor="end" font-size="10">'+historyFormat(bound[1]-(bound[1]-bound[0])*k,2)+'</text>'}).join("");
   }).join("");
   const upper=bb.map(r=>({date:r.date,value:r.upper})),lower=bb.map(r=>({date:r.date,value:r.lower}));
-  const priceLines=line(top,"value",ys[0],"#6ae0ed",2.8)+line(upper,"value",ys[0],"#daa5fb",1.4,"5 4")+line(lower,"value",ys[0],"#daa5fb",1.4,"5 4")+
-   ma.map((m,i)=>line(m.rows,"value",ys[0],["#ffce77","#ffa2a6","#99c7ff","#96d6a2"][i],1.7,"6 3")).join("");
+  const priceLines=line(top,"value",ys[0],"#6ae0ed",2.8)+(c.overlays.bb?line(upper,"value",ys[0],"#daa5fb",1.4,"5 4")+line(lower,"value",ys[0],"#daa5fb",1.4,"5 4"):"")+
+   ma.map((m,i)=>c.overlays["ma"+m.n]?line(m.rows,"value",ys[0],["#ffce77","#ffa2a6","#99c7ff","#96d6a2"][i],1.7,"6 3"):"").join("");
   const midBars=["foreignNetYi","marginDailyYi"].includes(c.middle);
   const midLines=midBars?middle.map(r=>'<line x1="'+x(r.date)+'" x2="'+x(r.date)+'" y1="'+ys[1](0)+'" y2="'+ys[1](r.value)+'" stroke="'+(r.value>=0?"#f5a4a6":"#74dfb3")+'" stroke-width="'+Math.max(2,Math.min(9,600/chartDays))+'"/>').join(""):line(middle,"value",ys[1],"#ffba76",2.3);
   let oscLines;
@@ -615,12 +662,16 @@ function showHistory(){
    label("中層來源｜籌碼","middle",c.middle,techOptions(TECH_MIDDLE_KEYS,c.middle))+
    label("下層指標來源","bottomSource",c.bottomSource,'<option value="follow"'+(c.bottomSource==="follow"?' selected':'')+'>跟隨上層</option>'+techOptions(TECH_PRICE_KEYS,c.bottomSource))+
    label("下層指標類型","oscillator",c.oscillator,["MACD","RSI"].map(k=>'<option value="'+k+'"'+(c.oscillator===k?' selected':'')+'>'+k+'</option>').join(""))+'</div>';
-  const labels=[["上層｜價格折線＋MA5/10/20/60＋布林通道",20],["中層｜"+techSeriesName(c.middle)+"（籌碼代理，非成交量）",297],["下層｜"+c.oscillator+"（"+techSeriesName(bottomKey)+"）",422]].map(([text,y])=>'<text x="40" y="'+y+'" fill="#d9f1fc" font-size="12">'+esc(text)+'</text>').join("");
-  const xticks=[0,.25,.5,.75,1].map(k=>'<text x="'+(38+720*k)+'" y="559" fill="#9ebdce" text-anchor="middle" font-size="11">'+new Date(start+(end-start)*k).toISOString().slice(5,10)+'</text>').join("");
-  const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 571" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標">'+grid+labels+priceLines+midLines+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="535"/>'+xticks+'</svg>';
+  const overlayButtons='<div class="technical-stack-overlays" role="group" aria-label="均線和布林通道顯示開關">'+
+   [["ma5","MA5","#ffce77"],["ma10","MA10","#ffa2a6"],["ma20","MA20","#99c7ff"],["ma60","MA60","#96d6a2"],["bb","BBands","#daa5fb"]].map(([key,label,color])=>
+    '<button type="button" class="technical-stack-overlay-btn'+(c.overlays[key]?' enabled':'')+'" data-tech-overlay="'+key+'" aria-pressed="'+(c.overlays[key]?'true':'false')+'" style="--tech-overlay-color:'+color+'"><i></i>'+label+'</button>'
+   ).join("")+'</div>';
+  const labels=[["上層｜價格折線"+(Object.values(c.overlays).some(Boolean)?"＋選用技術線":""),compact?17:20],["中層｜"+techSeriesName(c.middle)+"（籌碼代理，非成交量）",compact?203:297],["下層｜"+c.oscillator+"（"+techSeriesName(bottomKey)+"）",compact?290:422]].map(([text,y])=>'<text x="40" y="'+y+'" fill="#d9f1fc" font-size="12">'+esc(text)+'</text>').join("");
+  const xticks=[0,.25,.5,.75,1].map(k=>'<text x="'+(38+720*k)+'" y="'+(compact?384:559)+'" fill="#9ebdce" text-anchor="middle" font-size="11">'+new Date(start+(end-start)*k).toISOString().slice(5,10)+'</text>').join("");
+  const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標">'+grid+labels+priceLines+midLines+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+'</svg>';
   const readouts='<div class="technical-stack-readouts"><div><strong>上層：價格、均線與 BB</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>中層：籌碼</strong><span data-tech-readout="middle">—</span></div><div><strong>下層：'+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
-  const details='<div class="technical-stack-txt">v1 採現有逐日數值畫折線，非 OHLC K 線；中層為籌碼代理，不是成交量。布林通道 BB(20,2)；MACD＝EMA12－EMA26、訊號 EMA9、柱為差值；RSI＝14 期 Wilder。所有技術指標以完整歷史資料暖機，不因 20／60／120／240 日顯示區間重新計算；不足筆數不繪製。同步時間游標僅按住黃線才可拖動。</div>';
-  return {markup:'<div class="cross-row technical-stack-row" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><div class="technical-stack-instructions">上：價格類｜中：籌碼代理｜下：MACD 或 RSI</div></div>'+chartSortControls("technicalStack","三層技術分析圖")+'</div>'+controls+svg+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys};
+  const details='<div class="technical-stack-txt">v1：上層為收盤數值折線，非 OHLC K 線；中層為籌碼代理，不是成交量。BB(20,2)、MACD(12,26,9)、RSI(14) 使用完整歷史暖機，不因顯示期間縮短而重算；黃線按住左鍵才能同步拖曳。</div>';
+  return {markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div></div>'+controls+overlayButtons+svg+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
@@ -704,6 +755,10 @@ crossHost.addEventListener("change",event=>{
  if(target&&!updateTechnicalSetting(target.dataset.techField,target.value))target.value=techSettings[target.dataset.techField];
 });
 crossHost.addEventListener("click",event=>{
+ const layoutBtn=event.target.closest?.("[data-tech-layout]");
+ if(layoutBtn){updateTechnicalSetting("layout",layoutBtn.dataset.techLayout);event.preventDefault();return}
+ const overlayBtn=event.target.closest?.("[data-tech-overlay]");
+ if(overlayBtn){toggleTechnicalOverlay(overlayBtn.dataset.techOverlay);event.preventDefault();return}
  const maBtn=event.target.closest?.("[data-ma-key][data-ma-period]");
  if(maBtn){
   toggleChartMa(maBtn.dataset.maKey,Number(maBtn.dataset.maPeriod));
