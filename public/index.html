@@ -160,14 +160,14 @@ const comparisonStorageKey="jb-four-normalize-compare-v1";
 function readComparisonKeys(){
  try{
   const a=JSON.parse(localStorage.getItem(comparisonStorageKey)||"null");
-  if(Array.isArray(a)&&a.length===4&&new Set(a).size===4&&a.every(k=>seriesConfig.some(c=>c[0]===k)))return a;
+  if(Array.isArray(a)&&a.length===4&&a.every(k=>k===""||seriesConfig.some(c=>c[0]===k))&&new Set(a.filter(Boolean)).size===a.filter(Boolean).length)return a;
  }catch(e){}
  return ["taiex","dxy","vix","hyOas"];
 }
 let comparisonKeys=readComparisonKeys();
 function setComparisonKey(slot,key){
- if(!Number.isInteger(slot)||slot<0||slot>3||!seriesConfig.some(c=>c[0]===key))return false;
- if(comparisonKeys.some((k,i)=>i!==slot&&k===key))return false;
+ if(!Number.isInteger(slot)||slot<0||slot>3||(key!==""&&!seriesConfig.some(c=>c[0]===key)))return false;
+ if(key!==""&&comparisonKeys.some((k,i)=>i!==slot&&k===key))return false;
  comparisonKeys=[...comparisonKeys];comparisonKeys[slot]=key;
  try{localStorage.setItem(comparisonStorageKey,JSON.stringify(comparisonKeys))}catch(e){}
  showHistory();return true;
@@ -193,7 +193,7 @@ function comparisonNormalize(value,low,high){
 }
 function comparisonSeriesInfo(series){
  return comparisonKeys.map((key,i)=>{
-  const s=series.find(a=>a.key===key);
+  const s=key?series.find(a=>a.key===key):null;
   const values=s?s.rows.map(r=>r[key]):[];
   const min=values.length?Math.min(...values):null,max=values.length?Math.max(...values):null;
   const points=s?s.rows.map(r=>({date:r.date,raw:r[key],normalized:comparisonNormalize(r[key],min,max)})):[];
@@ -290,8 +290,8 @@ function syncChartCursor(date){
    const y=row?state.compareY(row.normalized):0;
    for(const item of [line,point])if(item){item.setAttribute("visibility",row?"visible":"hidden");if(row){if(item===line){item.setAttribute("y1",String(y));item.setAttribute("y2",String(y))}else{item.setAttribute("cx",selectedX.toFixed(2));item.setAttribute("cy",String(y))}}}
    const rawLabel=host.querySelector('[data-compare-value="'+i+'"]'),normLabel=host.querySelector('[data-compare-normalized="'+i+'"]');
-   if(rawLabel)rawLabel.textContent=row&&o.s?'原始值：'+unitValue(o.s,row.raw):'當日無觀測值';
-   if(normLabel)normLabel.textContent=row?'Normalize：'+historyFormat(row.normalized,1)+'/100':'Normalize：—';
+   if(rawLabel)rawLabel.textContent=!o.s?"未選取指標":row?"原始值："+unitValue(o.s,row.raw):"當日無觀測值";
+   if(normLabel)normLabel.textContent=row?"Normalize："+historyFormat(row.normalized,1)+"/100":o.s?"Normalize：—":"";
   });
   const coverage=host.querySelector("#comparisonCoverage");
   if(coverage)coverage.textContent='｜該日具數值 '+present+'/4';
@@ -376,7 +376,7 @@ function showHistory(){
  const comparisonInfo=comparisonSeriesInfo(series);
  const renderComparison=()=>{
   const selectors='<div class="cross-compare-selectors">'+comparisonKeys.map((chosen,i)=>{
-   const options=series.map(s=>'<option value="'+s.key+'"'+(s.key===chosen?' selected':'')+'>'+esc(s.label)+'</option>').join("");
+   const options='<option value=""'+(chosen===""?' selected':'')+'>空白（不選）</option>'+series.map(s=>'<option value="'+s.key+'"'+(s.key===chosen?' selected':'')+'>'+esc(s.label)+'</option>').join("");
    return '<label><span style="color:'+COMPARISON_COLORS[i]+'">比較線 '+(i+1)+'</span><select data-compare-slot="'+i+'" aria-label="選擇第'+(i+1)+'條比較線">'+options+'</select></label>';
   }).join("")+'</div>';
   const guidelines=[0,25,50,75,100].map(n=>guide(Yratio(n,0,100))).join("");
@@ -387,9 +387,9 @@ function showHistory(){
   }).join("");
   const selectedLines=comparisonInfo.map((o,i)=>'<line data-compare-hline="'+i+'" x1="'+LEFT+'" y1="0" x2="'+RIGHT+'" y2="0" stroke="'+o.color+'" stroke-width="1.4" stroke-dasharray="4 5" visibility="hidden"/><circle data-compare-point="'+i+'" cx="38" cy="0" r="4.5" stroke="#f8f8fa" stroke-width="1.2" fill="'+o.color+'" visibility="hidden"/>').join("");
   const svg='<svg class="cross-svg cross-compare-svg" data-compare-svg="1" viewBox="0 0 780 244" role="img" aria-label="四項指標 Min-Max 標準化比較，共用時間軸，無移動平均線">'+guidelines+lines+selectedLines+'<line class="cross-cursor-line" x1="'+LEFT+'" y1="24" x2="'+LEFT+'" y2="'+BOTTOM+'"/>'+svgText(33,38,"100","end")+svgText(33,Yratio(50,0,100)+4,"50","end")+svgText(33,BOTTOM+3,"0","end")+dates()+'</svg>';
-  const readouts='<div class="cross-compare-readouts">'+comparisonInfo.map((o,i)=>'<div class="cross-compare-readout" data-compare-readout="'+i+'"><strong style="color:'+o.color+'">'+esc(o.s?.label||o.key)+'</strong><span data-compare-value="'+i+'">選擇日期以查看原始值</span><small data-compare-normalized="'+i+'">Normalize：—</small></div>').join("")+'</div>';
+  const readouts='<div class="cross-compare-readouts">'+comparisonInfo.map((o,i)=>'<div class="cross-compare-readout" data-compare-readout="'+i+'"><strong style="color:'+o.color+'">'+esc(o.s?.label||"空白（不選）")+'</strong><span data-compare-value="'+i+'">'+(o.s?"選擇日期以查看原始值":"未選取指標") + '</span><small data-compare-normalized="'+i+'">Normalize：—</small></div>').join("")+'</div>';
   const legend='<div class="cross-compare-summary">Normalize＝(當日數值－所選期間最小值)／(最大值－最小值) × 100；每條線各自計算，全部對齊相同日期。若期間值不變，畫在 50。適用負值指標；此圖不繪 MA5／20／60。<span id="comparisonCoverage"></span></div>';
-  return '<div class="cross-row cross-compare-row" data-cross-row="comparison"><div class="cross-compare-heading"><div><strong>四指標自選比較｜Normalize 0–100</strong><div class="cross-compare-sub">可從其餘 14 張圖任選四條線，不同單位亦可在相同刻度比較變化方向。</div></div>'+chartSortControls("comparison","四指標 Normalize 比較")+'</div>'+selectors+svg+readouts+legend+'</div>';
+  return '<div class="cross-row cross-compare-row" data-cross-row="comparison"><div class="cross-compare-heading"><div><strong>四指標自選比較｜Normalize 0–100</strong><div class="cross-compare-sub">四個欄位可分別選擇其他 14 張圖，或選「空白（不選）」；空白不繪線，選取的指標不可重複。不同單位使用相同刻度比較變化方向。</div></div>'+chartSortControls("comparison","四指標 Normalize 比較")+'</div>'+selectors+svg+readouts+legend+'</div>';
  };
  host.innerHTML=chartOrder.map(k=>k==="comparison"?renderComparison():series.some(s=>s.key===k)?renderRow(series.find(s=>s.key===k)):"").join("");
  chartContext={start,end,series,dates:uniqueDays,x:X,comparisonInfo,compareY:v=>Yratio(v,0,100)};
@@ -473,7 +473,7 @@ crossHost.addEventListener("change",event=>{
  const slot=Number(selector.dataset.compareSlot),selected=selector.value;
  if(!setComparisonKey(slot,selected)){
   selector.value=comparisonKeys[slot];
-  if(typeof toast==="function")toast("請從其他 14 張圖選擇不同指標；比較圖需要四條不重複的線。");
+  if(typeof toast==="function")toast("已選的指標不可重複；可改選「空白（不選）」。");
  }
 });
 crossHost.addEventListener("click",event=>{
