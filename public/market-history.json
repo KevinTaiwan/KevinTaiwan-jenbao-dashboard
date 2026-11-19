@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-19T07:15:17+00:00",
+  "generatedAt": "2026-11-19T08:06:53+00:00",
   "cutoff": "2026-11-18",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -16,7 +16,8 @@
     "us10yYield": "percent, 10-year Treasury constant maturity yield (FRED DGS10)",
     "us10y2ySpread": "percentage points, 10-year minus 2-year Treasury constant maturity spread (FRED T10Y2Y)",
     "voo": "USD per VOO share, Yahoo Finance daily unadjusted Close; distributions excluded",
-    "qqq": "USD per QQQ share, Yahoo Finance daily unadjusted Close; distributions excluded"
+    "qqq": "USD per QQQ share, Yahoo Finance daily unadjusted Close; distributions excluded",
+    "fedFundsEffective": "percent, effective federal funds overnight rate, FRED DFF (not FOMC target range)"
   },
   "stats": {
     "taiex": {
@@ -150,6 +151,17 @@
         "name": "Yahoo Finance QQQ daily ETF Close, USD, unadjusted; excludes distributions",
         "url": "https://finance.yahoo.com/quote/QQQ/history/"
       }
+    },
+    "fedFundsEffective": {
+      "count": 299,
+      "first": "2026-01-23",
+      "last": "2026-11-17",
+      "lastValue": 3.88,
+      "status": "ready",
+      "source": {
+        "name": "FRED DFF daily observations",
+        "url": "https://fred.stlouisfed.org/series/DFF"
+      }
     }
   },
   "rows": [
@@ -161,7 +173,16 @@
       "us10yYield": 4.24,
       "us10y2ySpread": 0.64,
       "voo": 633.83,
-      "qqq": 622.72
+      "qqq": 622.72,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-01-24",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-01-25",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-01-26",
@@ -172,7 +193,8 @@
       "us10yYield": 4.22,
       "us10y2ySpread": 0.66,
       "voo": 637.09,
-      "qqq": 625.46
+      "qqq": 625.46,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-01-27",
@@ -183,7 +205,8 @@
       "us10yYield": 4.24,
       "us10y2ySpread": 0.71,
       "voo": 639.7,
-      "qqq": 631.13
+      "qqq": 631.13,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-01-28",
@@ -194,7 +217,8 @@
       "us10yYield": 4.26,
       "us10y2ySpread": 0.7,
       "voo": 639.6,
-      "qqq": 633.22
+      "qqq": 633.22,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-01-29",
@@ -205,7 +229,8 @@
       "us10yYield": 4.24,
       "us10y2ySpread": 0.71,
       "voo": 638.27,
-      "qqq": 629.43
+      "qqq": 629.43,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-01-30",
@@ -215,7 +240,16 @@
       "us10yYield": 4.26,
       "us10y2ySpread": 0.74,
       "voo": 636.22,
-      "qqq": 621.87
+      "qqq": 621.87,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-01-31",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-02-01",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-02",
@@ -226,7 +260,8 @@
       "us10yYield": 4.29,
       "us10y2ySpread": 0.72,
       "voo": 639.68,
-      "qqq": 626.14
+      "qqq": 626.14,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-03",
@@ -237,7 +272,8 @@
       "us10yYield": 4.28,
       "us10y2ySpread": 0.71,
       "voo": 634.15,
-      "qqq": 616.52
+      "qqq": 616.52,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-04",
@@ -248,7 +284,8 @@
       "us10yYield": 4.29,
       "us10y2ySpread": 0.72,
       "voo": 630.91,
-      "qqq": 605.75
+      "qqq": 605.75,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-05",
@@ -259,7 +296,8 @@
       "us10yYield": 4.21,
       "us10y2ySpread": 0.74,
       "voo": 623.1,
-      "qqq": 597.03
+      "qqq": 597.03,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-06",
@@ -269,7 +307,16 @@
       "us10yYield": 4.22,
       "us10y2ySpread": 0.72,
       "voo": 635.24,
-      "qqq": 609.65
+      "qqq": 609.65,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-02-07",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-02-08",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-09",
@@ -280,7 +327,8 @@
       "us10yYield": 4.22,
       "us10y2ySpread": 0.74,
       "voo": 638.23,
-      "qqq": 614.32
+      "qqq": 614.32,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-10",
@@ -291,7 +339,8 @@
       "us10yYield": 4.16,
       "us10y2ySpread": 0.71,
       "voo": 636.44,
-      "qqq": 611.47
+      "qqq": 611.47,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-11",
@@ -302,7 +351,8 @@
       "us10yYield": 4.18,
       "us10y2ySpread": 0.66,
       "voo": 636.35,
-      "qqq": 613.11
+      "qqq": 613.11,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-12",
@@ -313,7 +363,8 @@
       "us10yYield": 4.09,
       "us10y2ySpread": 0.62,
       "voo": 626.49,
-      "qqq": 600.64
+      "qqq": 600.64,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-13",
@@ -323,13 +374,23 @@
       "us10yYield": 4.04,
       "us10y2ySpread": 0.64,
       "voo": 626.89,
-      "qqq": 601.92
+      "qqq": 601.92,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-02-14",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-02-15",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-16",
       "usdtwd": 31.327,
       "vix": 21.2,
-      "hyOas": 2.94
+      "hyOas": 2.94,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-17",
@@ -340,7 +401,8 @@
       "us10yYield": 4.05,
       "us10y2ySpread": 0.62,
       "voo": 627.99,
-      "qqq": 601.3
+      "qqq": 601.3,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-18",
@@ -351,7 +413,8 @@
       "us10yYield": 4.09,
       "us10y2ySpread": 0.62,
       "voo": 631.15,
-      "qqq": 605.79
+      "qqq": 605.79,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-19",
@@ -362,7 +425,8 @@
       "us10yYield": 4.08,
       "us10y2ySpread": 0.61,
       "voo": 629.53,
-      "qqq": 603.47
+      "qqq": 603.47,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-20",
@@ -372,7 +436,16 @@
       "us10yYield": 4.08,
       "us10y2ySpread": 0.6,
       "voo": 634.02,
-      "qqq": 608.81
+      "qqq": 608.81,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-02-21",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-02-22",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-23",
@@ -383,7 +456,8 @@
       "us10yYield": 4.03,
       "us10y2ySpread": 0.6,
       "voo": 627.63,
-      "qqq": 601.41
+      "qqq": 601.41,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-24",
@@ -394,7 +468,8 @@
       "us10yYield": 4.04,
       "us10y2ySpread": 0.61,
       "voo": 632.21,
-      "qqq": 607.87
+      "qqq": 607.87,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-25",
@@ -405,7 +480,8 @@
       "us10yYield": 4.05,
       "us10y2ySpread": 0.6,
       "voo": 637.53,
-      "qqq": 616.68
+      "qqq": 616.68,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-26",
@@ -416,7 +492,8 @@
       "us10yYield": 4.02,
       "us10y2ySpread": 0.6,
       "voo": 633.95,
-      "qqq": 609.24
+      "qqq": 609.24,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-02-27",
@@ -426,7 +503,16 @@
       "us10yYield": 3.97,
       "us10y2ySpread": 0.59,
       "voo": 631.04,
-      "qqq": 607.29
+      "qqq": 607.29,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-02-28",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-03-01",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-02",
@@ -437,7 +523,8 @@
       "us10yYield": 4.05,
       "us10y2ySpread": 0.58,
       "voo": 631.28,
-      "qqq": 608.09
+      "qqq": 608.09,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-03",
@@ -448,7 +535,8 @@
       "us10yYield": 4.06,
       "us10y2ySpread": 0.55,
       "voo": 625.72,
-      "qqq": 601.58
+      "qqq": 601.58,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-04",
@@ -459,7 +547,8 @@
       "us10yYield": 4.09,
       "us10y2ySpread": 0.55,
       "voo": 630.18,
-      "qqq": 610.75
+      "qqq": 610.75,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-05",
@@ -470,7 +559,8 @@
       "us10yYield": 4.13,
       "us10y2ySpread": 0.56,
       "voo": 626.81,
-      "qqq": 608.91
+      "qqq": 608.91,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-06",
@@ -480,7 +570,16 @@
       "us10yYield": 4.15,
       "us10y2ySpread": 0.59,
       "voo": 618.43,
-      "qqq": 599.75
+      "qqq": 599.75,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-03-07",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-03-08",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-09",
@@ -491,7 +590,8 @@
       "us10yYield": 4.12,
       "us10y2ySpread": 0.56,
       "voo": 623.8,
-      "qqq": 607.76
+      "qqq": 607.76,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-10",
@@ -502,7 +602,8 @@
       "us10yYield": 4.15,
       "us10y2ySpread": 0.58,
       "voo": 622.72,
-      "qqq": 607.77
+      "qqq": 607.77,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-11",
@@ -513,7 +614,8 @@
       "us10yYield": 4.21,
       "us10y2ySpread": 0.57,
       "voo": 622.03,
-      "qqq": 607.69
+      "qqq": 607.69,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-12",
@@ -524,7 +626,8 @@
       "us10yYield": 4.27,
       "us10y2ySpread": 0.51,
       "voo": 612.5,
-      "qqq": 597.26
+      "qqq": 597.26,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-13",
@@ -534,7 +637,16 @@
       "us10yYield": 4.28,
       "us10y2ySpread": 0.55,
       "voo": 609.09,
-      "qqq": 593.72
+      "qqq": 593.72,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-03-14",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-03-15",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-16",
@@ -545,7 +657,8 @@
       "us10yYield": 4.23,
       "us10y2ySpread": 0.55,
       "voo": 615.19,
-      "qqq": 600.38
+      "qqq": 600.38,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-17",
@@ -556,7 +669,8 @@
       "us10yYield": 4.2,
       "us10y2ySpread": 0.52,
       "voo": 616.89,
-      "qqq": 603.31
+      "qqq": 603.31,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-18",
@@ -567,7 +681,8 @@
       "us10yYield": 4.26,
       "us10y2ySpread": 0.5,
       "voo": 608.38,
-      "qqq": 594.9
+      "qqq": 594.9,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-19",
@@ -578,7 +693,8 @@
       "us10yYield": 4.25,
       "us10y2ySpread": 0.46,
       "voo": 606.75,
-      "qqq": 593.02
+      "qqq": 593.02,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-20",
@@ -588,7 +704,16 @@
       "us10yYield": 4.39,
       "us10y2ySpread": 0.51,
       "voo": 597.94,
-      "qqq": 582.06
+      "qqq": 582.06,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-03-21",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-03-22",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-23",
@@ -599,7 +724,8 @@
       "us10yYield": 4.34,
       "us10y2ySpread": 0.51,
       "voo": 604.43,
-      "qqq": 588.0
+      "qqq": 588.0,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-24",
@@ -610,7 +736,8 @@
       "us10yYield": 4.39,
       "us10y2ySpread": 0.49,
       "voo": 602.38,
-      "qqq": 583.98
+      "qqq": 583.98,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-25",
@@ -621,7 +748,8 @@
       "us10yYield": 4.33,
       "us10y2ySpread": 0.49,
       "voo": 605.66,
-      "qqq": 587.82
+      "qqq": 587.82,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-26",
@@ -632,7 +760,8 @@
       "us10yYield": 4.42,
       "us10y2ySpread": 0.46,
       "voo": 594.92,
-      "qqq": 573.79
+      "qqq": 573.79,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-27",
@@ -642,7 +771,16 @@
       "us10yYield": 4.44,
       "us10y2ySpread": 0.56,
       "voo": 582.96,
-      "qqq": 562.58
+      "qqq": 562.58,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-03-28",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-03-29",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-30",
@@ -653,7 +791,8 @@
       "us10yYield": 4.35,
       "us10y2ySpread": 0.53,
       "voo": 580.93,
-      "qqq": 558.28
+      "qqq": 558.28,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-03-31",
@@ -664,7 +803,8 @@
       "us10yYield": 4.3,
       "us10y2ySpread": 0.51,
       "voo": 597.55,
-      "qqq": 577.18
+      "qqq": 577.18,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-01",
@@ -676,7 +816,8 @@
       "us10yYield": 4.33,
       "us10y2ySpread": 0.52,
       "voo": 602.3,
-      "qqq": 584.31
+      "qqq": 584.31,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-02",
@@ -688,13 +829,23 @@
       "us10yYield": 4.31,
       "us10y2ySpread": 0.52,
       "voo": 602.99,
-      "qqq": 584.98
+      "qqq": 584.98,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-03",
       "hyOas": 3.13,
       "us10yYield": 4.35,
-      "us10y2ySpread": 0.51
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-04-04",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-04-05",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-06",
@@ -705,7 +856,8 @@
       "us10yYield": 4.34,
       "us10y2ySpread": 0.5,
       "voo": 605.67,
-      "qqq": 588.5
+      "qqq": 588.5,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-07",
@@ -717,7 +869,8 @@
       "us10yYield": 4.33,
       "us10y2ySpread": 0.52,
       "voo": 606.04,
-      "qqq": 588.59
+      "qqq": 588.59,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-08",
@@ -729,7 +882,8 @@
       "us10yYield": 4.29,
       "us10y2ySpread": 0.5,
       "voo": 621.34,
-      "qqq": 606.09
+      "qqq": 606.09,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-09",
@@ -741,7 +895,8 @@
       "us10yYield": 4.29,
       "us10y2ySpread": 0.51,
       "voo": 625.02,
-      "qqq": 610.19
+      "qqq": 610.19,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-10",
@@ -752,7 +907,16 @@
       "us10yYield": 4.31,
       "us10y2ySpread": 0.5,
       "voo": 624.6,
-      "qqq": 611.07
+      "qqq": 611.07,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-04-11",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-04-12",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-13",
@@ -764,7 +928,8 @@
       "us10yYield": 4.3,
       "us10y2ySpread": 0.52,
       "voo": 630.72,
-      "qqq": 617.39
+      "qqq": 617.39,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-14",
@@ -776,7 +941,8 @@
       "us10yYield": 4.26,
       "us10y2ySpread": 0.5,
       "voo": 638.35,
-      "qqq": 628.6
+      "qqq": 628.6,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-15",
@@ -788,7 +954,8 @@
       "us10yYield": 4.29,
       "us10y2ySpread": 0.53,
       "voo": 643.45,
-      "qqq": 637.4
+      "qqq": 637.4,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-16",
@@ -800,7 +967,8 @@
       "us10yYield": 4.32,
       "us10y2ySpread": 0.54,
       "voo": 644.86,
-      "qqq": 640.47
+      "qqq": 640.47,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-17",
@@ -811,7 +979,16 @@
       "us10yYield": 4.26,
       "us10y2ySpread": 0.55,
       "voo": 652.78,
-      "qqq": 648.85
+      "qqq": 648.85,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-04-18",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-04-19",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-20",
@@ -823,7 +1000,8 @@
       "us10yYield": 4.26,
       "us10y2ySpread": 0.54,
       "voo": 651.54,
-      "qqq": 646.79
+      "qqq": 646.79,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-21",
@@ -835,7 +1013,8 @@
       "us10yYield": 4.3,
       "us10y2ySpread": 0.52,
       "voo": 647.25,
-      "qqq": 644.33
+      "qqq": 644.33,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-22",
@@ -847,7 +1026,8 @@
       "us10yYield": 4.3,
       "us10y2ySpread": 0.51,
       "voo": 653.9,
-      "qqq": 655.11
+      "qqq": 655.11,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-23",
@@ -859,7 +1039,8 @@
       "us10yYield": 4.34,
       "us10y2ySpread": 0.51,
       "voo": 651.26,
-      "qqq": 651.42
+      "qqq": 651.42,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-24",
@@ -870,7 +1051,16 @@
       "us10yYield": 4.31,
       "us10y2ySpread": 0.53,
       "voo": 656.42,
-      "qqq": 663.88
+      "qqq": 663.88,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-04-25",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-04-26",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-27",
@@ -882,7 +1072,8 @@
       "us10yYield": 4.35,
       "us10y2ySpread": 0.57,
       "voo": 657.5,
-      "qqq": 664.23
+      "qqq": 664.23,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-28",
@@ -894,7 +1085,8 @@
       "us10yYield": 4.36,
       "us10y2ySpread": 0.52,
       "voo": 654.26,
-      "qqq": 657.55
+      "qqq": 657.55,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-29",
@@ -906,7 +1098,8 @@
       "us10yYield": 4.42,
       "us10y2ySpread": 0.5,
       "voo": 654.24,
-      "qqq": 661.57
+      "qqq": 661.57,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-04-30",
@@ -918,7 +1111,8 @@
       "us10yYield": 4.4,
       "us10y2ySpread": 0.52,
       "voo": 660.58,
-      "qqq": 667.74
+      "qqq": 667.74,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-05-01",
@@ -928,7 +1122,16 @@
       "us10yYield": 4.39,
       "us10y2ySpread": 0.51,
       "voo": 662.52,
-      "qqq": 674.15
+      "qqq": 674.15,
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-05-02",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-05-03",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-05-04",
@@ -940,7 +1143,8 @@
       "us10yYield": 4.45,
       "us10y2ySpread": 0.5,
       "voo": 660.12,
-      "qqq": 672.88
+      "qqq": 672.88,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-05-05",
@@ -952,7 +1156,8 @@
       "us10yYield": 4.43,
       "us10y2ySpread": 0.5,
       "voo": 665.3,
-      "qqq": 681.61
+      "qqq": 681.61,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-05-06",
@@ -964,7 +1169,8 @@
       "us10yYield": 4.36,
       "us10y2ySpread": 0.49,
       "voo": 674.66,
-      "qqq": 695.77
+      "qqq": 695.77,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-05-07",
@@ -976,7 +1182,8 @@
       "us10yYield": 4.41,
       "us10y2ySpread": 0.49,
       "voo": 672.54,
-      "qqq": 694.94
+      "qqq": 694.94,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-05-08",
@@ -987,7 +1194,16 @@
       "us10yYield": 4.38,
       "us10y2ySpread": 0.48,
       "voo": 678.04,
-      "qqq": 711.23
+      "qqq": 711.23,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-05-09",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-05-10",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-05-11",
@@ -999,7 +1215,8 @@
       "us10yYield": 4.42,
       "us10y2ySpread": 0.47,
       "voo": 679.52,
-      "qqq": 713.29
+      "qqq": 713.29,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-05-12",
@@ -1011,7 +1228,8 @@
       "us10yYield": 4.46,
       "us10y2ySpread": 0.46,
       "voo": 678.67,
-      "qqq": 707.24
+      "qqq": 707.24,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-05-13",
@@ -1023,7 +1241,8 @@
       "us10yYield": 4.46,
       "us10y2ySpread": 0.48,
       "voo": 682.41,
-      "qqq": 714.71
+      "qqq": 714.71,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-05-14",
@@ -1035,7 +1254,8 @@
       "us10yYield": 4.47,
       "us10y2ySpread": 0.47,
       "voo": 687.73,
-      "qqq": 719.79
+      "qqq": 719.79,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-05-15",
@@ -1046,7 +1266,16 @@
       "us10yYield": 4.59,
       "us10y2ySpread": 0.5,
       "voo": 679.44,
-      "qqq": 708.93
+      "qqq": 708.93,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-05-16",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-05-17",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-05-18",
@@ -1058,7 +1287,8 @@
       "us10yYield": 4.61,
       "us10y2ySpread": 0.54,
       "voo": 678.91,
-      "qqq": 705.88
+      "qqq": 705.88,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-05-19",
@@ -1070,7 +1300,8 @@
       "us10yYield": 4.67,
       "us10y2ySpread": 0.54,
       "voo": 674.59,
-      "qqq": 701.53
+      "qqq": 701.53,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-05-20",
@@ -1082,7 +1313,8 @@
       "us10yYield": 4.57,
       "us10y2ySpread": 0.53,
       "voo": 681.57,
-      "qqq": 713.15
+      "qqq": 713.15,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-05-21",
@@ -1094,7 +1326,8 @@
       "us10yYield": 4.57,
       "us10y2ySpread": 0.49,
       "voo": 682.84,
-      "qqq": 714.51
+      "qqq": 714.51,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-05-22",
@@ -1105,14 +1338,24 @@
       "us10yYield": 4.56,
       "us10y2ySpread": 0.43,
       "voo": 685.55,
-      "qqq": 717.54
+      "qqq": 717.54,
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-05-23",
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-05-24",
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-05-25",
       "taiex": 43644.4,
       "usdtwd": 31.4484,
       "vix": 16.59,
-      "hyOas": 2.74
+      "hyOas": 2.74,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-05-26",
@@ -1124,7 +1367,8 @@
       "us10yYield": 4.5,
       "us10y2ySpread": 0.49,
       "voo": 690.01,
-      "qqq": 730.28
+      "qqq": 730.28,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-05-27",
@@ -1136,7 +1380,8 @@
       "us10yYield": 4.48,
       "us10y2ySpread": 0.48,
       "voo": 689.96,
-      "qqq": 729.45
+      "qqq": 729.45,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-05-28",
@@ -1148,7 +1393,8 @@
       "us10yYield": 4.45,
       "us10y2ySpread": 0.46,
       "voo": 693.91,
-      "qqq": 735.6
+      "qqq": 735.6,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-05-29",
@@ -1159,7 +1405,16 @@
       "us10yYield": 4.45,
       "us10y2ySpread": 0.47,
       "voo": 695.49,
-      "qqq": 738.31
+      "qqq": 738.31,
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-05-30",
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-05-31",
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-01",
@@ -1171,7 +1426,8 @@
       "us10yYield": 4.47,
       "us10y2ySpread": 0.42,
       "voo": 697.3,
-      "qqq": 742.74
+      "qqq": 742.74,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-02",
@@ -1183,7 +1439,8 @@
       "us10yYield": 4.46,
       "us10y2ySpread": 0.41,
       "voo": 698.26,
-      "qqq": 746.16
+      "qqq": 746.16,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-03",
@@ -1195,7 +1452,8 @@
       "us10yYield": 4.49,
       "us10y2ySpread": 0.41,
       "voo": 693.36,
-      "qqq": 744.21
+      "qqq": 744.21,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-04",
@@ -1207,7 +1465,8 @@
       "us10yYield": 4.47,
       "us10y2ySpread": 0.42,
       "voo": 696.06,
-      "qqq": 740.61
+      "qqq": 740.61,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-05",
@@ -1218,7 +1477,16 @@
       "us10yYield": 4.55,
       "us10y2ySpread": 0.38,
       "voo": 678.0,
-      "qqq": 705.06
+      "qqq": 705.06,
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-06-06",
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-06-07",
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-08",
@@ -1230,7 +1498,8 @@
       "us10yYield": 4.56,
       "us10y2ySpread": 0.41,
       "voo": 679.68,
-      "qqq": 716.07
+      "qqq": 716.07,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-09",
@@ -1242,7 +1511,8 @@
       "us10yYield": 4.53,
       "us10y2ySpread": 0.4,
       "voo": 677.7,
-      "qqq": 707.83
+      "qqq": 707.83,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-10",
@@ -1254,7 +1524,8 @@
       "us10yYield": 4.55,
       "us10y2ySpread": 0.42,
       "voo": 667.05,
-      "qqq": 693.69
+      "qqq": 693.69,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-11",
@@ -1266,7 +1537,8 @@
       "us10yYield": 4.45,
       "us10y2ySpread": 0.4,
       "voo": 678.23,
-      "qqq": 717.12
+      "qqq": 717.12,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-12",
@@ -1277,7 +1549,16 @@
       "us10yYield": 4.48,
       "us10y2ySpread": 0.39,
       "voo": 681.95,
-      "qqq": 721.34
+      "qqq": 721.34,
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-06-13",
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-06-14",
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-06-15",
@@ -1289,7 +1570,8 @@
       "us10yYield": 4.47,
       "us10y2ySpread": 0.4,
       "voo": 693.83,
-      "qqq": 744.0
+      "qqq": 744.0,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-16",
@@ -1301,7 +1583,8 @@
       "us10yYield": 4.43,
       "us10y2ySpread": 0.38,
       "voo": 689.75,
-      "qqq": 729.86
+      "qqq": 729.86,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-17",
@@ -1313,7 +1596,8 @@
       "us10yYield": 4.49,
       "us10y2ySpread": 0.29,
       "voo": 681.41,
-      "qqq": 722.51
+      "qqq": 722.51,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-18",
@@ -1325,12 +1609,22 @@
       "us10yYield": 4.46,
       "us10y2ySpread": 0.27,
       "voo": 688.11,
-      "qqq": 740.62
+      "qqq": 740.62,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-19",
       "vix": 16.78,
-      "hyOas": 2.66
+      "hyOas": 2.66,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-06-20",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-06-21",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-22",
@@ -1342,7 +1636,8 @@
       "us10yYield": 4.51,
       "us10y2ySpread": 0.27,
       "voo": 686.1,
-      "qqq": 737.95
+      "qqq": 737.95,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-23",
@@ -1354,7 +1649,8 @@
       "us10yYield": 4.5,
       "us10y2ySpread": 0.34,
       "voo": 676.34,
-      "qqq": 713.65
+      "qqq": 713.65,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-24",
@@ -1366,7 +1662,8 @@
       "us10yYield": 4.41,
       "us10y2ySpread": 0.3,
       "voo": 675.69,
-      "qqq": 710.62
+      "qqq": 710.62,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-25",
@@ -1378,7 +1675,8 @@
       "us10yYield": 4.4,
       "us10y2ySpread": 0.31,
       "voo": 675.71,
-      "qqq": 716.38
+      "qqq": 716.38,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-26",
@@ -1389,7 +1687,16 @@
       "us10yYield": 4.38,
       "us10y2ySpread": 0.31,
       "voo": 670.26,
-      "qqq": 706.52
+      "qqq": 706.52,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-06-27",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-06-28",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-29",
@@ -1401,7 +1708,8 @@
       "us10yYield": 4.38,
       "us10y2ySpread": 0.28,
       "voo": 681.01,
-      "qqq": 724.08
+      "qqq": 724.08,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-06-30",
@@ -1413,7 +1721,8 @@
       "us10yYield": 4.44,
       "us10y2ySpread": 0.3,
       "voo": 686.81,
-      "qqq": 736.4
+      "qqq": 736.4,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-01",
@@ -1425,7 +1734,8 @@
       "us10yYield": 4.48,
       "us10y2ySpread": 0.31,
       "voo": 685.46,
-      "qqq": 725.17
+      "qqq": 725.17,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-02",
@@ -1437,13 +1747,23 @@
       "us10yYield": 4.49,
       "us10y2ySpread": 0.35,
       "voo": 684.84,
-      "qqq": 712.6
+      "qqq": 712.6,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-03",
       "taiex": 46780.62,
       "vix": 15.81,
-      "hyOas": 2.74
+      "hyOas": 2.74,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-07-04",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-07-05",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-06",
@@ -1455,7 +1775,8 @@
       "us10yYield": 4.48,
       "us10y2ySpread": 0.35,
       "voo": 690.62,
-      "qqq": 722.82
+      "qqq": 722.82,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-07",
@@ -1467,7 +1788,8 @@
       "us10yYield": 4.55,
       "us10y2ySpread": 0.36,
       "voo": 687.08,
-      "qqq": 709.43
+      "qqq": 709.43,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-08",
@@ -1479,7 +1801,8 @@
       "us10yYield": 4.56,
       "us10y2ySpread": 0.35,
       "voo": 685.26,
-      "qqq": 711.44
+      "qqq": 711.44,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-07-09",
@@ -1491,7 +1814,8 @@
       "us10yYield": 4.54,
       "us10y2ySpread": 0.38,
       "voo": 690.69,
-      "qqq": 723.28
+      "qqq": 723.28,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-07-10",
@@ -1501,7 +1825,16 @@
       "us10yYield": 4.56,
       "us10y2ySpread": 0.35,
       "voo": 693.86,
-      "qqq": 725.51
+      "qqq": 725.51,
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-07-11",
+      "fedFundsEffective": 3.62
+    },
+    {
+      "date": "2026-07-12",
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-07-13",
@@ -1513,7 +1846,8 @@
       "us10yYield": 4.62,
       "us10y2ySpread": 0.36,
       "voo": 688.5,
-      "qqq": 711.74
+      "qqq": 711.74,
+      "fedFundsEffective": 3.62
     },
     {
       "date": "2026-07-14",
@@ -1525,7 +1859,8 @@
       "us10yYield": 4.58,
       "us10y2ySpread": 0.4,
       "voo": 691.1,
-      "qqq": 719.69
+      "qqq": 719.69,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-15",
@@ -1537,7 +1872,8 @@
       "us10yYield": 4.55,
       "us10y2ySpread": 0.42,
       "voo": 693.8,
-      "qqq": 717.74
+      "qqq": 717.74,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-16",
@@ -1549,7 +1885,8 @@
       "us10yYield": 4.57,
       "us10y2ySpread": 0.41,
       "voo": 690.14,
-      "qqq": 705.94
+      "qqq": 705.94,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-17",
@@ -1560,7 +1897,16 @@
       "us10yYield": 4.55,
       "us10y2ySpread": 0.37,
       "voo": 683.17,
-      "qqq": 695.33
+      "qqq": 695.33,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-07-18",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-07-19",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-20",
@@ -1572,7 +1918,8 @@
       "us10yYield": 4.6,
       "us10y2ySpread": 0.39,
       "voo": 682.21,
-      "qqq": 696.06
+      "qqq": 696.06,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-21",
@@ -1584,7 +1931,8 @@
       "us10yYield": 4.63,
       "us10y2ySpread": 0.37,
       "voo": 687.87,
-      "qqq": 708.97
+      "qqq": 708.97,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-22",
@@ -1596,7 +1944,8 @@
       "us10yYield": 4.67,
       "us10y2ySpread": 0.36,
       "voo": 687.03,
-      "qqq": 705.35
+      "qqq": 705.35,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-23",
@@ -1608,7 +1957,8 @@
       "us10yYield": 4.71,
       "us10y2ySpread": 0.34,
       "voo": 678.61,
-      "qqq": 691.96
+      "qqq": 691.96,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-24",
@@ -1619,7 +1969,16 @@
       "us10yYield": 4.69,
       "us10y2ySpread": 0.36,
       "voo": 679.14,
-      "qqq": 684.23
+      "qqq": 684.23,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-07-25",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-07-26",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-27",
@@ -1631,7 +1990,8 @@
       "us10yYield": 4.65,
       "us10y2ySpread": 0.34,
       "voo": 679.31,
-      "qqq": 682.12
+      "qqq": 682.12,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-28",
@@ -1643,7 +2003,8 @@
       "us10yYield": 4.61,
       "us10y2ySpread": 0.35,
       "voo": 680.96,
-      "qqq": 675.49
+      "qqq": 675.49,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-29",
@@ -1655,7 +2016,8 @@
       "us10yYield": 4.67,
       "us10y2ySpread": 0.45,
       "voo": 670.63,
-      "qqq": 661.73
+      "qqq": 661.73,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-30",
@@ -1667,7 +2029,8 @@
       "us10yYield": 4.68,
       "us10y2ySpread": 0.45,
       "voo": 681.79,
-      "qqq": 683.55
+      "qqq": 683.55,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-07-31",
@@ -1678,7 +2041,16 @@
       "us10yYield": 4.75,
       "us10y2ySpread": 0.47,
       "voo": 686.65,
-      "qqq": 687.99
+      "qqq": 687.99,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-01",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-02",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-03",
@@ -1690,7 +2062,8 @@
       "us10yYield": 4.7,
       "us10y2ySpread": 0.45,
       "voo": 696.4,
-      "qqq": 700.07
+      "qqq": 700.07,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-04",
@@ -1702,7 +2075,8 @@
       "us10yYield": 4.63,
       "us10y2ySpread": 0.43,
       "voo": 708.98,
-      "qqq": 723.85
+      "qqq": 723.85,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-05",
@@ -1715,7 +2089,8 @@
       "us10yYield": 4.63,
       "us10y2ySpread": 0.45,
       "voo": 707.6,
-      "qqq": 717.3
+      "qqq": 717.3,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-06",
@@ -1729,7 +2104,8 @@
       "us10yYield": 4.69,
       "us10y2ySpread": 0.44,
       "voo": 706.4,
-      "qqq": 714.65
+      "qqq": 714.65,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-07",
@@ -1742,7 +2118,16 @@
       "us10yYield": 4.65,
       "us10y2ySpread": 0.46,
       "voo": 710.71,
-      "qqq": 723.03
+      "qqq": 723.03,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-08",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-09",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-10",
@@ -1756,7 +2141,8 @@
       "us10yYield": 4.72,
       "us10y2ySpread": 0.47,
       "voo": 710.65,
-      "qqq": 720.87
+      "qqq": 720.87,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-11",
@@ -1770,7 +2156,8 @@
       "us10yYield": 4.7,
       "us10y2ySpread": 0.48,
       "voo": 708.42,
-      "qqq": 718.45
+      "qqq": 718.45,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-12",
@@ -1784,7 +2171,8 @@
       "us10yYield": 4.68,
       "us10y2ySpread": 0.48,
       "voo": 710.17,
-      "qqq": 723.7
+      "qqq": 723.7,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-13",
@@ -1798,7 +2186,8 @@
       "us10yYield": 4.63,
       "us10y2ySpread": 0.48,
       "voo": 714.95,
-      "qqq": 732.07
+      "qqq": 732.07,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-14",
@@ -1811,7 +2200,16 @@
       "us10yYield": 4.68,
       "us10y2ySpread": 0.51,
       "voo": 713.61,
-      "qqq": 731.07
+      "qqq": 731.07,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-15",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-16",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-17",
@@ -1825,7 +2223,8 @@
       "us10yYield": 4.72,
       "us10y2ySpread": 0.53,
       "voo": 710.27,
-      "qqq": 729.87
+      "qqq": 729.87,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-18",
@@ -1839,7 +2238,8 @@
       "us10yYield": 4.71,
       "us10y2ySpread": 0.52,
       "voo": 705.4,
-      "qqq": 717.51
+      "qqq": 717.51,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-19",
@@ -1853,7 +2253,8 @@
       "us10yYield": 4.65,
       "us10y2ySpread": 0.46,
       "voo": 706.91,
-      "qqq": 716.08
+      "qqq": 716.08,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-20",
@@ -1867,7 +2268,8 @@
       "us10yYield": 4.69,
       "us10y2ySpread": 0.5,
       "voo": 701.01,
-      "qqq": 710.93
+      "qqq": 710.93,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-21",
@@ -1880,7 +2282,16 @@
       "us10yYield": 4.74,
       "us10y2ySpread": 0.5,
       "voo": 703.71,
-      "qqq": 713.44
+      "qqq": 713.44,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-22",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-23",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-24",
@@ -1894,7 +2305,8 @@
       "us10yYield": 4.7,
       "us10y2ySpread": 0.46,
       "voo": 701.83,
-      "qqq": 706.32
+      "qqq": 706.32,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-25",
@@ -1908,7 +2320,8 @@
       "us10yYield": 4.64,
       "us10y2ySpread": 0.47,
       "voo": 704.02,
-      "qqq": 710.72
+      "qqq": 710.72,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-26",
@@ -1922,7 +2335,8 @@
       "us10yYield": 4.66,
       "us10y2ySpread": 0.47,
       "voo": 704.2,
-      "qqq": 711.37
+      "qqq": 711.37,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-27",
@@ -1936,7 +2350,8 @@
       "us10yYield": 4.67,
       "us10y2ySpread": 0.47,
       "voo": 708.75,
-      "qqq": 721.11
+      "qqq": 721.11,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-28",
@@ -1949,7 +2364,16 @@
       "us10yYield": 4.73,
       "us10y2ySpread": 0.39,
       "voo": 707.24,
-      "qqq": 716.43
+      "qqq": 716.43,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-29",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-08-30",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-08-31",
@@ -1963,7 +2387,8 @@
       "us10yYield": 4.75,
       "us10y2ySpread": 0.41,
       "voo": 704.89,
-      "qqq": 716.76
+      "qqq": 716.76,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-01",
@@ -1977,7 +2402,8 @@
       "us10yYield": 4.79,
       "us10y2ySpread": 0.4,
       "voo": 700.28,
-      "qqq": 707.64
+      "qqq": 707.64,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-02",
@@ -1991,7 +2417,8 @@
       "us10yYield": 4.79,
       "us10y2ySpread": 0.4,
       "voo": 703.41,
-      "qqq": 709.24
+      "qqq": 709.24,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-03",
@@ -2005,7 +2432,8 @@
       "us10yYield": 4.77,
       "us10y2ySpread": 0.43,
       "voo": 710.72,
-      "qqq": 717.67
+      "qqq": 717.67,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-04",
@@ -2018,7 +2446,16 @@
       "us10yYield": 4.78,
       "us10y2ySpread": 0.41,
       "voo": 708.01,
-      "qqq": 718.96
+      "qqq": 718.96,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-09-05",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-09-06",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-07",
@@ -2027,7 +2464,8 @@
       "vix": 15.3,
       "hyOas": 2.68,
       "marginDailyYi": 63.7699,
-      "foreignNetYi": 883.0774
+      "foreignNetYi": 883.0774,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-08",
@@ -2041,7 +2479,8 @@
       "us10yYield": 4.8,
       "us10y2ySpread": 0.41,
       "voo": 704.07,
-      "qqq": 718.36
+      "qqq": 718.36,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-09",
@@ -2055,7 +2494,8 @@
       "us10yYield": 4.83,
       "us10y2ySpread": 0.4,
       "voo": 700.87,
-      "qqq": 716.31
+      "qqq": 716.31,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-10",
@@ -2069,7 +2509,8 @@
       "us10yYield": 4.95,
       "us10y2ySpread": 0.39,
       "voo": 696.65,
-      "qqq": 708.69
+      "qqq": 708.69,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-11",
@@ -2082,7 +2523,16 @@
       "us10yYield": 4.96,
       "us10y2ySpread": 0.33,
       "voo": 702.56,
-      "qqq": 714.88
+      "qqq": 714.88,
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-09-12",
+      "fedFundsEffective": 3.63
+    },
+    {
+      "date": "2026-09-13",
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-14",
@@ -2096,7 +2546,8 @@
       "us10yYield": 4.97,
       "us10y2ySpread": 0.32,
       "voo": 699.3,
-      "qqq": 709.18
+      "qqq": 709.18,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-15",
@@ -2110,7 +2561,8 @@
       "us10yYield": 5.0,
       "us10y2ySpread": 0.33,
       "voo": 696.2,
-      "qqq": 704.54
+      "qqq": 704.54,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-16",
@@ -2124,7 +2576,8 @@
       "us10yYield": 5.01,
       "us10y2ySpread": 0.27,
       "voo": 693.24,
-      "qqq": 704.72
+      "qqq": 704.72,
+      "fedFundsEffective": 3.63
     },
     {
       "date": "2026-09-17",
@@ -2138,7 +2591,8 @@
       "us10yYield": 4.94,
       "us10y2ySpread": 0.27,
       "voo": 701.03,
-      "qqq": 716.92
+      "qqq": 716.92,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-09-18",
@@ -2151,7 +2605,16 @@
       "us10yYield": 5.01,
       "us10y2ySpread": 0.25,
       "voo": 701.78,
-      "qqq": 721.45
+      "qqq": 721.45,
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-09-19",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-09-20",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-09-21",
@@ -2165,7 +2628,8 @@
       "us10yYield": 4.96,
       "us10y2ySpread": 0.2,
       "voo": 712.78,
-      "qqq": 741.47
+      "qqq": 741.47,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-09-22",
@@ -2179,7 +2643,8 @@
       "us10yYield": 4.96,
       "us10y2ySpread": 0.25,
       "voo": 712.78,
-      "qqq": 747.46
+      "qqq": 747.46,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-09-23",
@@ -2193,7 +2658,8 @@
       "us10yYield": 5.11,
       "us10y2ySpread": 0.26,
       "voo": 707.6,
-      "qqq": 741.21
+      "qqq": 741.21,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-09-24",
@@ -2207,7 +2673,8 @@
       "us10yYield": 5.18,
       "us10y2ySpread": 0.31,
       "voo": 706.99,
-      "qqq": 741.1
+      "qqq": 741.1,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-09-25",
@@ -2217,7 +2684,16 @@
       "us10yYield": 5.17,
       "us10y2ySpread": 0.36,
       "voo": 710.79,
-      "qqq": 744.5
+      "qqq": 744.5,
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-09-26",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-09-27",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-09-28",
@@ -2228,7 +2704,8 @@
       "us10yYield": 5.24,
       "us10y2ySpread": 0.32,
       "voo": 703.61,
-      "qqq": 736.53
+      "qqq": 736.53,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-09-29",
@@ -2242,7 +2719,8 @@
       "us10yYield": 5.26,
       "us10y2ySpread": 0.37,
       "voo": 702.46,
-      "qqq": 737.93
+      "qqq": 737.93,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-09-30",
@@ -2256,7 +2734,8 @@
       "us10yYield": 5.29,
       "us10y2ySpread": 0.41,
       "voo": 700.86,
-      "qqq": 739.77
+      "qqq": 739.77,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-01",
@@ -2270,7 +2749,8 @@
       "us10yYield": 5.24,
       "us10y2ySpread": 0.46,
       "voo": 702.35,
-      "qqq": 742.03
+      "qqq": 742.03,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-02",
@@ -2283,7 +2763,16 @@
       "us10yYield": 5.28,
       "us10y2ySpread": 0.45,
       "voo": 707.54,
-      "qqq": 749.58
+      "qqq": 749.58,
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-10-03",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-10-04",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-05",
@@ -2298,7 +2787,8 @@
       "us10yYield": 5.31,
       "us10y2ySpread": 0.47,
       "voo": 712.32,
-      "qqq": 756.2
+      "qqq": 756.2,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-06",
@@ -2313,7 +2803,8 @@
       "us10yYield": 5.27,
       "us10y2ySpread": 0.48,
       "voo": 716.2,
-      "qqq": 759.66
+      "qqq": 759.66,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-07",
@@ -2328,7 +2819,8 @@
       "us10yYield": 5.28,
       "us10y2ySpread": 0.51,
       "voo": 714.34,
-      "qqq": 757.73
+      "qqq": 757.73,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-08",
@@ -2343,7 +2835,8 @@
       "us10yYield": 5.22,
       "us10y2ySpread": 0.47,
       "voo": 711.28,
-      "qqq": 747.58
+      "qqq": 747.58,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-09",
@@ -2353,7 +2846,16 @@
       "us10yYield": 5.24,
       "us10y2ySpread": 0.44,
       "voo": 715.59,
-      "qqq": 751.27
+      "qqq": 751.27,
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-10-10",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-10-11",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-12",
@@ -2366,7 +2868,8 @@
       "foreignNetYi": -521.9815,
       "marginMaintenanceExEtf": 173.18,
       "voo": 715.13,
-      "qqq": 746.04
+      "qqq": 746.04,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-13",
@@ -2381,7 +2884,8 @@
       "us10yYield": 5.21,
       "us10y2ySpread": 0.42,
       "voo": 715.2,
-      "qqq": 743.57
+      "qqq": 743.57,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-14",
@@ -2396,7 +2900,8 @@
       "us10yYield": 5.19,
       "us10y2ySpread": 0.37,
       "voo": 707.43,
-      "qqq": 728.95
+      "qqq": 728.95,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-15",
@@ -2410,7 +2915,8 @@
       "us10yYield": 5.1,
       "us10y2ySpread": 0.33,
       "voo": 709.43,
-      "qqq": 728.0
+      "qqq": 728.0,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-16",
@@ -2425,7 +2931,16 @@
       "us10yYield": 5.09,
       "us10y2ySpread": 0.35,
       "voo": 701.61,
-      "qqq": 709.8
+      "qqq": 709.8,
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-10-17",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-10-18",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-19",
@@ -2440,7 +2955,8 @@
       "us10yYield": 5.15,
       "us10y2ySpread": 0.38,
       "voo": 704.6,
-      "qqq": 718.36
+      "qqq": 718.36,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-20",
@@ -2455,7 +2971,8 @@
       "us10yYield": 5.12,
       "us10y2ySpread": 0.33,
       "voo": 706.8,
-      "qqq": 717.63
+      "qqq": 717.63,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-21",
@@ -2470,7 +2987,8 @@
       "us10yYield": 5.13,
       "us10y2ySpread": 0.32,
       "voo": 710.72,
-      "qqq": 725.2
+      "qqq": 725.2,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-22",
@@ -2485,7 +3003,8 @@
       "us10yYield": 4.96,
       "us10y2ySpread": 0.31,
       "voo": 702.3,
-      "qqq": 704.47
+      "qqq": 704.47,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-23",
@@ -2495,7 +3014,16 @@
       "us10yYield": 5.0,
       "us10y2ySpread": 0.31,
       "voo": 698.58,
-      "qqq": 704.4
+      "qqq": 704.4,
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-10-24",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-10-25",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-26",
@@ -2506,7 +3034,8 @@
       "us10yYield": 5.0,
       "us10y2ySpread": 0.32,
       "voo": 703.41,
-      "qqq": 712.2
+      "qqq": 712.2,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-27",
@@ -2521,7 +3050,8 @@
       "us10yYield": 4.99,
       "us10y2ySpread": 0.29,
       "voo": 707.52,
-      "qqq": 721.25
+      "qqq": 721.25,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-28",
@@ -2536,7 +3066,8 @@
       "us10yYield": 5.05,
       "us10y2ySpread": 0.38,
       "voo": 709.9,
-      "qqq": 725.61
+      "qqq": 725.61,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-29",
@@ -2551,7 +3082,8 @@
       "us10yYield": 4.98,
       "us10y2ySpread": 0.37,
       "voo": 707.32,
-      "qqq": 715.34
+      "qqq": 715.34,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-10-30",
@@ -2566,7 +3098,16 @@
       "us10yYield": 4.94,
       "us10y2ySpread": 0.38,
       "voo": 694.81,
-      "qqq": 690.49
+      "qqq": 690.49,
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-10-31",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-11-01",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-02",
@@ -2581,7 +3122,8 @@
       "us10yYield": 4.91,
       "us10y2ySpread": 0.32,
       "voo": 691.32,
-      "qqq": 681.09
+      "qqq": 681.09,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-03",
@@ -2596,7 +3138,8 @@
       "us10yYield": 4.95,
       "us10y2ySpread": 0.34,
       "voo": 693.54,
-      "qqq": 685.28
+      "qqq": 685.28,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-04",
@@ -2611,7 +3154,8 @@
       "us10yYield": 4.9,
       "us10y2ySpread": 0.32,
       "voo": 704.78,
-      "qqq": 691.95
+      "qqq": 691.95,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-05",
@@ -2626,7 +3170,8 @@
       "us10yYield": 4.84,
       "us10y2ySpread": 0.38,
       "voo": 673.97,
-      "qqq": 647.05
+      "qqq": 647.05,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-06",
@@ -2641,7 +3186,16 @@
       "us10yYield": 4.86,
       "us10y2ySpread": 0.35,
       "voo": 675.99,
-      "qqq": 656.1
+      "qqq": 656.1,
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-11-07",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-11-08",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-09",
@@ -2656,7 +3210,8 @@
       "us10yYield": 4.88,
       "us10y2ySpread": 0.32,
       "voo": 691.87,
-      "qqq": 679.35
+      "qqq": 679.35,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-10",
@@ -2671,7 +3226,8 @@
       "us10yYield": 4.98,
       "us10y2ySpread": 0.25,
       "voo": 689.5,
-      "qqq": 674.76
+      "qqq": 674.76,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-11",
@@ -2684,7 +3240,8 @@
       "foreignNetYi": -7.6644,
       "marginMaintenanceExEtf": 151.56,
       "voo": 698.35,
-      "qqq": 690.38
+      "qqq": 690.38,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-12",
@@ -2699,7 +3256,8 @@
       "us10yYield": 5.1,
       "us10y2ySpread": 0.24,
       "voo": 696.0,
-      "qqq": 688.17
+      "qqq": 688.17,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-13",
@@ -2714,7 +3272,16 @@
       "us10yYield": 5.15,
       "us10y2ySpread": 0.27,
       "voo": 693.38,
-      "qqq": 679.89
+      "qqq": 679.89,
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-11-14",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2026-11-15",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-16",
@@ -2729,7 +3296,8 @@
       "us10yYield": 5.12,
       "us10y2ySpread": 0.29,
       "voo": 680.26,
-      "qqq": 661.75
+      "qqq": 661.75,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-17",
@@ -2744,7 +3312,8 @@
       "us10yYield": 5.1,
       "us10y2ySpread": 0.3,
       "voo": 673.19,
-      "qqq": 656.95
+      "qqq": 656.95,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-18",
