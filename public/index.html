@@ -123,7 +123,7 @@ function syncChartCursor(date){
  for(const s of state.series){
   const observation=s.rows.find(r=>r.date===selected);
   if(observation)exactCount++;
-  const display=observation?historyFormat(observation[s.key],s.digits)+(s.unit==="%"?"%":s.unit==="點"?" 點":""):"—";
+  const display=observation?historyFormat(observation[s.key],s.digits)+(s.unit==="%"?"%":s.unit==="點"?" 點":s.unit==="億元"?" 億":""):"—";
   const label=host.querySelector('[data-cross-value="'+s.key+'"]');
   const asof=host.querySelector('[data-cross-date="'+s.key+'"]');
   const row=host.querySelector('[data-cross-row="'+s.key+'"]');
@@ -135,7 +135,7 @@ function syncChartCursor(date){
   const line=svg.querySelector(".cross-cursor-line"),point=svg.querySelector(".cross-cursor-point"),halo=svg.querySelector(".cross-cursor-halo"),tooltip=svg.querySelector(".cross-cursor-tooltip");
   const x=selectedX.toFixed(2);
   if(line){line.setAttribute("x1",x);line.setAttribute("x2",x)}
-  const val=observation&&s.first>0&&(chartMode==="indexed")?100*observation[s.key]/s.first:observation?.[s.key];
+  const val=observation&&s.kind!=="flow"&&s.first>0&&(chartMode==="indexed")?100*observation[s.key]/s.first:observation?.[s.key];
   const isValid=Number.isFinite(val);
   const y=isValid?s.y(val):0;
   for(const circle of [point,halo])if(circle){circle.setAttribute("cx",x);circle.setAttribute("cy",String(y));circle.setAttribute("visibility",isValid?"visible":"hidden")}
@@ -162,39 +162,39 @@ function showHistory(){
        start=cutoff-(chartDays-1)*86400000,end=cutoff;
  const series=seriesConfig.map(([key,label,unit,color,digits])=>{
    const rows=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date));
-   return {key,label,unit,color,digits,rows,first:rows[0]?.[key]};
+   return {key,label,unit,color,digits,kind:seriesConfig.find(v=>v[0]===key)?.[5]||"line",rows,first:rows[0]?.[key]};
  });
  const uniqueDays=[...new Set(series.flatMap(s=>s.rows.map(r=>r.date)))].sort();
  const X=t=>38+(t-start)/(end-start)*720;
  let commonLo=Infinity,commonHi=-Infinity;
  if(chartMode==="indexed"){
-   for(const s of series)if(s.rows.length>1&&s.first>0)for(const r of s.rows){const v=100*r[s.key]/s.first;commonLo=Math.min(commonLo,v);commonHi=Math.max(commonHi,v)}
+   for(const s of series)if(s.kind!=="flow"&&s.rows.length>1&&s.first>0)for(const r of s.rows){const v=100*r[s.key]/s.first;commonLo=Math.min(commonLo,v);commonHi=Math.max(commonHi,v)}
    if(!Number.isFinite(commonLo)){commonLo=90;commonHi=110}
    const span=Math.max(commonHi-commonLo,1);commonLo=Math.min(commonLo-0.08*span,99);commonHi=Math.max(commonHi+0.08*span,101);
  }
  const svgText=(x,y,str,anchor="start",tone="#a8c0d5")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" fill="'+tone+'" font-size="11">'+esc(str)+'</text>';
  const renderRow=(s)=>{
    const {rows,key,label,unit,color,digits}=s, last=rows.at(-1),length=rows.length;
-   const val=last?historyFormat(last[key],digits)+(unit==="%"?"%":unit==="點"?" 點":""):"—";
+   const val=last?historyFormat(last[key],digits)+(unit==="%"?"%":unit==="點"?" 點":unit==="億元"?" 億":""):"—";
    if(length<2){
     s.y=()=>0;
     return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label"><strong>'+esc(label)+'</strong><small>缺少可靠逐日數列</small></div><div class="cross-empty">至少需要 2 筆觀測值，不能繪圖。</div><div class="cross-last"><strong data-cross-value="'+key+'">無資料</strong><small data-cross-date="'+key+'">該期間資料待補</small></div></div>';
    }
-   const chartRows=rows.map(r=>({ts:marketChartDate(r.date),v:chartMode==="indexed"?100*r[key]/s.first:r[key]}));
+   const chartRows=rows.map(r=>({ts:marketChartDate(r.date),v:chartMode==="indexed"&&s.kind!=="flow"&&s.first>0?100*r[key]/s.first:r[key]}));
    const vals=chartRows.map(r=>r.v),range=Math.max(...vals)-Math.min(...vals);
-   let lo=chartMode==="indexed"?commonLo:Math.min(...vals)-Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
-   let hi=chartMode==="indexed"?commonHi:Math.max(...vals)+Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
+   let lo=s.kind==="flow"?-Math.max(1,Math.max(...vals.map(Math.abs))*1.12):chartMode==="indexed"?commonLo:Math.min(...vals)-Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
+   let hi=s.kind==="flow"?Math.max(1,Math.max(...vals.map(Math.abs))*1.12):chartMode==="indexed"?commonHi:Math.max(...vals)+Math.max(0.04*range,Math.abs(vals[0])*0.003,0.0001);
    if(hi===lo){hi+=1;lo-=1}
    const Y=v=>112-(v-lo)/(hi-lo)*79;
    s.y=Y;
    const poly=chartRows.map(r=>X(r.ts).toFixed(1)+","+Y(r.v).toFixed(1)).join(" ");
    const latestDate=last.date;
-   const totalChange=chartMode==="indexed"?(chartRows.at(-1).v-100):((last[key]-s.first)/Math.abs(s.first)*100);
-   const delta=(totalChange>0?"+":"")+historyFormat(totalChange,2)+"%";
+   const totalChange=s.kind==="flow"?rows.reduce((sum,r)=>sum+r[key],0):chartMode==="indexed"?(chartRows.at(-1).v-100):((last[key]-s.first)/Math.abs(s.first)*100);
+   const delta=(totalChange>0?"+":"")+historyFormat(totalChange,2)+(s.kind==="flow"?" 億元":"%");
    const axes=[0,0.5,1].map(r=>'<line x1="38" y1="'+(33+r*79)+'" x2="758" y2="'+(33+r*79)+'" stroke="#28455d" stroke-width="1"/>').join("");
    const ylabels=svgText(33,38,historyFormat(hi,chartMode==="indexed"?1:digits),"end")+svgText(33,115,historyFormat(lo,chartMode==="indexed"?1:digits),"end");
    const ticks=[0,.25,.5,.75,1].map(n=>{const ts=start+(end-start)*n,day=new Date(ts).toISOString().slice(5,10);return '<line x1="'+X(ts)+'" y1="112" x2="'+X(ts)+'" y2="117" stroke="#57748d"/>'+svgText(X(ts),137,day,"middle")}).join("");
-   const baseline=chartMode==="indexed"?'<line x1="38" y1="'+Y(100)+'" x2="758" y2="'+Y(100)+'" stroke="#c7b27b" stroke-dasharray="4,6" opacity=".7"/>':"";
+   const baseline=s.kind==="flow"?'<line x1="38" y1="'+Y(0)+'" x2="758" y2="'+Y(0)+'" stroke="#a9bdce" stroke-dasharray="4,5"/>':chartMode==="indexed"?'<line x1="38" y1="'+Y(100)+'" x2="758" y2="'+Y(100)+'" stroke="#c7b27b" stroke-dasharray="4,6" opacity=".7"/>':"";
    const cursor='<line class="cross-cursor-line" x1="38" y1="24" x2="38" y2="112"/><circle class="cross-cursor-halo" cx="38" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="38" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">選取日期</text></g>';
    const svg='<svg class="cross-svg" data-series-svg="'+key+'" viewBox="0 0 780 150" role="img" aria-label="'+esc(label)+' '+chartDays+'日歷史走勢，按住黃線拖動同步查看八項資料">'+axes+baseline+'<polyline points="'+poly+'" stroke="'+color+'" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>'+cursor+ylabels+ticks+'</svg>';
    return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label"><strong>'+esc(label)+'</strong><small>'+length+' 筆 · '+esc(rows[0].date)+' 至 '+esc(latestDate)+'</small><div class="cross-stat">區間變化 '+esc(delta)+'</div></div>'+svg+'<div class="cross-last"><strong data-cross-value="'+key+'">'+esc(val)+'</strong><small data-cross-date="'+key+'">觀測日 '+esc(latestDate)+'</small><div class="cross-legend"><i style="background:'+color+'"></i>同步選日數值</div></div></div>';
