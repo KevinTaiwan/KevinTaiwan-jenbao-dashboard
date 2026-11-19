@@ -269,6 +269,7 @@ function card(title,value,sub='',tone=''){return `<div class="card"><div class="
 function toast(message){const t=$('toast');t.textContent=message;t.style.display='block';clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.style.display='none',3600)}
 function validate(d){if(!d||d.schemaVersion!==2||d.audience!=='public-market'||typeof d.market!=='object'||!Array.isArray(d.ai)||!/^\d{4}-\d{2}-\d{2}$/.test(d.asOf))throw Error('公開市場 JSON 格式不符合規範');if(['portfolio','holdings','defense','rollingRisk','personal','account'].some(k=>Object.prototype.hasOwnProperty.call(d,k)))throw Error('公開資料包含不應出現的私人欄位');return d}
 let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
+let indexOhlcHistory=null,indexOhlcError="",techOhlcCache={taiex:[],sp500:[]};
 let chartCursorDate=null,chartContext=null,chartPointerSvg=null,chartPointerId=null;
 const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2],["us10yYield","美國 10 年公債殖利率","%","#9dbdff",3],["us10y2ySpread","美國 10Y－2Y 公債利差","百分點","#ddc18f",3,"spread"],["voo","VOO｜S&P 500 ETF（美元）","美元","#79d4f2",2],["qqq","QQQ｜Nasdaq-100 ETF（美元）","美元","#ffbc8b",2],["fedFundsEffective","美國聯邦基金有效利率（EFFR／DFF）","%","#c7df80",3]];
 
@@ -336,7 +337,7 @@ function transformedValue(s,value){
 }
 
 /* Three-panel public-source technical workbench. All calculations use archived values. */
-const TECH_PRICE_KEYS=["taiex","voo","qqq","dxy","usdtwd","vix","hyOas","us10yYield","us10y2ySpread","fedFundsEffective"];
+const TECH_PRICE_KEYS=["taiex","taiexK","sp500K","voo","qqq","dxy","usdtwd","vix","hyOas","us10yYield","us10y2ySpread","fedFundsEffective"];
 const TECH_MIDDLE_KEYS=["foreignNetYi","marginDailyYi","foreignCumulativeYi","marginMaintenanceExEtf"];
 const TECH_STACK_KEY="jb-technical-stack-v1";
 function readTechnicalStackSettings(){
@@ -348,7 +349,7 @@ function readTechnicalStackSettings(){
     top:TECH_PRICE_KEYS.includes(x.top)?x.top:defaults.top,
     middle:TECH_MIDDLE_KEYS.includes(x.middle)?x.middle:defaults.middle,
     bottomSource:x.bottomSource==="follow"||TECH_PRICE_KEYS.includes(x.bottomSource)?x.bottomSource:defaults.bottomSource,
-    oscillator:["MACD","RSI"].includes(x.oscillator)?x.oscillator:defaults.oscillator,
+    oscillator:["MACD","RSI","KD"].includes(x.oscillator)?x.oscillator:defaults.oscillator,
     layout:["compact","standard"].includes(x.layout)?x.layout:defaults.layout,
     overlays:Object.fromEntries(Object.keys(defaults.overlays).map(k=>[k,x.overlays?.[k]===true]))
    };
@@ -358,7 +359,7 @@ function readTechnicalStackSettings(){
 }
 let techSettings=readTechnicalStackSettings();
 function updateTechnicalSetting(field,value){
- const valid=field==="top"?TECH_PRICE_KEYS.includes(value):field==="middle"?TECH_MIDDLE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
+ const valid=field==="top"?TECH_PRICE_KEYS.includes(value):field==="middle"?TECH_MIDDLE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI","KD"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
  if(!valid)return false;
  techSettings={...techSettings,[field]:value};
  try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
@@ -370,9 +371,39 @@ function toggleTechnicalOverlay(key){
  try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
  showHistory();return true;
 }
-function techSeriesName(key){return seriesConfig.find(x=>x[0]===key)?.[1]||key}
+function techSeriesName(key){
+ if(key==="taiexK")return "台灣加權指數｜K 線（OHLC）";
+ if(key==="sp500K")return "S&P 500 指數｜K 線（OHLC）";
+ return seriesConfig.find(x=>x[0]===key)?.[1]||key;
+}
+function techOhlcSource(key){
+ if(key==="taiex"||key==="taiexK")return "taiex";
+ if(key==="sp500K")return "sp500";
+ return null;
+}
+function techOhlcRecords(key){
+ const source=techOhlcSource(key);
+ return source?techOhlcCache[source]||[]:[];
+}
 function techPriceObservations(raw,key){
+ if(key==="taiexK"||key==="sp500K"){
+  return techOhlcRecords(key).map(r=>({...r,value:r.close}));
+ }
  return raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:r[key]}));
+}
+function techKd(ohlcRows,period=9,smoothK=3,smoothD=3){
+ const out=[];let priorK=50,priorD=50;
+ for(let i=period-1;i<ohlcRows.length;i++){
+  const window=ohlcRows.slice(i-period+1,i+1);
+  if(window.length<period||window.some(r=>![r.high,r.low,r.close].every(Number.isFinite)))continue;
+  const high=Math.max(...window.map(r=>r.high)),low=Math.min(...window.map(r=>r.low));
+  const rsv=high===low?50:Math.max(0,Math.min(100,100*(ohlcRows[i].close-low)/(high-low)));
+  const k=((smoothK-1)*priorK+rsv)/smoothK;
+  const d=((smoothD-1)*priorD+k)/smoothD;
+  out.push({date:ohlcRows[i].date,k,d,rsv});
+  priorK=k;priorD=d;
+ }
+ return out;
 }
 function techRolling(rows,n){
  const out=[],window=[];let sum=0;
@@ -681,6 +712,30 @@ function showHistory(){
  if(uniqueDays.length)syncChartCursor(chartCursorDate||uniqueDays.at(-1));
  else{$("crossCursorDate").textContent="無可比較日期";$("crossCursorCoverage").textContent="等待歷史資料"}
 }
+async function fetchIndexOhlc(){
+ try{
+  const r=await fetch("./index-ohlc-history.json?c="+Date.now(),{cache:"no-store"});
+  if(!r.ok)throw Error("HTTP "+r.status);
+  const d=await r.json();
+  if(d?.audience!=="public-index-ohlc"||d?.schemaVersion!==1||!d?.series
+     ||!Array.isArray(d.series.taiex?.rows)||!Array.isArray(d.series.sp500?.rows)){
+   throw Error("OHLC 檔案結構錯誤");
+  }
+  const clean={};
+  for(const k of ["taiex","sp500"]){
+   clean[k]=d.series[k].rows.filter(row=>{
+    if(!row||typeof row.date!=="string"||!(/^\d{4}-\d{2}-\d{2}$/.test(row.date)))return false;
+    const {open,high,low,close}=row;
+    return [open,high,low,close].every(Number.isFinite)&&high>=Math.max(open,close,low)&&low<=Math.min(open,close,high);
+   }).map(row=>({date:row.date,open:row.open,high:row.high,low:row.low,close:row.close,source:row.source}));
+   if(clean[k].length<240)throw Error(k+" 的有效 OHLC 少於 240 筆");
+  }
+  indexOhlcHistory={asOf:d.cutoff,stats:Object.fromEntries(["taiex","sp500"].map(k=>[k,{count:clean[k].length,last:clean[k].at(-1)?.date}]))};
+  techOhlcCache=clean;
+  indexOhlcError="";
+ }catch(e){indexOhlcError="K 線資料未取得："+e.message;indexOhlcHistory=null;techOhlcCache={taiex:[],sp500:[]};}
+ showHistory();
+}
 async function fetchMarketHistory(){
  try{
   const resp=await fetch("./market-history.json?c="+Date.now(),{cache:"no-store"});
@@ -943,6 +998,6 @@ $('aiRows').innerHTML=(d.ai||[]).map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.
 $('sources').innerHTML=(d.sources||[]).filter(s=>s&&typeof s.url==='string'&&/^https:\/\//.test(s.url)).map(s=>`<a class="source" rel="noopener noreferrer" target="_blank" href="${esc(s.url)}">${esc(s.label||s.url)}</a>`).join('')||'<span class="small">尚未附上公開來源</span>'; $('lastLoaded').textContent=`最後讀取：${new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})}`;
 showPageInterpretations();
 }
-async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();await fetchMarketHistory();loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
+async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();await Promise.all([fetchMarketHistory(),fetchIndexOhlc()]);loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
 $('reload').addEventListener('click',()=>sync(false));document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.tabscreen').forEach(s=>s.classList.toggle('visible',s.id===btn.dataset.tab))}));document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync(true)});sync(true);setInterval(()=>{if(!document.hidden)sync(true)},300000);
 </script></body></html>
