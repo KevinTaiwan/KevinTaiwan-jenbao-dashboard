@@ -61,7 +61,7 @@ def valid_day(value):
 
 def add(key, day, value):
     day=valid_day(day)
-    if day is None or value in (None,"",".","NA","N/A"):return
+    if day is None or day.weekday()>=5 or value in (None,"",".","NA","N/A"):return
     try:
         v=float(str(value).replace(",","").replace("%","").strip())
     except (ValueError,TypeError):return
