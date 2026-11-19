@@ -8,7 +8,7 @@ import sys
 from urllib.parse import urlsplit
 
 ALLOWED_TOP={'schemaVersion','audience','asOf','dataStatus','updatedAt','headline','summary','market','ai','alerts','sources','marketHistory','notes'}
-ALLOWED_MARKET={'taiex','taiexChange','ma5','ma10','ma20','ma60','vix','move','usdtwd','dxy','us10y','de10y','cnn','marginBalanceYi','marginDailyYi','marginMaintenance','foreignNetYi','futuresNetContracts','hyOas','singleBOas','sofrMinusIorb','t10yie','t5yie','oil','goldPrice'}
+ALLOWED_MARKET={'taiex','taiexChange','ma5','ma10','ma20','ma60','ma120','ma240','vix','move','usdtwd','dxy','us10y','de10y','cnn','marginBalanceYi','marginDailyYi','marginMaintenance','foreignNetYi','futuresNetContracts','hyOas','singleBOas','sofrMinusIorb','t10yie','t5yie','oil','goldPrice'}
 # Defensively catch private-field leaks even if a future editor accidentally expands the schema.
 BANNED_KEY_FRAGMENTS=('portfolio','holding','position','allocation','account','secret','token','password','private','networth','costbasis','assetweight','personaldrawdown','personalreturn','defense','beta','volatility','correlation','cash','bondweight','user','owner','statement','ledger')
 BANNED_TEXT_FRAGMENTS=('我的投資組合','我的持股','你的持股','總資產','個人資產','買入成本','券商帳戶','原始部位','個人回撤','現金占比','現金佔比','d1 防守','股債配置','個人報酬','私有資料')
@@ -36,7 +36,7 @@ def validate(d):
     check_keys(d,ALLOWED_TOP)
     if d.get('schemaVersion')!=2 or d.get('audience')!='public-market': fail('wrong schema/audience')
     valid_date(d.get('asOf'))
-    if d.get('dataStatus') not in {'verified','partial','awaiting-verification'}: fail('bad status')
+    if d.get('dataStatus') not in {'verified','partial','intraday','awaiting-verification'}: fail('bad status')
     if d.get('updatedAt') is not None: check_text(d['updatedAt'],64)
     for key in ('headline','summary'): check_text(d.get(key,''),650)
     m=d.get('market');check_keys(m,ALLOWED_MARKET)
