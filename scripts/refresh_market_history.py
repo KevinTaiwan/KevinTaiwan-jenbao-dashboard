@@ -103,6 +103,14 @@ def load_seed():
             add(key,row.get("date"),row.get(key))
     SOURCE["taiex"]={"name":"TAIEX official TWSE; Library closing prices as fallback","url":URLS["taiex"]}
     SOURCE["usdtwd"]={"name":"USD/TWD indicative market close; Library historical price input","url":URLS["usdtwd"]}
+    exetf=ROOT / "scripts" / "ex_etf_maintenance_seed.json"
+    if exetf.exists():
+        trusted=json.loads(exetf.read_text(encoding="utf-8"))
+        if trusted.get("audience")!="public-market-seed" or trusted.get("series")!="marginMaintenanceExEtf":
+            raise ValueError("Invalid source-labeled ETF-excluded financing maintenance seed")
+        for row in trusted["rows"]:
+            add("marginMaintenanceExEtf",row.get("date"),row.get("value"))
+        SOURCE["marginMaintenanceExEtf"]={"name":"Wantgoo: TAIEX financing maintenance EXCLUDING ETF, dated historical seed","url":URLS["marginMaintenanceExEtf"]}
     if DEST.exists():
         old=json.loads(DEST.read_text(encoding="utf-8"))
         for row in old.get("rows",[]):
