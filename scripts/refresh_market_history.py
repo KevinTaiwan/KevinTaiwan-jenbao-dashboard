@@ -25,7 +25,7 @@ SEED = ROOT / "scripts" / "market_seed.json"
 TODAY = dt.datetime.now(ZoneInfo("Asia/Taipei")).date()
 CUTOFF = TODAY - dt.timedelta(days=1)  # no intraday price in daily-close chart
 EARLIEST = TODAY - dt.timedelta(days=300)
-FIELDS = ("taiex", "dxy", "usdtwd", "vix", "hyOas", "marginDailyYi", "foreignNetYi", "marginMaintenanceExEtf")
+FIELDS = ("taiex", "dxy", "usdtwd", "vix", "hyOas", "marginDailyYi", "foreignNetYi", "marginMaintenanceExEtf", "us10yYield", "us10y2ySpread")
 SOURCE = {}
 OBS = {key: {} for key in FIELDS}
 SUCCESS = {}
@@ -40,6 +40,8 @@ URLS = {
     "foreignNetYi":"https://www.twse.com.tw/rwd/zh/fund/BFI82U",
     "marginDailyYi":"https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN",
     "marginMaintenanceExEtf":"https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
+    "us10yYield":"https://fred.stlouisfed.org/series/DGS10",
+    "us10y2ySpread":"https://fred.stlouisfed.org/series/T10Y2Y",
 }
 
 def get(url, timeout=22):
@@ -70,7 +72,7 @@ def add(key, day, value):
     try:
         v=float(str(value).replace(",","").replace("%","").strip())
     except (ValueError,TypeError):return
-    bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-2500,2500),"marginMaintenanceExEtf":(80,500)}
+    bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-2500,2500),"marginMaintenanceExEtf":(80,500),"us10yYield":(0,25),"us10y2ySpread":(-6,7)}
     a,b=bounds[key]
     if math.isfinite(v) and a<=v<=b:
         OBS[key][day.isoformat()]=round(v,4)
@@ -115,6 +117,9 @@ def load_seed():
         old=json.loads(DEST.read_text(encoding="utf-8"))
         for row in old.get("rows",[]):
             for key in FIELDS:add(key,row.get("date"),row.get(key))
+        for key in FIELDS:
+            if key not in SOURCE and isinstance(old.get("stats",{}).get(key,{}).get("source"),dict):
+                SOURCE[key]=old["stats"][key]["source"]
 
 def fetch_twse():
     found=0
@@ -303,6 +308,14 @@ def fetch_wantgoo_ex_etf():
 
 def main():
     load_seed()
+    if os.environ.get("JENBAO_YIELD_ONLY")=="1":
+        attempt("US10Y_FRED",lambda:fetch_fred("us10yYield","DGS10"))
+        attempt("US10Y_MINUS_US2Y_FRED",lambda:fetch_fred("us10y2ySpread","T10Y2Y"))
+    else:
+        full_refresh()
+    finalize_history()
+
+def full_refresh():
     attempt("TWSE_TAIEX",fetch_twse)
     # Yahoo US dollar index preferred, xaudaily only if Yahoo unavailable
     if not attempt("DXY_Yahoo",lambda:fetch_yahoo("DX-Y.NYB","dxy")):
@@ -314,9 +327,12 @@ def main():
     if not attempt("VIX_Cboe",fetch_cboe):
         attempt("VIX_FRED",lambda:fetch_fred("vix","VIXCLS"))
     attempt("HY_OAS_FRED",lambda:fetch_fred("hyOas","BAMLH0A0HYM2"))
+    attempt("US10Y_FRED",lambda:fetch_fred("us10yYield","DGS10"))
+    attempt("US10Y_MINUS_US2Y_FRED",lambda:fetch_fred("us10y2ySpread","T10Y2Y"))
     attempt("TWSE_FOREIGN",fetch_foreign_daily)
     attempt("TWSE_MARGIN",fetch_margin_daily)
     attempt("WANTGOO_EX_ETF",fetch_wantgoo_ex_etf)
+def finalize_history():
     dates=sorted({day for ser in OBS.values() for day in ser})
     rows=[]
     for day in dates:
@@ -342,7 +358,7 @@ def main():
       "generatedAt":dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
       "cutoff":CUTOFF.isoformat(),
       "calendar":"source observation dates; never forward-fill; latest intraday excluded",
-      "units":{"taiex":"index pts","dxy":"ICE US Dollar Index points","usdtwd":"TWD per USD","vix":"index pts","hyOas":"percent","marginDailyYi":"TWD 100 million daily finance balance change, including ETF","foreignNetYi":"TWD 100 million, TWSE foreign institution cash net","marginMaintenanceExEtf":"percent, Wantgoo margin maintenance excludes ETF"},
+      "units":{"taiex":"index pts","dxy":"ICE US Dollar Index points","usdtwd":"TWD per USD","vix":"index pts","hyOas":"percent","marginDailyYi":"TWD 100 million daily finance balance change, including ETF","foreignNetYi":"TWD 100 million, TWSE foreign institution cash net","marginMaintenanceExEtf":"percent, Wantgoo margin maintenance excludes ETF","us10yYield":"percent, 10-year Treasury constant maturity yield (FRED DGS10)","us10y2ySpread":"percentage points, 10-year minus 2-year Treasury constant maturity spread (FRED T10Y2Y)"},
       "stats":stats,
       "rows":rows
     }
