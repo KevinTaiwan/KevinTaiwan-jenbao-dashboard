@@ -5,11 +5,12 @@ path=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else "public/market-history.jso
 d=json.loads(path.read_text(encoding="utf-8"))
 if set(d)!={"schemaVersion","audience","generatedAt","cutoff","calendar","units","stats","rows"} or d["schemaVersion"]!=1 or d["audience"]!="public-market-history":
     raise SystemExit("FAIL: unexpected public market-history structure")
-keys={"taiex","dxy","usdtwd","vix","hyOas","marginDailyYi","foreignNetYi","marginMaintenanceExEtf","us10yYield","us10y2ySpread","voo","qqq"}
+keys={"taiex","dxy","usdtwd","vix","hyOas","marginDailyYi","foreignNetYi","marginMaintenanceExEtf","us10yYield","us10y2ySpread","voo","qqq","fedFundsEffective"}
 if set(d["units"])!=keys or set(d["stats"])!=keys:raise SystemExit("FAIL: unexpected market series")
-if len(d["rows"])>260:raise SystemExit("FAIL: too many observations")
+if not isinstance(d["rows"],list):raise SystemExit("FAIL: malformed rows")
+# Permanent data archive: never reject due to reaching 20/60/120/240/260 days or any count limit.
 prev=None
-bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-2500,2500),"marginMaintenanceExEtf":(80,500),"us10yYield":(0,25),"us10y2ySpread":(-6,7),"voo":(20,2000),"qqq":(20,2000)}
+bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-2500,2500),"marginMaintenanceExEtf":(80,500),"us10yYield":(0,25),"us10y2ySpread":(-6,7),"voo":(20,2000),"qqq":(20,2000),"fedFundsEffective":(0,25)}
 counts={k:0 for k in keys}
 for r in d["rows"]:
     if set(r)-({"date"}|keys):raise SystemExit("FAIL: private or unexpected history key")
