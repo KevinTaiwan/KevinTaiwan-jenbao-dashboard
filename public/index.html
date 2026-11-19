@@ -464,7 +464,7 @@ function techRsi(rows,n=14){
  return out;
 }
 function techFiltered(rows,start,end){
- return rows.filter(r=>{const t=marketChartDate(r.date);return t>=start&&t<=end});
+ return rows.filter(r=>{const t=marketChartDate(r.date);return t>=start&&t<=end&&marketIsWeekday(t)});
 }
 function techOptions(keys,selected){
  return keys.map(k=>'<option value="'+k+'"'+(k===selected?' selected':'')+'>'+esc(techSeriesName(k))+'</option>').join("");
@@ -495,6 +495,11 @@ function chartSortControls(key,label){
 }
 
 function marketChartDate(t){return new Date(String(t).slice(0,10)+"T00:00:00Z").getTime()}
+function marketIsWeekday(date){
+ const ts=typeof date==="number"?date:marketChartDate(date);
+ const day=new Date(ts).getUTCDay();
+ return day!==0&&day!==6;
+}
 function historyFormat(v,d){return Number.isFinite(v)?v.toLocaleString("zh-TW",{minimumFractionDigits:d,maximumFractionDigits:d}):"—"}
 function marketViewDate(v){return String(v).replace(/-/g,"/")}
 function nearestHistoryDate(ts,dates){
@@ -580,21 +585,38 @@ function showHistory(){
        cutoff=Math.min(reference,Date.now(),lastPublished),
        start=cutoff-(chartDays-1)*86400000,end=cutoff;
  const TOP=35,BOTTOM=151,LEFT=38,RIGHT=758;
- const X=t=>LEFT+(t-start)/(end-start)*(RIGHT-LEFT);
+ // Each Monday immediately follows the preceding Friday: draw on weekday slots.
+ // This affects presentation only; all original source observations remain stored.
+ const timelineDays=[];
+ for(let t=start;t<=end;t+=86400000)if(marketIsWeekday(t))timelineDays.push(new Date(t).toISOString().slice(0,10));
+ const timelineIndex=new Map(timelineDays.map((d,i)=>[d,i]));
+ const X=t=>{
+  const key=new Date(t).toISOString().slice(0,10);
+  const i=timelineIndex.get(key);
+  if(i!==undefined)return LEFT+i/Math.max(1,timelineDays.length-1)*(RIGHT-LEFT);
+  // Nontrading weekends are omitted; anything outside the visible period is clipped.
+  const next=timelineDays.findIndex(day=>day>=key);
+  const position=next<0?timelineDays.length-1:next;
+  return LEFT+Math.max(0,position)/Math.max(1,timelineDays.length-1)*(RIGHT-LEFT);
+ };
  const Yratio=(v,lo,hi)=>BOTTOM-((v-lo)/(hi-lo))*(BOTTOM-TOP);
  const svgText=(x,y,str,anchor="start",tone="#a8c0d5")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" fill="'+tone+'" font-size="11">'+esc(str)+'</text>';
- const foreignDaily=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r.foreignNetYi)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date));
+ const foreignDaily=raw.filter(r=>r&&typeof r.date==="string"&&marketIsWeekday(r.date)&&Number.isFinite(r.foreignNetYi)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date));
  let accumulated=0;
  const foreignCumulative=foreignDaily.map(r=>({date:r.date,foreignCumulativeYi:Math.round((accumulated+=r.foreignNetYi)*10000)/10000}));
  const series=seriesConfig.map(([key,label,unit,color,digits,,kind])=>{
   const isCum=key==="foreignCumulativeYi";
   const all=isCum?foreignCumulative:raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date));
-  const rows=all.filter(r=>marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end);
+  const rows=all.filter(r=>marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end);
   const s={key,label,unit,color,digits,kind:seriesConfig.find(x=>x[0]===key)?.[5]||"line",rows,first:rows[0]?.[key],ma:{}};
-  for(const n of MA_PERIODS)s.ma[n]=rollingMean(all,key,n).filter(p=>marketChartDate(p.date)>=start&&marketChartDate(p.date)<=end);
+  for(const n of MA_PERIODS)s.ma[n]=rollingMean(all,key,n).filter(p=>marketIsWeekday(p.date)&&marketChartDate(p.date)>=start&&marketChartDate(p.date)<=end);
   return s;
  });
- const uniqueDays=[...new Set(series.filter(s=>s.key!=="foreignCumulativeYi").flatMap(s=>s.rows.map(r=>r.date)))].sort();
+ const uniqueDays=[...new Set([
+  ...series.filter(s=>s.key!=="foreignCumulativeYi").flatMap(s=>s.rows.map(r=>r.date)),
+  ...techOhlcCache.taiex.filter(r=>marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).map(r=>r.date),
+  ...techOhlcCache.sp500.filter(r=>marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).map(r=>r.date)
+ ])].filter(marketIsWeekday).sort();
  let commonLo=Infinity,commonHi=-Infinity;
  if(chartMode==="indexed"){
   for(const s of series)if(s.kind==="line"&&s.rows.length>1&&s.first>0){
@@ -610,8 +632,9 @@ function showHistory(){
   return '<line x1="'+LEFT+'" y1="'+axisY+'" x2="'+RIGHT+'" y2="'+axisY+'" stroke="#29485d" stroke-width="1"/>';
  };
  const dates=(startY=175)=>[0,.25,.5,.75,1].map(n=>{
-  const ts=start+(end-start)*n,day=new Date(ts).toISOString().slice(5,10);
-  return '<line x1="'+X(ts)+'" y1="'+BOTTOM+'" x2="'+X(ts)+'" y2="'+(BOTTOM+5)+'" stroke="#57748d"/>'+svgText(X(ts),startY,day,"middle");
+  const index=Math.round((timelineDays.length-1)*n);
+  const day=timelineDays[index]||new Date(start).toISOString().slice(0,10),px=X(marketChartDate(day));
+  return '<line x1="'+px+'" y1="'+BOTTOM+'" x2="'+px+'" y2="'+(BOTTOM+5)+'" stroke="#57748d"/>'+svgText(px,startY,day.slice(5),"middle");
  }).join("");
  const cursor=(color)=>'<line class="cross-cursor-horizontal" x1="'+LEFT+'" y1="0" x2="'+RIGHT+'" y2="0" visibility="hidden"/><line class="cross-cursor-line" x1="'+LEFT+'" y1="24" x2="'+LEFT+'" y2="'+BOTTOM+'"/><circle class="cross-cursor-halo" cx="'+LEFT+'" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="'+LEFT+'" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">選取日期</text></g>';
  const renderRow=(s)=>{
@@ -657,7 +680,7 @@ function showHistory(){
   const bb=techFiltered(techBollinger(fullTop),start,end);
   const osc=techFiltered(c.oscillator==="RSI"?techRsi(fullBottom):c.oscillator==="KD"?(kdAvailable?techKd(kdCandles):[]):techMacd(fullBottom),start,end);
   let middle;
-  if(c.middle==="foreignCumulativeYi"){let total=0;middle=raw.filter(r=>Number.isFinite(r.foreignNetYi)&&r.date&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:(total+=r.foreignNetYi)}));}
+  if(c.middle==="foreignCumulativeYi"){let total=0;middle=raw.filter(r=>Number.isFinite(r.foreignNetYi)&&r.date&&marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:(total+=r.foreignNetYi)}));}
   else middle=techFiltered(techPriceObservations(raw,c.middle),start,end);
   const compact=c.layout!=="standard";
   const panel=compact?[{start:27,end:185},{start:212,end:271},{start:299,end:365}]:[{start:30,end:270},{start:306,end:394},{start:430,end:535}];
@@ -714,7 +737,10 @@ function showHistory(){
     '<button type="button" class="technical-stack-overlay-btn'+(c.overlays[key]?' enabled':'')+'" data-tech-overlay="'+key+'" aria-pressed="'+(c.overlays[key]?'true':'false')+'" style="--tech-overlay-color:'+color+'"><i></i>'+label+'</button>'
    ).join("")+'</div>';
   const labels=[["上層｜"+(c.top==="taiexK"||c.top==="sp500K"?"真實 OHLC K 線":"價格折線")+(Object.values(c.overlays).some(Boolean)?"＋選用技術線":""),compact?17:20],["中層｜"+techSeriesName(c.middle)+"（籌碼代理，非成交量）",compact?203:297],["下層｜"+c.oscillator+"（"+techSeriesName(bottomKey)+"）",compact?290:422]].map(([text,y])=>'<text x="40" y="'+y+'" fill="#d9f1fc" font-size="12">'+esc(text)+'</text>').join("");
-  const xticks=[0,.25,.5,.75,1].map(k=>'<text x="'+(38+720*k)+'" y="'+(compact?384:559)+'" fill="#9ebdce" text-anchor="middle" font-size="11">'+new Date(start+(end-start)*k).toISOString().slice(5,10)+'</text>').join("");
+  const xticks=[0,.25,.5,.75,1].map(k=>{
+   const day=timelineDays[Math.round((timelineDays.length-1)*k)]||new Date(start).toISOString().slice(0,10);
+   return '<text x="'+X(marketChartDate(day))+'" y="'+(compact?384:559)+'" fill="#9ebdce" text-anchor="middle" font-size="11">'+day.slice(5)+'</text>';
+  }).join("");
   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標">'+grid+labels+priceLines+midLines+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+'</svg>';
   const readouts='<div class="technical-stack-readouts"><div><strong>上層：價格、均線與 BB</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>中層：籌碼</strong><span data-tech-readout="middle">—</span></div><div><strong>下層：'+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸不計週六、週日，週五直接接週一；紅漲空心、綠跌實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。中層籌碼並非成交量。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
@@ -722,7 +748,7 @@ function showHistory(){
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
- chartContext={start,end,series,dates:uniqueDays,x:X,technicalStack};
+ chartContext={start,end,series,dates:uniqueDays,x:X,timelineDays,technicalStack};
  const counts=series.map(s=>s.label+":"+s.rows.length).join("｜");
  note.textContent="顯示範圍：截至 "+new Date(end).toISOString().slice(0,10)+" 的 "+chartDays+" 日曆日。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
  if(uniqueDays.length)syncChartCursor(chartCursorDate||uniqueDays.at(-1));
@@ -778,8 +804,9 @@ function selectCursorAtPointer(evt,svg){
   svgX=(evt.clientX-rect.left)/rect.width*780;
  }
  svgX=Math.max(38,Math.min(758,svgX));
- const ts=state.start+(svgX-38)/720*(state.end-state.start);
- syncChartCursor(nearestHistoryDate(ts,state.dates));
+ const slot=Math.max(0,Math.min(state.timelineDays.length-1,Math.round((svgX-38)/720*(state.timelineDays.length-1))));
+ const date=state.timelineDays[slot];
+ syncChartCursor(date);
 }
 const crossHost=$("marketCrossCharts");
 function clearChartDropTarget(){
