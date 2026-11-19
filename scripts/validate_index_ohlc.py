@@ -15,7 +15,7 @@ if d["schemaVersion"]!=1 or d["audience"]!="public-index-ohlc" or d["retention"]
 if d["minimumTradingSessions"]!=240:
     raise SystemExit("FAIL: minimum must be 240 real sessions")
 if set(d["series"])!={"taiex","sp500"}:raise SystemExit("FAIL: index symbols incorrect")
-sources={"TWSE","YAHOO_TWII","YAHOO_GSPC"}
+sources={"TWSE","YAHOO_TWII","YAHOO_GSPC","STOOQ_SPX"}
 if set(d["sourceRegistry"])!=sources:raise SystemExit("FAIL: source registry changed")
 limit=dt.date.fromisoformat(d["cutoff"])
 counts={}
@@ -39,7 +39,7 @@ for key,meta in d["series"].items():
         prev=day
         if row["source"] not in sources:
             raise SystemExit("FAIL: unknown OHLC provenance")
-        if key=="sp500" and row["source"]!="YAHOO_GSPC":
+        if key=="sp500" and row["source"] not in {"YAHOO_GSPC","STOOQ_SPX"}:
             raise SystemExit("FAIL: S&P 500 index data are not ^GSPC")
         vals=[row[k] for k in ("open","high","low","close")]
         if any(type(v) not in (int,float) or not math.isfinite(v) or not 100<=v<=200000 for v in vals):
