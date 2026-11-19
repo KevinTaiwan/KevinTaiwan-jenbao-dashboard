@@ -38,7 +38,8 @@ SOURCE_REGISTRY = {
     "TWSE": {"name": "Taiwan Stock Exchange MI_5MINS_HIST official TAIEX OHLC", "url": TWSE_URL},
     "YAHOO_TWII": {"name": "Yahoo Finance ^TWII TAIEX index OHLC fallback", "url": "https://finance.yahoo.com/quote/%5ETWII/history/"},
     "YAHOO_GSPC": {"name": "Yahoo Finance ^GSPC S&P 500 index OHLC", "url": "https://finance.yahoo.com/quote/%5EGSPC/history/"},
-    "STOOQ_SPX": {"name": "Stooq ^SPX S&P 500 cash index OHLC fallback (not SPY)", "url": "https://stooq.com/q/d/?s=%5Espx&i=d"}
+    "STOOQ_SPX": {"name": "Stooq ^SPX S&P 500 cash index OHLC fallback (not SPY)", "url": "https://stooq.com/q/d/?s=%5Espx&i=d"},
+    "GITHUB_SPX_DATASET": {"name": "Public S&P 500 index OHLC historical dataset by jingerzz, based on Stooq ^SPX and Yahoo ^SPX (baseline only)", "url": "https://github.com/jingerzz/historical-index-api/tree/main/data/sp500"}
 }
 ARCHIVE = {k: {} for k in SERIES}
 ERRORS = []
@@ -228,6 +229,48 @@ def fetch_stooq_spx():
         print("WARN Stooq",str(exc)[:190],flush=True)
         return 0
 
+def fetch_public_sp500_duckdb():
+    """Transparent archival S&P 500 cash-index baseline, only if live daily sources fail.
+
+    Dataset: https://github.com/jingerzz/historical-index-api
+    This is a historical baseline, NOT falsely marketed as an up-to-date feed.
+    Its newest date is checked and reported separately.
+    """
+    if len(ARCHIVE["sp500"])>=MIN_DAYS:
+        return 0
+    try:
+        import duckdb
+        url="https://raw.githubusercontent.com/jingerzz/historical-index-api/main/data/sp500/data.duckdb"
+        req=urllib.request.Request(url,headers={"User-Agent":"JenbaoPublicMarketHistory/2.0"})
+        with urllib.request.urlopen(req,timeout=35) as f:
+            raw=f.read(8_000_000)
+        if len(raw)<100_000:
+            raise ValueError("Public S&P 500 index archive too small or missing")
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            target=pathlib.Path(d)/"sp500.duckdb"
+            target.write_bytes(raw)
+            connection=duckdb.connect(str(target),read_only=True)
+            try:
+                rows=connection.execute(
+                    "select date, open, high, low, close from indicators "
+                    "where date >= DATE '2024-01-01' order by date"
+                ).fetchall()
+            finally:
+                connection.close()
+        count=0
+        for date,op,hi,lo,cl in rows:
+            if save_record("sp500",date,op,hi,lo,cl,"GITHUB_SPX_DATASET"):
+                count+=1
+        FETCHED["GITHUB_SPX_DATASET"]=count
+        print("GITHUB_SPX_DATASET",count,"baseline sessions, last",
+              max(ARCHIVE["sp500"]) if ARCHIVE["sp500"] else "none",flush=True)
+        return count
+    except Exception as exc:
+        ERRORS.append("S&P 500 public archive: "+str(exc)[:220])
+        print("WARN public S&P 500 archive",str(exc)[:220],flush=True)
+        return 0
+
 def finish():
     obj={"schemaVersion":1,"audience":"public-index-ohlc",
          "generatedAt":dt.datetime.now(dt.timezone.utc).isoformat(),
@@ -256,6 +299,8 @@ def main():
     fetch_yahoo("^GSPC","sp500","YAHOO_GSPC")
     if len(ARCHIVE["sp500"])<MIN_DAYS:
         fetch_stooq_spx()
+    if len(ARCHIVE["sp500"])<MIN_DAYS:
+        fetch_public_sp500_duckdb()
     finish()
 
 if __name__=="__main__":
