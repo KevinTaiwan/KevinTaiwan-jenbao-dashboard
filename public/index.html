@@ -475,6 +475,29 @@ body.technical-fullscreen-active{overflow:hidden!important}
    padding:2px 4px!important;font-size:10px!important
  }
 }
+
+/* The three-layer technical chart shares the same sort controls as all
+   other market indicator charts, kept visible in compact and normal layout. */
+.technical-stack-row .cross-sort-controls{
+  display:flex;align-items:center;flex-wrap:nowrap;
+  gap:3px;margin:0 6px 0 0;padding:0;
+}
+.technical-stack-row .cross-drag-handle{
+  background:#fff;color:#225571;border:1px solid #a2c1d2;
+  border-radius:5px;font-size:11px;padding:4px 7px;
+  white-space:nowrap;touch-action:none
+}
+.technical-stack-row .cross-drag-handle:hover{background:#e6f5fa}
+.technical-stack-row .cross-sort-step{
+  background:#fff;color:#225571;border:1px solid #b8cbd6;
+  width:24px;height:24px;border-radius:4px
+}
+.technical-stack-row .cross-sort-step:hover{background:#e6f5fa;color:#123d57}
+@media(max-width:760px){
+  .technical-stack-row .cross-sort-controls{gap:2px;margin-right:3px}
+  .technical-stack-row .cross-drag-handle{padding:3px 5px;font-size:10px}
+  .technical-stack-row .cross-sort-step{width:22px;height:22px}
+}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -547,17 +570,28 @@ let indexOhlcHistory=null,indexOhlcError="",techOhlcCache={taiex:[],sp500:[]};
 let chartCursorDate=null,chartContext=null,chartPointerSvg=null,chartPointerId=null;
 const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2],["us10yYield","美國 10 年公債殖利率","%","#9dbdff",3],["us10y2ySpread","美國 10Y－2Y 公債利差","百分點","#ddc18f",3,"spread"],["voo","VOO｜S&P 500 ETF（美元）","美元","#79d4f2",2],["qqq","QQQ｜Nasdaq-100 ETF（美元）","美元","#ffbc8b",2],["fedFundsEffective","美國聯邦基金有效利率（EFFR／DFF）","%","#c7df80",3]];
 
-const orderKeys=[...seriesConfig.map(c=>c[0]),"technicalStack"];
+const orderKeys=["technicalStack",...seriesConfig.map(c=>c[0])];
 const chartOrderKey="jb-public-chart-order-v1";
+const chartOrderFirstTechMigrationKey="jb-top-technical-chart-order-v1";
 function readChartOrder(){
+ let selected=[...orderKeys];
  try{
   const saved=JSON.parse(localStorage.getItem(chartOrderKey)||"null");
   if(Array.isArray(saved)){
    const preserved=[...new Set(saved.filter(k=>orderKeys.includes(k)))];
-   return [...preserved,...orderKeys.filter(k=>!preserved.includes(k))];
+   selected=[...preserved,...orderKeys.filter(k=>!preserved.includes(k))];
   }
- }catch(e){}
- return [...orderKeys];
+  // Migrate a saved old browser order once; then preserve all subsequent user
+  // drag/drop or ▲▼ changes (including moving this chart away from first).
+  if(localStorage.getItem(chartOrderFirstTechMigrationKey)!=="done"){
+   selected=["technicalStack",...selected.filter(k=>k!=="technicalStack")];
+   localStorage.setItem(chartOrderKey,JSON.stringify(selected));
+   localStorage.setItem(chartOrderFirstTechMigrationKey,"done");
+  }
+ }catch(e){
+  selected=["technicalStack",...selected.filter(k=>k!=="technicalStack")];
+ }
+ return selected;
 }
 let chartOrder=readChartOrder(), draggingChart=null;
 const MA_PERIODS=[5,20,60,240],MA_COLORS={"5":"#ffcf78","20":"#ff8fb2","60":"#afaaff","240":"#7fe0c1"};
@@ -1095,7 +1129,7 @@ function showHistory(){
   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="780" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+priceLines+midLines+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+'</svg>';
   const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。中層籌碼並非成交量。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
-  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 全螢幕工具列</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions"><div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button></div></div>'+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys};
+  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 全螢幕工具列</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button></div></div>'+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
