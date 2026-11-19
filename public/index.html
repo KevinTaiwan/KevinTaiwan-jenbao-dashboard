@@ -113,6 +113,8 @@ function toast(message){const t=$('toast');t.textContent=message;t.style.display
 function validate(d){if(!d||d.schemaVersion!==2||d.audience!=='public-market'||typeof d.market!=='object'||!Array.isArray(d.ai)||!/^\d{4}-\d{2}-\d{2}$/.test(d.asOf))throw Error('公開市場 JSON 格式不符合規範');if(['portfolio','holdings','defense','rollingRisk','personal','account'].some(k=>Object.prototype.hasOwnProperty.call(d,k)))throw Error('公開資料包含不應出現的私人欄位');return d}
 let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
 let chartCursorDate=null,chartContext=null,chartPointerSvg=null,chartPointerId=null;
+const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2]];
+
 const orderKeys=seriesConfig.map(c=>c[0]);
 const chartOrderKey="jb-public-chart-order-v1";
 function readChartOrder(){
@@ -150,7 +152,6 @@ function chartSortControls(key,label){
  return '<div class="cross-sort-controls"><span class="cross-drag-handle" data-chart-handle="'+key+'" draggable="true" tabindex="0" role="button" aria-label="拖曳'+esc(label)+'調整圖表順序" title="抓住此把手，往上或往下拖動圖表">⠿ 排序</span><button class="cross-sort-step" type="button" data-chart-move="'+key+'" data-direction="-1" aria-label="'+esc(label)+'向上移動一格" title="向上移動">▲</button><button class="cross-sort-step" type="button" data-chart-move="'+key+'" data-direction="1" aria-label="'+esc(label)+'向下移動一格" title="向下移動">▼</button></div>';
 }
 
-const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2]];
 function marketChartDate(t){return new Date(String(t).slice(0,10)+"T00:00:00Z").getTime()}
 function historyFormat(v,d){return Number.isFinite(v)?v.toLocaleString("zh-TW",{minimumFractionDigits:d,maximumFractionDigits:d}):"—"}
 function marketViewDate(v){return String(v).replace(/-/g,"/")}
