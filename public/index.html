@@ -125,6 +125,46 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 
 
 }
+
+/* Restore the fourteen legacy market panels' left information rail after removing the old comparison widget. */
+.cross-row:not(.technical-stack-row){display:grid;grid-template-columns:205px minmax(0,1fr);grid-template-rows:auto auto;align-items:start;gap:8px 12px;min-height:215px;padding:11px 14px}
+.cross-row:not(.technical-stack-row)>.cross-label{grid-column:1;grid-row:1;min-width:0;text-align:left}
+.cross-row:not(.technical-stack-row)>.cross-last{grid-column:1;grid-row:2;text-align:left;border-top:1px solid #34536d;padding-top:7px;align-self:start}
+.cross-row:not(.technical-stack-row)>.cross-svg{grid-column:2;grid-row:1 / span 2;min-width:0;width:100%;height:190px;max-width:none}
+.cross-row:not(.technical-stack-row) .cross-last strong{font-size:19px}
+.cross-row:not(.technical-stack-row) .cross-ma-values{font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+.technical-stack-row{display:flex;flex-direction:column;align-items:stretch;gap:13px;padding:17px 20px;background:linear-gradient(110deg,#10253d,#172943)}
+.technical-stack-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.technical-stack-head strong{font-size:17px;color:#e9f9fe}
+.technical-stack-instructions{font-size:12px;color:#afc9da;line-height:1.65}
+.technical-stack-selectors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.technical-stack-selectors label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:#b9d8e9;min-width:0}
+.technical-stack-selectors select{min-width:0;width:100%;background:#0c253b;color:#f1faff;border:1px solid #53758d;border-radius:7px;padding:8px 7px;font-size:12px;cursor:pointer}
+.technical-stack-svg{display:block;width:100%;height:520px;touch-action:none;cursor:default;overflow:visible}
+.technical-stack-readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.technical-stack-readouts>div{border:1px solid #355b77;background:#0b2339;padding:10px 12px;border-radius:9px;font-size:12px;line-height:1.7;min-width:0;overflow-wrap:anywhere}
+.technical-stack-readouts strong{display:block;font-size:13px}
+.technical-stack-readouts span{display:block;color:#d4edfa}
+.technical-stack-readouts small{display:block;color:#91b9cd}
+.technical-stack-txt{font-size:11px;color:#9dbfd0;line-height:1.8}
+.technical-stack-line{fill:none;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.technical-stack-hline{stroke-width:1.4;stroke-dasharray:5 5;pointer-events:none;opacity:.85}
+.technical-stack-dot{stroke:#fff;stroke-width:1.4;pointer-events:none}
+@media(max-width:950px){
+ .cross-row:not(.technical-stack-row){grid-template-columns:158px minmax(0,1fr);padding:10px;gap:8px;min-height:210px}
+ .technical-stack-selectors{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .technical-stack-svg{height:500px}
+}
+@media(max-width:650px){
+ .cross-row:not(.technical-stack-row){grid-template-columns:1fr;grid-template-rows:auto;min-height:unset;gap:7px}
+ .cross-row:not(.technical-stack-row)>.cross-label{grid-column:1;grid-row:1}
+ .cross-row:not(.technical-stack-row)>.cross-last{grid-column:1;grid-row:2}
+ .cross-row:not(.technical-stack-row)>.cross-svg{grid-column:1;grid-row:3;height:190px}
+ .technical-stack-row{padding:12px}
+ .technical-stack-selectors{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .technical-stack-readouts{grid-template-columns:1fr}
+ .technical-stack-svg{height:485px}
+}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -144,9 +184,9 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 <div class="grid four" id="topmetrics"></div>
 <div class="sectionhead"><h2>市場核心監控</h2><span class="small">多因子交叉觀察，不代表買賣訊號</span></div>
 <div class="card market-cross">
-<div class="cross-head"><div><div class="subhead">十四指標歷史走勢｜原始 Y 軸比例・同步時間軸</div><div class="small">已恢復 2026/11/18 原始 Y 軸繪圖比例；保留 14 張指標圖及 MA5／MA20／MA60／MA240 個別開關。拖曳 ⠿ 排序可調整上下位置，按住黃色時間線才能同步移動。</div></div>
+<div class="cross-head"><div><div class="subhead">十四指標走勢＋三層技術分析｜同步時間軸</div><div class="small">原有 14 張指標圖維持原始 Y 軸及 MA5／20／60／240；另新增可獨立選上、中、下層資料來源的三層技術圖（價格折線＋MA／布林通道、籌碼副圖、MACD／RSI）。所有圖可排序，按住黃色時間線同步選日。</div></div>
 <div class="cross-controls" aria-label="歷史圖切換"><button class="button" type="button" data-window="20">20日</button><button class="button" type="button" data-window="60">60日</button><button class="button active" type="button" data-window="120">120日</button><button class="button" type="button" data-window="240">240日</button><button class="button" type="button" data-mode="raw">原始值</button><button class="button" type="button" data-mode="indexed">起點=100</button></div></div>
-<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">按住垂直黃色時間線（滑鼠左鍵）左右拖曳，其他圖會同步</span></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="十四張圖同步時間游標，需在黃線按滑鼠左鍵拖曳，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
+<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">按住垂直黃色時間線（滑鼠左鍵）左右拖曳，其他圖會同步</span></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="十五張圖同步時間游標（含三層技術分析），需在黃線按滑鼠左鍵拖曳，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
 <div id="historynote" class="small cross-note">歷史資料正在載入…</div></div>
 <div class="sectionhead"><h2>市場狀態與信用溫度｜最新觀測</h2><span class="small">保留個別指標原始單位</span></div><div class="grid two"><div class="card"><div id="coreSignals"></div></div><div class="card"><div class="subhead">跨市場解讀原則</div><p class="small" style="line-height:2">股市下跌若與 DXY、USD/TWD、VIX 同時走高，應留意跨境資金與避險需求；只有 HY OAS 也連續擴大，信用風險的證據才更完整。不同市場休市日、報價時段及利差發布延遲都會產生時間差。</p><div class="separator"></div><p class="small">原始值模式：各張圖獨立縱軸，便於觀察自身轉折。起點=100：五圖共用同一縱軸比例，適合比較相對變化幅度。</p></div></div>
 <div class="sectionhead"><h2>今日市場注意事項</h2></div><div class="card"><ul class="bullet-list" id="notes"></ul></div>
@@ -196,7 +236,7 @@ let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
 let chartCursorDate=null,chartContext=null,chartPointerSvg=null,chartPointerId=null;
 const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2],["us10yYield","美國 10 年公債殖利率","%","#9dbdff",3],["us10y2ySpread","美國 10Y－2Y 公債利差","百分點","#ddc18f",3,"spread"],["voo","VOO｜S&P 500 ETF（美元）","美元","#79d4f2",2],["qqq","QQQ｜Nasdaq-100 ETF（美元）","美元","#ffbc8b",2],["fedFundsEffective","美國聯邦基金有效利率（EFFR／DFF）","%","#c7df80",3]];
 
-const orderKeys=seriesConfig.map(c=>c[0]);
+const orderKeys=[...seriesConfig.map(c=>c[0]),"technicalStack"];
 const chartOrderKey="jb-public-chart-order-v1";
 function readChartOrder(){
  try{
@@ -257,6 +297,102 @@ function unitValue(s,value){
 }
 function transformedValue(s,value){
  return chartMode==="indexed"&&s.kind==="line"&&s.first>0?100*value/s.first:value;
+}
+
+/* Three-panel public-source technical workbench. All calculations use archived values. */
+const TECH_PRICE_KEYS=["taiex","voo","qqq","dxy","usdtwd","vix","hyOas","us10yYield","us10y2ySpread","fedFundsEffective"];
+const TECH_MIDDLE_KEYS=["foreignNetYi","marginDailyYi","foreignCumulativeYi","marginMaintenanceExEtf"];
+const TECH_STACK_KEY="jb-technical-stack-v1";
+function readTechnicalStackSettings(){
+ const defaults={top:"taiex",middle:"foreignNetYi",bottomSource:"follow",oscillator:"MACD"};
+ try{
+  const x=JSON.parse(localStorage.getItem(TECH_STACK_KEY)||"null");
+  if(x&&typeof x==="object"&&!Array.isArray(x)){
+   return {
+    top:TECH_PRICE_KEYS.includes(x.top)?x.top:defaults.top,
+    middle:TECH_MIDDLE_KEYS.includes(x.middle)?x.middle:defaults.middle,
+    bottomSource:x.bottomSource==="follow"||TECH_PRICE_KEYS.includes(x.bottomSource)?x.bottomSource:defaults.bottomSource,
+    oscillator:["MACD","RSI"].includes(x.oscillator)?x.oscillator:defaults.oscillator
+   };
+  }
+ }catch(e){}
+ return defaults;
+}
+let techSettings=readTechnicalStackSettings();
+function updateTechnicalSetting(field,value){
+ const valid=field==="top"?TECH_PRICE_KEYS.includes(value):field==="middle"?TECH_MIDDLE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI"].includes(value):false;
+ if(!valid)return false;
+ techSettings={...techSettings,[field]:value};
+ try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
+ showHistory();return true;
+}
+function techSeriesName(key){return seriesConfig.find(x=>x[0]===key)?.[1]||key}
+function techPriceObservations(raw,key){
+ return raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:r[key]}));
+}
+function techRolling(rows,n){
+ const out=[],window=[];let sum=0;
+ for(const r of rows){
+  window.push(r.value);sum+=r.value;
+  if(window.length>n)sum-=window.shift();
+  if(window.length===n)out.push({date:r.date,value:sum/n});
+ }
+ return out;
+}
+function techBollinger(rows,n=20,multiple=2){
+ const out=[],window=[];
+ for(const r of rows){
+  window.push(r.value);if(window.length>n)window.shift();
+  if(window.length!==n)continue;
+  const mean=window.reduce((a,b)=>a+b,0)/n;
+  const std=Math.sqrt(window.reduce((a,b)=>a+(b-mean)**2,0)/n);
+  out.push({date:r.date,mid:mean,upper:mean+multiple*std,lower:mean-multiple*std});
+ }
+ return out;
+}
+function techEma(rows,n){
+ let initial=[],prev=null;const result=[];
+ const alpha=2/(n+1);
+ for(const r of rows){
+  if(!Number.isFinite(r.value))continue;
+  if(prev===null){
+   initial.push(r.value);
+   if(initial.length<n)continue;
+   prev=initial.reduce((a,b)=>a+b,0)/n;
+  }else prev=alpha*r.value+(1-alpha)*prev;
+  result.push({date:r.date,value:prev});
+ }
+ return result;
+}
+function techMacd(rows){
+ const ema12=techEma(rows,12),ema26=techEma(rows,26),fast=new Map(ema12.map(r=>[r.date,r.value]));
+ const macd=ema26.filter(r=>fast.has(r.date)).map(r=>({date:r.date,value:fast.get(r.date)-r.value}));
+ const signal=techEma(macd,9),signals=new Map(signal.map(r=>[r.date,r.value]));
+ return macd.map(r=>({date:r.date,macd:r.value,signal:signals.get(r.date)??null,hist:signals.has(r.date)?r.value-signals.get(r.date):null}));
+}
+function techRsi(rows,n=14){
+ if(rows.length<=n)return [];
+ const out=[];let gain=0,loss=0;
+ for(let i=1;i<=n;i++){
+  const move=rows[i].value-rows[i-1].value;
+  gain+=Math.max(move,0);loss+=Math.max(-move,0);
+ }
+ gain/=n;loss/=n;
+ const rsi=()=>gain===0&&loss===0?50:loss===0?100:100-100/(1+gain/loss);
+ out.push({date:rows[n].date,value:rsi()});
+ for(let i=n+1;i<rows.length;i++){
+  const delta=rows[i].value-rows[i-1].value;
+  gain=(gain*(n-1)+Math.max(delta,0))/n;
+  loss=(loss*(n-1)+Math.max(-delta,0))/n;
+  out.push({date:rows[i].date,value:rsi()});
+ }
+ return out;
+}
+function techFiltered(rows,start,end){
+ return rows.filter(r=>{const t=marketChartDate(r.date);return t>=start&&t<=end});
+}
+function techOptions(keys,selected){
+ return keys.map(k=>'<option value="'+k+'"'+(k===selected?' selected':'')+'>'+esc(techSeriesName(k))+'</option>').join("");
 }
 function saveChartOrder(){
  try{localStorage.setItem(chartOrderKey,JSON.stringify(chartOrder))}catch(e){}
