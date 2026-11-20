@@ -55,9 +55,10 @@ jobs:
           python3 scripts/validate_public.py public/market-data.json
           python3 scripts/validate_market_history.py public/market-history.json
           if test -f public/index-ohlc-history.json; then python3 scripts/validate_index_ohlc.py public/index-ohlc-history.json; fi
+          if test -f public/intraday-market.json; then python3 scripts/validate_intraday_market.py public/intraday-market.json; fi
           python3 - <<'PY'
           from pathlib import Path
-          allowed={'index.html','market-data.json','market-history.json','index-ohlc-history.json','.nojekyll'}
+          allowed={'index.html','market-data.json','market-history.json','index-ohlc-history.json','intraday-market.json','.nojekyll'}
           files={p.name for p in Path('public').rglob('*') if p.is_file()}
           if files-allowed:raise SystemExit('Unsafe unexpected public files: '+repr(files-allowed))
           if '<script src=' in Path('public/index.html').read_text():raise SystemExit('External script is not allowed')
