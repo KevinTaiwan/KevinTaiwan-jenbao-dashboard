@@ -1,0 +1,39 @@
+name: Backfill TWSE 240 trading days turnover-value metrics
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/backfill-twse-turnover.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: twse-turnover-240
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run official TWSE turnover-value collector
+        run: python3 -u scripts/backfill_twse_market_activity.py
+      - name: Record verified observations on main
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('public/market-history.json'))
+          audit=d.get('twseTurnoverAudit') or {}
+          print(json.dumps(audit,ensure_ascii=False,indent=2))
+          for k in ('marketTurnoverYiTwd','dayTradeTurnoverYiTwd','dayTradeTurnoverSharePct'):
+              print(k,(d.get('stats',{}).get(k) or {}).get('count',0))
+          if not audit.get('marketDatesDownloaded'):
+              raise SystemExit('No official FMTQIK成交金額 rows; refusing publication')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/market-history.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Backfill TWSE market and day-trade成交金額 history [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
