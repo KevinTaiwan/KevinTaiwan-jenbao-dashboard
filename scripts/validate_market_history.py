@@ -3,9 +3,28 @@
 import json, datetime as dt, pathlib, math, sys
 path=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else "public/market-history.json")
 d=json.loads(path.read_text(encoding="utf-8"))
-if set(d)!={"schemaVersion","audience","generatedAt","cutoff","calendar","units","stats","rows"} or d["schemaVersion"]!=1 or d["audience"]!="public-market-history":
+expected={"schemaVersion","audience","generatedAt","cutoff","calendar","units","stats","rows"}
+if set(d) not in (expected,expected|{"backfillAudit"}) or d["schemaVersion"]!=1 or d["audience"]!="public-market-history":
     raise SystemExit("FAIL: unexpected public market-history structure")
 keys={"taiex","dxy","usdtwd","vix","hyOas","marginDailyYi","foreignNetYi","marginMaintenanceExEtf","us10yYield","us10y2ySpread","voo","qqq","fedFundsEffective"}
+# History backfill attaches only public aggregation metadata, never private fields.
+if "backfillAudit" in d:
+    audit=d["backfillAudit"]
+    allowed={"targetObservations","collectedAt","before","after","unverifiedOrUnavailable","notes"}
+    if not isinstance(audit,dict) or set(audit)!=allowed:
+        raise SystemExit("FAIL: malformed public backfill audit")
+    if not isinstance(audit["targetObservations"],int) or audit["targetObservations"]<1:
+        raise SystemExit("FAIL: invalid backfill target")
+    if not isinstance(audit["collectedAt"],str):
+        raise SystemExit("FAIL: invalid backfill timestamp")
+    for field in ("before","after"):
+        data=audit[field]
+        if not isinstance(data,dict) or set(data)!={"taiex","dxy","usdtwd","vix","hyOas","marginDailyYi","foreignNetYi","marginMaintenanceExEtf","us10yYield","us10y2ySpread","voo","qqq","fedFundsEffective"} or any(type(n)!=int or n<0 for n in data.values()):
+            raise SystemExit("FAIL: invalid backfill series counts")
+    for field in ("unverifiedOrUnavailable","notes"):
+        if not isinstance(audit[field],list) or any(not isinstance(item,str) or len(item)>500 for item in audit[field]):
+            raise SystemExit("FAIL: invalid public backfill notes")
+
 if set(d["units"])!=keys or set(d["stats"])!=keys:raise SystemExit("FAIL: unexpected market series")
 if not isinstance(d["rows"],list):raise SystemExit("FAIL: malformed rows")
 # Permanent data archive: never reject due to reaching 20/60/120/240/260 days or any count limit.
