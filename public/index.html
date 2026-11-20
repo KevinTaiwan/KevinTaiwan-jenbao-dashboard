@@ -1174,7 +1174,13 @@ function syncChartCursor(date,pointerX=null){
    const item=m.rows.find(r=>r.date===selected);
    put('[data-tech-ma-value="'+m.n+'"]',item?historyFormat(item.value,2):"—");
   }
-  const middleText=tech.c.middle==="turnoverWithDayTrade"?
+  const lastAvailableMiddle=tech.middle.filter(r=>Number.isFinite(r.value)).at(-1);
+  const maintenanceUnpublished=tech.c.middle==="marginMaintenanceExEtf"&&!mid&&
+      lastAvailableMiddle&&selected>lastAvailableMiddle.date;
+  const middleText=maintenanceUnpublished?
+     selected+" 扣ETF融資維持率尚無正式資料｜最新 "+marketViewDate(lastAvailableMiddle.date)+
+       " "+historyFormat(lastAvailableMiddle.value,2)+"%":
+     tech.c.middle==="turnoverWithDayTrade"?
     (mid&&Number.isFinite(mid.ratio)?"成交 "+historyFormat(mid.value,2)+" 億元 · 當沖 "+historyFormat(mid.ratio,2)+"% · "+selected:"當日資料未完整"):
     mid?(historyFormat(mid.value,2)+(tech.c.middle==="dayTradeTurnoverSharePct"?"%":tech.c.middle==="marketTurnoverYiTwd"?" 億元":"")+" · "+selected):"當日無數值";
    put('[data-tech-readout="middle"]',middleText);
@@ -1376,6 +1382,12 @@ function showHistory(){
     return '<text x="762" y="'+(y+3)+'" text-anchor="start" font-size="9" fill="#a45d13">'+
       historyFormat(ratioBounds[1]-(ratioBounds[1]-ratioBounds[0])*t,1)+'%</text>';
    }).join(""):"";
+   const latestMaint=c.middle==="marginMaintenanceExEtf"?
+      middle.filter(r=>Number.isFinite(r.value)).at(-1):null;
+   const maintenanceHint=latestMaint&&latestMaint.date<marketLocalDay("taiex")?
+      '<text x="746" y="'+(panel[1].start-7)+
+      '" font-size="10" text-anchor="end" fill="#9b541d">今日維持率尚無正式值｜最新 '+
+      latestMaint.date.slice(5)+' '+historyFormat(latestMaint.value,2)+'%</text>':"";
    const midLegend=dualTurnover?'<text x="526" y="'+(panel[1].start-5)+
      '" fill="#2678ad" text-anchor="end" font-size="10">■ 成交億元</text><text x="742" y="'+(panel[1].start-5)+
      '" fill="#aa5b00" text-anchor="end" font-size="10">━ 當沖%</text>':"";
@@ -1414,7 +1426,7 @@ function showHistory(){
     '<g data-tech-hover-compact visibility="hidden"><rect x="582" y="1" width="174" height="22" rx="3" fill="#f3f8fc" stroke="#a1b2c1" stroke-width=".7"/>'+
     '<text data-tech-compact-text x="669" y="16" text-anchor="middle" font-size="11" fill="#23435f" font-weight="700">—</text></g>'+
     '</g>';
-   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 840 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="840" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+priceLines+midLines+midRatioLine+midRightAxis+midLegend+missingMoney+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
+   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 840 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="840" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+maintenanceHint+priceLines+midLines+midRatioLine+midRightAxis+midLegend+missingMoney+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
   const latestDaily=topCandles.at(-1);
    const directNote='<div class="technical-current-day" role="status">'+esc(directQuoteStatus)+
       '｜K線查詢間隔 60 秒（供應商延遲可能較長）'+
@@ -1432,7 +1444,7 @@ function showHistory(){
       '（非正式收盤；報價可能延遲）</div>':"";
    const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。指數日K最右側會顯示交易當日暫定K，盤中更新同一根，不覆蓋正式歷史母檔。中層可切換成交金額（億元）、當沖成交金額占比（%）或雙軸合併圖；雙軸左側為成交億元，右側為當沖占比，不使用成交股數。其他籌碼指標維持原定義。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
-  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 直連行情與當沖更新 v2026.11.20.5</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
+  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 維持率日期提示 v2026.11.20.7</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
