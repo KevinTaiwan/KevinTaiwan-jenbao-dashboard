@@ -824,8 +824,19 @@ function transformedValue(s,value){
 
 /* Three-panel public-source technical workbench. All calculations use archived values. */
 const TECH_PRICE_KEYS=["taiex","taiexK","sp500K","voo","qqq","dxy","usdtwd","vix","hyOas","us10yYield","us10y2ySpread","fedFundsEffective"];
+const TECH_CREDIT_SERIES={
+ creditBelow130Accounts:{label:"追繳戶數（整戶維持率低於 130%）",unit:"戶",divisor:1},
+ creditCallAmountTwd:{label:"追繳金額（億元）",unit:"億元",divisor:1e8},
+ creditDisposalAccounts:{label:"次一營業日應處分戶數",unit:"戶",divisor:1},
+ creditDisposalAmountTwd:{label:"次一營業日應處分金額（億元）",unit:"億元",divisor:1e8}
+};
+const TECH_TOP_KEYS=[...TECH_PRICE_KEYS,...Object.keys(TECH_CREDIT_SERIES)];
+function techReadout(key,value){
+ const series=TECH_CREDIT_SERIES[key];
+ return series?historyFormat(value,series.unit==="戶"?0:2)+" "+series.unit:historyFormat(value,2);
+}
 const TECH_MIDDLE_KEYS=["foreignNetYi","marginDailyYi","foreignCumulativeYi","marginMaintenanceExEtf","marketTurnoverYiTwd","dayTradeTurnoverSharePct","turnoverWithDayTrade",
- ...TECH_PRICE_KEYS.filter(key=>key!=="taiexK"&&key!=="sp500K")
+ ...TECH_TOP_KEYS.filter(key=>key!=="taiexK"&&key!=="sp500K")
 ];
 const TECH_STACK_KEY="jb-technical-stack-v1";
 function readTechnicalStackSettings(){
@@ -834,7 +845,7 @@ function readTechnicalStackSettings(){
   const x=JSON.parse(localStorage.getItem(TECH_STACK_KEY)||"null");
   if(x&&typeof x==="object"&&!Array.isArray(x)){
    return {
-    top:TECH_PRICE_KEYS.includes(x.top)?x.top:defaults.top,
+    top:TECH_TOP_KEYS.includes(x.top)?x.top:defaults.top,
     middle:TECH_MIDDLE_KEYS.includes(x.middle)?x.middle:defaults.middle,
     bottomSource:x.bottomSource==="follow"||TECH_PRICE_KEYS.includes(x.bottomSource)?x.bottomSource:defaults.bottomSource,
     oscillator:["MACD","RSI","KD"].includes(x.oscillator)?x.oscillator:defaults.oscillator,
@@ -887,7 +898,7 @@ document.addEventListener("keydown",event=>{
 });
 
 function updateTechnicalSetting(field,value){
- const valid=field==="top"?TECH_PRICE_KEYS.includes(value):field==="middle"?TECH_MIDDLE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI","KD"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
+ const valid=field==="top"?TECH_TOP_KEYS.includes(value):field==="middle"?TECH_MIDDLE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI","KD"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
  if(!valid)return false;
  techSettings={...techSettings,[field]:value};
  try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
@@ -900,6 +911,7 @@ function toggleTechnicalOverlay(key){
  showHistory();return true;
 }
 function techSeriesName(key){
+ if(TECH_CREDIT_SERIES[key])return TECH_CREDIT_SERIES[key].label;
  if(key==="taiexK")return "台灣加權指數｜K 線（OHLC）";
  if(key==="sp500K")return "S&P 500 指數｜K 線（OHLC）";
  if(key==="marketTurnoverYiTwd")return "大盤成交金額（億元）";
@@ -923,7 +935,7 @@ function techPriceObservations(raw,key){
  if(key==="taiexK"||key==="sp500K"){
   return techOhlcRecords(key).map(r=>({...r,value:r.close}));
  }
- const published=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:r[key]}));
+ const published=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:r[key]/(TECH_CREDIT_SERIES[key]?.divisor??1)}));
  if(key==="taiex"){
   const day=provisionalDailyCandle("taiex");
   if(day&&!published.some(r=>r.date>=day.date))published.push({date:day.date,value:day.close,provisional:true});
@@ -1140,8 +1152,8 @@ function syncChartCursor(date,pointerX=null){
    if(active){
     const values=[candle?.close??top?.value,mid?.value,oscValue];
     const formatted=[
-     historyFormat(values[0],2),
-     historyFormat(values[1],2)+(tech.c.middle==="dayTradeTurnoverSharePct"?"%":""),
+     techReadout(tech.c.top,values[0]),
+     techReadout(tech.c.middle,values[1])+(tech.c.middle==="dayTradeTurnoverSharePct"?"%":""),
      historyFormat(values[2],tech.c.oscillator==="MACD"?3:2)
     ];
     // Use a dedicated right gutter: the value labels never cover candles or signal curves.
@@ -1166,11 +1178,11 @@ function syncChartCursor(date,pointerX=null){
     if(compact)compact.setAttribute("visibility",Number.isFinite(price)?"visible":"hidden");
     if(Number.isFinite(price)){
      const label=hover.querySelector("[data-tech-compact-text]");
-     if(label)label.textContent=selected.slice(5).replace("-","/")+"  收 "+historyFormat(price,2);
+     if(label)label.textContent=selected.slice(5).replace("-","/")+(TECH_CREDIT_SERIES[tech.c.top]?"  ":"  收 ")+techReadout(tech.c.top,price);
     }
    }
   }
-    put('[data-tech-readout="top"]',candle?("開 "+historyFormat(candle.open,2)+" · 高 "+historyFormat(candle.high,2)+" · 低 "+historyFormat(candle.low,2)+" · 收 "+historyFormat(candle.close,2)):top?historyFormat(top.value,2)+" · "+selected:"當日無數值");
+    put('[data-tech-readout="top"]',candle?("開 "+historyFormat(candle.open,2)+" · 高 "+historyFormat(candle.high,2)+" · 低 "+historyFormat(candle.low,2)+" · 收 "+historyFormat(candle.close,2)):top?techReadout(tech.c.top,top.value)+" · "+selected:"當日無數值");
   put('[data-tech-extra="top"]', [...tech.ma.filter(m=>tech.c.overlays["ma"+m.n]).map(m=>{const p=m.rows.find(r=>r.date===selected);return "MA"+m.n+" "+(p?historyFormat(p.value,2):"—")}),...(tech.c.overlays.bb?["BB20 "+(bb?historyFormat(bb.lower,2)+"–"+historyFormat(bb.upper,2):"—")]:[])].join(" · ")||"MA／BB 已全部關閉");
   for(const m of tech.ma){
    const item=m.rows.find(r=>r.date===selected);
@@ -1184,7 +1196,7 @@ function syncChartCursor(date,pointerX=null){
        " "+historyFormat(lastAvailableMiddle.value,2)+"%":
      tech.c.middle==="turnoverWithDayTrade"?
     (mid&&Number.isFinite(mid.ratio)?"成交 "+historyFormat(mid.value,2)+" 億元 · 當沖 "+historyFormat(mid.ratio,2)+"% · "+selected:"當日資料未完整"):
-    mid?(historyFormat(mid.value,2)+(tech.c.middle==="dayTradeTurnoverSharePct"?"%":tech.c.middle==="marketTurnoverYiTwd"?" 億元":"")+" · "+selected):"當日無數值";
+    mid?(techReadout(tech.c.middle,mid.value)+(tech.c.middle==="dayTradeTurnoverSharePct"?"%":tech.c.middle==="marketTurnoverYiTwd"?" 億元":"")+" · "+selected):"當日無數值";
    put('[data-tech-readout="middle"]',middleText);
   put('[data-tech-readout="bottom"]',bottom?(tech.c.oscillator==="RSI"?"RSI14 "+historyFormat(bottom.value,2):tech.c.oscillator==="KD"?"K "+historyFormat(bottom.k,2)+" · D "+historyFormat(bottom.d,2):"MACD "+historyFormat(bottom.macd,3)):(tech.c.oscillator==="KD"&&!techOhlcRecords(tech.bottomKey).length?"KD 需要完整 OHLC 來源":"暖機不足／當日無數值"));
   put('[data-tech-extra="bottom"]',bottom&&tech.c.oscillator==="MACD"?"Signal "+historyFormat(bottom.signal,3)+" · Histogram "+historyFormat(bottom.hist,3):bottom&&tech.c.oscillator==="KD"?"RSV "+historyFormat(bottom.rsv,2)+" · KD(9,3,3)": "");
@@ -1405,7 +1417,7 @@ function showHistory(){
   const cross=panel.map((a,i)=>'<line data-tech-hline="'+i+'" x1="38" x2="758" y1="0" y2="0" visibility="hidden" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'" stroke-width=".7" vector-effect="non-scaling-stroke"/><circle data-tech-point="'+i+'" cx="38" cy="0" r="4" visibility="hidden" fill="#ffffff" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'"/>').join("");
   const label=(name,code,selected,opts)=>'<label>'+name+'<select data-tech-field="'+code+'" aria-label="'+name+'">'+opts+'</select></label>';
   const controls='<div class="technical-stack-selectors">'+
-   label("上層來源｜價格","top",c.top,techOptions(TECH_PRICE_KEYS,c.top))+
+   label("上層來源｜價格／市場指標","top",c.top,techOptions(TECH_TOP_KEYS,c.top))+
    label("中層來源｜市場指標／成交量／籌碼","middle",c.middle,techOptions(TECH_MIDDLE_KEYS,c.middle))+
    label("下層指標來源","bottomSource",c.bottomSource,'<option value="follow"'+(c.bottomSource==="follow"?' selected':'')+'>跟隨上層</option>'+techOptions(TECH_PRICE_KEYS,c.bottomSource))+
    label("下層指標類型","oscillator",c.oscillator,["MACD","RSI","KD"].map(k=>'<option value="'+k+'"'+(c.oscillator===k?' selected':'')+'>'+k+'</option>').join(""))+'</div>';
@@ -1447,7 +1459,7 @@ function showHistory(){
       '（非正式收盤；報價可能延遲）</div>':"";
    const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。指數日K最右側會顯示交易當日暫定K，盤中更新同一根，不覆蓋正式歷史母檔。中層可切換成交金額（億元）、當沖成交金額占比（%）或雙軸合併圖；雙軸左側為成交億元，右側為當沖占比，不使用成交股數。其他籌碼指標維持原定義。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
-  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 中層跨市場比對 v2026.11.20.8</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
+  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 信用交易指標 v2026.11.20.9</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
