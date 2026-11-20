@@ -101,23 +101,23 @@
       }
     },
     "marginMaintenanceExEtf": {
-      "count": 31,
-      "first": "2026-10-05",
+      "count": 61,
+      "first": "2026-06-26",
       "last": "2026-11-19",
       "lastValue": 128.31,
       "status": "partial",
       "source": {
-        "name": "Wantgoo: TAIEX financing maintenance EXCLUDING ETF, dated historical seed",
+        "name": "Wantgoo exclude-ETF financing-maintenance dated table snapshots (2026-08-07; 2026-11-19)",
         "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
       },
       "targetTradingDays": 240,
-      "observedInTarget": 31,
-      "missingInTarget": 209,
-      "coveragePct": 12.92,
+      "observedInTarget": 61,
+      "missingInTarget": 179,
+      "coveragePct": 25.42,
       "targetFirst": "2025-11-21",
       "targetLast": "2026-11-19",
       "dataScope": "TWSE listed-stock financing maintenance excluding ETFs; vendor-provided, distinct from all-market margin ratio and official whole-account collateral ratio",
-      "note": "240-day target remains INCOMPLETE. Never forward-fill, back-calculate from TAIEX, or substitute ETF-inclusive / whole-account ratios."
+      "note": "31 recent observations plus 30 dated observations directly transcribed from a preserved 2026-08-07 Wantgoo HTML table; each of 30 dates matched TAIEX close in original repo. Not obtained by interactive hover. Missing dates are unknown, not zero."
     },
     "us10yYield": {
       "count": 425,
@@ -40986,7 +40986,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 16728.324884,
       "dayTradeTurnoverYiTwd": 6370.875411,
-      "dayTradeTurnoverSharePct": 38.0844
+      "dayTradeTurnoverSharePct": 38.0844,
+      "marginMaintenanceExEtf": 164.07
     },
     {
       "date": "2026-06-27",
@@ -41010,7 +41011,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 10454.39448,
       "dayTradeTurnoverYiTwd": 4316.95428,
-      "dayTradeTurnoverSharePct": 41.2932
+      "dayTradeTurnoverSharePct": 41.2932,
+      "marginMaintenanceExEtf": 165.18
     },
     {
       "date": "2026-06-30",
@@ -41026,7 +41028,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 12660.62228,
       "dayTradeTurnoverYiTwd": 4465.621337,
-      "dayTradeTurnoverSharePct": 35.2717
+      "dayTradeTurnoverSharePct": 35.2717,
+      "marginMaintenanceExEtf": 171.46
     },
     {
       "date": "2026-07-01",
@@ -41042,7 +41045,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 13678.177952,
       "dayTradeTurnoverYiTwd": 5175.488935,
-      "dayTradeTurnoverSharePct": 37.8376
+      "dayTradeTurnoverSharePct": 37.8376,
+      "marginMaintenanceExEtf": 170.56
     },
     {
       "date": "2026-07-02",
@@ -41058,7 +41062,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 10835.834174,
       "dayTradeTurnoverYiTwd": 4015.374765,
-      "dayTradeTurnoverSharePct": 37.0564
+      "dayTradeTurnoverSharePct": 37.0564,
+      "marginMaintenanceExEtf": 170.22
     },
     {
       "date": "2026-07-03",
@@ -41068,7 +41073,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 10780.281371,
       "dayTradeTurnoverYiTwd": 4078.037075,
-      "dayTradeTurnoverSharePct": 37.8287
+      "dayTradeTurnoverSharePct": 37.8287,
+      "marginMaintenanceExEtf": 170.61
     },
     {
       "date": "2026-07-04",
@@ -41092,7 +41098,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 10644.319061,
       "dayTradeTurnoverYiTwd": 4137.830977,
-      "dayTradeTurnoverSharePct": 38.8736
+      "dayTradeTurnoverSharePct": 38.8736,
+      "marginMaintenanceExEtf": 167.77
     },
     {
       "date": "2026-07-07",
@@ -41108,7 +41115,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 12281.194219,
       "dayTradeTurnoverYiTwd": 4534.652695,
-      "dayTradeTurnoverSharePct": 36.9235
+      "dayTradeTurnoverSharePct": 36.9235,
+      "marginMaintenanceExEtf": 159.86
     },
     {
       "date": "2026-07-08",
@@ -41124,7 +41132,8 @@
       "fedFundsEffective": 3.62,
       "marketTurnoverYiTwd": 10045.604467,
       "dayTradeTurnoverYiTwd": 4144.10336,
-      "dayTradeTurnoverSharePct": 41.2529
+      "dayTradeTurnoverSharePct": 41.2529,
+      "marginMaintenanceExEtf": 160.74
     },
     {
       "date": "2026-07-09",
@@ -41140,7 +41149,8 @@
       "fedFundsEffective": 3.62,
       "marketTurnoverYiTwd": 9967.894299,
       "dayTradeTurnoverYiTwd": 4224.261593,
-      "dayTradeTurnoverSharePct": 42.3787
+      "dayTradeTurnoverSharePct": 42.3787,
+      "marginMaintenanceExEtf": 160.96
     },
     {
       "date": "2026-07-10",
@@ -41175,7 +41185,8 @@
       "fedFundsEffective": 3.62,
       "marketTurnoverYiTwd": 10676.621071,
       "dayTradeTurnoverYiTwd": 4192.819703,
-      "dayTradeTurnoverSharePct": 39.271
+      "dayTradeTurnoverSharePct": 39.271,
+      "marginMaintenanceExEtf": 158.81
     },
     {
       "date": "2026-07-14",
@@ -41191,7 +41202,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 12452.065386,
       "dayTradeTurnoverYiTwd": 4846.89376,
-      "dayTradeTurnoverSharePct": 38.9244
+      "dayTradeTurnoverSharePct": 38.9244,
+      "marginMaintenanceExEtf": 155.51
     },
     {
       "date": "2026-07-15",
@@ -41207,7 +41219,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 10243.855006,
       "dayTradeTurnoverYiTwd": 4177.014586,
-      "dayTradeTurnoverSharePct": 40.7758
+      "dayTradeTurnoverSharePct": 40.7758,
+      "marginMaintenanceExEtf": 161.27
     },
     {
       "date": "2026-07-16",
@@ -41223,7 +41236,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 9331.809425,
       "dayTradeTurnoverYiTwd": 3835.564931,
-      "dayTradeTurnoverSharePct": 41.102
+      "dayTradeTurnoverSharePct": 41.102,
+      "marginMaintenanceExEtf": 157.87
     },
     {
       "date": "2026-07-17",
@@ -41238,7 +41252,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 13331.566529,
       "dayTradeTurnoverYiTwd": 3726.343941,
-      "dayTradeTurnoverSharePct": 27.9513
+      "dayTradeTurnoverSharePct": 27.9513,
+      "marginMaintenanceExEtf": 146.29
     },
     {
       "date": "2026-07-18",
@@ -41262,7 +41277,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 10414.574344,
       "dayTradeTurnoverYiTwd": 4309.186124,
-      "dayTradeTurnoverSharePct": 41.3765
+      "dayTradeTurnoverSharePct": 41.3765,
+      "marginMaintenanceExEtf": 142.75
     },
     {
       "date": "2026-07-21",
@@ -41278,7 +41294,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 8662.51695,
       "dayTradeTurnoverYiTwd": 3496.174458,
-      "dayTradeTurnoverSharePct": 40.3598
+      "dayTradeTurnoverSharePct": 40.3598,
+      "marginMaintenanceExEtf": 150.11
     },
     {
       "date": "2026-07-22",
@@ -41294,7 +41311,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 10259.583963,
       "dayTradeTurnoverYiTwd": 4254.379037,
-      "dayTradeTurnoverSharePct": 41.4674
+      "dayTradeTurnoverSharePct": 41.4674,
+      "marginMaintenanceExEtf": 155.91
     },
     {
       "date": "2026-07-23",
@@ -41310,7 +41328,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 9306.120677,
       "dayTradeTurnoverYiTwd": 4203.867546,
-      "dayTradeTurnoverSharePct": 45.1731
+      "dayTradeTurnoverSharePct": 45.1731,
+      "marginMaintenanceExEtf": 154.99
     },
     {
       "date": "2026-07-24",
@@ -41325,7 +41344,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 8271.295122,
       "dayTradeTurnoverYiTwd": 3623.149827,
-      "dayTradeTurnoverSharePct": 43.8039
+      "dayTradeTurnoverSharePct": 43.8039,
+      "marginMaintenanceExEtf": 149.18
     },
     {
       "date": "2026-07-25",
@@ -41349,7 +41369,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 7476.472007,
       "dayTradeTurnoverYiTwd": 3209.463903,
-      "dayTradeTurnoverSharePct": 42.9275
+      "dayTradeTurnoverSharePct": 42.9275,
+      "marginMaintenanceExEtf": 149.53
     },
     {
       "date": "2026-07-28",
@@ -41365,7 +41386,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 8725.75,
       "dayTradeTurnoverYiTwd": 2755.042667,
-      "dayTradeTurnoverSharePct": 31.5737
+      "dayTradeTurnoverSharePct": 31.5737,
+      "marginMaintenanceExEtf": 139.69
     },
     {
       "date": "2026-07-29",
@@ -41381,7 +41403,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 11491.85295,
       "dayTradeTurnoverYiTwd": 4415.239098,
-      "dayTradeTurnoverSharePct": 38.4206
+      "dayTradeTurnoverSharePct": 38.4206,
+      "marginMaintenanceExEtf": 133.12
     },
     {
       "date": "2026-07-30",
@@ -41397,7 +41420,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 11469.378292,
       "dayTradeTurnoverYiTwd": 5529.435782,
-      "dayTradeTurnoverSharePct": 48.2104
+      "dayTradeTurnoverSharePct": 48.2104,
+      "marginMaintenanceExEtf": 131.72
     },
     {
       "date": "2026-07-31",
@@ -41412,7 +41436,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 8877.324051,
       "dayTradeTurnoverYiTwd": 2470.983373,
-      "dayTradeTurnoverSharePct": 27.8348
+      "dayTradeTurnoverSharePct": 27.8348,
+      "marginMaintenanceExEtf": 143.41
     },
     {
       "date": "2026-08-01",
@@ -41436,7 +41461,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 8855.060431,
       "dayTradeTurnoverYiTwd": 3118.985609,
-      "dayTradeTurnoverSharePct": 35.2226
+      "dayTradeTurnoverSharePct": 35.2226,
+      "marginMaintenanceExEtf": 150.84
     },
     {
       "date": "2026-08-04",
@@ -41453,7 +41479,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 10870.458758,
       "dayTradeTurnoverYiTwd": 4522.456764,
-      "dayTradeTurnoverSharePct": 41.6032
+      "dayTradeTurnoverSharePct": 41.6032,
+      "marginMaintenanceExEtf": 156.65
     },
     {
       "date": "2026-08-05",
@@ -41470,7 +41497,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 12002.125105,
       "dayTradeTurnoverYiTwd": 4910.090147,
-      "dayTradeTurnoverSharePct": 40.9102
+      "dayTradeTurnoverSharePct": 40.9102,
+      "marginMaintenanceExEtf": 161.98
     },
     {
       "date": "2026-08-06",
@@ -41488,7 +41516,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 9740.549734,
       "dayTradeTurnoverYiTwd": 4497.38912,
-      "dayTradeTurnoverSharePct": 46.1718
+      "dayTradeTurnoverSharePct": 46.1718,
+      "marginMaintenanceExEtf": 164.06
     },
     {
       "date": "2026-08-07",
@@ -41505,7 +41534,8 @@
       "fedFundsEffective": 3.63,
       "marketTurnoverYiTwd": 8508.151891,
       "dayTradeTurnoverYiTwd": 3815.674118,
-      "dayTradeTurnoverSharePct": 44.8473
+      "dayTradeTurnoverSharePct": 44.8473,
+      "marginMaintenanceExEtf": 161.46
     },
     {
       "date": "2026-08-08",
@@ -42963,8 +42993,8 @@
     "target": 240,
     "targetFirst": "2025-11-21",
     "targetLast": "2026-11-19",
-    "observed": 31,
-    "missing": 209,
+    "observed": 61,
+    "missing": 179,
     "status": "partial",
     "source": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
     "missingDates": [
@@ -43109,36 +43139,6 @@
       "2026-06-23",
       "2026-06-24",
       "2026-06-25",
-      "2026-06-26",
-      "2026-06-29",
-      "2026-06-30",
-      "2026-07-01",
-      "2026-07-02",
-      "2026-07-03",
-      "2026-07-06",
-      "2026-07-07",
-      "2026-07-08",
-      "2026-07-09",
-      "2026-07-13",
-      "2026-07-14",
-      "2026-07-15",
-      "2026-07-16",
-      "2026-07-17",
-      "2026-07-20",
-      "2026-07-21",
-      "2026-07-22",
-      "2026-07-23",
-      "2026-07-24",
-      "2026-07-27",
-      "2026-07-28",
-      "2026-07-29",
-      "2026-07-30",
-      "2026-07-31",
-      "2026-08-03",
-      "2026-08-04",
-      "2026-08-05",
-      "2026-08-06",
-      "2026-08-07",
       "2026-08-10",
       "2026-08-11",
       "2026-08-12",
@@ -43179,6 +43179,24 @@
       "2026-10-02"
     ],
     "historyPreserved": true,
-    "caveat": "Do not treat missing values as zero. Source exposed only recent ~30 days to public read. Do not mix with ETF-inclusive or whole-account ratios."
+    "caveat": "240 days NOT complete. HTML table snapshots carry only recent 30 dates each. Do not backfill by forward-fill, ETF-inclusive series or modeled margin ratio.",
+    "sourceSnapshots": [
+      {
+        "asOf": "2026-08-07",
+        "validObservations": 30,
+        "observationFirst": "2026-06-26",
+        "observationLast": "2026-08-07",
+        "extraction": "Wantgoo HTML dated table archived in web index, TAIEX daily close matched",
+        "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
+      },
+      {
+        "asOf": "2026-11-19",
+        "validObservations": 31,
+        "observationFirst": "2026-10-05",
+        "observationLast": "2026-11-19",
+        "extraction": "previously verified Wantgoo source",
+        "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
+      }
+    ]
   }
 }
