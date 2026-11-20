@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Strict validator: this published JSON is PUBLIC market data only."""
 import json, datetime as dt, pathlib, math, sys
+from twse_credit_calls import FIELDS as credit_fields
 path=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else "public/market-history.json")
 d=json.loads(path.read_text(encoding="utf-8"))
 expected={"schemaVersion","audience","generatedAt","cutoff","calendar","units","stats","rows"}
@@ -9,6 +10,8 @@ if not expected.issubset(d) or set(d)-expected-{"backfillAudit","twseTurnoverAud
 keys={"taiex","dxy","usdtwd","vix","hyOas","marginDailyYi","foreignNetYi","marginMaintenanceExEtf","us10yYield","us10y2ySpread","voo","qqq","fedFundsEffective","marketTurnoverYiTwd","dayTradeTurnoverYiTwd","dayTradeTurnoverSharePct"}
 if "foreignCumulativeYi" in d["units"]:
     keys.add("foreignCumulativeYi")
+if credit_fields.keys() & d["units"].keys():
+    keys.update(credit_fields)
 # History backfill attaches only public aggregation metadata, never private fields.
 if "backfillAudit" in d:
     audit=d["backfillAudit"]
@@ -53,6 +56,7 @@ if not isinstance(d["rows"],list):raise SystemExit("FAIL: malformed rows")
 prev=None
 bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-100000,100000),"marginMaintenanceExEtf":(80,500),"us10yYield":(0,25),"us10y2ySpread":(-6,7),"voo":(20,2000),"qqq":(20,2000),"fedFundsEffective":(0,25),"marketTurnoverYiTwd":(0,200000),"dayTradeTurnoverYiTwd":(0,200000),"dayTradeTurnoverSharePct":(0,100)}
 bounds["foreignCumulativeYi"]=(-1e12,1e12)
+bounds.update({key:(0,1e15) for key in credit_fields})
 counts={k:0 for k in keys}
 for r in d["rows"]:
     if set(r)-({"date"}|keys):raise SystemExit("FAIL: private or unexpected history key")
@@ -64,6 +68,7 @@ for r in d["rows"]:
         v=r[k];a,b=bounds[k]
         if type(v) not in (int,float) or not math.isfinite(v) or not a<=v<=b:
             raise SystemExit(f"FAIL: invalid {k} observation")
+        if k in credit_fields and type(v) != int: raise SystemExit("FAIL: credit series requires integer units")
         counts[k]+=1
 for k,st in d["stats"].items():
     required={"count","first","last","lastValue","status","source"}

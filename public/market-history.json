@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-20T08:43:03.937848+00:00",
+  "generatedAt": "2026-11-20T11:50:55.824805+00:00",
   "cutoff": "2026-11-20",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -21,7 +21,11 @@
     "marketTurnoverYiTwd": "TWD 100 million market trading value, TWSE FMTQIK 成交金額",
     "dayTradeTurnoverYiTwd": "TWD 100 million, (TWSE day-trade buy TWD + sell TWD)/2",
     "dayTradeTurnoverSharePct": "percent, TWSE day-trade avg buy/sell TWD value divided by FMTQIK market trading TWD value",
-    "foreignCumulativeYi": "TWD 100 million, sum of foreignNetYi from the first trading date in the backfill window"
+    "foreignCumulativeYi": "TWD 100 million, sum of foreignNetYi from the first trading date in the backfill window",
+    "creditBelow130Accounts": "戶：全市場整戶維持率低於130%",
+    "creditCallAmountTwd": "新台幣元：當日通知應補繳金額",
+    "creditDisposalAccounts": "戶：次一營業日應處分",
+    "creditDisposalAmountTwd": "新台幣元：次一營業日應處分部位"
   },
   "stats": {
     "taiex": {
@@ -224,6 +228,50 @@
       "status": "ready",
       "source": {
         "name": "Cumulative sum of daily foreignNetYi, starting from zero immediately before 2025-11-21"
+      }
+    },
+    "creditBelow130Accounts": {
+      "count": 74,
+      "first": "2026-08-03",
+      "last": "2026-11-19",
+      "lastValue": 2947,
+      "status": "partial",
+      "source": {
+        "name": "TWSE BFIJ3U_TREND belowAccNum",
+        "url": "https://www.twse.com.tw/rwd/zh/marginTrading/BFIJ3U_TREND"
+      }
+    },
+    "creditCallAmountTwd": {
+      "count": 74,
+      "first": "2026-08-03",
+      "last": "2026-11-19",
+      "lastValue": 2964159000,
+      "status": "partial",
+      "source": {
+        "name": "TWSE BFIJ3U_TREND callAmt",
+        "url": "https://www.twse.com.tw/rwd/zh/marginTrading/BFIJ3U_TREND"
+      }
+    },
+    "creditDisposalAccounts": {
+      "count": 74,
+      "first": "2026-08-03",
+      "last": "2026-11-19",
+      "lastValue": 520,
+      "status": "partial",
+      "source": {
+        "name": "TWSE BFIJ3U_TREND exeAccNum",
+        "url": "https://www.twse.com.tw/rwd/zh/marginTrading/BFIJ3U_TREND"
+      }
+    },
+    "creditDisposalAmountTwd": {
+      "count": 74,
+      "first": "2026-08-03",
+      "last": "2026-11-19",
+      "lastValue": 918355880,
+      "status": "partial",
+      "source": {
+        "name": "TWSE BFIJ3U_TREND exeAmt",
+        "url": "https://www.twse.com.tw/rwd/zh/marginTrading/BFIJ3U_TREND"
       }
     }
   },
@@ -42123,7 +42171,11 @@
       "marginMaintenanceExEtf": 150.84,
       "foreignNetYi": -191.9092,
       "marginDailyYi": 72.9262,
-      "foreignCumulativeYi": -18783.3328
+      "foreignCumulativeYi": -18783.3328,
+      "creditBelow130Accounts": 102,
+      "creditCallAmountTwd": 4462561,
+      "creditDisposalAccounts": 8,
+      "creditDisposalAmountTwd": 1861650
     },
     {
       "date": "2026-08-04",
@@ -42143,7 +42195,11 @@
       "dayTradeTurnoverSharePct": 41.6032,
       "marginMaintenanceExEtf": 156.65,
       "marginDailyYi": 63.7931,
-      "foreignCumulativeYi": -18840.6481
+      "foreignCumulativeYi": -18840.6481,
+      "creditBelow130Accounts": 49,
+      "creditCallAmountTwd": 605000,
+      "creditDisposalAccounts": 17,
+      "creditDisposalAmountTwd": 107000000
     },
     {
       "date": "2026-08-05",
@@ -42163,7 +42219,11 @@
       "dayTradeTurnoverSharePct": 40.9102,
       "marginMaintenanceExEtf": 161.98,
       "marginDailyYi": 23.5766,
-      "foreignCumulativeYi": -17937.5648
+      "foreignCumulativeYi": -17937.5648,
+      "creditBelow130Accounts": 48,
+      "creditCallAmountTwd": 2026000,
+      "creditDisposalAccounts": 12,
+      "creditDisposalAmountTwd": 3572700
     },
     {
       "date": "2026-08-06",
@@ -42183,7 +42243,11 @@
       "dayTradeTurnoverYiTwd": 4497.38912,
       "dayTradeTurnoverSharePct": 46.1718,
       "marginMaintenanceExEtf": 164.06,
-      "foreignCumulativeYi": -17917.3666
+      "foreignCumulativeYi": -17917.3666,
+      "creditBelow130Accounts": 39,
+      "creditCallAmountTwd": 2528000,
+      "creditDisposalAccounts": 8,
+      "creditDisposalAmountTwd": 1441950
     },
     {
       "date": "2026-08-07",
@@ -42202,7 +42266,11 @@
       "dayTradeTurnoverYiTwd": 3815.674118,
       "dayTradeTurnoverSharePct": 44.8473,
       "marginMaintenanceExEtf": 161.46,
-      "foreignCumulativeYi": -18324.524
+      "foreignCumulativeYi": -18324.524,
+      "creditBelow130Accounts": 39,
+      "creditCallAmountTwd": 1438000,
+      "creditDisposalAccounts": 3,
+      "creditDisposalAmountTwd": 18406800
     },
     {
       "date": "2026-08-08",
@@ -42230,7 +42298,11 @@
       "dayTradeTurnoverYiTwd": 3240.407418,
       "dayTradeTurnoverSharePct": 36.8044,
       "marginMaintenanceExEtf": 166.52,
-      "foreignCumulativeYi": -17807.1188
+      "foreignCumulativeYi": -17807.1188,
+      "creditBelow130Accounts": 47,
+      "creditCallAmountTwd": 4817600,
+      "creditDisposalAccounts": 15,
+      "creditDisposalAmountTwd": 1491500
     },
     {
       "date": "2026-08-11",
@@ -42250,7 +42322,11 @@
       "dayTradeTurnoverYiTwd": 3858.809349,
       "dayTradeTurnoverSharePct": 42.7781,
       "marginMaintenanceExEtf": 167.03,
-      "foreignCumulativeYi": -17583.832
+      "foreignCumulativeYi": -17583.832,
+      "creditBelow130Accounts": 34,
+      "creditCallAmountTwd": 4146000,
+      "creditDisposalAccounts": 17,
+      "creditDisposalAmountTwd": 5782800
     },
     {
       "date": "2026-08-12",
@@ -42270,7 +42346,11 @@
       "dayTradeTurnoverYiTwd": 3496.488723,
       "dayTradeTurnoverSharePct": 39.1693,
       "marginMaintenanceExEtf": 169.18,
-      "foreignCumulativeYi": -17473.6239
+      "foreignCumulativeYi": -17473.6239,
+      "creditBelow130Accounts": 48,
+      "creditCallAmountTwd": 14369500,
+      "creditDisposalAccounts": 16,
+      "creditDisposalAmountTwd": 2606650
     },
     {
       "date": "2026-08-13",
@@ -42290,7 +42370,11 @@
       "dayTradeTurnoverYiTwd": 4210.224696,
       "dayTradeTurnoverSharePct": 38.1352,
       "marginMaintenanceExEtf": 171.14,
-      "foreignCumulativeYi": -16716.6787
+      "foreignCumulativeYi": -16716.6787,
+      "creditBelow130Accounts": 49,
+      "creditCallAmountTwd": 2960000,
+      "creditDisposalAccounts": 23,
+      "creditDisposalAmountTwd": 50614889
     },
     {
       "date": "2026-08-14",
@@ -42309,7 +42393,11 @@
       "dayTradeTurnoverYiTwd": 4424.654988,
       "dayTradeTurnoverSharePct": 39.8709,
       "marginMaintenanceExEtf": 170.59,
-      "foreignCumulativeYi": -16263.1654
+      "foreignCumulativeYi": -16263.1654,
+      "creditBelow130Accounts": 88,
+      "creditCallAmountTwd": 7832000,
+      "creditDisposalAccounts": 15,
+      "creditDisposalAmountTwd": 4323930
     },
     {
       "date": "2026-08-15",
@@ -42337,7 +42425,11 @@
       "dayTradeTurnoverYiTwd": 3947.217405,
       "dayTradeTurnoverSharePct": 40.2344,
       "marginMaintenanceExEtf": 171.35,
-      "foreignCumulativeYi": -15808.6925
+      "foreignCumulativeYi": -15808.6925,
+      "creditBelow130Accounts": 102,
+      "creditCallAmountTwd": 11107071,
+      "creditDisposalAccounts": 14,
+      "creditDisposalAmountTwd": 2547500
     },
     {
       "date": "2026-08-18",
@@ -42357,7 +42449,11 @@
       "dayTradeTurnoverYiTwd": 4082.074223,
       "dayTradeTurnoverSharePct": 40.5015,
       "marginMaintenanceExEtf": 167.23,
-      "foreignCumulativeYi": -15928.5506
+      "foreignCumulativeYi": -15928.5506,
+      "creditBelow130Accounts": 102,
+      "creditCallAmountTwd": 7015600,
+      "creditDisposalAccounts": 21,
+      "creditDisposalAmountTwd": 16104660
     },
     {
       "date": "2026-08-19",
@@ -42377,7 +42473,11 @@
       "dayTradeTurnoverYiTwd": 3678.883293,
       "dayTradeTurnoverSharePct": 41.3232,
       "marginMaintenanceExEtf": 164.57,
-      "foreignCumulativeYi": -16344.945
+      "foreignCumulativeYi": -16344.945,
+      "creditBelow130Accounts": 96,
+      "creditCallAmountTwd": 2985000,
+      "creditDisposalAccounts": 16,
+      "creditDisposalAmountTwd": 3880872
     },
     {
       "date": "2026-08-20",
@@ -42397,7 +42497,11 @@
       "dayTradeTurnoverYiTwd": 3616.500986,
       "dayTradeTurnoverSharePct": 43.3419,
       "marginMaintenanceExEtf": 166.05,
-      "foreignCumulativeYi": -16271.7687
+      "foreignCumulativeYi": -16271.7687,
+      "creditBelow130Accounts": 99,
+      "creditCallAmountTwd": 5021176,
+      "creditDisposalAccounts": 8,
+      "creditDisposalAmountTwd": 2137300
     },
     {
       "date": "2026-08-21",
@@ -42416,7 +42520,11 @@
       "dayTradeTurnoverYiTwd": 3325.801652,
       "dayTradeTurnoverSharePct": 44.0559,
       "marginMaintenanceExEtf": 164.66,
-      "foreignCumulativeYi": -15988.7145
+      "foreignCumulativeYi": -15988.7145,
+      "creditBelow130Accounts": 89,
+      "creditCallAmountTwd": 1666800,
+      "creditDisposalAccounts": 22,
+      "creditDisposalAmountTwd": 5154241
     },
     {
       "date": "2026-08-22",
@@ -42444,7 +42552,11 @@
       "dayTradeTurnoverYiTwd": 2769.288273,
       "dayTradeTurnoverSharePct": 42.1967,
       "marginMaintenanceExEtf": 162.92,
-      "foreignCumulativeYi": -16146.0758
+      "foreignCumulativeYi": -16146.0758,
+      "creditBelow130Accounts": 87,
+      "creditCallAmountTwd": 2552000,
+      "creditDisposalAccounts": 16,
+      "creditDisposalAmountTwd": 5773100
     },
     {
       "date": "2026-08-25",
@@ -42464,7 +42576,11 @@
       "dayTradeTurnoverYiTwd": 3400.2365,
       "dayTradeTurnoverSharePct": 46.9478,
       "marginMaintenanceExEtf": 165.37,
-      "foreignCumulativeYi": -16153.9416
+      "foreignCumulativeYi": -16153.9416,
+      "creditBelow130Accounts": 87,
+      "creditCallAmountTwd": 7315300,
+      "creditDisposalAccounts": 9,
+      "creditDisposalAmountTwd": 814800
     },
     {
       "date": "2026-08-26",
@@ -42484,7 +42600,11 @@
       "dayTradeTurnoverYiTwd": 3459.797442,
       "dayTradeTurnoverSharePct": 41.037,
       "marginMaintenanceExEtf": 170.06,
-      "foreignCumulativeYi": -15787.8097
+      "foreignCumulativeYi": -15787.8097,
+      "creditBelow130Accounts": 79,
+      "creditCallAmountTwd": 8463600,
+      "creditDisposalAccounts": 25,
+      "creditDisposalAmountTwd": 13401714
     },
     {
       "date": "2026-08-27",
@@ -42504,7 +42624,11 @@
       "dayTradeTurnoverYiTwd": 3982.595621,
       "dayTradeTurnoverSharePct": 41.1652,
       "marginMaintenanceExEtf": 171.33,
-      "foreignCumulativeYi": -15296.8676
+      "foreignCumulativeYi": -15296.8676,
+      "creditBelow130Accounts": 110,
+      "creditCallAmountTwd": 33548600,
+      "creditDisposalAccounts": 52,
+      "creditDisposalAmountTwd": 37294703
     },
     {
       "date": "2026-08-28",
@@ -42523,7 +42647,11 @@
       "dayTradeTurnoverYiTwd": 4655.433,
       "dayTradeTurnoverSharePct": 43.55,
       "marginMaintenanceExEtf": 172.33,
-      "foreignCumulativeYi": -14879.3266
+      "foreignCumulativeYi": -14879.3266,
+      "creditBelow130Accounts": 99,
+      "creditCallAmountTwd": 3062600,
+      "creditDisposalAccounts": 1,
+      "creditDisposalAmountTwd": 133000
     },
     {
       "date": "2026-08-29",
@@ -42551,7 +42679,11 @@
       "dayTradeTurnoverYiTwd": 4585.194202,
       "dayTradeTurnoverSharePct": 35.5654,
       "marginMaintenanceExEtf": 170.44,
-      "foreignCumulativeYi": -15023.25
+      "foreignCumulativeYi": -15023.25,
+      "creditBelow130Accounts": 96,
+      "creditCallAmountTwd": 5723300,
+      "creditDisposalAccounts": 5,
+      "creditDisposalAmountTwd": 2381400
     },
     {
       "date": "2026-09-01",
@@ -42571,7 +42703,11 @@
       "dayTradeTurnoverYiTwd": 4442.64669,
       "dayTradeTurnoverSharePct": 37.4095,
       "marginMaintenanceExEtf": 172.03,
-      "foreignCumulativeYi": -14756.174
+      "foreignCumulativeYi": -14756.174,
+      "creditBelow130Accounts": 98,
+      "creditCallAmountTwd": 11003716,
+      "creditDisposalAccounts": 6,
+      "creditDisposalAmountTwd": 608850
     },
     {
       "date": "2026-09-02",
@@ -42591,7 +42727,11 @@
       "dayTradeTurnoverYiTwd": 3720.640488,
       "dayTradeTurnoverSharePct": 38.1018,
       "marginMaintenanceExEtf": 168.63,
-      "foreignCumulativeYi": -15669.7194
+      "foreignCumulativeYi": -15669.7194,
+      "creditBelow130Accounts": 117,
+      "creditCallAmountTwd": 6198100,
+      "creditDisposalAccounts": 7,
+      "creditDisposalAmountTwd": 1089400
     },
     {
       "date": "2026-09-03",
@@ -42611,7 +42751,11 @@
       "dayTradeTurnoverYiTwd": 4152.477512,
       "dayTradeTurnoverSharePct": 41.8065,
       "marginMaintenanceExEtf": 163.12,
-      "foreignCumulativeYi": -16151.1787
+      "foreignCumulativeYi": -16151.1787,
+      "creditBelow130Accounts": 146,
+      "creditCallAmountTwd": 21866400,
+      "creditDisposalAccounts": 33,
+      "creditDisposalAmountTwd": 7097072
     },
     {
       "date": "2026-09-04",
@@ -42630,7 +42774,11 @@
       "dayTradeTurnoverYiTwd": 3708.545571,
       "dayTradeTurnoverSharePct": 43.2108,
       "marginMaintenanceExEtf": 166.73,
-      "foreignCumulativeYi": -15589.0492
+      "foreignCumulativeYi": -15589.0492,
+      "creditBelow130Accounts": 131,
+      "creditCallAmountTwd": 14460412,
+      "creditDisposalAccounts": 21,
+      "creditDisposalAmountTwd": 4628145
     },
     {
       "date": "2026-09-05",
@@ -42653,7 +42801,11 @@
       "dayTradeTurnoverYiTwd": 3586.077902,
       "dayTradeTurnoverSharePct": 35.9346,
       "marginMaintenanceExEtf": 168.33,
-      "foreignCumulativeYi": -14705.9718
+      "foreignCumulativeYi": -14705.9718,
+      "creditBelow130Accounts": 127,
+      "creditCallAmountTwd": 10740262,
+      "creditDisposalAccounts": 20,
+      "creditDisposalAmountTwd": 8062950
     },
     {
       "date": "2026-09-08",
@@ -42673,7 +42825,11 @@
       "dayTradeTurnoverYiTwd": 3338.580615,
       "dayTradeTurnoverSharePct": 36.1844,
       "marginMaintenanceExEtf": 165.85,
-      "foreignCumulativeYi": -14573.2862
+      "foreignCumulativeYi": -14573.2862,
+      "creditBelow130Accounts": 133,
+      "creditCallAmountTwd": 11919700,
+      "creditDisposalAccounts": 4,
+      "creditDisposalAmountTwd": 722400
     },
     {
       "date": "2026-09-09",
@@ -42693,7 +42849,11 @@
       "dayTradeTurnoverYiTwd": 3277.184948,
       "dayTradeTurnoverSharePct": 40.1627,
       "marginMaintenanceExEtf": 166.98,
-      "foreignCumulativeYi": -14364.0424
+      "foreignCumulativeYi": -14364.0424,
+      "creditBelow130Accounts": 126,
+      "creditCallAmountTwd": 36463872,
+      "creditDisposalAccounts": 16,
+      "creditDisposalAmountTwd": 2839647
     },
     {
       "date": "2026-09-10",
@@ -42713,7 +42873,11 @@
       "dayTradeTurnoverYiTwd": 3136.944381,
       "dayTradeTurnoverSharePct": 41.7845,
       "marginMaintenanceExEtf": 166.2,
-      "foreignCumulativeYi": -14747.384
+      "foreignCumulativeYi": -14747.384,
+      "creditBelow130Accounts": 140,
+      "creditCallAmountTwd": 30592552,
+      "creditDisposalAccounts": 24,
+      "creditDisposalAmountTwd": 13015353
     },
     {
       "date": "2026-09-11",
@@ -42732,7 +42896,11 @@
       "dayTradeTurnoverYiTwd": 2864.976725,
       "dayTradeTurnoverSharePct": 37.586,
       "marginMaintenanceExEtf": 162.32,
-      "foreignCumulativeYi": -15640.0884
+      "foreignCumulativeYi": -15640.0884,
+      "creditBelow130Accounts": 163,
+      "creditCallAmountTwd": 28838226,
+      "creditDisposalAccounts": 30,
+      "creditDisposalAmountTwd": 7247128
     },
     {
       "date": "2026-09-12",
@@ -42760,7 +42928,11 @@
       "dayTradeTurnoverYiTwd": 2638.690511,
       "dayTradeTurnoverSharePct": 39.6607,
       "marginMaintenanceExEtf": 160.68,
-      "foreignCumulativeYi": -16009.7241
+      "foreignCumulativeYi": -16009.7241,
+      "creditBelow130Accounts": 159,
+      "creditCallAmountTwd": 10576600,
+      "creditDisposalAccounts": 29,
+      "creditDisposalAmountTwd": 29119413
     },
     {
       "date": "2026-09-15",
@@ -42780,7 +42952,11 @@
       "dayTradeTurnoverYiTwd": 2548.628563,
       "dayTradeTurnoverSharePct": 40.1544,
       "marginMaintenanceExEtf": 157.84,
-      "foreignCumulativeYi": -16636.7131
+      "foreignCumulativeYi": -16636.7131,
+      "creditBelow130Accounts": 170,
+      "creditCallAmountTwd": 8337800,
+      "creditDisposalAccounts": 55,
+      "creditDisposalAmountTwd": 121439507
     },
     {
       "date": "2026-09-16",
@@ -42800,7 +42976,11 @@
       "dayTradeTurnoverYiTwd": 2705.335338,
       "dayTradeTurnoverSharePct": 40.0216,
       "marginMaintenanceExEtf": 161.38,
-      "foreignCumulativeYi": -16816.5179
+      "foreignCumulativeYi": -16816.5179,
+      "creditBelow130Accounts": 153,
+      "creditCallAmountTwd": 8117600,
+      "creditDisposalAccounts": 20,
+      "creditDisposalAmountTwd": 6810723
     },
     {
       "date": "2026-09-17",
@@ -42820,7 +43000,11 @@
       "dayTradeTurnoverYiTwd": 3517.289699,
       "dayTradeTurnoverSharePct": 40.5863,
       "marginMaintenanceExEtf": 161.45,
-      "foreignCumulativeYi": -16694.6679
+      "foreignCumulativeYi": -16694.6679,
+      "creditBelow130Accounts": 132,
+      "creditCallAmountTwd": 13546800,
+      "creditDisposalAccounts": 11,
+      "creditDisposalAmountTwd": 3834400
     },
     {
       "date": "2026-09-18",
@@ -42839,7 +43023,11 @@
       "dayTradeTurnoverYiTwd": 3584.985952,
       "dayTradeTurnoverSharePct": 31.3833,
       "marginMaintenanceExEtf": 166.85,
-      "foreignCumulativeYi": -15824.7243
+      "foreignCumulativeYi": -15824.7243,
+      "creditBelow130Accounts": 136,
+      "creditCallAmountTwd": 25623700,
+      "creditDisposalAccounts": 16,
+      "creditDisposalAmountTwd": 3057230
     },
     {
       "date": "2026-09-19",
@@ -42867,7 +43055,11 @@
       "dayTradeTurnoverYiTwd": 3229.785402,
       "dayTradeTurnoverSharePct": 37.2603,
       "marginMaintenanceExEtf": 168.43,
-      "foreignCumulativeYi": -15619.9349
+      "foreignCumulativeYi": -15619.9349,
+      "creditBelow130Accounts": 117,
+      "creditCallAmountTwd": 21004400,
+      "creditDisposalAccounts": 19,
+      "creditDisposalAmountTwd": 21457400
     },
     {
       "date": "2026-09-22",
@@ -42887,7 +43079,11 @@
       "dayTradeTurnoverYiTwd": 4062.076552,
       "dayTradeTurnoverSharePct": 37.6545,
       "marginMaintenanceExEtf": 169.99,
-      "foreignCumulativeYi": -15166.7256
+      "foreignCumulativeYi": -15166.7256,
+      "creditBelow130Accounts": 147,
+      "creditCallAmountTwd": 16071673,
+      "creditDisposalAccounts": 11,
+      "creditDisposalAmountTwd": 17705361
     },
     {
       "date": "2026-09-23",
@@ -42907,7 +43103,11 @@
       "dayTradeTurnoverYiTwd": 3556.630116,
       "dayTradeTurnoverSharePct": 39.7544,
       "marginMaintenanceExEtf": 170.29,
-      "foreignCumulativeYi": -14793.592
+      "foreignCumulativeYi": -14793.592,
+      "creditBelow130Accounts": 143,
+      "creditCallAmountTwd": 3293500,
+      "creditDisposalAccounts": 8,
+      "creditDisposalAmountTwd": 786616
     },
     {
       "date": "2026-09-24",
@@ -42927,7 +43127,11 @@
       "dayTradeTurnoverYiTwd": 3167.984941,
       "dayTradeTurnoverSharePct": 40.8461,
       "marginMaintenanceExEtf": 170.87,
-      "foreignCumulativeYi": -15123.2381
+      "foreignCumulativeYi": -15123.2381,
+      "creditBelow130Accounts": 145,
+      "creditCallAmountTwd": 14639300,
+      "creditDisposalAccounts": 30,
+      "creditDisposalAmountTwd": 20787605
     },
     {
       "date": "2026-09-25",
@@ -42978,7 +43182,11 @@
       "dayTradeTurnoverYiTwd": 2971.066773,
       "dayTradeTurnoverSharePct": 35.5329,
       "marginMaintenanceExEtf": 169.06,
-      "foreignCumulativeYi": -15749.0636
+      "foreignCumulativeYi": -15749.0636,
+      "creditBelow130Accounts": 161,
+      "creditCallAmountTwd": 31050843,
+      "creditDisposalAccounts": 27,
+      "creditDisposalAmountTwd": 11448150
     },
     {
       "date": "2026-09-30",
@@ -42998,7 +43206,11 @@
       "dayTradeTurnoverYiTwd": 3321.983937,
       "dayTradeTurnoverSharePct": 36.05,
       "marginMaintenanceExEtf": 170.81,
-      "foreignCumulativeYi": -15440.498
+      "foreignCumulativeYi": -15440.498,
+      "creditBelow130Accounts": 146,
+      "creditCallAmountTwd": 15895500,
+      "creditDisposalAccounts": 21,
+      "creditDisposalAmountTwd": 3024940
     },
     {
       "date": "2026-10-01",
@@ -43018,7 +43230,11 @@
       "dayTradeTurnoverYiTwd": 3331.959387,
       "dayTradeTurnoverSharePct": 38.1211,
       "marginMaintenanceExEtf": 172.14,
-      "foreignCumulativeYi": -15221.1247
+      "foreignCumulativeYi": -15221.1247,
+      "creditBelow130Accounts": 132,
+      "creditCallAmountTwd": 19006427,
+      "creditDisposalAccounts": 23,
+      "creditDisposalAmountTwd": 8153197
     },
     {
       "date": "2026-10-02",
@@ -43037,7 +43253,11 @@
       "dayTradeTurnoverYiTwd": 3753.703623,
       "dayTradeTurnoverSharePct": 40.0087,
       "marginMaintenanceExEtf": 173.96,
-      "foreignCumulativeYi": -15194.9067
+      "foreignCumulativeYi": -15194.9067,
+      "creditBelow130Accounts": 140,
+      "creditCallAmountTwd": 31841527,
+      "creditDisposalAccounts": 12,
+      "creditDisposalAmountTwd": 4263744
     },
     {
       "date": "2026-10-03",
@@ -43065,7 +43285,11 @@
       "marketTurnoverYiTwd": 12110.413951,
       "dayTradeTurnoverYiTwd": 4501.950304,
       "dayTradeTurnoverSharePct": 37.1742,
-      "foreignCumulativeYi": -14475.9406
+      "foreignCumulativeYi": -14475.9406,
+      "creditBelow130Accounts": 168,
+      "creditCallAmountTwd": 35055758,
+      "creditDisposalAccounts": 13,
+      "creditDisposalAmountTwd": 3327757
     },
     {
       "date": "2026-10-06",
@@ -43085,7 +43309,11 @@
       "marketTurnoverYiTwd": 10262.047711,
       "dayTradeTurnoverYiTwd": 4020.091369,
       "dayTradeTurnoverSharePct": 39.1744,
-      "foreignCumulativeYi": -14542.514
+      "foreignCumulativeYi": -14542.514,
+      "creditBelow130Accounts": 164,
+      "creditCallAmountTwd": 16807168,
+      "creditDisposalAccounts": 19,
+      "creditDisposalAmountTwd": 45653493
     },
     {
       "date": "2026-10-07",
@@ -43105,7 +43333,11 @@
       "marketTurnoverYiTwd": 9862.800412,
       "dayTradeTurnoverYiTwd": 3951.717752,
       "dayTradeTurnoverSharePct": 40.0669,
-      "foreignCumulativeYi": -14672.9529
+      "foreignCumulativeYi": -14672.9529,
+      "creditBelow130Accounts": 157,
+      "creditCallAmountTwd": 8935409,
+      "creditDisposalAccounts": 16,
+      "creditDisposalAmountTwd": 8464870
     },
     {
       "date": "2026-10-08",
@@ -43125,7 +43357,11 @@
       "marketTurnoverYiTwd": 9245.090979,
       "dayTradeTurnoverYiTwd": 3495.265685,
       "dayTradeTurnoverSharePct": 37.8067,
-      "foreignCumulativeYi": -15431.4758
+      "foreignCumulativeYi": -15431.4758,
+      "creditBelow130Accounts": 145,
+      "creditCallAmountTwd": 38155400,
+      "creditDisposalAccounts": 27,
+      "creditDisposalAmountTwd": 9687713
     },
     {
       "date": "2026-10-09",
@@ -43162,7 +43398,11 @@
       "marketTurnoverYiTwd": 8945.219284,
       "dayTradeTurnoverYiTwd": 3258.506279,
       "dayTradeTurnoverSharePct": 36.4273,
-      "foreignCumulativeYi": -15953.4573
+      "foreignCumulativeYi": -15953.4573,
+      "creditBelow130Accounts": 133,
+      "creditCallAmountTwd": 9219211,
+      "creditDisposalAccounts": 28,
+      "creditDisposalAmountTwd": 8538400
     },
     {
       "date": "2026-10-13",
@@ -43182,7 +43422,11 @@
       "marketTurnoverYiTwd": 12018.612649,
       "dayTradeTurnoverYiTwd": 4075.877624,
       "dayTradeTurnoverSharePct": 33.913,
-      "foreignCumulativeYi": -17606.3624
+      "foreignCumulativeYi": -17606.3624,
+      "creditBelow130Accounts": 166,
+      "creditCallAmountTwd": 14115798,
+      "creditDisposalAccounts": 22,
+      "creditDisposalAmountTwd": 5119650
     },
     {
       "date": "2026-10-14",
@@ -43202,7 +43446,11 @@
       "marketTurnoverYiTwd": 9781.374163,
       "dayTradeTurnoverYiTwd": 3835.726798,
       "dayTradeTurnoverSharePct": 39.2146,
-      "foreignCumulativeYi": -17806.7358
+      "foreignCumulativeYi": -17806.7358,
+      "creditBelow130Accounts": 147,
+      "creditCallAmountTwd": 12266212,
+      "creditDisposalAccounts": 21,
+      "creditDisposalAmountTwd": 9229248
     },
     {
       "date": "2026-10-15",
@@ -43222,7 +43470,11 @@
       "dayTradeTurnoverYiTwd": 4360.232325,
       "dayTradeTurnoverSharePct": 30.3689,
       "foreignNetYi": -3025.5548,
-      "foreignCumulativeYi": -20832.2906
+      "foreignCumulativeYi": -20832.2906,
+      "creditBelow130Accounts": 178,
+      "creditCallAmountTwd": 32412900,
+      "creditDisposalAccounts": 13,
+      "creditDisposalAmountTwd": 4051080
     },
     {
       "date": "2026-10-16",
@@ -43242,7 +43494,11 @@
       "marketTurnoverYiTwd": 9938.148301,
       "dayTradeTurnoverYiTwd": 3784.417034,
       "dayTradeTurnoverSharePct": 38.0797,
-      "foreignCumulativeYi": -21293.7622
+      "foreignCumulativeYi": -21293.7622,
+      "creditBelow130Accounts": 152,
+      "creditCallAmountTwd": 18596883,
+      "creditDisposalAccounts": 13,
+      "creditDisposalAmountTwd": 12036820
     },
     {
       "date": "2026-10-17",
@@ -43270,7 +43526,11 @@
       "marketTurnoverYiTwd": 8667.1186,
       "dayTradeTurnoverYiTwd": 3547.240591,
       "dayTradeTurnoverSharePct": 40.9276,
-      "foreignCumulativeYi": -22061.1896
+      "foreignCumulativeYi": -22061.1896,
+      "creditBelow130Accounts": 170,
+      "creditCallAmountTwd": 13089500,
+      "creditDisposalAccounts": 11,
+      "creditDisposalAmountTwd": 21089800
     },
     {
       "date": "2026-10-20",
@@ -43290,7 +43550,11 @@
       "marketTurnoverYiTwd": 8029.474417,
       "dayTradeTurnoverYiTwd": 3419.086103,
       "dayTradeTurnoverSharePct": 42.5817,
-      "foreignCumulativeYi": -22856.5865
+      "foreignCumulativeYi": -22856.5865,
+      "creditBelow130Accounts": 208,
+      "creditCallAmountTwd": 31825000,
+      "creditDisposalAccounts": 18,
+      "creditDisposalAmountTwd": 8428450
     },
     {
       "date": "2026-10-21",
@@ -43310,7 +43574,11 @@
       "marketTurnoverYiTwd": 8746.141667,
       "dayTradeTurnoverYiTwd": 3639.3074,
       "dayTradeTurnoverSharePct": 41.6104,
-      "foreignCumulativeYi": -22834.1974
+      "foreignCumulativeYi": -22834.1974,
+      "creditBelow130Accounts": 167,
+      "creditCallAmountTwd": 7993900,
+      "creditDisposalAccounts": 8,
+      "creditDisposalAmountTwd": 3527369
     },
     {
       "date": "2026-10-22",
@@ -43330,7 +43598,11 @@
       "marketTurnoverYiTwd": 9334.374736,
       "dayTradeTurnoverYiTwd": 3862.424726,
       "dayTradeTurnoverSharePct": 41.3785,
-      "foreignCumulativeYi": -23650.0184
+      "foreignCumulativeYi": -23650.0184,
+      "creditBelow130Accounts": 232,
+      "creditCallAmountTwd": 51577822,
+      "creditDisposalAccounts": 26,
+      "creditDisposalAmountTwd": 20952010
     },
     {
       "date": "2026-10-23",
@@ -43381,7 +43653,11 @@
       "marketTurnoverYiTwd": 10316.835389,
       "dayTradeTurnoverYiTwd": 4079.559407,
       "dayTradeTurnoverSharePct": 39.5427,
-      "foreignCumulativeYi": -23730.4071
+      "foreignCumulativeYi": -23730.4071,
+      "creditBelow130Accounts": 263,
+      "creditCallAmountTwd": 62174900,
+      "creditDisposalAccounts": 34,
+      "creditDisposalAmountTwd": 12500282
     },
     {
       "date": "2026-10-28",
@@ -43401,7 +43677,11 @@
       "marketTurnoverYiTwd": 7503.405369,
       "dayTradeTurnoverYiTwd": 3123.700029,
       "dayTradeTurnoverSharePct": 41.6304,
-      "foreignCumulativeYi": -23570.8409
+      "foreignCumulativeYi": -23570.8409,
+      "creditBelow130Accounts": 182,
+      "creditCallAmountTwd": 22548000,
+      "creditDisposalAccounts": 15,
+      "creditDisposalAmountTwd": 10973283
     },
     {
       "date": "2026-10-29",
@@ -43421,7 +43701,11 @@
       "marketTurnoverYiTwd": 8238.127485,
       "dayTradeTurnoverYiTwd": 3519.64481,
       "dayTradeTurnoverSharePct": 42.7238,
-      "foreignCumulativeYi": -24258.9937
+      "foreignCumulativeYi": -24258.9937,
+      "creditBelow130Accounts": 199,
+      "creditCallAmountTwd": 24568806,
+      "creditDisposalAccounts": 21,
+      "creditDisposalAmountTwd": 6819570
     },
     {
       "date": "2026-10-30",
@@ -43441,7 +43725,11 @@
       "marketTurnoverYiTwd": 9396.052677,
       "dayTradeTurnoverYiTwd": 3391.91519,
       "dayTradeTurnoverSharePct": 36.0994,
-      "foreignCumulativeYi": -25383.6662
+      "foreignCumulativeYi": -25383.6662,
+      "creditBelow130Accounts": 469,
+      "creditCallAmountTwd": 232824000,
+      "creditDisposalAccounts": 36,
+      "creditDisposalAmountTwd": 27034300
     },
     {
       "date": "2026-10-31",
@@ -43469,7 +43757,11 @@
       "marketTurnoverYiTwd": 7996.875079,
       "dayTradeTurnoverYiTwd": 3431.490488,
       "dayTradeTurnoverSharePct": 42.9104,
-      "foreignCumulativeYi": -26118.8743
+      "foreignCumulativeYi": -26118.8743,
+      "creditBelow130Accounts": 375,
+      "creditCallAmountTwd": 28446000,
+      "creditDisposalAccounts": 18,
+      "creditDisposalAmountTwd": 9530980
     },
     {
       "date": "2026-11-03",
@@ -43489,7 +43781,11 @@
       "marketTurnoverYiTwd": 10020.35661,
       "dayTradeTurnoverYiTwd": 3643.712299,
       "dayTradeTurnoverSharePct": 36.3631,
-      "foreignCumulativeYi": -27191.9415
+      "foreignCumulativeYi": -27191.9415,
+      "creditBelow130Accounts": 1286,
+      "creditCallAmountTwd": 1403658100,
+      "creditDisposalAccounts": 109,
+      "creditDisposalAmountTwd": 150053490
     },
     {
       "date": "2026-11-04",
@@ -43509,7 +43805,11 @@
       "marketTurnoverYiTwd": 11769.304429,
       "dayTradeTurnoverYiTwd": 5310.14309,
       "dayTradeTurnoverSharePct": 45.1186,
-      "foreignCumulativeYi": -28690.9398
+      "foreignCumulativeYi": -28690.9398,
+      "creditBelow130Accounts": 840,
+      "creditCallAmountTwd": 300564400,
+      "creditDisposalAccounts": 14,
+      "creditDisposalAmountTwd": 7986400
     },
     {
       "date": "2026-11-05",
@@ -43529,7 +43829,11 @@
       "marketTurnoverYiTwd": 9870.988832,
       "dayTradeTurnoverYiTwd": 3843.594313,
       "dayTradeTurnoverSharePct": 38.9383,
-      "foreignCumulativeYi": -29715.546
+      "foreignCumulativeYi": -29715.546,
+      "creditBelow130Accounts": 2352,
+      "creditCallAmountTwd": 2685573000,
+      "creditDisposalAccounts": 222,
+      "creditDisposalAmountTwd": 641633740
     },
     {
       "date": "2026-11-06",
@@ -43549,7 +43853,11 @@
       "marketTurnoverYiTwd": 13210.718586,
       "dayTradeTurnoverYiTwd": 5545.119227,
       "dayTradeTurnoverSharePct": 41.9744,
-      "foreignCumulativeYi": -30627.4285
+      "foreignCumulativeYi": -30627.4285,
+      "creditBelow130Accounts": 3382,
+      "creditCallAmountTwd": 3806099400,
+      "creditDisposalAccounts": 171,
+      "creditDisposalAmountTwd": 516535190
     },
     {
       "date": "2026-11-07",
@@ -43577,7 +43885,11 @@
       "marketTurnoverYiTwd": 8770.256172,
       "dayTradeTurnoverYiTwd": 3700.808543,
       "dayTradeTurnoverSharePct": 42.1973,
-      "foreignCumulativeYi": -31527.9922
+      "foreignCumulativeYi": -31527.9922,
+      "creditBelow130Accounts": 1197,
+      "creditCallAmountTwd": 15150600,
+      "creditDisposalAccounts": 81,
+      "creditDisposalAmountTwd": 61283890
     },
     {
       "date": "2026-11-10",
@@ -43597,7 +43909,11 @@
       "marketTurnoverYiTwd": 10340.122405,
       "dayTradeTurnoverYiTwd": 4680.434188,
       "dayTradeTurnoverSharePct": 45.2648,
-      "foreignCumulativeYi": -31869.1591
+      "foreignCumulativeYi": -31869.1591,
+      "creditBelow130Accounts": 250,
+      "creditCallAmountTwd": 12838300,
+      "creditDisposalAccounts": 16,
+      "creditDisposalAmountTwd": 34034200
     },
     {
       "date": "2026-11-11",
@@ -43615,7 +43931,11 @@
       "marketTurnoverYiTwd": 8762.954593,
       "dayTradeTurnoverYiTwd": 4011.312268,
       "dayTradeTurnoverSharePct": 45.7758,
-      "foreignCumulativeYi": -31876.8235
+      "foreignCumulativeYi": -31876.8235,
+      "creditBelow130Accounts": 193,
+      "creditCallAmountTwd": 10144400,
+      "creditDisposalAccounts": 20,
+      "creditDisposalAmountTwd": 6324280
     },
     {
       "date": "2026-11-12",
@@ -43635,7 +43955,11 @@
       "marketTurnoverYiTwd": 10568.424571,
       "dayTradeTurnoverYiTwd": 5009.540464,
       "dayTradeTurnoverSharePct": 47.401,
-      "foreignCumulativeYi": -31883.6685
+      "foreignCumulativeYi": -31883.6685,
+      "creditBelow130Accounts": 238,
+      "creditCallAmountTwd": 89224800,
+      "creditDisposalAccounts": 56,
+      "creditDisposalAmountTwd": 29619157
     },
     {
       "date": "2026-11-13",
@@ -43655,7 +43979,11 @@
       "marketTurnoverYiTwd": 9515.800081,
       "dayTradeTurnoverYiTwd": 4593.513467,
       "dayTradeTurnoverSharePct": 48.2725,
-      "foreignCumulativeYi": -31595.3016
+      "foreignCumulativeYi": -31595.3016,
+      "creditBelow130Accounts": 209,
+      "creditCallAmountTwd": 7485100,
+      "creditDisposalAccounts": 27,
+      "creditDisposalAmountTwd": 16722680
     },
     {
       "date": "2026-11-14",
@@ -43683,7 +44011,11 @@
       "marketTurnoverYiTwd": 9031.151299,
       "dayTradeTurnoverYiTwd": 3214.177317,
       "dayTradeTurnoverSharePct": 35.5899,
-      "foreignCumulativeYi": -32297.1937
+      "foreignCumulativeYi": -32297.1937,
+      "creditBelow130Accounts": 733,
+      "creditCallAmountTwd": 397022000,
+      "creditDisposalAccounts": 247,
+      "creditDisposalAmountTwd": 566802830
     },
     {
       "date": "2026-11-17",
@@ -43703,7 +44035,11 @@
       "marketTurnoverYiTwd": 10128.678299,
       "dayTradeTurnoverYiTwd": 4482.452861,
       "dayTradeTurnoverSharePct": 44.2551,
-      "foreignCumulativeYi": -32678.1301
+      "foreignCumulativeYi": -32678.1301,
+      "creditBelow130Accounts": 1118,
+      "creditCallAmountTwd": 651418600,
+      "creditDisposalAccounts": 207,
+      "creditDisposalAmountTwd": 687633970
     },
     {
       "date": "2026-11-18",
@@ -43723,7 +44059,11 @@
       "marketTurnoverYiTwd": 10751.743088,
       "dayTradeTurnoverYiTwd": 5654.458479,
       "dayTradeTurnoverSharePct": 52.5911,
-      "foreignCumulativeYi": -33443.7669
+      "foreignCumulativeYi": -33443.7669,
+      "creditBelow130Accounts": 719,
+      "creditCallAmountTwd": 107339100,
+      "creditDisposalAccounts": 72,
+      "creditDisposalAmountTwd": 220238390
     },
     {
       "date": "2026-11-19",
@@ -43740,7 +44080,11 @@
       "dayTradeTurnoverYiTwd": 3896.995766,
       "dayTradeTurnoverSharePct": 41.326,
       "marginMaintenanceExEtf": 128.31,
-      "foreignCumulativeYi": -33686.889
+      "foreignCumulativeYi": -33686.889,
+      "creditBelow130Accounts": 2947,
+      "creditCallAmountTwd": 2964159000,
+      "creditDisposalAccounts": 520,
+      "creditDisposalAmountTwd": 918355880
     },
     {
       "date": "2026-11-20",

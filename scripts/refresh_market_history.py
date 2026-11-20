@@ -7,6 +7,7 @@ VOO and QQQ use publicly accessible USD share prices; not user-specific position
 DFF observations are the effective overnight rate, distinct from the FOMC target range.
 """
 from decimal import Decimal
+from twse_credit_calls import merge_credit
 import csv
 import io
 import json
@@ -328,7 +329,7 @@ def main():
         attempt("FED_FUNDS_EFFECTIVE_DFF_FRED",lambda:fetch_fred("fedFundsEffective","DFF"))
     else:
         full_refresh()
-    finalize_history()
+    finalize_history(include_credit=not (os.environ.get("JENBAO_ETF_ONLY")=="1" or os.environ.get("JENBAO_YIELD_ONLY")=="1"))
 
 def full_refresh():
     attempt("TWSE_TAIEX",fetch_twse)
@@ -350,7 +351,7 @@ def full_refresh():
     attempt("TWSE_FOREIGN",fetch_foreign_daily)
     attempt("TWSE_MARGIN",fetch_margin_daily)
     attempt("WANTGOO_EX_ETF",fetch_wantgoo_ex_etf)
-def finalize_history():
+def finalize_history(include_credit=False):
     archive = json.loads(DEST.read_text(encoding="utf-8")) if DEST.exists() else {}
     retained = {row["date"]: row for row in archive.get("rows", [])}
     dates = sorted(set(retained).union(day for ser in OBS.values() for day in ser))
@@ -409,6 +410,8 @@ def finalize_history():
             targetLast=audit["targetLast"], observedInTarget=observed, missingInTarget=len(missing),
             coveragePct=round(100 * observed / len(window), 2), status="partial" if missing else "ready")
     if stats["taiex"]["count"]<20:raise SystemExit("FAIL: insufficient TAIEX source history")
+    if include_credit:
+        attempt("TWSE_CREDIT_CALLS", lambda: merge_credit(out))
     temp = DEST.with_suffix(".json.tmp")
     temp.write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     temp.replace(DEST)
