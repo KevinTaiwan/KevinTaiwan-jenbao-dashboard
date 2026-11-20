@@ -20,7 +20,8 @@
     "fedFundsEffective": "percent, effective federal funds overnight rate, FRED DFF (not FOMC target range)",
     "marketTurnoverYiTwd": "TWD 100 million market trading value, TWSE FMTQIK 成交金額",
     "dayTradeTurnoverYiTwd": "TWD 100 million, (TWSE day-trade buy TWD + sell TWD)/2",
-    "dayTradeTurnoverSharePct": "percent, TWSE day-trade avg buy/sell TWD value divided by FMTQIK market trading TWD value"
+    "dayTradeTurnoverSharePct": "percent, TWSE day-trade avg buy/sell TWD value divided by FMTQIK market trading TWD value",
+    "foreignCumulativeYi": "TWD 100 million, sum of foreignNetYi from the first trading date in the backfill window"
   },
   "stats": {
     "taiex": {
@@ -79,25 +80,33 @@
       }
     },
     "marginDailyYi": {
-      "count": 71,
-      "first": "2026-08-06",
+      "count": 240,
+      "first": "2025-11-21",
       "last": "2026-11-19",
       "lastValue": -236.5831,
       "status": "ready",
       "source": {
         "name": "TWSE MI_MARGN finance outstanding daily change, includes ETFs, TWD 100m",
         "url": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN"
+      },
+      "backfillSource": {
+        "name": "FinMind TaiwanStockTotalMarginPurchaseShortSale, TWSE data; overlapping values verified to four decimals",
+        "url": "https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockTotalMarginPurchaseShortSale&start_date=2025-11-21&end_date=2026-11-19"
       }
     },
     "foreignNetYi": {
-      "count": 72,
-      "first": "2026-08-04",
+      "count": 240,
+      "first": "2025-11-21",
       "last": "2026-11-19",
       "lastValue": -243.1221,
       "status": "ready",
       "source": {
         "name": "TWSE BFI82U foreign cash investment net amount, TWD 100m",
         "url": "https://www.twse.com.tw/rwd/zh/fund/BFI82U"
+      },
+      "backfillSource": {
+        "name": "FinMind TaiwanStockTotalInstitutionalInvestors, TWSE data; overlapping values verified to four decimals",
+        "url": "https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockTotalInstitutionalInvestors&start_date=2025-11-21&end_date=2026-11-19"
       }
     },
     "marginMaintenanceExEtf": {
@@ -206,6 +215,16 @@
       "first": "2025-03-03",
       "last": "2026-11-19",
       "lastValue": 41.326
+    },
+    "foreignCumulativeYi": {
+      "count": 240,
+      "first": "2025-11-21",
+      "last": "2026-11-19",
+      "lastValue": -33686.889,
+      "status": "ready",
+      "source": {
+        "name": "Cumulative sum of daily foreignNetYi, starting from zero immediately before 2025-11-21"
+      }
     }
   },
   "rows": [
@@ -38371,7 +38390,10 @@
       "marketTurnoverYiTwd": 5818.608486,
       "dayTradeTurnoverYiTwd": 1853.15118,
       "dayTradeTurnoverSharePct": 31.8487,
-      "marginMaintenanceExEtf": 149.95
+      "marginMaintenanceExEtf": 149.95,
+      "foreignNetYi": -915.9904,
+      "marginDailyYi": -59.5754,
+      "foreignCumulativeYi": -915.9904
     },
     {
       "date": "2025-11-22",
@@ -38396,7 +38418,10 @@
       "marketTurnoverYiTwd": 7491.631167,
       "dayTradeTurnoverYiTwd": 2014.186548,
       "dayTradeTurnoverSharePct": 26.8858,
-      "marginMaintenanceExEtf": 151.74
+      "marginMaintenanceExEtf": 151.74,
+      "foreignNetYi": -299.5585,
+      "marginDailyYi": 26.7263,
+      "foreignCumulativeYi": -1215.5489
     },
     {
       "date": "2025-11-25",
@@ -38413,7 +38438,10 @@
       "marketTurnoverYiTwd": 4907.507034,
       "dayTradeTurnoverYiTwd": 1950.611129,
       "dayTradeTurnoverSharePct": 39.7475,
-      "marginMaintenanceExEtf": 154.91
+      "marginMaintenanceExEtf": 154.91,
+      "foreignNetYi": 63.3845,
+      "marginDailyYi": 49.8875,
+      "foreignCumulativeYi": -1152.1644
     },
     {
       "date": "2025-11-26",
@@ -38430,7 +38458,10 @@
       "marketTurnoverYiTwd": 5235.316294,
       "dayTradeTurnoverYiTwd": 2026.52532,
       "dayTradeTurnoverSharePct": 38.7087,
-      "marginMaintenanceExEtf": 157.63
+      "marginMaintenanceExEtf": 157.63,
+      "foreignNetYi": 124.2261,
+      "marginDailyYi": -3.0824,
+      "foreignCumulativeYi": -1027.9383
     },
     {
       "date": "2025-11-27",
@@ -38442,7 +38473,10 @@
       "marketTurnoverYiTwd": 5065.172082,
       "dayTradeTurnoverYiTwd": 1938.006242,
       "dayTradeTurnoverSharePct": 38.2614,
-      "marginMaintenanceExEtf": 159.91
+      "marginMaintenanceExEtf": 159.91,
+      "foreignNetYi": 134.5296,
+      "marginDailyYi": 29.4558,
+      "foreignCumulativeYi": -893.4087
     },
     {
       "date": "2025-11-28",
@@ -38459,7 +38493,10 @@
       "marketTurnoverYiTwd": 4898.859641,
       "dayTradeTurnoverYiTwd": 1908.661203,
       "dayTradeTurnoverSharePct": 38.9613,
-      "marginMaintenanceExEtf": 161.18
+      "marginMaintenanceExEtf": 161.18,
+      "foreignNetYi": -194.6956,
+      "marginDailyYi": 31.7623,
+      "foreignCumulativeYi": -1088.1043
     },
     {
       "date": "2025-11-29",
@@ -38484,7 +38521,10 @@
       "marketTurnoverYiTwd": 4934.405741,
       "dayTradeTurnoverYiTwd": 1865.176698,
       "dayTradeTurnoverSharePct": 37.7994,
-      "marginMaintenanceExEtf": 159.75
+      "marginMaintenanceExEtf": 159.75,
+      "foreignNetYi": -243.4924,
+      "marginDailyYi": 21.7805,
+      "foreignCumulativeYi": -1331.5967
     },
     {
       "date": "2025-12-02",
@@ -38501,7 +38541,10 @@
       "marketTurnoverYiTwd": 4865.388253,
       "dayTradeTurnoverYiTwd": 1952.371144,
       "dayTradeTurnoverSharePct": 40.1278,
-      "marginMaintenanceExEtf": 159.58
+      "marginMaintenanceExEtf": 159.58,
+      "foreignNetYi": 135.7529,
+      "marginDailyYi": 3.7674,
+      "foreignCumulativeYi": -1195.8438
     },
     {
       "date": "2025-12-03",
@@ -38518,7 +38561,10 @@
       "marketTurnoverYiTwd": 4572.845906,
       "dayTradeTurnoverYiTwd": 1792.061763,
       "dayTradeTurnoverSharePct": 39.1892,
-      "marginMaintenanceExEtf": 160.04
+      "marginMaintenanceExEtf": 160.04,
+      "foreignNetYi": 162.1481,
+      "marginDailyYi": 16.8796,
+      "foreignCumulativeYi": -1033.6957
     },
     {
       "date": "2025-12-04",
@@ -38535,7 +38581,10 @@
       "marketTurnoverYiTwd": 3979.859535,
       "dayTradeTurnoverYiTwd": 1589.955278,
       "dayTradeTurnoverSharePct": 39.95,
-      "marginMaintenanceExEtf": 160.02
+      "marginMaintenanceExEtf": 160.02,
+      "foreignNetYi": 103.46,
+      "marginDailyYi": 14.0142,
+      "foreignCumulativeYi": -930.2357
     },
     {
       "date": "2025-12-05",
@@ -38552,7 +38601,10 @@
       "marketTurnoverYiTwd": 4572.388213,
       "dayTradeTurnoverYiTwd": 1891.832073,
       "dayTradeTurnoverSharePct": 41.3751,
-      "marginMaintenanceExEtf": 161.26
+      "marginMaintenanceExEtf": 161.26,
+      "foreignNetYi": 368.7803,
+      "marginDailyYi": 0.902,
+      "foreignCumulativeYi": -561.4554
     },
     {
       "date": "2025-12-06",
@@ -38577,7 +38629,10 @@
       "marketTurnoverYiTwd": 4382.971791,
       "dayTradeTurnoverYiTwd": 1548.613482,
       "dayTradeTurnoverSharePct": 35.3325,
-      "marginMaintenanceExEtf": 162.5
+      "marginMaintenanceExEtf": 162.5,
+      "foreignNetYi": 140.8761,
+      "marginDailyYi": 18.2279,
+      "foreignCumulativeYi": -420.5793
     },
     {
       "date": "2025-12-09",
@@ -38594,7 +38649,10 @@
       "marketTurnoverYiTwd": 5245.251119,
       "dayTradeTurnoverYiTwd": 2081.653221,
       "dayTradeTurnoverSharePct": 39.6864,
-      "marginMaintenanceExEtf": 162.62
+      "marginMaintenanceExEtf": 162.62,
+      "foreignNetYi": -58.8847,
+      "marginDailyYi": 21.4521,
+      "foreignCumulativeYi": -479.464
     },
     {
       "date": "2025-12-10",
@@ -38611,7 +38669,10 @@
       "marketTurnoverYiTwd": 5091.414323,
       "dayTradeTurnoverYiTwd": 1906.700421,
       "dayTradeTurnoverSharePct": 37.4493,
-      "marginMaintenanceExEtf": 162.87
+      "marginMaintenanceExEtf": 162.87,
+      "foreignNetYi": 196.0745,
+      "marginDailyYi": 8.1031,
+      "foreignCumulativeYi": -283.3895
     },
     {
       "date": "2025-12-11",
@@ -38628,7 +38689,10 @@
       "marketTurnoverYiTwd": 5371.288033,
       "dayTradeTurnoverYiTwd": 1979.315576,
       "dayTradeTurnoverSharePct": 36.8499,
-      "marginMaintenanceExEtf": 161.69
+      "marginMaintenanceExEtf": 161.69,
+      "foreignNetYi": -189.7681,
+      "marginDailyYi": -10.2272,
+      "foreignCumulativeYi": -473.1576
     },
     {
       "date": "2025-12-12",
@@ -38645,7 +38709,10 @@
       "marketTurnoverYiTwd": 4886.529796,
       "dayTradeTurnoverYiTwd": 1926.874936,
       "dayTradeTurnoverSharePct": 39.4324,
-      "marginMaintenanceExEtf": 162.91
+      "marginMaintenanceExEtf": 162.91,
+      "foreignNetYi": 166.2392,
+      "marginDailyYi": 26.7774,
+      "foreignCumulativeYi": -306.9184
     },
     {
       "date": "2025-12-13",
@@ -38670,7 +38737,10 @@
       "marketTurnoverYiTwd": 4517.404863,
       "dayTradeTurnoverYiTwd": 1590.61262,
       "dayTradeTurnoverSharePct": 35.2108,
-      "marginMaintenanceExEtf": 161.39
+      "marginMaintenanceExEtf": 161.39,
+      "foreignNetYi": -489.9497,
+      "marginDailyYi": 25.0976,
+      "foreignCumulativeYi": -796.8681
     },
     {
       "date": "2025-12-16",
@@ -38687,7 +38757,10 @@
       "marketTurnoverYiTwd": 5471.861677,
       "dayTradeTurnoverYiTwd": 1845.483505,
       "dayTradeTurnoverSharePct": 33.7268,
-      "marginMaintenanceExEtf": 157.97
+      "marginMaintenanceExEtf": 157.97,
+      "foreignNetYi": -595.0091,
+      "marginDailyYi": -30.6986,
+      "foreignCumulativeYi": -1391.8772
     },
     {
       "date": "2025-12-17",
@@ -38704,7 +38777,10 @@
       "marketTurnoverYiTwd": 5248.292431,
       "dayTradeTurnoverYiTwd": 1904.80363,
       "dayTradeTurnoverSharePct": 36.2938,
-      "marginMaintenanceExEtf": 158.34
+      "marginMaintenanceExEtf": 158.34,
+      "foreignNetYi": -354.3355,
+      "marginDailyYi": 33.8542,
+      "foreignCumulativeYi": -1746.2127
     },
     {
       "date": "2025-12-18",
@@ -38721,7 +38797,10 @@
       "marketTurnoverYiTwd": 4600.359553,
       "dayTradeTurnoverYiTwd": 1768.080044,
       "dayTradeTurnoverSharePct": 38.4335,
-      "marginMaintenanceExEtf": 157.37
+      "marginMaintenanceExEtf": 157.37,
+      "foreignNetYi": -268.4141,
+      "marginDailyYi": 2.0525,
+      "foreignCumulativeYi": -2014.6268
     },
     {
       "date": "2025-12-19",
@@ -38738,7 +38817,10 @@
       "marketTurnoverYiTwd": 5683.275092,
       "dayTradeTurnoverYiTwd": 1894.031339,
       "dayTradeTurnoverSharePct": 33.3264,
-      "marginMaintenanceExEtf": 159.79
+      "marginMaintenanceExEtf": 159.79,
+      "foreignNetYi": -1.2435,
+      "marginDailyYi": 9.2859,
+      "foreignCumulativeYi": -2015.8703
     },
     {
       "date": "2025-12-20",
@@ -38763,7 +38845,10 @@
       "marketTurnoverYiTwd": 5044.724908,
       "dayTradeTurnoverYiTwd": 1731.721246,
       "dayTradeTurnoverSharePct": 34.3274,
-      "marginMaintenanceExEtf": 162.27
+      "marginMaintenanceExEtf": 162.27,
+      "foreignNetYi": 226.2154,
+      "marginDailyYi": 18.8734,
+      "foreignCumulativeYi": -1789.6549
     },
     {
       "date": "2025-12-23",
@@ -38780,7 +38865,10 @@
       "marketTurnoverYiTwd": 4319.942604,
       "dayTradeTurnoverYiTwd": 1546.569787,
       "dayTradeTurnoverSharePct": 35.8007,
-      "marginMaintenanceExEtf": 162.22
+      "marginMaintenanceExEtf": 162.22,
+      "foreignNetYi": -81.7476,
+      "marginDailyYi": 23.9237,
+      "foreignCumulativeYi": -1871.4025
     },
     {
       "date": "2025-12-24",
@@ -38797,7 +38885,10 @@
       "marketTurnoverYiTwd": 4390.616689,
       "dayTradeTurnoverYiTwd": 1654.659314,
       "dayTradeTurnoverSharePct": 37.6863,
-      "marginMaintenanceExEtf": 163.08
+      "marginMaintenanceExEtf": 163.08,
+      "foreignNetYi": -38.0182,
+      "marginDailyYi": 13.1436,
+      "foreignCumulativeYi": -1909.4207
     },
     {
       "date": "2025-12-25",
@@ -38819,7 +38910,10 @@
       "marketTurnoverYiTwd": 4439.9448,
       "dayTradeTurnoverYiTwd": 1529.685024,
       "dayTradeTurnoverSharePct": 34.4528,
-      "marginMaintenanceExEtf": 163.99
+      "marginMaintenanceExEtf": 163.99,
+      "foreignNetYi": 84.1722,
+      "marginDailyYi": 14.3431,
+      "foreignCumulativeYi": -1825.2485
     },
     {
       "date": "2025-12-27",
@@ -38844,7 +38938,10 @@
       "marketTurnoverYiTwd": 4690.619628,
       "dayTradeTurnoverYiTwd": 1570.077427,
       "dayTradeTurnoverSharePct": 33.4727,
-      "marginMaintenanceExEtf": 164.39
+      "marginMaintenanceExEtf": 164.39,
+      "foreignNetYi": 95.0991,
+      "marginDailyYi": -4.503,
+      "foreignCumulativeYi": -1730.1494
     },
     {
       "date": "2025-12-30",
@@ -38861,7 +38958,10 @@
       "marketTurnoverYiTwd": 4698.717822,
       "dayTradeTurnoverYiTwd": 1855.185572,
       "dayTradeTurnoverSharePct": 39.4828,
-      "marginMaintenanceExEtf": 164.94
+      "marginMaintenanceExEtf": 164.94,
+      "foreignNetYi": 44.7238,
+      "marginDailyYi": 14.8087,
+      "foreignCumulativeYi": -1685.4256
     },
     {
       "date": "2025-12-31",
@@ -38878,7 +38978,10 @@
       "marketTurnoverYiTwd": 5484.253143,
       "dayTradeTurnoverYiTwd": 2106.493964,
       "dayTradeTurnoverSharePct": 38.4099,
-      "marginMaintenanceExEtf": 165.23
+      "marginMaintenanceExEtf": 165.23,
+      "foreignNetYi": -5.1875,
+      "marginDailyYi": 20.4193,
+      "foreignCumulativeYi": -1690.6131
     },
     {
       "date": "2026-01-01",
@@ -38900,7 +39003,10 @@
       "marketTurnoverYiTwd": 6697.819895,
       "dayTradeTurnoverYiTwd": 2408.772366,
       "dayTradeTurnoverSharePct": 35.9635,
-      "marginMaintenanceExEtf": 167.1
+      "marginMaintenanceExEtf": 167.1,
+      "foreignNetYi": 120.1785,
+      "marginDailyYi": 32.2467,
+      "foreignCumulativeYi": -1570.4346
     },
     {
       "date": "2026-01-03",
@@ -38925,7 +39031,10 @@
       "marketTurnoverYiTwd": 8007.93654,
       "dayTradeTurnoverYiTwd": 2755.762125,
       "dayTradeTurnoverSharePct": 34.4129,
-      "marginMaintenanceExEtf": 167.49
+      "marginMaintenanceExEtf": 167.49,
+      "foreignNetYi": -76.4347,
+      "marginDailyYi": 43.1495,
+      "foreignCumulativeYi": -1646.8693
     },
     {
       "date": "2026-01-06",
@@ -38942,7 +39051,10 @@
       "marketTurnoverYiTwd": 7632.367397,
       "dayTradeTurnoverYiTwd": 2819.952424,
       "dayTradeTurnoverSharePct": 36.9473,
-      "marginMaintenanceExEtf": 170.31
+      "marginMaintenanceExEtf": 170.31,
+      "foreignNetYi": 28.4141,
+      "marginDailyYi": 36.0088,
+      "foreignCumulativeYi": -1618.4552
     },
     {
       "date": "2026-01-07",
@@ -38959,7 +39071,10 @@
       "marketTurnoverYiTwd": 8817.367072,
       "dayTradeTurnoverYiTwd": 3372.718289,
       "dayTradeTurnoverSharePct": 38.2509,
-      "marginMaintenanceExEtf": 170.29
+      "marginMaintenanceExEtf": 170.29,
+      "foreignNetYi": -295.0991,
+      "marginDailyYi": 25.0842,
+      "foreignCumulativeYi": -1913.5543
     },
     {
       "date": "2026-01-08",
@@ -38976,7 +39091,10 @@
       "marketTurnoverYiTwd": 7592.70755,
       "dayTradeTurnoverYiTwd": 2914.605915,
       "dayTradeTurnoverSharePct": 38.3869,
-      "marginMaintenanceExEtf": 167.88
+      "marginMaintenanceExEtf": 167.88,
+      "foreignNetYi": -6.7849,
+      "marginDailyYi": -46.7128,
+      "foreignCumulativeYi": -1920.3392
     },
     {
       "date": "2026-01-09",
@@ -38993,7 +39111,10 @@
       "marketTurnoverYiTwd": 7043.713874,
       "dayTradeTurnoverYiTwd": 2770.1285,
       "dayTradeTurnoverSharePct": 39.3277,
-      "marginMaintenanceExEtf": 166.27
+      "marginMaintenanceExEtf": 166.27,
+      "foreignNetYi": -84.4236,
+      "marginDailyYi": -8.9498,
+      "foreignCumulativeYi": -2004.7628
     },
     {
       "date": "2026-01-10",
@@ -39018,7 +39139,10 @@
       "marketTurnoverYiTwd": 6264.081763,
       "dayTradeTurnoverYiTwd": 2137.347966,
       "dayTradeTurnoverSharePct": 34.1207,
-      "marginMaintenanceExEtf": 169.21
+      "marginMaintenanceExEtf": 169.21,
+      "foreignNetYi": -121.6657,
+      "marginDailyYi": 49.9741,
+      "foreignCumulativeYi": -2126.4285
     },
     {
       "date": "2026-01-13",
@@ -39035,7 +39159,10 @@
       "marketTurnoverYiTwd": 7491.794366,
       "dayTradeTurnoverYiTwd": 2821.485495,
       "dayTradeTurnoverSharePct": 37.661,
-      "marginMaintenanceExEtf": 168.21
+      "marginMaintenanceExEtf": 168.21,
+      "foreignNetYi": 157.4132,
+      "marginDailyYi": -8.5121,
+      "foreignCumulativeYi": -1969.0153
     },
     {
       "date": "2026-01-14",
@@ -39052,7 +39179,10 @@
       "marketTurnoverYiTwd": 6819.833537,
       "dayTradeTurnoverYiTwd": 2403.13168,
       "dayTradeTurnoverSharePct": 35.2374,
-      "marginMaintenanceExEtf": 169.87
+      "marginMaintenanceExEtf": 169.87,
+      "foreignNetYi": 132.825,
+      "marginDailyYi": 28.1398,
+      "foreignCumulativeYi": -1836.1903
     },
     {
       "date": "2026-01-15",
@@ -39069,7 +39199,10 @@
       "marketTurnoverYiTwd": 6719.5372,
       "dayTradeTurnoverYiTwd": 2389.171186,
       "dayTradeTurnoverSharePct": 35.5556,
-      "marginMaintenanceExEtf": 169.13
+      "marginMaintenanceExEtf": 169.13,
+      "foreignNetYi": -2.1022,
+      "marginDailyYi": 8.4642,
+      "foreignCumulativeYi": -1838.2925
     },
     {
       "date": "2026-01-16",
@@ -39086,7 +39219,10 @@
       "marketTurnoverYiTwd": 8514.524087,
       "dayTradeTurnoverYiTwd": 3046.924551,
       "dayTradeTurnoverSharePct": 35.785,
-      "marginMaintenanceExEtf": 170.93
+      "marginMaintenanceExEtf": 170.93,
+      "foreignNetYi": 399.1656,
+      "marginDailyYi": 40.9257,
+      "foreignCumulativeYi": -1439.1269
     },
     {
       "date": "2026-01-17",
@@ -39106,7 +39242,10 @@
       "marketTurnoverYiTwd": 8234.280033,
       "dayTradeTurnoverYiTwd": 3034.700502,
       "dayTradeTurnoverSharePct": 36.8545,
-      "marginMaintenanceExEtf": 173.3
+      "marginMaintenanceExEtf": 173.3,
+      "foreignNetYi": -277.9476,
+      "marginDailyYi": 60.2386,
+      "foreignCumulativeYi": -1717.0745
     },
     {
       "date": "2026-01-20",
@@ -39123,7 +39262,10 @@
       "marketTurnoverYiTwd": 7996.393718,
       "dayTradeTurnoverYiTwd": 3004.527481,
       "dayTradeTurnoverSharePct": 37.5735,
-      "marginMaintenanceExEtf": 173.08
+      "marginMaintenanceExEtf": 173.08,
+      "foreignNetYi": -39.835,
+      "marginDailyYi": 18.1008,
+      "foreignCumulativeYi": -1756.9095
     },
     {
       "date": "2026-01-21",
@@ -39140,7 +39282,10 @@
       "marketTurnoverYiTwd": 8993.090762,
       "dayTradeTurnoverYiTwd": 3263.342431,
       "dayTradeTurnoverSharePct": 36.2872,
-      "marginMaintenanceExEtf": 168.11
+      "marginMaintenanceExEtf": 168.11,
+      "foreignNetYi": -445.6829,
+      "marginDailyYi": -34.7559,
+      "foreignCumulativeYi": -2202.5924
     },
     {
       "date": "2026-01-22",
@@ -39157,7 +39302,10 @@
       "marketTurnoverYiTwd": 8145.958414,
       "dayTradeTurnoverYiTwd": 2996.399487,
       "dayTradeTurnoverSharePct": 36.7839,
-      "marginMaintenanceExEtf": 170.66
+      "marginMaintenanceExEtf": 170.66,
+      "foreignNetYi": 192.7813,
+      "marginDailyYi": 39.8918,
+      "foreignCumulativeYi": -2009.8111
     },
     {
       "date": "2026-01-23",
@@ -39174,7 +39322,10 @@
       "marketTurnoverYiTwd": 8184.289301,
       "dayTradeTurnoverYiTwd": 3127.843904,
       "dayTradeTurnoverSharePct": 38.2177,
-      "marginMaintenanceExEtf": 170.87
+      "marginMaintenanceExEtf": 170.87,
+      "foreignNetYi": 232.085,
+      "marginDailyYi": 43.4255,
+      "foreignCumulativeYi": -1777.7261
     },
     {
       "date": "2026-01-24",
@@ -39199,7 +39350,10 @@
       "marketTurnoverYiTwd": 7473.39306,
       "dayTradeTurnoverYiTwd": 2824.803038,
       "dayTradeTurnoverSharePct": 37.7981,
-      "marginMaintenanceExEtf": 172.61
+      "marginMaintenanceExEtf": 172.61,
+      "foreignNetYi": -14.9277,
+      "marginDailyYi": 55.0368,
+      "foreignCumulativeYi": -1792.6538
     },
     {
       "date": "2026-01-27",
@@ -39216,7 +39370,10 @@
       "marketTurnoverYiTwd": 8176.045462,
       "dayTradeTurnoverYiTwd": 3194.161349,
       "dayTradeTurnoverSharePct": 39.0673,
-      "marginMaintenanceExEtf": 172.08
+      "marginMaintenanceExEtf": 172.08,
+      "foreignNetYi": 222.7888,
+      "marginDailyYi": 11.4736,
+      "foreignCumulativeYi": -1569.865
     },
     {
       "date": "2026-01-28",
@@ -39233,7 +39390,10 @@
       "marketTurnoverYiTwd": 8539.224284,
       "dayTradeTurnoverYiTwd": 3301.199637,
       "dayTradeTurnoverSharePct": 38.6592,
-      "marginMaintenanceExEtf": 174.23
+      "marginMaintenanceExEtf": 174.23,
+      "foreignNetYi": 332.7587,
+      "marginDailyYi": 21.9231,
+      "foreignCumulativeYi": -1237.1063
     },
     {
       "date": "2026-01-29",
@@ -39250,7 +39410,10 @@
       "marketTurnoverYiTwd": 9596.520458,
       "dayTradeTurnoverYiTwd": 3990.007275,
       "dayTradeTurnoverSharePct": 41.5776,
-      "marginMaintenanceExEtf": 171.59
+      "marginMaintenanceExEtf": 171.59,
+      "foreignNetYi": 146.5922,
+      "marginDailyYi": -31.424,
+      "foreignCumulativeYi": -1090.5141
     },
     {
       "date": "2026-01-30",
@@ -39267,7 +39430,10 @@
       "marketTurnoverYiTwd": 9413.209645,
       "dayTradeTurnoverYiTwd": 3606.056741,
       "dayTradeTurnoverSharePct": 38.3085,
-      "marginMaintenanceExEtf": 169.68
+      "marginMaintenanceExEtf": 169.68,
+      "foreignNetYi": -512.3919,
+      "marginDailyYi": 21.1518,
+      "foreignCumulativeYi": -1602.906
     },
     {
       "date": "2026-01-31",
@@ -39292,7 +39458,10 @@
       "marketTurnoverYiTwd": 7714.195439,
       "dayTradeTurnoverYiTwd": 2837.953903,
       "dayTradeTurnoverSharePct": 36.7887,
-      "marginMaintenanceExEtf": 164.12
+      "marginMaintenanceExEtf": 164.12,
+      "foreignNetYi": -480.5035,
+      "marginDailyYi": -50.4491,
+      "foreignCumulativeYi": -2083.4095
     },
     {
       "date": "2026-02-03",
@@ -39309,7 +39478,10 @@
       "marketTurnoverYiTwd": 8215.741201,
       "dayTradeTurnoverYiTwd": 3593.870087,
       "dayTradeTurnoverSharePct": 43.7437,
-      "marginMaintenanceExEtf": 165.77
+      "marginMaintenanceExEtf": 165.77,
+      "foreignNetYi": 72.6781,
+      "marginDailyYi": 32.7688,
+      "foreignCumulativeYi": -2010.7314
     },
     {
       "date": "2026-02-04",
@@ -39326,7 +39498,10 @@
       "marketTurnoverYiTwd": 7046.440327,
       "dayTradeTurnoverYiTwd": 2952.989119,
       "dayTradeTurnoverSharePct": 41.9075,
-      "marginMaintenanceExEtf": 168.86
+      "marginMaintenanceExEtf": 168.86,
+      "foreignNetYi": 120.6604,
+      "marginDailyYi": 19.2078,
+      "foreignCumulativeYi": -1890.071
     },
     {
       "date": "2026-02-05",
@@ -39343,7 +39518,10 @@
       "marketTurnoverYiTwd": 7151.687051,
       "dayTradeTurnoverYiTwd": 2684.300013,
       "dayTradeTurnoverSharePct": 37.5338,
-      "marginMaintenanceExEtf": 163.68
+      "marginMaintenanceExEtf": 163.68,
+      "foreignNetYi": -726.945,
+      "marginDailyYi": -11.2823,
+      "foreignCumulativeYi": -2617.016
     },
     {
       "date": "2026-02-06",
@@ -39360,7 +39538,10 @@
       "marketTurnoverYiTwd": 7003.131731,
       "dayTradeTurnoverYiTwd": 2913.826974,
       "dayTradeTurnoverSharePct": 41.6075,
-      "marginMaintenanceExEtf": 160.1
+      "marginMaintenanceExEtf": 160.1,
+      "foreignNetYi": -71.5299,
+      "marginDailyYi": -89.2704,
+      "foreignCumulativeYi": -2688.5459
     },
     {
       "date": "2026-02-07",
@@ -39385,7 +39566,10 @@
       "marketTurnoverYiTwd": 6539.577367,
       "dayTradeTurnoverYiTwd": 2343.212899,
       "dayTradeTurnoverSharePct": 35.8313,
-      "marginMaintenanceExEtf": 163.5
+      "marginMaintenanceExEtf": 163.5,
+      "foreignNetYi": 247.6862,
+      "marginDailyYi": 14.7931,
+      "foreignCumulativeYi": -2440.8597
     },
     {
       "date": "2026-02-10",
@@ -39402,7 +39586,10 @@
       "marketTurnoverYiTwd": 6784.907147,
       "dayTradeTurnoverYiTwd": 2585.622754,
       "dayTradeTurnoverSharePct": 38.1084,
-      "marginMaintenanceExEtf": 164.6
+      "marginMaintenanceExEtf": 164.6,
+      "foreignNetYi": 557.1083,
+      "marginDailyYi": -28.8358,
+      "foreignCumulativeYi": -1883.7514
     },
     {
       "date": "2026-02-11",
@@ -39419,7 +39606,10 @@
       "marketTurnoverYiTwd": 6992.922984,
       "dayTradeTurnoverYiTwd": 2458.955343,
       "dayTradeTurnoverSharePct": 35.1635,
-      "marginMaintenanceExEtf": 165.82
+      "marginMaintenanceExEtf": 165.82,
+      "foreignNetYi": 523.6006,
+      "marginDailyYi": -45.3962,
+      "foreignCumulativeYi": -1360.1508
     },
     {
       "date": "2026-02-12",
@@ -39531,7 +39721,10 @@
       "marketTurnoverYiTwd": 9499.927672,
       "dayTradeTurnoverYiTwd": 2784.294535,
       "dayTradeTurnoverSharePct": 29.3086,
-      "marginMaintenanceExEtf": 169.15
+      "marginMaintenanceExEtf": 169.15,
+      "foreignNetYi": 83.5218,
+      "marginDailyYi": 46.5787,
+      "foreignCumulativeYi": -1276.629
     },
     {
       "date": "2026-02-24",
@@ -39548,7 +39741,10 @@
       "marketTurnoverYiTwd": 8618.089128,
       "dayTradeTurnoverYiTwd": 3022.385051,
       "dayTradeTurnoverSharePct": 35.0702,
-      "marginMaintenanceExEtf": 173.98
+      "marginMaintenanceExEtf": 173.98,
+      "foreignNetYi": 627.3356,
+      "marginDailyYi": 53.3931,
+      "foreignCumulativeYi": -649.2934
     },
     {
       "date": "2026-02-25",
@@ -39565,7 +39761,10 @@
       "marketTurnoverYiTwd": 10205.708701,
       "dayTradeTurnoverYiTwd": 3670.853303,
       "dayTradeTurnoverSharePct": 35.9686,
-      "marginMaintenanceExEtf": 174.6
+      "marginMaintenanceExEtf": 174.6,
+      "foreignNetYi": 411.4817,
+      "marginDailyYi": 56.3177,
+      "foreignCumulativeYi": -237.8117
     },
     {
       "date": "2026-02-26",
@@ -39582,7 +39781,10 @@
       "marketTurnoverYiTwd": 12078.367225,
       "dayTradeTurnoverYiTwd": 3771.072959,
       "dayTradeTurnoverSharePct": 31.2217,
-      "marginMaintenanceExEtf": 175.64
+      "marginMaintenanceExEtf": 175.64,
+      "foreignNetYi": -105.6392,
+      "marginDailyYi": 67.3421,
+      "foreignCumulativeYi": -343.4509
     },
     {
       "date": "2026-02-27",
@@ -39619,7 +39821,10 @@
       "marketTurnoverYiTwd": 10140.40138,
       "dayTradeTurnoverYiTwd": 3586.715344,
       "dayTradeTurnoverSharePct": 35.3705,
-      "marginMaintenanceExEtf": 174.78
+      "marginMaintenanceExEtf": 174.78,
+      "foreignNetYi": -389.8868,
+      "marginDailyYi": 17.618,
+      "foreignCumulativeYi": -733.3377
     },
     {
       "date": "2026-03-03",
@@ -39636,7 +39841,10 @@
       "marketTurnoverYiTwd": 11132.333191,
       "dayTradeTurnoverYiTwd": 4008.7798,
       "dayTradeTurnoverSharePct": 36.0102,
-      "marginMaintenanceExEtf": 167.67
+      "marginMaintenanceExEtf": 167.67,
+      "foreignNetYi": -947.0813,
+      "marginDailyYi": -71.648,
+      "foreignCumulativeYi": -1680.419
     },
     {
       "date": "2026-03-04",
@@ -39653,7 +39861,10 @@
       "marketTurnoverYiTwd": 10993.385758,
       "dayTradeTurnoverYiTwd": 3634.823547,
       "dayTradeTurnoverSharePct": 33.0637,
-      "marginMaintenanceExEtf": 157.81
+      "marginMaintenanceExEtf": 157.81,
+      "foreignNetYi": -966.1504,
+      "marginDailyYi": -77.4171,
+      "foreignCumulativeYi": -2646.5694
     },
     {
       "date": "2026-03-05",
@@ -39670,7 +39881,10 @@
       "marketTurnoverYiTwd": 7935.456023,
       "dayTradeTurnoverYiTwd": 2985.905651,
       "dayTradeTurnoverSharePct": 37.6274,
-      "marginMaintenanceExEtf": 163.57
+      "marginMaintenanceExEtf": 163.57,
+      "foreignNetYi": -514.9512,
+      "marginDailyYi": 25.5023,
+      "foreignCumulativeYi": -3161.5206
     },
     {
       "date": "2026-03-06",
@@ -39687,7 +39901,10 @@
       "marketTurnoverYiTwd": 6554.729345,
       "dayTradeTurnoverYiTwd": 2582.492019,
       "dayTradeTurnoverSharePct": 39.3989,
-      "marginMaintenanceExEtf": 162.84
+      "marginMaintenanceExEtf": 162.84,
+      "foreignNetYi": -352.3649,
+      "marginDailyYi": 35.1702,
+      "foreignCumulativeYi": -3513.8855
     },
     {
       "date": "2026-03-07",
@@ -39712,7 +39929,10 @@
       "marketTurnoverYiTwd": 8683.047379,
       "dayTradeTurnoverYiTwd": 2580.915622,
       "dayTradeTurnoverSharePct": 29.7236,
-      "marginMaintenanceExEtf": 153.06
+      "marginMaintenanceExEtf": 153.06,
+      "foreignNetYi": -1208.1716,
+      "marginDailyYi": -107.2311,
+      "foreignCumulativeYi": -4722.0571
     },
     {
       "date": "2026-03-10",
@@ -39729,7 +39949,10 @@
       "marketTurnoverYiTwd": 7282.25719,
       "dayTradeTurnoverYiTwd": 2881.690628,
       "dayTradeTurnoverSharePct": 39.5714,
-      "marginMaintenanceExEtf": 157.31
+      "marginMaintenanceExEtf": 157.31,
+      "foreignNetYi": -250.8598,
+      "marginDailyYi": -37.2413,
+      "foreignCumulativeYi": -4972.9169
     },
     {
       "date": "2026-03-11",
@@ -39746,7 +39969,10 @@
       "marketTurnoverYiTwd": 6934.358342,
       "dayTradeTurnoverYiTwd": 2319.031771,
       "dayTradeTurnoverSharePct": 33.4426,
-      "marginMaintenanceExEtf": 165.54
+      "marginMaintenanceExEtf": 165.54,
+      "foreignNetYi": 371.8095,
+      "marginDailyYi": 79.1168,
+      "foreignCumulativeYi": -4601.1074
     },
     {
       "date": "2026-03-12",
@@ -39763,7 +39989,10 @@
       "marketTurnoverYiTwd": 7840.073845,
       "dayTradeTurnoverYiTwd": 3140.970042,
       "dayTradeTurnoverSharePct": 40.063,
-      "marginMaintenanceExEtf": 163.96
+      "marginMaintenanceExEtf": 163.96,
+      "foreignNetYi": -711.2759,
+      "marginDailyYi": 32.1904,
+      "foreignCumulativeYi": -5312.3833
     },
     {
       "date": "2026-03-13",
@@ -39780,7 +40009,10 @@
       "marketTurnoverYiTwd": 7526.826719,
       "dayTradeTurnoverYiTwd": 3012.098382,
       "dayTradeTurnoverSharePct": 40.0182,
-      "marginMaintenanceExEtf": 164.76
+      "marginMaintenanceExEtf": 164.76,
+      "foreignNetYi": -580.173,
+      "marginDailyYi": 60.7977,
+      "foreignCumulativeYi": -5892.5563
     },
     {
       "date": "2026-03-14",
@@ -39805,7 +40037,10 @@
       "marketTurnoverYiTwd": 7554.203483,
       "dayTradeTurnoverYiTwd": 2947.140888,
       "dayTradeTurnoverSharePct": 39.0133,
-      "marginMaintenanceExEtf": 166.4
+      "marginMaintenanceExEtf": 166.4,
+      "foreignNetYi": -438.2544,
+      "marginDailyYi": 68.3733,
+      "foreignCumulativeYi": -6330.8107
     },
     {
       "date": "2026-03-17",
@@ -39822,7 +40057,10 @@
       "marketTurnoverYiTwd": 8461.765349,
       "dayTradeTurnoverYiTwd": 3302.147671,
       "dayTradeTurnoverSharePct": 39.0243,
-      "marginMaintenanceExEtf": 168.98
+      "marginMaintenanceExEtf": 168.98,
+      "foreignNetYi": 4.7238,
+      "marginDailyYi": 11.8295,
+      "foreignCumulativeYi": -6326.0869
     },
     {
       "date": "2026-03-18",
@@ -39839,7 +40077,10 @@
       "marketTurnoverYiTwd": 9241.011948,
       "dayTradeTurnoverYiTwd": 3680.383693,
       "dayTradeTurnoverSharePct": 39.8266,
-      "marginMaintenanceExEtf": 171.61
+      "marginMaintenanceExEtf": 171.61,
+      "foreignNetYi": 90.2075,
+      "marginDailyYi": 63.0505,
+      "foreignCumulativeYi": -6235.8794
     },
     {
       "date": "2026-03-19",
@@ -39856,7 +40097,10 @@
       "marketTurnoverYiTwd": 8939.187562,
       "dayTradeTurnoverYiTwd": 3292.368409,
       "dayTradeTurnoverSharePct": 36.8307,
-      "marginMaintenanceExEtf": 169.79
+      "marginMaintenanceExEtf": 169.79,
+      "foreignNetYi": -909.4763,
+      "marginDailyYi": 23.2391,
+      "foreignCumulativeYi": -7145.3557
     },
     {
       "date": "2026-03-20",
@@ -39873,7 +40117,10 @@
       "marketTurnoverYiTwd": 10042.34873,
       "dayTradeTurnoverYiTwd": 3654.158371,
       "dayTradeTurnoverSharePct": 36.3875,
-      "marginMaintenanceExEtf": 167.4
+      "marginMaintenanceExEtf": 167.4,
+      "foreignNetYi": -403.1104,
+      "marginDailyYi": -35.0486,
+      "foreignCumulativeYi": -7548.4661
     },
     {
       "date": "2026-03-21",
@@ -39898,7 +40145,10 @@
       "marketTurnoverYiTwd": 7125.781173,
       "dayTradeTurnoverYiTwd": 2310.726499,
       "dayTradeTurnoverSharePct": 32.4277,
-      "marginMaintenanceExEtf": 160.41
+      "marginMaintenanceExEtf": 160.41,
+      "foreignNetYi": -839.226,
+      "marginDailyYi": -52.5727,
+      "foreignCumulativeYi": -8387.6921
     },
     {
       "date": "2026-03-24",
@@ -39915,7 +40165,10 @@
       "marketTurnoverYiTwd": 6900.910655,
       "dayTradeTurnoverYiTwd": 2621.050592,
       "dayTradeTurnoverSharePct": 37.9812,
-      "marginMaintenanceExEtf": 157.66
+      "marginMaintenanceExEtf": 157.66,
+      "foreignNetYi": -123.0574,
+      "marginDailyYi": -32.3113,
+      "foreignCumulativeYi": -8510.7495
     },
     {
       "date": "2026-03-25",
@@ -39932,7 +40185,10 @@
       "marketTurnoverYiTwd": 6523.407652,
       "dayTradeTurnoverYiTwd": 2092.255865,
       "dayTradeTurnoverSharePct": 32.0731,
-      "marginMaintenanceExEtf": 163.51
+      "marginMaintenanceExEtf": 163.51,
+      "foreignNetYi": 374.7476,
+      "marginDailyYi": 53.964,
+      "foreignCumulativeYi": -8136.0019
     },
     {
       "date": "2026-03-26",
@@ -39949,7 +40205,10 @@
       "marketTurnoverYiTwd": 7665.991196,
       "dayTradeTurnoverYiTwd": 2885.296233,
       "dayTradeTurnoverSharePct": 37.6376,
-      "marginMaintenanceExEtf": 161.69
+      "marginMaintenanceExEtf": 161.69,
+      "foreignNetYi": -79.2035,
+      "marginDailyYi": -43.6241,
+      "foreignCumulativeYi": -8215.2054
     },
     {
       "date": "2026-03-27",
@@ -39966,7 +40225,10 @@
       "marketTurnoverYiTwd": 6582.73529,
       "dayTradeTurnoverYiTwd": 2507.514732,
       "dayTradeTurnoverSharePct": 38.0923,
-      "marginMaintenanceExEtf": 161.89
+      "marginMaintenanceExEtf": 161.89,
+      "foreignNetYi": -363.5555,
+      "marginDailyYi": 25.863,
+      "foreignCumulativeYi": -8578.7609
     },
     {
       "date": "2026-03-28",
@@ -39991,7 +40253,10 @@
       "marketTurnoverYiTwd": 6781.521919,
       "dayTradeTurnoverYiTwd": 2519.058838,
       "dayTradeTurnoverSharePct": 37.1459,
-      "marginMaintenanceExEtf": 159.04
+      "marginMaintenanceExEtf": 159.04,
+      "foreignNetYi": -639.3672,
+      "marginDailyYi": -10.1412,
+      "foreignCumulativeYi": -9218.1281
     },
     {
       "date": "2026-03-31",
@@ -40008,7 +40273,10 @@
       "marketTurnoverYiTwd": 8824.539696,
       "dayTradeTurnoverYiTwd": 2985.958383,
       "dayTradeTurnoverSharePct": 33.837,
-      "marginMaintenanceExEtf": 151.62
+      "marginMaintenanceExEtf": 151.62,
+      "foreignNetYi": -807.4551,
+      "marginDailyYi": -109.8378,
+      "foreignCumulativeYi": -10025.5832
     },
     {
       "date": "2026-04-01",
@@ -40025,7 +40293,10 @@
       "marketTurnoverYiTwd": 6526.089707,
       "dayTradeTurnoverYiTwd": 2305.07764,
       "dayTradeTurnoverSharePct": 35.321,
-      "marginMaintenanceExEtf": 158.7
+      "marginMaintenanceExEtf": 158.7,
+      "foreignNetYi": 232.5132,
+      "marginDailyYi": 31.8304,
+      "foreignCumulativeYi": -9793.07
     },
     {
       "date": "2026-04-02",
@@ -40042,7 +40313,10 @@
       "marketTurnoverYiTwd": 7026.087051,
       "dayTradeTurnoverYiTwd": 3009.767408,
       "dayTradeTurnoverSharePct": 42.837,
-      "marginMaintenanceExEtf": 156.26
+      "marginMaintenanceExEtf": 156.26,
+      "foreignNetYi": -386.9556,
+      "marginDailyYi": -7.0723,
+      "foreignCumulativeYi": -10180.0256
     },
     {
       "date": "2026-04-03",
@@ -40086,7 +40360,10 @@
       "marketTurnoverYiTwd": 5846.922544,
       "dayTradeTurnoverYiTwd": 2264.757504,
       "dayTradeTurnoverSharePct": 38.7342,
-      "marginMaintenanceExEtf": 159.47
+      "marginMaintenanceExEtf": 159.47,
+      "foreignNetYi": 100.9661,
+      "marginDailyYi": 35.343,
+      "foreignCumulativeYi": -10079.0595
     },
     {
       "date": "2026-04-08",
@@ -40103,7 +40380,10 @@
       "marketTurnoverYiTwd": 8941.0045,
       "dayTradeTurnoverYiTwd": 2886.069652,
       "dayTradeTurnoverSharePct": 32.279,
-      "marginMaintenanceExEtf": 167.69
+      "marginMaintenanceExEtf": 167.69,
+      "foreignNetYi": 1177.7262,
+      "marginDailyYi": 70.8646,
+      "foreignCumulativeYi": -8901.3333
     },
     {
       "date": "2026-04-09",
@@ -40120,7 +40400,10 @@
       "marketTurnoverYiTwd": 8722.759546,
       "dayTradeTurnoverYiTwd": 3272.95183,
       "dayTradeTurnoverSharePct": 37.522,
-      "marginMaintenanceExEtf": 167.51
+      "marginMaintenanceExEtf": 167.51,
+      "foreignNetYi": 317.7963,
+      "marginDailyYi": 11.8429,
+      "foreignCumulativeYi": -8583.537
     },
     {
       "date": "2026-04-10",
@@ -40136,7 +40419,10 @@
       "marketTurnoverYiTwd": 8718.081495,
       "dayTradeTurnoverYiTwd": 3404.839174,
       "dayTradeTurnoverSharePct": 39.0549,
-      "marginMaintenanceExEtf": 169.81
+      "marginMaintenanceExEtf": 169.81,
+      "foreignNetYi": 288.0827,
+      "marginDailyYi": 47.2256,
+      "foreignCumulativeYi": -8295.4543
     },
     {
       "date": "2026-04-11",
@@ -40161,7 +40447,10 @@
       "marketTurnoverYiTwd": 8057.014575,
       "dayTradeTurnoverYiTwd": 2870.737227,
       "dayTradeTurnoverSharePct": 35.6303,
-      "marginMaintenanceExEtf": 171.03
+      "marginMaintenanceExEtf": 171.03,
+      "foreignNetYi": -161.7866,
+      "marginDailyYi": 74.106,
+      "foreignCumulativeYi": -8457.2409
     },
     {
       "date": "2026-04-14",
@@ -40178,7 +40467,10 @@
       "marketTurnoverYiTwd": 10172.775568,
       "dayTradeTurnoverYiTwd": 3604.796763,
       "dayTradeTurnoverSharePct": 35.4357,
-      "marginMaintenanceExEtf": 172.44
+      "marginMaintenanceExEtf": 172.44,
+      "foreignNetYi": 689.079,
+      "marginDailyYi": 63.0376,
+      "foreignCumulativeYi": -7768.1619
     },
     {
       "date": "2026-04-15",
@@ -40195,7 +40487,10 @@
       "marketTurnoverYiTwd": 10259.056096,
       "dayTradeTurnoverYiTwd": 3821.846096,
       "dayTradeTurnoverSharePct": 37.2534,
-      "marginMaintenanceExEtf": 172.35
+      "marginMaintenanceExEtf": 172.35,
+      "foreignNetYi": 553.5019,
+      "marginDailyYi": 12.6561,
+      "foreignCumulativeYi": -7214.66
     },
     {
       "date": "2026-04-16",
@@ -40212,7 +40507,10 @@
       "marketTurnoverYiTwd": 9273.149004,
       "dayTradeTurnoverYiTwd": 3497.876761,
       "dayTradeTurnoverSharePct": 37.7205,
-      "marginMaintenanceExEtf": 174.52
+      "marginMaintenanceExEtf": 174.52,
+      "foreignNetYi": 440.0751,
+      "marginDailyYi": 61.5497,
+      "foreignCumulativeYi": -6774.5849
     },
     {
       "date": "2026-04-17",
@@ -40228,7 +40526,10 @@
       "marketTurnoverYiTwd": 9855.257334,
       "dayTradeTurnoverYiTwd": 3463.650768,
       "dayTradeTurnoverSharePct": 35.1452,
-      "marginMaintenanceExEtf": 174.88
+      "marginMaintenanceExEtf": 174.88,
+      "foreignNetYi": -20.3954,
+      "marginDailyYi": 47.1161,
+      "foreignCumulativeYi": -6794.9803
     },
     {
       "date": "2026-04-18",
@@ -40253,7 +40554,10 @@
       "marketTurnoverYiTwd": 9609.639669,
       "dayTradeTurnoverYiTwd": 3284.018804,
       "dayTradeTurnoverSharePct": 34.1742,
-      "marginMaintenanceExEtf": 176.46
+      "marginMaintenanceExEtf": 176.46,
+      "foreignNetYi": 43.4638,
+      "marginDailyYi": 27.0987,
+      "foreignCumulativeYi": -6751.5165
     },
     {
       "date": "2026-04-21",
@@ -40270,7 +40574,10 @@
       "marketTurnoverYiTwd": 10217.047054,
       "dayTradeTurnoverYiTwd": 3742.962099,
       "dayTradeTurnoverSharePct": 36.6345,
-      "marginMaintenanceExEtf": 179.05
+      "marginMaintenanceExEtf": 179.05,
+      "foreignNetYi": 601.5373,
+      "marginDailyYi": 33.3394,
+      "foreignCumulativeYi": -6149.9792
     },
     {
       "date": "2026-04-22",
@@ -40287,7 +40594,10 @@
       "marketTurnoverYiTwd": 9798.760441,
       "dayTradeTurnoverYiTwd": 3453.765582,
       "dayTradeTurnoverSharePct": 35.247,
-      "marginMaintenanceExEtf": 180.1
+      "marginMaintenanceExEtf": 180.1,
+      "foreignNetYi": 116.094,
+      "marginDailyYi": 53.8135,
+      "foreignCumulativeYi": -6033.8852
     },
     {
       "date": "2026-04-23",
@@ -40304,7 +40614,10 @@
       "marketTurnoverYiTwd": 14601.030036,
       "dayTradeTurnoverYiTwd": 5864.702659,
       "dayTradeTurnoverSharePct": 40.1664,
-      "marginMaintenanceExEtf": 173.25
+      "marginMaintenanceExEtf": 173.25,
+      "foreignNetYi": -27.5499,
+      "marginDailyYi": -77.1822,
+      "foreignCumulativeYi": -6061.4351
     },
     {
       "date": "2026-04-24",
@@ -40320,7 +40633,10 @@
       "marketTurnoverYiTwd": 10811.538275,
       "dayTradeTurnoverYiTwd": 4092.356016,
       "dayTradeTurnoverSharePct": 37.8517,
-      "marginMaintenanceExEtf": 174.73
+      "marginMaintenanceExEtf": 174.73,
+      "foreignNetYi": 439.0787,
+      "marginDailyYi": 100.8136,
+      "foreignCumulativeYi": -5622.3564
     },
     {
       "date": "2026-04-25",
@@ -40345,7 +40661,10 @@
       "marketTurnoverYiTwd": 12480.276235,
       "dayTradeTurnoverYiTwd": 4529.251062,
       "dayTradeTurnoverSharePct": 36.2913,
-      "marginMaintenanceExEtf": 174.49
+      "marginMaintenanceExEtf": 174.49,
+      "foreignNetYi": -511.9616,
+      "marginDailyYi": 111.3731,
+      "foreignCumulativeYi": -6134.318
     },
     {
       "date": "2026-04-28",
@@ -40362,7 +40681,10 @@
       "marketTurnoverYiTwd": 10574.881557,
       "dayTradeTurnoverYiTwd": 4105.063334,
       "dayTradeTurnoverSharePct": 38.819,
-      "marginMaintenanceExEtf": 176.27
+      "marginMaintenanceExEtf": 176.27,
+      "foreignNetYi": -392.9803,
+      "marginDailyYi": 50.6536,
+      "foreignCumulativeYi": -6527.2983
     },
     {
       "date": "2026-04-29",
@@ -40379,7 +40701,10 @@
       "marketTurnoverYiTwd": 9152.726955,
       "dayTradeTurnoverYiTwd": 3656.062586,
       "dayTradeTurnoverSharePct": 39.9451,
-      "marginMaintenanceExEtf": 175.43
+      "marginMaintenanceExEtf": 175.43,
+      "foreignNetYi": -481.4745,
+      "marginDailyYi": 38.5101,
+      "foreignCumulativeYi": -7008.7728
     },
     {
       "date": "2026-04-30",
@@ -40396,7 +40721,10 @@
       "marketTurnoverYiTwd": 10749.018915,
       "dayTradeTurnoverYiTwd": 4049.561048,
       "dayTradeTurnoverSharePct": 37.6738,
-      "marginMaintenanceExEtf": 175.17
+      "marginMaintenanceExEtf": 175.17,
+      "foreignNetYi": -535.6173,
+      "marginDailyYi": -0.7023,
+      "foreignCumulativeYi": -7544.3901
     },
     {
       "date": "2026-05-01",
@@ -40432,7 +40760,10 @@
       "marketTurnoverYiTwd": 10513.156436,
       "dayTradeTurnoverYiTwd": 3752.242739,
       "dayTradeTurnoverSharePct": 35.6909,
-      "marginMaintenanceExEtf": 180.38
+      "marginMaintenanceExEtf": 180.38,
+      "foreignNetYi": 669.757,
+      "marginDailyYi": 94.8799,
+      "foreignCumulativeYi": -6874.6331
     },
     {
       "date": "2026-05-05",
@@ -40449,7 +40780,10 @@
       "marketTurnoverYiTwd": 10493.347228,
       "dayTradeTurnoverYiTwd": 3737.486271,
       "dayTradeTurnoverSharePct": 35.6177,
-      "marginMaintenanceExEtf": 181.61
+      "marginMaintenanceExEtf": 181.61,
+      "foreignNetYi": 39.9027,
+      "marginDailyYi": 47.5566,
+      "foreignCumulativeYi": -6834.7304
     },
     {
       "date": "2026-05-06",
@@ -40466,7 +40800,10 @@
       "marketTurnoverYiTwd": 15240.125577,
       "dayTradeTurnoverYiTwd": 5877.970764,
       "dayTradeTurnoverSharePct": 38.569,
-      "marginMaintenanceExEtf": 180.23
+      "marginMaintenanceExEtf": 180.23,
+      "foreignNetYi": 751.0491,
+      "marginDailyYi": 5.0318,
+      "foreignCumulativeYi": -6083.6813
     },
     {
       "date": "2026-05-07",
@@ -40483,7 +40820,10 @@
       "marketTurnoverYiTwd": 12469.02674,
       "dayTradeTurnoverYiTwd": 4596.109819,
       "dayTradeTurnoverSharePct": 36.8602,
-      "marginMaintenanceExEtf": 181.84
+      "marginMaintenanceExEtf": 181.84,
+      "foreignNetYi": 464.1153,
+      "marginDailyYi": 70.157,
+      "foreignCumulativeYi": -5619.566
     },
     {
       "date": "2026-05-08",
@@ -40499,7 +40839,10 @@
       "marketTurnoverYiTwd": 13053.903282,
       "dayTradeTurnoverYiTwd": 4881.133589,
       "dayTradeTurnoverSharePct": 37.3921,
-      "marginMaintenanceExEtf": 177.31
+      "marginMaintenanceExEtf": 177.31,
+      "foreignNetYi": -120.8454,
+      "marginDailyYi": -54.7941,
+      "foreignCumulativeYi": -5740.4114
     },
     {
       "date": "2026-05-09",
@@ -40524,7 +40867,10 @@
       "marketTurnoverYiTwd": 11704.875392,
       "dayTradeTurnoverYiTwd": 3804.834225,
       "dayTradeTurnoverSharePct": 32.5064,
-      "marginMaintenanceExEtf": 181.64
+      "marginMaintenanceExEtf": 181.64,
+      "foreignNetYi": -109.835,
+      "marginDailyYi": 74.0799,
+      "foreignCumulativeYi": -5850.2464
     },
     {
       "date": "2026-05-12",
@@ -40541,7 +40887,10 @@
       "marketTurnoverYiTwd": 14462.285037,
       "dayTradeTurnoverYiTwd": 5241.507737,
       "dayTradeTurnoverSharePct": 36.2426,
-      "marginMaintenanceExEtf": 181.15
+      "marginMaintenanceExEtf": 181.15,
+      "foreignNetYi": -304.9378,
+      "marginDailyYi": 66.022,
+      "foreignCumulativeYi": -6155.1842
     },
     {
       "date": "2026-05-13",
@@ -40558,7 +40907,10 @@
       "marketTurnoverYiTwd": 12657.92084,
       "dayTradeTurnoverYiTwd": 4680.172398,
       "dayTradeTurnoverSharePct": 36.9743,
-      "marginMaintenanceExEtf": 177.17
+      "marginMaintenanceExEtf": 177.17,
+      "foreignNetYi": -434.2947,
+      "marginDailyYi": 32.2319,
+      "foreignCumulativeYi": -6589.4789
     },
     {
       "date": "2026-05-14",
@@ -40575,7 +40927,10 @@
       "marketTurnoverYiTwd": 12753.847852,
       "dayTradeTurnoverYiTwd": 5076.708768,
       "dayTradeTurnoverSharePct": 39.8053,
-      "marginMaintenanceExEtf": 176.96
+      "marginMaintenanceExEtf": 176.96,
+      "foreignNetYi": 45.4262,
+      "marginDailyYi": 47.1681,
+      "foreignCumulativeYi": -6544.0527
     },
     {
       "date": "2026-05-15",
@@ -40591,7 +40946,10 @@
       "marketTurnoverYiTwd": 13748.654922,
       "dayTradeTurnoverYiTwd": 5332.116855,
       "dayTradeTurnoverSharePct": 38.7828,
-      "marginMaintenanceExEtf": 171.61
+      "marginMaintenanceExEtf": 171.61,
+      "foreignNetYi": -104.2659,
+      "marginDailyYi": -63.3775,
+      "foreignCumulativeYi": -6648.3186
     },
     {
       "date": "2026-05-16",
@@ -40616,7 +40974,10 @@
       "marketTurnoverYiTwd": 10420.466459,
       "dayTradeTurnoverYiTwd": 4073.545328,
       "dayTradeTurnoverSharePct": 39.0918,
-      "marginMaintenanceExEtf": 171.7
+      "marginMaintenanceExEtf": 171.7,
+      "foreignNetYi": -452.4096,
+      "marginDailyYi": 88.2247,
+      "foreignCumulativeYi": -7100.7282
     },
     {
       "date": "2026-05-19",
@@ -40633,7 +40994,10 @@
       "marketTurnoverYiTwd": 11512.194138,
       "dayTradeTurnoverYiTwd": 4306.320794,
       "dayTradeTurnoverSharePct": 37.4066,
-      "marginMaintenanceExEtf": 166.93
+      "marginMaintenanceExEtf": 166.93,
+      "foreignNetYi": -632.3495,
+      "marginDailyYi": -47.3252,
+      "foreignCumulativeYi": -7733.0777
     },
     {
       "date": "2026-05-20",
@@ -40650,7 +41014,10 @@
       "marketTurnoverYiTwd": 10275.527006,
       "dayTradeTurnoverYiTwd": 4173.17226,
       "dayTradeTurnoverSharePct": 40.6127,
-      "marginMaintenanceExEtf": 166.48
+      "marginMaintenanceExEtf": 166.48,
+      "foreignNetYi": -466.2062,
+      "marginDailyYi": 51.9227,
+      "foreignCumulativeYi": -8199.2839
     },
     {
       "date": "2026-05-21",
@@ -40667,7 +41034,10 @@
       "marketTurnoverYiTwd": 10476.237924,
       "dayTradeTurnoverYiTwd": 3828.001847,
       "dayTradeTurnoverSharePct": 36.5399,
-      "marginMaintenanceExEtf": 173.76
+      "marginMaintenanceExEtf": 173.76,
+      "foreignNetYi": 603.4068,
+      "marginDailyYi": 90.7499,
+      "foreignCumulativeYi": -7595.8771
     },
     {
       "date": "2026-05-22",
@@ -40683,7 +41053,10 @@
       "marketTurnoverYiTwd": 12368.888209,
       "dayTradeTurnoverYiTwd": 4615.394996,
       "dayTradeTurnoverSharePct": 37.3146,
-      "marginMaintenanceExEtf": 179.8
+      "marginMaintenanceExEtf": 179.8,
+      "foreignNetYi": 761.3653,
+      "marginDailyYi": 111.3483,
+      "foreignCumulativeYi": -6834.5118
     },
     {
       "date": "2026-05-23",
@@ -40703,7 +41076,10 @@
       "marketTurnoverYiTwd": 13527.10348,
       "dayTradeTurnoverYiTwd": 4913.405907,
       "dayTradeTurnoverSharePct": 36.3227,
-      "marginMaintenanceExEtf": 184.84
+      "marginMaintenanceExEtf": 184.84,
+      "foreignNetYi": 494.5916,
+      "marginDailyYi": 81.8622,
+      "foreignCumulativeYi": -6339.9202
     },
     {
       "date": "2026-05-26",
@@ -40720,7 +41096,10 @@
       "marketTurnoverYiTwd": 15497.10749,
       "dayTradeTurnoverYiTwd": 6068.924184,
       "dayTradeTurnoverSharePct": 39.1617,
-      "marginMaintenanceExEtf": 183.9
+      "marginMaintenanceExEtf": 183.9,
+      "foreignNetYi": 354.364,
+      "marginDailyYi": 41.1655,
+      "foreignCumulativeYi": -5985.5562
     },
     {
       "date": "2026-05-27",
@@ -40737,7 +41116,10 @@
       "marketTurnoverYiTwd": 16300.775808,
       "dayTradeTurnoverYiTwd": 6872.999894,
       "dayTradeTurnoverSharePct": 42.1636,
-      "marginMaintenanceExEtf": 182.44
+      "marginMaintenanceExEtf": 182.44,
+      "foreignNetYi": 381.279,
+      "marginDailyYi": 16.7645,
+      "foreignCumulativeYi": -5604.2772
     },
     {
       "date": "2026-05-28",
@@ -40754,7 +41136,10 @@
       "marketTurnoverYiTwd": 16707.188741,
       "dayTradeTurnoverYiTwd": 6658.515814,
       "dayTradeTurnoverSharePct": 39.8542,
-      "marginMaintenanceExEtf": 176.66
+      "marginMaintenanceExEtf": 176.66,
+      "foreignNetYi": -381.3668,
+      "marginDailyYi": -12.3965,
+      "foreignCumulativeYi": -5985.644
     },
     {
       "date": "2026-05-29",
@@ -40770,7 +41155,10 @@
       "marketTurnoverYiTwd": 19169.524459,
       "dayTradeTurnoverYiTwd": 5891.857317,
       "dayTradeTurnoverSharePct": 30.7355,
-      "marginMaintenanceExEtf": 180.37
+      "marginMaintenanceExEtf": 180.37,
+      "foreignNetYi": 801.4546,
+      "marginDailyYi": 213.3388,
+      "foreignCumulativeYi": -5184.1894
     },
     {
       "date": "2026-05-30",
@@ -40795,7 +41183,10 @@
       "marketTurnoverYiTwd": 16111.339897,
       "dayTradeTurnoverYiTwd": 5326.729902,
       "dayTradeTurnoverSharePct": 33.062,
-      "marginMaintenanceExEtf": 183.23
+      "marginMaintenanceExEtf": 183.23,
+      "foreignNetYi": 368.1737,
+      "marginDailyYi": 94.188,
+      "foreignCumulativeYi": -4816.0157
     },
     {
       "date": "2026-06-02",
@@ -40812,7 +41203,10 @@
       "marketTurnoverYiTwd": 16963.980952,
       "dayTradeTurnoverYiTwd": 6419.87496,
       "dayTradeTurnoverSharePct": 37.8442,
-      "marginMaintenanceExEtf": 181.06
+      "marginMaintenanceExEtf": 181.06,
+      "foreignNetYi": 108.4295,
+      "marginDailyYi": 11.9169,
+      "foreignCumulativeYi": -4707.5862
     },
     {
       "date": "2026-06-03",
@@ -40829,7 +41223,10 @@
       "marketTurnoverYiTwd": 15175.356638,
       "dayTradeTurnoverYiTwd": 5615.797429,
       "dayTradeTurnoverSharePct": 37.006,
-      "marginMaintenanceExEtf": 181.33
+      "marginMaintenanceExEtf": 181.33,
+      "foreignNetYi": 433.9634,
+      "marginDailyYi": 14.264,
+      "foreignCumulativeYi": -4273.6228
     },
     {
       "date": "2026-06-04",
@@ -40846,7 +41243,10 @@
       "marketTurnoverYiTwd": 13255.977436,
       "dayTradeTurnoverYiTwd": 4511.636254,
       "dayTradeTurnoverSharePct": 34.0347,
-      "marginMaintenanceExEtf": 175.96
+      "marginMaintenanceExEtf": 175.96,
+      "foreignNetYi": -756.8543,
+      "marginDailyYi": 42.4076,
+      "foreignCumulativeYi": -5030.4771
     },
     {
       "date": "2026-06-05",
@@ -40862,7 +41262,10 @@
       "marketTurnoverYiTwd": 13198.219265,
       "dayTradeTurnoverYiTwd": 4648.560728,
       "dayTradeTurnoverSharePct": 35.2211,
-      "marginMaintenanceExEtf": 172.17
+      "marginMaintenanceExEtf": 172.17,
+      "foreignNetYi": -826.3116,
+      "marginDailyYi": -59.8622,
+      "foreignCumulativeYi": -5856.7887
     },
     {
       "date": "2026-06-06",
@@ -40887,7 +41290,10 @@
       "marketTurnoverYiTwd": 12165.746039,
       "dayTradeTurnoverYiTwd": 4069.175524,
       "dayTradeTurnoverSharePct": 33.4478,
-      "marginMaintenanceExEtf": 164.59
+      "marginMaintenanceExEtf": 164.59,
+      "foreignNetYi": -938.5155,
+      "marginDailyYi": -156.3667,
+      "foreignCumulativeYi": -6795.3042
     },
     {
       "date": "2026-06-09",
@@ -40904,7 +41310,10 @@
       "marketTurnoverYiTwd": 12240.629878,
       "dayTradeTurnoverYiTwd": 4471.067276,
       "dayTradeTurnoverSharePct": 36.5264,
-      "marginMaintenanceExEtf": 171.32
+      "marginMaintenanceExEtf": 171.32,
+      "foreignNetYi": -917.3342,
+      "marginDailyYi": 128.647,
+      "foreignCumulativeYi": -7712.6384
     },
     {
       "date": "2026-06-10",
@@ -40921,7 +41330,10 @@
       "marketTurnoverYiTwd": 14240.695673,
       "dayTradeTurnoverYiTwd": 5110.458294,
       "dayTradeTurnoverSharePct": 35.8863,
-      "marginMaintenanceExEtf": 162.24
+      "marginMaintenanceExEtf": 162.24,
+      "foreignNetYi": -935.7371,
+      "marginDailyYi": -170.6527,
+      "foreignCumulativeYi": -8648.3755
     },
     {
       "date": "2026-06-11",
@@ -40938,7 +41350,10 @@
       "marketTurnoverYiTwd": 13385.166911,
       "dayTradeTurnoverYiTwd": 5449.789639,
       "dayTradeTurnoverSharePct": 40.7151,
-      "marginMaintenanceExEtf": 162.75
+      "marginMaintenanceExEtf": 162.75,
+      "foreignNetYi": -357.7928,
+      "marginDailyYi": 23.6451,
+      "foreignCumulativeYi": -9006.1683
     },
     {
       "date": "2026-06-12",
@@ -40954,7 +41369,10 @@
       "marketTurnoverYiTwd": 11691.869583,
       "dayTradeTurnoverYiTwd": 4619.748384,
       "dayTradeTurnoverSharePct": 39.5125,
-      "marginMaintenanceExEtf": 166.82
+      "marginMaintenanceExEtf": 166.82,
+      "foreignNetYi": 286.9027,
+      "marginDailyYi": 78.5097,
+      "foreignCumulativeYi": -8719.2656
     },
     {
       "date": "2026-06-13",
@@ -40979,7 +41397,10 @@
       "marketTurnoverYiTwd": 11157.443512,
       "dayTradeTurnoverYiTwd": 3869.490122,
       "dayTradeTurnoverSharePct": 34.6808,
-      "marginMaintenanceExEtf": 172.81
+      "marginMaintenanceExEtf": 172.81,
+      "foreignNetYi": 465.3192,
+      "marginDailyYi": 148.7914,
+      "foreignCumulativeYi": -8253.9464
     },
     {
       "date": "2026-06-16",
@@ -40996,7 +41417,10 @@
       "marketTurnoverYiTwd": 12621.855181,
       "dayTradeTurnoverYiTwd": 4833.445188,
       "dayTradeTurnoverSharePct": 38.2943,
-      "marginMaintenanceExEtf": 172.74
+      "marginMaintenanceExEtf": 172.74,
+      "foreignNetYi": 407.982,
+      "marginDailyYi": -5.972,
+      "foreignCumulativeYi": -7845.9644
     },
     {
       "date": "2026-06-17",
@@ -41013,7 +41437,10 @@
       "marketTurnoverYiTwd": 11545.959515,
       "dayTradeTurnoverYiTwd": 4588.139451,
       "dayTradeTurnoverSharePct": 39.7381,
-      "marginMaintenanceExEtf": 174.77
+      "marginMaintenanceExEtf": 174.77,
+      "foreignNetYi": -206.8374,
+      "marginDailyYi": 126.0429,
+      "foreignCumulativeYi": -8052.8018
     },
     {
       "date": "2026-06-18",
@@ -41030,7 +41457,10 @@
       "marketTurnoverYiTwd": 16061.954023,
       "dayTradeTurnoverYiTwd": 6000.472974,
       "dayTradeTurnoverSharePct": 37.3583,
-      "marginMaintenanceExEtf": 178.37
+      "marginMaintenanceExEtf": 178.37,
+      "foreignNetYi": 211.4674,
+      "marginDailyYi": 82.8642,
+      "foreignCumulativeYi": -7841.3344
     },
     {
       "date": "2026-06-19",
@@ -41061,7 +41491,10 @@
       "marketTurnoverYiTwd": 15158.179598,
       "dayTradeTurnoverYiTwd": 4843.731441,
       "dayTradeTurnoverSharePct": 31.9546,
-      "marginMaintenanceExEtf": 181.16
+      "marginMaintenanceExEtf": 181.16,
+      "foreignNetYi": 684.5758,
+      "marginDailyYi": 119.955,
+      "foreignCumulativeYi": -7156.7586
     },
     {
       "date": "2026-06-23",
@@ -41078,7 +41511,10 @@
       "marketTurnoverYiTwd": 16723.553377,
       "dayTradeTurnoverYiTwd": 6301.411543,
       "dayTradeTurnoverSharePct": 37.6799,
-      "marginMaintenanceExEtf": 174.52
+      "marginMaintenanceExEtf": 174.52,
+      "foreignNetYi": -385.9235,
+      "marginDailyYi": -111.1285,
+      "foreignCumulativeYi": -7542.6821
     },
     {
       "date": "2026-06-24",
@@ -41095,7 +41531,10 @@
       "marketTurnoverYiTwd": 15390.462682,
       "dayTradeTurnoverYiTwd": 6010.312803,
       "dayTradeTurnoverSharePct": 39.0522,
-      "marginMaintenanceExEtf": 173.47
+      "marginMaintenanceExEtf": 173.47,
+      "foreignNetYi": -1774.0321,
+      "marginDailyYi": 135.2625,
+      "foreignCumulativeYi": -9316.7142
     },
     {
       "date": "2026-06-25",
@@ -41112,7 +41551,10 @@
       "marketTurnoverYiTwd": 13680.769016,
       "dayTradeTurnoverYiTwd": 5544.711982,
       "dayTradeTurnoverSharePct": 40.5292,
-      "marginMaintenanceExEtf": 174.1
+      "marginMaintenanceExEtf": 174.1,
+      "foreignNetYi": -405.1004,
+      "marginDailyYi": 35.4429,
+      "foreignCumulativeYi": -9721.8146
     },
     {
       "date": "2026-06-26",
@@ -41128,7 +41570,10 @@
       "marketTurnoverYiTwd": 16728.324884,
       "dayTradeTurnoverYiTwd": 6370.875411,
       "dayTradeTurnoverSharePct": 38.0844,
-      "marginMaintenanceExEtf": 164.07
+      "marginMaintenanceExEtf": 164.07,
+      "foreignNetYi": -1431.8922,
+      "marginDailyYi": -200.7468,
+      "foreignCumulativeYi": -11153.7068
     },
     {
       "date": "2026-06-27",
@@ -41153,7 +41598,10 @@
       "marketTurnoverYiTwd": 10454.39448,
       "dayTradeTurnoverYiTwd": 4316.95428,
       "dayTradeTurnoverSharePct": 41.2932,
-      "marginMaintenanceExEtf": 165.18
+      "marginMaintenanceExEtf": 165.18,
+      "foreignNetYi": -43.3621,
+      "marginDailyYi": 33.0317,
+      "foreignCumulativeYi": -11197.0689
     },
     {
       "date": "2026-06-30",
@@ -41170,7 +41618,10 @@
       "marketTurnoverYiTwd": 12660.62228,
       "dayTradeTurnoverYiTwd": 4465.621337,
       "dayTradeTurnoverSharePct": 35.2717,
-      "marginMaintenanceExEtf": 171.46
+      "marginMaintenanceExEtf": 171.46,
+      "foreignNetYi": -5.0873,
+      "marginDailyYi": 174.2252,
+      "foreignCumulativeYi": -11202.1562
     },
     {
       "date": "2026-07-01",
@@ -41187,7 +41638,10 @@
       "marketTurnoverYiTwd": 13678.177952,
       "dayTradeTurnoverYiTwd": 5175.488935,
       "dayTradeTurnoverSharePct": 37.8376,
-      "marginMaintenanceExEtf": 170.56
+      "marginMaintenanceExEtf": 170.56,
+      "foreignNetYi": 323.756,
+      "marginDailyYi": -21.498,
+      "foreignCumulativeYi": -10878.4002
     },
     {
       "date": "2026-07-02",
@@ -41204,7 +41658,10 @@
       "marketTurnoverYiTwd": 10835.834174,
       "dayTradeTurnoverYiTwd": 4015.374765,
       "dayTradeTurnoverSharePct": 37.0564,
-      "marginMaintenanceExEtf": 170.22
+      "marginMaintenanceExEtf": 170.22,
+      "foreignNetYi": -890.4651,
+      "marginDailyYi": 113.3488,
+      "foreignCumulativeYi": -11768.8653
     },
     {
       "date": "2026-07-03",
@@ -41215,7 +41672,10 @@
       "marketTurnoverYiTwd": 10780.281371,
       "dayTradeTurnoverYiTwd": 4078.037075,
       "dayTradeTurnoverSharePct": 37.8287,
-      "marginMaintenanceExEtf": 170.61
+      "marginMaintenanceExEtf": 170.61,
+      "foreignNetYi": -777.8261,
+      "marginDailyYi": 99.752,
+      "foreignCumulativeYi": -12546.6914
     },
     {
       "date": "2026-07-04",
@@ -41240,7 +41700,10 @@
       "marketTurnoverYiTwd": 10644.319061,
       "dayTradeTurnoverYiTwd": 4137.830977,
       "dayTradeTurnoverSharePct": 38.8736,
-      "marginMaintenanceExEtf": 167.77
+      "marginMaintenanceExEtf": 167.77,
+      "foreignNetYi": -255.045,
+      "marginDailyYi": 5.2749,
+      "foreignCumulativeYi": -12801.7364
     },
     {
       "date": "2026-07-07",
@@ -41257,7 +41720,10 @@
       "marketTurnoverYiTwd": 12281.194219,
       "dayTradeTurnoverYiTwd": 4534.652695,
       "dayTradeTurnoverSharePct": 36.9235,
-      "marginMaintenanceExEtf": 159.86
+      "marginMaintenanceExEtf": 159.86,
+      "foreignNetYi": -547.3107,
+      "marginDailyYi": -203.996,
+      "foreignCumulativeYi": -13349.0471
     },
     {
       "date": "2026-07-08",
@@ -41274,7 +41740,10 @@
       "marketTurnoverYiTwd": 10045.604467,
       "dayTradeTurnoverYiTwd": 4144.10336,
       "dayTradeTurnoverSharePct": 41.2529,
-      "marginMaintenanceExEtf": 160.74
+      "marginMaintenanceExEtf": 160.74,
+      "foreignNetYi": -379.4899,
+      "marginDailyYi": 28.7048,
+      "foreignCumulativeYi": -13728.537
     },
     {
       "date": "2026-07-09",
@@ -41291,7 +41760,10 @@
       "marketTurnoverYiTwd": 9967.894299,
       "dayTradeTurnoverYiTwd": 4224.261593,
       "dayTradeTurnoverSharePct": 42.3787,
-      "marginMaintenanceExEtf": 160.96
+      "marginMaintenanceExEtf": 160.96,
+      "foreignNetYi": -472.5282,
+      "marginDailyYi": 58.3252,
+      "foreignCumulativeYi": -14201.0652
     },
     {
       "date": "2026-07-10",
@@ -41327,7 +41799,10 @@
       "marketTurnoverYiTwd": 10676.621071,
       "dayTradeTurnoverYiTwd": 4192.819703,
       "dayTradeTurnoverSharePct": 39.271,
-      "marginMaintenanceExEtf": 158.81
+      "marginMaintenanceExEtf": 158.81,
+      "foreignNetYi": -195.5976,
+      "marginDailyYi": -13.492,
+      "foreignCumulativeYi": -14396.6628
     },
     {
       "date": "2026-07-14",
@@ -41344,7 +41819,10 @@
       "marketTurnoverYiTwd": 12452.065386,
       "dayTradeTurnoverYiTwd": 4846.89376,
       "dayTradeTurnoverSharePct": 38.9244,
-      "marginMaintenanceExEtf": 155.51
+      "marginMaintenanceExEtf": 155.51,
+      "foreignNetYi": -518.9281,
+      "marginDailyYi": -142.6595,
+      "foreignCumulativeYi": -14915.5909
     },
     {
       "date": "2026-07-15",
@@ -41361,7 +41839,10 @@
       "marketTurnoverYiTwd": 10243.855006,
       "dayTradeTurnoverYiTwd": 4177.014586,
       "dayTradeTurnoverSharePct": 40.7758,
-      "marginMaintenanceExEtf": 161.27
+      "marginMaintenanceExEtf": 161.27,
+      "foreignNetYi": -14.1539,
+      "marginDailyYi": 113.3424,
+      "foreignCumulativeYi": -14929.7448
     },
     {
       "date": "2026-07-16",
@@ -41378,7 +41859,10 @@
       "marketTurnoverYiTwd": 9331.809425,
       "dayTradeTurnoverYiTwd": 3835.564931,
       "dayTradeTurnoverSharePct": 41.102,
-      "marginMaintenanceExEtf": 157.87
+      "marginMaintenanceExEtf": 157.87,
+      "foreignNetYi": -483.3497,
+      "marginDailyYi": 1.8721,
+      "foreignCumulativeYi": -15413.0945
     },
     {
       "date": "2026-07-17",
@@ -41394,7 +41878,10 @@
       "marketTurnoverYiTwd": 13331.566529,
       "dayTradeTurnoverYiTwd": 3726.343941,
       "dayTradeTurnoverSharePct": 27.9513,
-      "marginMaintenanceExEtf": 146.29
+      "marginMaintenanceExEtf": 146.29,
+      "foreignNetYi": -1883.1455,
+      "marginDailyYi": -276.1348,
+      "foreignCumulativeYi": -17296.24
     },
     {
       "date": "2026-07-18",
@@ -41419,7 +41906,10 @@
       "marketTurnoverYiTwd": 10414.574344,
       "dayTradeTurnoverYiTwd": 4309.186124,
       "dayTradeTurnoverSharePct": 41.3765,
-      "marginMaintenanceExEtf": 142.75
+      "marginMaintenanceExEtf": 142.75,
+      "foreignNetYi": -60.8368,
+      "marginDailyYi": -189.2735,
+      "foreignCumulativeYi": -17357.0768
     },
     {
       "date": "2026-07-21",
@@ -41436,7 +41926,10 @@
       "marketTurnoverYiTwd": 8662.51695,
       "dayTradeTurnoverYiTwd": 3496.174458,
       "dayTradeTurnoverSharePct": 40.3598,
-      "marginMaintenanceExEtf": 150.11
+      "marginMaintenanceExEtf": 150.11,
+      "foreignNetYi": -43.3186,
+      "marginDailyYi": 74.6086,
+      "foreignCumulativeYi": -17400.3954
     },
     {
       "date": "2026-07-22",
@@ -41453,7 +41946,10 @@
       "marketTurnoverYiTwd": 10259.583963,
       "dayTradeTurnoverYiTwd": 4254.379037,
       "dayTradeTurnoverSharePct": 41.4674,
-      "marginMaintenanceExEtf": 155.91
+      "marginMaintenanceExEtf": 155.91,
+      "foreignNetYi": 173.4399,
+      "marginDailyYi": 63.2729,
+      "foreignCumulativeYi": -17226.9555
     },
     {
       "date": "2026-07-23",
@@ -41470,7 +41966,10 @@
       "marketTurnoverYiTwd": 9306.120677,
       "dayTradeTurnoverYiTwd": 4203.867546,
       "dayTradeTurnoverSharePct": 45.1731,
-      "marginMaintenanceExEtf": 154.99
+      "marginMaintenanceExEtf": 154.99,
+      "foreignNetYi": 69.5791,
+      "marginDailyYi": -1.9732,
+      "foreignCumulativeYi": -17157.3764
     },
     {
       "date": "2026-07-24",
@@ -41486,7 +41985,10 @@
       "marketTurnoverYiTwd": 8271.295122,
       "dayTradeTurnoverYiTwd": 3623.149827,
       "dayTradeTurnoverSharePct": 43.8039,
-      "marginMaintenanceExEtf": 149.18
+      "marginMaintenanceExEtf": 149.18,
+      "foreignNetYi": -609.5049,
+      "marginDailyYi": -55.6681,
+      "foreignCumulativeYi": -17766.8813
     },
     {
       "date": "2026-07-25",
@@ -41511,7 +42013,10 @@
       "marketTurnoverYiTwd": 7476.472007,
       "dayTradeTurnoverYiTwd": 3209.463903,
       "dayTradeTurnoverSharePct": 42.9275,
-      "marginMaintenanceExEtf": 149.53
+      "marginMaintenanceExEtf": 149.53,
+      "foreignNetYi": 80.4025,
+      "marginDailyYi": -83.9588,
+      "foreignCumulativeYi": -17686.4788
     },
     {
       "date": "2026-07-28",
@@ -41528,7 +42033,10 @@
       "marketTurnoverYiTwd": 8725.75,
       "dayTradeTurnoverYiTwd": 2755.042667,
       "dayTradeTurnoverSharePct": 31.5737,
-      "marginMaintenanceExEtf": 139.69
+      "marginMaintenanceExEtf": 139.69,
+      "foreignNetYi": -874.8463,
+      "marginDailyYi": -231.286,
+      "foreignCumulativeYi": -18561.3251
     },
     {
       "date": "2026-07-29",
@@ -41545,7 +42053,10 @@
       "marketTurnoverYiTwd": 11491.85295,
       "dayTradeTurnoverYiTwd": 4415.239098,
       "dayTradeTurnoverSharePct": 38.4206,
-      "marginMaintenanceExEtf": 133.12
+      "marginMaintenanceExEtf": 133.12,
+      "foreignNetYi": -222.5186,
+      "marginDailyYi": -385.2247,
+      "foreignCumulativeYi": -18783.8437
     },
     {
       "date": "2026-07-30",
@@ -41562,7 +42073,10 @@
       "marketTurnoverYiTwd": 11469.378292,
       "dayTradeTurnoverYiTwd": 5529.435782,
       "dayTradeTurnoverSharePct": 48.2104,
-      "marginMaintenanceExEtf": 131.72
+      "marginMaintenanceExEtf": 131.72,
+      "foreignNetYi": -483.1182,
+      "marginDailyYi": -131.4272,
+      "foreignCumulativeYi": -19266.9619
     },
     {
       "date": "2026-07-31",
@@ -41578,7 +42092,10 @@
       "marketTurnoverYiTwd": 8877.324051,
       "dayTradeTurnoverYiTwd": 2470.983373,
       "dayTradeTurnoverSharePct": 27.8348,
-      "marginMaintenanceExEtf": 143.41
+      "marginMaintenanceExEtf": 143.41,
+      "foreignNetYi": 675.5383,
+      "marginDailyYi": 135.9699,
+      "foreignCumulativeYi": -18591.4236
     },
     {
       "date": "2026-08-01",
@@ -41603,7 +42120,10 @@
       "marketTurnoverYiTwd": 8855.060431,
       "dayTradeTurnoverYiTwd": 3118.985609,
       "dayTradeTurnoverSharePct": 35.2226,
-      "marginMaintenanceExEtf": 150.84
+      "marginMaintenanceExEtf": 150.84,
+      "foreignNetYi": -191.9092,
+      "marginDailyYi": 72.9262,
+      "foreignCumulativeYi": -18783.3328
     },
     {
       "date": "2026-08-04",
@@ -41621,7 +42141,9 @@
       "marketTurnoverYiTwd": 10870.458758,
       "dayTradeTurnoverYiTwd": 4522.456764,
       "dayTradeTurnoverSharePct": 41.6032,
-      "marginMaintenanceExEtf": 156.65
+      "marginMaintenanceExEtf": 156.65,
+      "marginDailyYi": 63.7931,
+      "foreignCumulativeYi": -18840.6481
     },
     {
       "date": "2026-08-05",
@@ -41639,7 +42161,9 @@
       "marketTurnoverYiTwd": 12002.125105,
       "dayTradeTurnoverYiTwd": 4910.090147,
       "dayTradeTurnoverSharePct": 40.9102,
-      "marginMaintenanceExEtf": 161.98
+      "marginMaintenanceExEtf": 161.98,
+      "marginDailyYi": 23.5766,
+      "foreignCumulativeYi": -17937.5648
     },
     {
       "date": "2026-08-06",
@@ -41658,7 +42182,8 @@
       "marketTurnoverYiTwd": 9740.549734,
       "dayTradeTurnoverYiTwd": 4497.38912,
       "dayTradeTurnoverSharePct": 46.1718,
-      "marginMaintenanceExEtf": 164.06
+      "marginMaintenanceExEtf": 164.06,
+      "foreignCumulativeYi": -17917.3666
     },
     {
       "date": "2026-08-07",
@@ -41676,7 +42201,8 @@
       "marketTurnoverYiTwd": 8508.151891,
       "dayTradeTurnoverYiTwd": 3815.674118,
       "dayTradeTurnoverSharePct": 44.8473,
-      "marginMaintenanceExEtf": 161.46
+      "marginMaintenanceExEtf": 161.46,
+      "foreignCumulativeYi": -18324.524
     },
     {
       "date": "2026-08-08",
@@ -41703,7 +42229,8 @@
       "marketTurnoverYiTwd": 8804.407237,
       "dayTradeTurnoverYiTwd": 3240.407418,
       "dayTradeTurnoverSharePct": 36.8044,
-      "marginMaintenanceExEtf": 166.52
+      "marginMaintenanceExEtf": 166.52,
+      "foreignCumulativeYi": -17807.1188
     },
     {
       "date": "2026-08-11",
@@ -41722,7 +42249,8 @@
       "marketTurnoverYiTwd": 9020.522075,
       "dayTradeTurnoverYiTwd": 3858.809349,
       "dayTradeTurnoverSharePct": 42.7781,
-      "marginMaintenanceExEtf": 167.03
+      "marginMaintenanceExEtf": 167.03,
+      "foreignCumulativeYi": -17583.832
     },
     {
       "date": "2026-08-12",
@@ -41741,7 +42269,8 @@
       "marketTurnoverYiTwd": 8926.597849,
       "dayTradeTurnoverYiTwd": 3496.488723,
       "dayTradeTurnoverSharePct": 39.1693,
-      "marginMaintenanceExEtf": 169.18
+      "marginMaintenanceExEtf": 169.18,
+      "foreignCumulativeYi": -17473.6239
     },
     {
       "date": "2026-08-13",
@@ -41760,7 +42289,8 @@
       "marketTurnoverYiTwd": 11040.246422,
       "dayTradeTurnoverYiTwd": 4210.224696,
       "dayTradeTurnoverSharePct": 38.1352,
-      "marginMaintenanceExEtf": 171.14
+      "marginMaintenanceExEtf": 171.14,
+      "foreignCumulativeYi": -16716.6787
     },
     {
       "date": "2026-08-14",
@@ -41778,7 +42308,8 @@
       "marketTurnoverYiTwd": 11097.46702,
       "dayTradeTurnoverYiTwd": 4424.654988,
       "dayTradeTurnoverSharePct": 39.8709,
-      "marginMaintenanceExEtf": 170.59
+      "marginMaintenanceExEtf": 170.59,
+      "foreignCumulativeYi": -16263.1654
     },
     {
       "date": "2026-08-15",
@@ -41805,7 +42336,8 @@
       "marketTurnoverYiTwd": 9810.551348,
       "dayTradeTurnoverYiTwd": 3947.217405,
       "dayTradeTurnoverSharePct": 40.2344,
-      "marginMaintenanceExEtf": 171.35
+      "marginMaintenanceExEtf": 171.35,
+      "foreignCumulativeYi": -15808.6925
     },
     {
       "date": "2026-08-18",
@@ -41824,7 +42356,8 @@
       "marketTurnoverYiTwd": 10078.817608,
       "dayTradeTurnoverYiTwd": 4082.074223,
       "dayTradeTurnoverSharePct": 40.5015,
-      "marginMaintenanceExEtf": 167.23
+      "marginMaintenanceExEtf": 167.23,
+      "foreignCumulativeYi": -15928.5506
     },
     {
       "date": "2026-08-19",
@@ -41843,7 +42376,8 @@
       "marketTurnoverYiTwd": 8902.697435,
       "dayTradeTurnoverYiTwd": 3678.883293,
       "dayTradeTurnoverSharePct": 41.3232,
-      "marginMaintenanceExEtf": 164.57
+      "marginMaintenanceExEtf": 164.57,
+      "foreignCumulativeYi": -16344.945
     },
     {
       "date": "2026-08-20",
@@ -41862,7 +42396,8 @@
       "marketTurnoverYiTwd": 8344.12514,
       "dayTradeTurnoverYiTwd": 3616.500986,
       "dayTradeTurnoverSharePct": 43.3419,
-      "marginMaintenanceExEtf": 166.05
+      "marginMaintenanceExEtf": 166.05,
+      "foreignCumulativeYi": -16271.7687
     },
     {
       "date": "2026-08-21",
@@ -41880,7 +42415,8 @@
       "marketTurnoverYiTwd": 7549.053359,
       "dayTradeTurnoverYiTwd": 3325.801652,
       "dayTradeTurnoverSharePct": 44.0559,
-      "marginMaintenanceExEtf": 164.66
+      "marginMaintenanceExEtf": 164.66,
+      "foreignCumulativeYi": -15988.7145
     },
     {
       "date": "2026-08-22",
@@ -41907,7 +42443,8 @@
       "marketTurnoverYiTwd": 6562.806797,
       "dayTradeTurnoverYiTwd": 2769.288273,
       "dayTradeTurnoverSharePct": 42.1967,
-      "marginMaintenanceExEtf": 162.92
+      "marginMaintenanceExEtf": 162.92,
+      "foreignCumulativeYi": -16146.0758
     },
     {
       "date": "2026-08-25",
@@ -41926,7 +42463,8 @@
       "marketTurnoverYiTwd": 7242.584455,
       "dayTradeTurnoverYiTwd": 3400.2365,
       "dayTradeTurnoverSharePct": 46.9478,
-      "marginMaintenanceExEtf": 165.37
+      "marginMaintenanceExEtf": 165.37,
+      "foreignCumulativeYi": -16153.9416
     },
     {
       "date": "2026-08-26",
@@ -41945,7 +42483,8 @@
       "marketTurnoverYiTwd": 8430.924834,
       "dayTradeTurnoverYiTwd": 3459.797442,
       "dayTradeTurnoverSharePct": 41.037,
-      "marginMaintenanceExEtf": 170.06
+      "marginMaintenanceExEtf": 170.06,
+      "foreignCumulativeYi": -15787.8097
     },
     {
       "date": "2026-08-27",
@@ -41964,7 +42503,8 @@
       "marketTurnoverYiTwd": 9674.660552,
       "dayTradeTurnoverYiTwd": 3982.595621,
       "dayTradeTurnoverSharePct": 41.1652,
-      "marginMaintenanceExEtf": 171.33
+      "marginMaintenanceExEtf": 171.33,
+      "foreignCumulativeYi": -15296.8676
     },
     {
       "date": "2026-08-28",
@@ -41982,7 +42522,8 @@
       "marketTurnoverYiTwd": 10689.853926,
       "dayTradeTurnoverYiTwd": 4655.433,
       "dayTradeTurnoverSharePct": 43.55,
-      "marginMaintenanceExEtf": 172.33
+      "marginMaintenanceExEtf": 172.33,
+      "foreignCumulativeYi": -14879.3266
     },
     {
       "date": "2026-08-29",
@@ -42009,7 +42550,8 @@
       "marketTurnoverYiTwd": 12892.281431,
       "dayTradeTurnoverYiTwd": 4585.194202,
       "dayTradeTurnoverSharePct": 35.5654,
-      "marginMaintenanceExEtf": 170.44
+      "marginMaintenanceExEtf": 170.44,
+      "foreignCumulativeYi": -15023.25
     },
     {
       "date": "2026-09-01",
@@ -42028,7 +42570,8 @@
       "marketTurnoverYiTwd": 11875.715671,
       "dayTradeTurnoverYiTwd": 4442.64669,
       "dayTradeTurnoverSharePct": 37.4095,
-      "marginMaintenanceExEtf": 172.03
+      "marginMaintenanceExEtf": 172.03,
+      "foreignCumulativeYi": -14756.174
     },
     {
       "date": "2026-09-02",
@@ -42047,7 +42590,8 @@
       "marketTurnoverYiTwd": 9764.999791,
       "dayTradeTurnoverYiTwd": 3720.640488,
       "dayTradeTurnoverSharePct": 38.1018,
-      "marginMaintenanceExEtf": 168.63
+      "marginMaintenanceExEtf": 168.63,
+      "foreignCumulativeYi": -15669.7194
     },
     {
       "date": "2026-09-03",
@@ -42066,7 +42610,8 @@
       "marketTurnoverYiTwd": 9932.616062,
       "dayTradeTurnoverYiTwd": 4152.477512,
       "dayTradeTurnoverSharePct": 41.8065,
-      "marginMaintenanceExEtf": 163.12
+      "marginMaintenanceExEtf": 163.12,
+      "foreignCumulativeYi": -16151.1787
     },
     {
       "date": "2026-09-04",
@@ -42084,7 +42629,8 @@
       "marketTurnoverYiTwd": 8582.449666,
       "dayTradeTurnoverYiTwd": 3708.545571,
       "dayTradeTurnoverSharePct": 43.2108,
-      "marginMaintenanceExEtf": 166.73
+      "marginMaintenanceExEtf": 166.73,
+      "foreignCumulativeYi": -15589.0492
     },
     {
       "date": "2026-09-05",
@@ -42106,7 +42652,8 @@
       "marketTurnoverYiTwd": 9979.448432,
       "dayTradeTurnoverYiTwd": 3586.077902,
       "dayTradeTurnoverSharePct": 35.9346,
-      "marginMaintenanceExEtf": 168.33
+      "marginMaintenanceExEtf": 168.33,
+      "foreignCumulativeYi": -14705.9718
     },
     {
       "date": "2026-09-08",
@@ -42125,7 +42672,8 @@
       "marketTurnoverYiTwd": 9226.580791,
       "dayTradeTurnoverYiTwd": 3338.580615,
       "dayTradeTurnoverSharePct": 36.1844,
-      "marginMaintenanceExEtf": 165.85
+      "marginMaintenanceExEtf": 165.85,
+      "foreignCumulativeYi": -14573.2862
     },
     {
       "date": "2026-09-09",
@@ -42144,7 +42692,8 @@
       "marketTurnoverYiTwd": 8159.766781,
       "dayTradeTurnoverYiTwd": 3277.184948,
       "dayTradeTurnoverSharePct": 40.1627,
-      "marginMaintenanceExEtf": 166.98
+      "marginMaintenanceExEtf": 166.98,
+      "foreignCumulativeYi": -14364.0424
     },
     {
       "date": "2026-09-10",
@@ -42163,7 +42712,8 @@
       "marketTurnoverYiTwd": 7507.428116,
       "dayTradeTurnoverYiTwd": 3136.944381,
       "dayTradeTurnoverSharePct": 41.7845,
-      "marginMaintenanceExEtf": 166.2
+      "marginMaintenanceExEtf": 166.2,
+      "foreignCumulativeYi": -14747.384
     },
     {
       "date": "2026-09-11",
@@ -42181,7 +42731,8 @@
       "marketTurnoverYiTwd": 7622.451899,
       "dayTradeTurnoverYiTwd": 2864.976725,
       "dayTradeTurnoverSharePct": 37.586,
-      "marginMaintenanceExEtf": 162.32
+      "marginMaintenanceExEtf": 162.32,
+      "foreignCumulativeYi": -15640.0884
     },
     {
       "date": "2026-09-12",
@@ -42208,7 +42759,8 @@
       "marketTurnoverYiTwd": 6653.16266,
       "dayTradeTurnoverYiTwd": 2638.690511,
       "dayTradeTurnoverSharePct": 39.6607,
-      "marginMaintenanceExEtf": 160.68
+      "marginMaintenanceExEtf": 160.68,
+      "foreignCumulativeYi": -16009.7241
     },
     {
       "date": "2026-09-15",
@@ -42227,7 +42779,8 @@
       "marketTurnoverYiTwd": 6347.068046,
       "dayTradeTurnoverYiTwd": 2548.628563,
       "dayTradeTurnoverSharePct": 40.1544,
-      "marginMaintenanceExEtf": 157.84
+      "marginMaintenanceExEtf": 157.84,
+      "foreignCumulativeYi": -16636.7131
     },
     {
       "date": "2026-09-16",
@@ -42246,7 +42799,8 @@
       "marketTurnoverYiTwd": 6759.695286,
       "dayTradeTurnoverYiTwd": 2705.335338,
       "dayTradeTurnoverSharePct": 40.0216,
-      "marginMaintenanceExEtf": 161.38
+      "marginMaintenanceExEtf": 161.38,
+      "foreignCumulativeYi": -16816.5179
     },
     {
       "date": "2026-09-17",
@@ -42265,7 +42819,8 @@
       "marketTurnoverYiTwd": 8666.191794,
       "dayTradeTurnoverYiTwd": 3517.289699,
       "dayTradeTurnoverSharePct": 40.5863,
-      "marginMaintenanceExEtf": 161.45
+      "marginMaintenanceExEtf": 161.45,
+      "foreignCumulativeYi": -16694.6679
     },
     {
       "date": "2026-09-18",
@@ -42283,7 +42838,8 @@
       "marketTurnoverYiTwd": 11423.219104,
       "dayTradeTurnoverYiTwd": 3584.985952,
       "dayTradeTurnoverSharePct": 31.3833,
-      "marginMaintenanceExEtf": 166.85
+      "marginMaintenanceExEtf": 166.85,
+      "foreignCumulativeYi": -15824.7243
     },
     {
       "date": "2026-09-19",
@@ -42310,7 +42866,8 @@
       "marketTurnoverYiTwd": 8668.175338,
       "dayTradeTurnoverYiTwd": 3229.785402,
       "dayTradeTurnoverSharePct": 37.2603,
-      "marginMaintenanceExEtf": 168.43
+      "marginMaintenanceExEtf": 168.43,
+      "foreignCumulativeYi": -15619.9349
     },
     {
       "date": "2026-09-22",
@@ -42329,7 +42886,8 @@
       "marketTurnoverYiTwd": 10787.763133,
       "dayTradeTurnoverYiTwd": 4062.076552,
       "dayTradeTurnoverSharePct": 37.6545,
-      "marginMaintenanceExEtf": 169.99
+      "marginMaintenanceExEtf": 169.99,
+      "foreignCumulativeYi": -15166.7256
     },
     {
       "date": "2026-09-23",
@@ -42348,7 +42906,8 @@
       "marketTurnoverYiTwd": 8946.506831,
       "dayTradeTurnoverYiTwd": 3556.630116,
       "dayTradeTurnoverSharePct": 39.7544,
-      "marginMaintenanceExEtf": 170.29
+      "marginMaintenanceExEtf": 170.29,
+      "foreignCumulativeYi": -14793.592
     },
     {
       "date": "2026-09-24",
@@ -42367,7 +42926,8 @@
       "marketTurnoverYiTwd": 7755.914282,
       "dayTradeTurnoverYiTwd": 3167.984941,
       "dayTradeTurnoverSharePct": 40.8461,
-      "marginMaintenanceExEtf": 170.87
+      "marginMaintenanceExEtf": 170.87,
+      "foreignCumulativeYi": -15123.2381
     },
     {
       "date": "2026-09-25",
@@ -42417,7 +42977,8 @@
       "marketTurnoverYiTwd": 8361.447077,
       "dayTradeTurnoverYiTwd": 2971.066773,
       "dayTradeTurnoverSharePct": 35.5329,
-      "marginMaintenanceExEtf": 169.06
+      "marginMaintenanceExEtf": 169.06,
+      "foreignCumulativeYi": -15749.0636
     },
     {
       "date": "2026-09-30",
@@ -42436,7 +42997,8 @@
       "marketTurnoverYiTwd": 9214.927026,
       "dayTradeTurnoverYiTwd": 3321.983937,
       "dayTradeTurnoverSharePct": 36.05,
-      "marginMaintenanceExEtf": 170.81
+      "marginMaintenanceExEtf": 170.81,
+      "foreignCumulativeYi": -15440.498
     },
     {
       "date": "2026-10-01",
@@ -42455,7 +43017,8 @@
       "marketTurnoverYiTwd": 8740.462524,
       "dayTradeTurnoverYiTwd": 3331.959387,
       "dayTradeTurnoverSharePct": 38.1211,
-      "marginMaintenanceExEtf": 172.14
+      "marginMaintenanceExEtf": 172.14,
+      "foreignCumulativeYi": -15221.1247
     },
     {
       "date": "2026-10-02",
@@ -42473,7 +43036,8 @@
       "marketTurnoverYiTwd": 9382.221963,
       "dayTradeTurnoverYiTwd": 3753.703623,
       "dayTradeTurnoverSharePct": 40.0087,
-      "marginMaintenanceExEtf": 173.96
+      "marginMaintenanceExEtf": 173.96,
+      "foreignCumulativeYi": -15194.9067
     },
     {
       "date": "2026-10-03",
@@ -42500,7 +43064,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 12110.413951,
       "dayTradeTurnoverYiTwd": 4501.950304,
-      "dayTradeTurnoverSharePct": 37.1742
+      "dayTradeTurnoverSharePct": 37.1742,
+      "foreignCumulativeYi": -14475.9406
     },
     {
       "date": "2026-10-06",
@@ -42519,7 +43084,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 10262.047711,
       "dayTradeTurnoverYiTwd": 4020.091369,
-      "dayTradeTurnoverSharePct": 39.1744
+      "dayTradeTurnoverSharePct": 39.1744,
+      "foreignCumulativeYi": -14542.514
     },
     {
       "date": "2026-10-07",
@@ -42538,7 +43104,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 9862.800412,
       "dayTradeTurnoverYiTwd": 3951.717752,
-      "dayTradeTurnoverSharePct": 40.0669
+      "dayTradeTurnoverSharePct": 40.0669,
+      "foreignCumulativeYi": -14672.9529
     },
     {
       "date": "2026-10-08",
@@ -42557,7 +43124,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 9245.090979,
       "dayTradeTurnoverYiTwd": 3495.265685,
-      "dayTradeTurnoverSharePct": 37.8067
+      "dayTradeTurnoverSharePct": 37.8067,
+      "foreignCumulativeYi": -15431.4758
     },
     {
       "date": "2026-10-09",
@@ -42593,7 +43161,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 8945.219284,
       "dayTradeTurnoverYiTwd": 3258.506279,
-      "dayTradeTurnoverSharePct": 36.4273
+      "dayTradeTurnoverSharePct": 36.4273,
+      "foreignCumulativeYi": -15953.4573
     },
     {
       "date": "2026-10-13",
@@ -42612,7 +43181,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 12018.612649,
       "dayTradeTurnoverYiTwd": 4075.877624,
-      "dayTradeTurnoverSharePct": 33.913
+      "dayTradeTurnoverSharePct": 33.913,
+      "foreignCumulativeYi": -17606.3624
     },
     {
       "date": "2026-10-14",
@@ -42631,7 +43201,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 9781.374163,
       "dayTradeTurnoverYiTwd": 3835.726798,
-      "dayTradeTurnoverSharePct": 39.2146
+      "dayTradeTurnoverSharePct": 39.2146,
+      "foreignCumulativeYi": -17806.7358
     },
     {
       "date": "2026-10-15",
@@ -42649,7 +43220,9 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 14357.552197,
       "dayTradeTurnoverYiTwd": 4360.232325,
-      "dayTradeTurnoverSharePct": 30.3689
+      "dayTradeTurnoverSharePct": 30.3689,
+      "foreignNetYi": -3025.5548,
+      "foreignCumulativeYi": -20832.2906
     },
     {
       "date": "2026-10-16",
@@ -42668,7 +43241,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 9938.148301,
       "dayTradeTurnoverYiTwd": 3784.417034,
-      "dayTradeTurnoverSharePct": 38.0797
+      "dayTradeTurnoverSharePct": 38.0797,
+      "foreignCumulativeYi": -21293.7622
     },
     {
       "date": "2026-10-17",
@@ -42695,7 +43269,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 8667.1186,
       "dayTradeTurnoverYiTwd": 3547.240591,
-      "dayTradeTurnoverSharePct": 40.9276
+      "dayTradeTurnoverSharePct": 40.9276,
+      "foreignCumulativeYi": -22061.1896
     },
     {
       "date": "2026-10-20",
@@ -42714,7 +43289,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 8029.474417,
       "dayTradeTurnoverYiTwd": 3419.086103,
-      "dayTradeTurnoverSharePct": 42.5817
+      "dayTradeTurnoverSharePct": 42.5817,
+      "foreignCumulativeYi": -22856.5865
     },
     {
       "date": "2026-10-21",
@@ -42733,7 +43309,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 8746.141667,
       "dayTradeTurnoverYiTwd": 3639.3074,
-      "dayTradeTurnoverSharePct": 41.6104
+      "dayTradeTurnoverSharePct": 41.6104,
+      "foreignCumulativeYi": -22834.1974
     },
     {
       "date": "2026-10-22",
@@ -42752,7 +43329,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 9334.374736,
       "dayTradeTurnoverYiTwd": 3862.424726,
-      "dayTradeTurnoverSharePct": 41.3785
+      "dayTradeTurnoverSharePct": 41.3785,
+      "foreignCumulativeYi": -23650.0184
     },
     {
       "date": "2026-10-23",
@@ -42802,7 +43380,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 10316.835389,
       "dayTradeTurnoverYiTwd": 4079.559407,
-      "dayTradeTurnoverSharePct": 39.5427
+      "dayTradeTurnoverSharePct": 39.5427,
+      "foreignCumulativeYi": -23730.4071
     },
     {
       "date": "2026-10-28",
@@ -42821,7 +43400,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 7503.405369,
       "dayTradeTurnoverYiTwd": 3123.700029,
-      "dayTradeTurnoverSharePct": 41.6304
+      "dayTradeTurnoverSharePct": 41.6304,
+      "foreignCumulativeYi": -23570.8409
     },
     {
       "date": "2026-10-29",
@@ -42840,7 +43420,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 8238.127485,
       "dayTradeTurnoverYiTwd": 3519.64481,
-      "dayTradeTurnoverSharePct": 42.7238
+      "dayTradeTurnoverSharePct": 42.7238,
+      "foreignCumulativeYi": -24258.9937
     },
     {
       "date": "2026-10-30",
@@ -42859,7 +43440,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 9396.052677,
       "dayTradeTurnoverYiTwd": 3391.91519,
-      "dayTradeTurnoverSharePct": 36.0994
+      "dayTradeTurnoverSharePct": 36.0994,
+      "foreignCumulativeYi": -25383.6662
     },
     {
       "date": "2026-10-31",
@@ -42886,7 +43468,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 7996.875079,
       "dayTradeTurnoverYiTwd": 3431.490488,
-      "dayTradeTurnoverSharePct": 42.9104
+      "dayTradeTurnoverSharePct": 42.9104,
+      "foreignCumulativeYi": -26118.8743
     },
     {
       "date": "2026-11-03",
@@ -42905,7 +43488,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 10020.35661,
       "dayTradeTurnoverYiTwd": 3643.712299,
-      "dayTradeTurnoverSharePct": 36.3631
+      "dayTradeTurnoverSharePct": 36.3631,
+      "foreignCumulativeYi": -27191.9415
     },
     {
       "date": "2026-11-04",
@@ -42924,7 +43508,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 11769.304429,
       "dayTradeTurnoverYiTwd": 5310.14309,
-      "dayTradeTurnoverSharePct": 45.1186
+      "dayTradeTurnoverSharePct": 45.1186,
+      "foreignCumulativeYi": -28690.9398
     },
     {
       "date": "2026-11-05",
@@ -42943,7 +43528,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 9870.988832,
       "dayTradeTurnoverYiTwd": 3843.594313,
-      "dayTradeTurnoverSharePct": 38.9383
+      "dayTradeTurnoverSharePct": 38.9383,
+      "foreignCumulativeYi": -29715.546
     },
     {
       "date": "2026-11-06",
@@ -42962,7 +43548,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 13210.718586,
       "dayTradeTurnoverYiTwd": 5545.119227,
-      "dayTradeTurnoverSharePct": 41.9744
+      "dayTradeTurnoverSharePct": 41.9744,
+      "foreignCumulativeYi": -30627.4285
     },
     {
       "date": "2026-11-07",
@@ -42989,7 +43576,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 8770.256172,
       "dayTradeTurnoverYiTwd": 3700.808543,
-      "dayTradeTurnoverSharePct": 42.1973
+      "dayTradeTurnoverSharePct": 42.1973,
+      "foreignCumulativeYi": -31527.9922
     },
     {
       "date": "2026-11-10",
@@ -43008,7 +43596,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 10340.122405,
       "dayTradeTurnoverYiTwd": 4680.434188,
-      "dayTradeTurnoverSharePct": 45.2648
+      "dayTradeTurnoverSharePct": 45.2648,
+      "foreignCumulativeYi": -31869.1591
     },
     {
       "date": "2026-11-11",
@@ -43025,7 +43614,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 8762.954593,
       "dayTradeTurnoverYiTwd": 4011.312268,
-      "dayTradeTurnoverSharePct": 45.7758
+      "dayTradeTurnoverSharePct": 45.7758,
+      "foreignCumulativeYi": -31876.8235
     },
     {
       "date": "2026-11-12",
@@ -43044,7 +43634,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 10568.424571,
       "dayTradeTurnoverYiTwd": 5009.540464,
-      "dayTradeTurnoverSharePct": 47.401
+      "dayTradeTurnoverSharePct": 47.401,
+      "foreignCumulativeYi": -31883.6685
     },
     {
       "date": "2026-11-13",
@@ -43063,7 +43654,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 9515.800081,
       "dayTradeTurnoverYiTwd": 4593.513467,
-      "dayTradeTurnoverSharePct": 48.2725
+      "dayTradeTurnoverSharePct": 48.2725,
+      "foreignCumulativeYi": -31595.3016
     },
     {
       "date": "2026-11-14",
@@ -43090,7 +43682,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 9031.151299,
       "dayTradeTurnoverYiTwd": 3214.177317,
-      "dayTradeTurnoverSharePct": 35.5899
+      "dayTradeTurnoverSharePct": 35.5899,
+      "foreignCumulativeYi": -32297.1937
     },
     {
       "date": "2026-11-17",
@@ -43109,7 +43702,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 10128.678299,
       "dayTradeTurnoverYiTwd": 4482.452861,
-      "dayTradeTurnoverSharePct": 44.2551
+      "dayTradeTurnoverSharePct": 44.2551,
+      "foreignCumulativeYi": -32678.1301
     },
     {
       "date": "2026-11-18",
@@ -43128,7 +43722,8 @@
       "fedFundsEffective": 3.88,
       "marketTurnoverYiTwd": 10751.743088,
       "dayTradeTurnoverYiTwd": 5654.458479,
-      "dayTradeTurnoverSharePct": 52.5911
+      "dayTradeTurnoverSharePct": 52.5911,
+      "foreignCumulativeYi": -33443.7669
     },
     {
       "date": "2026-11-19",
@@ -43144,7 +43739,8 @@
       "marketTurnoverYiTwd": 9429.889765,
       "dayTradeTurnoverYiTwd": 3896.995766,
       "dayTradeTurnoverSharePct": 41.326,
-      "marginMaintenanceExEtf": 128.31
+      "marginMaintenanceExEtf": 128.31,
+      "foreignCumulativeYi": -33686.889
     }
   ],
   "twseTurnoverAudit": {
