@@ -33,14 +33,31 @@ def check_num(v,name):
     if v is not None and (type(v) not in (int,float) or not (-1e15<v<1e15)):
         fail('invalid numeric market value: '+name)
 def validate(d):
-    check_keys(d,ALLOWED_TOP)
+    coverage = d.get('marginMaintenanceCoverage')
+    if coverage is not None:
+        fields = {'targetTradingDays', 'observedTradingDays', 'missingTradingDays',
+                  'targetFirst', 'targetLast', 'status', 'sourceUrl'}
+        if set(coverage) != fields: fail('invalid maintenance coverage schema')
+        for key in ('targetTradingDays', 'observedTradingDays', 'missingTradingDays'):
+            if type(coverage[key]) != int or coverage[key] < 0: fail('invalid coverage count')
+        if coverage['observedTradingDays'] + coverage['missingTradingDays'] != coverage['targetTradingDays']:
+            fail('inconsistent coverage counts')
+        valid_date(coverage['targetFirst'])
+        valid_date(coverage['targetLast'])
+        if coverage['status'] not in ('partial', 'complete'): fail('invalid coverage status')
+        if coverage['sourceUrl'] != 'https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex':
+            fail('invalid maintenance source')
+    check_keys(d,ALLOWED_TOP | {'marginMaintenanceCoverage'})
     if d.get('schemaVersion')!=2 or d.get('audience')!='public-market': fail('wrong schema/audience')
     valid_date(d.get('asOf'))
     if d.get('dataStatus') not in {'verified','partial','intraday','awaiting-verification'}: fail('bad status')
     if d.get('updatedAt') is not None: check_text(d['updatedAt'],64)
     for key in ('headline','summary'): check_text(d.get(key,''),650)
-    m=d.get('market');check_keys(m,ALLOWED_MARKET)
-    for k,v in m.items(): check_num(v,k)
+    m=d.get('market');check_keys(m,ALLOWED_MARKET | {'marginMaintenanceScope', 'marginMaintenanceAsOf'})
+    for k,v in m.items():
+        if k == 'marginMaintenanceAsOf': valid_date(v)
+        elif k == 'marginMaintenanceScope': check_text(v, 200)
+        else: check_num(v,k)
     for a in d.get('ai',[]):
         check_keys(a,{'name','value','trend','status'})
         check_text(a.get('name',''),100);check_text(a.get('trend',''),300)

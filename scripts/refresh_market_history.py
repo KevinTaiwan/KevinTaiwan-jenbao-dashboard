@@ -6,6 +6,7 @@ Source dates are preserved. Failed fetches never become fabricated zeros.
 VOO and QQQ use publicly accessible USD share prices; not user-specific positions.
 DFF observations are the effective overnight rate, distinct from the FOMC target range.
 """
+from decimal import Decimal
 import csv
 import io
 import json
@@ -78,7 +79,7 @@ def add(key, day, value):
     try:
         v=float(str(value).replace(",","").replace("%","").strip())
     except (ValueError,TypeError):return
-    bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-2500,2500),"marginMaintenanceExEtf":(80,500),"us10yYield":(0,25),"us10y2ySpread":(-6,7),"voo":(20,2000),"qqq":(20,2000),"fedFundsEffective":(0,25)}
+    bounds={"taiex":(1000,100000),"dxy":(50,200),"usdtwd":(15,60),"vix":(5,100),"hyOas":(0.1,40),"marginDailyYi":(-2000,2000),"foreignNetYi":(-100000,100000),"marginMaintenanceExEtf":(80,500),"us10yYield":(0,25),"us10y2ySpread":(-6,7),"voo":(20,2000),"qqq":(20,2000),"fedFundsEffective":(0,25)}
     a,b=bounds[key]
     if math.isfinite(v) and a<=v<=b:
         OBS[key][day.isoformat()]=round(v,4)
@@ -228,6 +229,7 @@ def fetch_foreign_daily():
         try:
             u=URLS["foreignNetYi"]+"?type=day&dayDate="+stamp+"&response=json"
             payload=json.loads(get(u,timeout=12))
+            if payload.get("date") != stamp: continue
             for fields,rows in _twse_tables(payload):
                 for row in rows:
                     if not row or "外資及陸資" not in str(row[0]) or "自營商" not in str(row[0]):continue
@@ -235,7 +237,7 @@ def fetch_foreign_daily():
                     if len(row)<4:continue
                     raw=str(row[3])
                     val=_number(raw)/1e8
-                    if abs(val)>2500:continue
+                    if abs(val)>100000:continue
                     add("foreignNetYi",date.isoformat(),val)
                     found+=1
                     break
@@ -256,6 +258,7 @@ def fetch_margin_daily():
         try:
             u=URLS["marginDailyYi"]+"?date="+stamp+"&selectType=MS&response=json"
             d=json.loads(get(u,timeout=12))
+            if d.get("date") != stamp: continue
             for fields,rows in _twse_tables(d):
                 for row in rows:
                     if len(row)<6 or "融資金額" not in str(row[0]):continue
@@ -348,25 +351,28 @@ def full_refresh():
     attempt("TWSE_MARGIN",fetch_margin_daily)
     attempt("WANTGOO_EX_ETF",fetch_wantgoo_ex_etf)
 def finalize_history():
-    dates=sorted({day for ser in OBS.values() for day in ser})
+    archive = json.loads(DEST.read_text(encoding="utf-8")) if DEST.exists() else {}
+    retained = {row["date"]: row for row in archive.get("rows", [])}
+    dates = sorted(set(retained).union(day for ser in OBS.values() for day in ser))
     rows=[]
     for day in dates:
-        item={"date":day}
+        item=retained.get(day, {"date":day})
         for key in FIELDS:
-            if day in OBS[key]:item[key]=OBS[key][day]
+            if day in OBS[key]:item.setdefault(key, OBS[key][day])
         rows.append(item)
     # Permanent archive: NEVER truncate stored market history based on chart lookback windows.
     # Chart windows 20/60/120/240 days are presentation filters only.
-    stats={}
+    stats=archive.get("stats", {})
     for key in FIELDS:
         values=[(r["date"],r[key]) for r in rows if key in r]
         stats[key]={
+          **stats.get(key, {}),
           "count":len(values),
           "first":values[0][0] if values else None,
           "last":values[-1][0] if values else None,
           "lastValue":values[-1][1] if values else None,
           "status":"ready" if len(values)>=55 else "partial",
-          "source":SOURCE.get(key,{"name":"Previously verified market observations","url":None})
+          "source":stats.get(key, {}).get("source") or SOURCE.get(key,{"name":"Previously verified market observations","url":None})
         }
     out={
       "schemaVersion":1,
@@ -378,8 +384,34 @@ def finalize_history():
       "stats":stats,
       "rows":rows
     }
+    out = {**archive, **out, "units": {**out["units"], **archive.get("units", {})},
+           "cutoff": max(out["cutoff"], archive.get("cutoff", ""))}
+    if "foreignCumulativeYi" in stats:
+        cumulative = stats["foreignCumulativeYi"]
+        total = Decimal(str(cumulative["lastValue"]))
+        for row in rows:
+            if row["date"] <= cumulative["last"] or "taiex" not in row:
+                continue
+            if "foreignNetYi" not in row:
+                break
+            total += Decimal(str(row["foreignNetYi"]))
+            row["foreignCumulativeYi"] = float(total)
+            cumulative.update(last=row["date"], lastValue=float(total), count=cumulative["count"]+1)
+    audit = out.get("marginMaintenance240dAudit")
+    if audit:
+        window = [r for r in rows if "taiex" in r][-audit["target"]:]
+        missing = [r["date"] for r in window if "marginMaintenanceExEtf" not in r]
+        observed = len(window) - len(missing)
+        status = "partial" if missing else "complete"
+        audit.update(targetFirst=window[0]["date"], targetLast=window[-1]["date"],
+                     observed=observed, missing=len(missing), missingDates=missing, status=status)
+        stats["marginMaintenanceExEtf"].update(targetFirst=audit["targetFirst"],
+            targetLast=audit["targetLast"], observedInTarget=observed, missingInTarget=len(missing),
+            coveragePct=round(100 * observed / len(window), 2), status="partial" if missing else "ready")
     if stats["taiex"]["count"]<20:raise SystemExit("FAIL: insufficient TAIEX source history")
-    DEST.write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    temp = DEST.with_suffix(".json.tmp")
+    temp.write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    temp.replace(DEST)
     print("FINAL COUNTS",json.dumps({k:(v["count"],v["last"]) for k,v in stats.items()},ensure_ascii=False),flush=True)
 
 if __name__=="__main__":main()
