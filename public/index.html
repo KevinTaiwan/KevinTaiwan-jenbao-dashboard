@@ -746,7 +746,7 @@ function provisionalDailyCandle(key){
      Number.isFinite(m.turnoverYiTwd)&&m.turnoverYiTwd>=0?m.turnoverYiTwd:null};
 }
 let chartCursorDate=null,chartContext=null,chartPointerSvg=null,chartPointerId=null;
-const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2],["us10yYield","美國 10 年公債殖利率","%","#9dbdff",3],["us10y2ySpread","美國 10Y－2Y 公債利差","百分點","#ddc18f",3,"spread"],["voo","VOO｜S&P 500 ETF（美元）","美元","#79d4f2",2],["qqq","QQQ｜Nasdaq-100 ETF（美元）","美元","#ffbc8b",2],["fedFundsEffective","美國聯邦基金有效利率（EFFR／DFF）","%","#c7df80",3]];
+const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資累積買賣超（240交易日基準）","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2],["us10yYield","美國 10 年公債殖利率","%","#9dbdff",3],["us10y2ySpread","美國 10Y－2Y 公債利差","百分點","#ddc18f",3,"spread"],["voo","VOO｜S&P 500 ETF（美元）","美元","#79d4f2",2],["qqq","QQQ｜Nasdaq-100 ETF（美元）","美元","#ffbc8b",2],["fedFundsEffective","美國聯邦基金有效利率（EFFR／DFF）","%","#c7df80",3]];
 
 const orderKeys=["technicalStack",...seriesConfig.map(c=>c[0])];
 const chartOrderKey="jb-public-chart-order-v1";
@@ -1196,7 +1196,11 @@ function showHistory(){
        lastPublished=raw.length?Math.max(...raw.map(r=>marketChartDate(r.date))):reference,
        currentSessions=["taiex","sp500"].map(k=>provisionalDailyCandle(k)).filter(Boolean).map(r=>marketChartDate(r.date)),
        cutoff=Math.min(Date.now(),Math.max(reference,lastPublished,...currentSessions)),
-       start=cutoff-(chartDays-1)*86400000,end=cutoff;
+       archivedSessions=[...new Set(raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r.taiex)).map(r=>r.date))]
+          .filter(day=>marketChartDate(day)<=cutoff).sort(),
+       windowSessions=archivedSessions.slice(-chartDays),
+       // Count completed TAIEX trading sessions, not calendar days. Provisional K-lines may extend the right edge.
+       start=windowSessions.length?marketChartDate(windowSessions[0]):cutoff-(chartDays-1)*86400000,end=cutoff;
  const TOP=35,BOTTOM=151,LEFT=38,RIGHT=758;
  // Each Monday immediately follows the preceding Friday: draw on weekday slots.
  // This affects presentation only; all original source observations remain stored.
@@ -1214,12 +1218,10 @@ function showHistory(){
  };
  const Yratio=(v,lo,hi)=>BOTTOM-((v-lo)/(hi-lo))*(BOTTOM-TOP);
  const svgText=(x,y,str,anchor="start",tone="#a8c0d5")=>'<text x="'+x+'" y="'+y+'" text-anchor="'+anchor+'" fill="'+tone+'" font-size="11">'+esc(str)+'</text>';
- const foreignDaily=raw.filter(r=>r&&typeof r.date==="string"&&marketIsWeekday(r.date)&&Number.isFinite(r.foreignNetYi)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date));
- let accumulated=0;
- const foreignCumulative=foreignDaily.map(r=>({date:r.date,foreignCumulativeYi:Math.round((accumulated+=r.foreignNetYi)*10000)/10000}));
+ // Foreign daily flow and cumulative values both come from the verified 240-session history.
+ // The cumulative baseline is fixed in market-history.json and never resets for a 20/60/120-day display window.
  const series=seriesConfig.map(([key,label,unit,color,digits,,kind])=>{
-  const isCum=key==="foreignCumulativeYi";
-  const all=isCum?foreignCumulative:raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date));
+  const all=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date));
   const rows=all.filter(r=>marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end);
   const s={key,label,unit,color,digits,kind:seriesConfig.find(x=>x[0]===key)?.[5]||"line",rows,first:rows[0]?.[key],ma:{}};
   for(const n of MA_PERIODS)s.ma[n]=rollingMean(all,key,n).filter(p=>marketIsWeekday(p.date)&&marketChartDate(p.date)>=start&&marketChartDate(p.date)<=end);
@@ -1282,7 +1284,7 @@ function showHistory(){
   }).join("");
   const maLegend=maControls(s);
   const svg='<svg class="cross-svg" preserveAspectRatio="none" data-series-svg="'+key+'" viewBox="0 0 780 190" role="img" aria-label="'+esc(label)+'：原始值及 5、20、60、240 筆有效觀測均線">'+guides+baseline+main+maCurves+cursor(color)+ylabels+dates(s.scale)+'</svg>';
-  return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>'+length+' 筆 · '+esc(rows[0].date)+' 至 '+esc(last.date)+'</small>'+maLegend+'<div class="cross-stat">'+(s.kind==="flow"?"區間合計 ":s.kind==="cumulative"?"從 "+rows[0].date+" 起累積 ":s.kind==="spread"?"利差變動 ":"區間變化 ")+esc(delta)+'</div></div>'+svg+'<div class="cross-last"><strong data-cross-value="'+key+'">'+esc(lastValue)+'</strong><small data-cross-date="'+key+'">觀測日 '+esc(last.date)+'</small><div class="cross-ma-values" data-ma-values="'+key+'">MA5／20／60／240：依選定日期</div></div></div>';
+  return '<div class="cross-row" data-cross-row="'+key+'"><div class="cross-label">'+chartSortControls(key,label)+'<strong>'+esc(label)+'</strong><small>'+length+' 筆 · '+esc(rows[0].date)+' 至 '+esc(last.date)+'</small>'+maLegend+'<div class="cross-stat">'+(s.kind==="flow"?"區間合計 ":s.kind==="cumulative"?"自資料基準日累積 ":s.kind==="spread"?"利差變動 ":"區間變化 ")+esc(delta)+'</div></div>'+svg+'<div class="cross-last"><strong data-cross-value="'+key+'">'+esc(lastValue)+'</strong><small data-cross-date="'+key+'">觀測日 '+esc(last.date)+'</small><div class="cross-ma-values" data-ma-values="'+key+'">MA5／20／60／240：依選定日期</div></div></div>';
  };
 
  const technicalStack=(()=>{
@@ -1295,8 +1297,7 @@ function showHistory(){
   const bb=techFiltered(techBollinger(fullTop),start,end);
   const osc=techFiltered(c.oscillator==="RSI"?techRsi(fullBottom):c.oscillator==="KD"?(kdAvailable?techKd(kdCandles):[]):techMacd(fullBottom),start,end);
   let middle;
-  if(c.middle==="foreignCumulativeYi"){let total=0;middle=raw.filter(r=>Number.isFinite(r.foreignNetYi)&&r.date&&marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:(total+=r.foreignNetYi)}));}
-  else if(c.middle==="turnoverWithDayTrade")middle=techFiltered(raw.filter(r=>
+  if(c.middle==="turnoverWithDayTrade")middle=techFiltered(raw.filter(r=>
     r&&typeof r.date==="string"&&Number.isFinite(r.marketTurnoverYiTwd)&&Number.isFinite(r.dayTradeTurnoverSharePct)
    ).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>
     ({date:r.date,value:r.marketTurnoverYiTwd,ratio:r.dayTradeTurnoverSharePct})),start,end);
@@ -1450,7 +1451,7 @@ function showHistory(){
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
  chartContext={start,end,series,dates:uniqueDays,x:X,timelineDays,technicalStack};
  const counts=series.map(s=>s.label+":"+s.rows.length).join("｜");
- note.textContent="顯示範圍：截至 "+new Date(end).toISOString().slice(0,10)+" 的 "+chartDays+" 日曆日。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
+ note.textContent="顯示範圍：最近 "+chartDays+" 個已收盤台股交易日（"+(windowSessions[0]||"—")+" 至 "+(windowSessions.at(-1)||"—")+"）；盤中暫定 K 線可能另顯示當日。外資買賣超及外資累積買賣超均採用 market-history.json 的真實 240 交易日資料，累積值固定由母檔基準日計算，不隨圖表視窗重新歸零。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
  if(uniqueDays.length)syncChartCursor(chartCursorDate||uniqueDays.at(-1));
  else{$("crossCursorDate").textContent="無可比較日期";$("crossCursorCoverage").textContent="等待歷史資料"}
 }
