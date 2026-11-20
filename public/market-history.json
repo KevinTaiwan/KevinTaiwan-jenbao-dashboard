@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-19T22:41:53+00:00",
+  "generatedAt": "2026-11-20T01:13:27.978338+00:00",
   "cutoff": "2026-11-19",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -21,8 +21,8 @@
   },
   "stats": {
     "taiex": {
-      "count": 157,
-      "first": "2026-04-01",
+      "count": 421,
+      "first": "2025-03-03",
       "last": "2026-11-19",
       "lastValue": 38426.89,
       "status": "ready",
@@ -43,10 +43,10 @@
       }
     },
     "usdtwd": {
-      "count": 212,
-      "first": "2025-11-18",
-      "last": "2026-11-18",
-      "lastValue": 32.953,
+      "count": 444,
+      "first": "2025-03-10",
+      "last": "2026-11-20",
+      "lastValue": 33.0169983,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance TWD=X daily indicative FX quote; Library values override on overlapping dates",
@@ -65,8 +65,8 @@
       }
     },
     "hyOas": {
-      "count": 214,
-      "first": "2026-01-23",
+      "count": 446,
+      "first": "2025-03-10",
       "last": "2026-11-18",
       "lastValue": 3.47,
       "status": "ready",
@@ -80,7 +80,7 @@
       "first": "2026-08-06",
       "last": "2026-11-19",
       "lastValue": -236.5831,
-      "status": "ready",
+      "status": "partial",
       "source": {
         "name": "TWSE MI_MARGN finance outstanding daily change, includes ETFs, TWD 100m",
         "url": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN"
@@ -91,7 +91,7 @@
       "first": "2026-08-04",
       "last": "2026-11-19",
       "lastValue": -243.1221,
-      "status": "ready",
+      "status": "partial",
       "source": {
         "name": "TWSE BFI82U foreign cash investment net amount, TWD 100m",
         "url": "https://www.twse.com.tw/rwd/zh/fund/BFI82U"
@@ -109,8 +109,8 @@
       }
     },
     "us10yYield": {
-      "count": 207,
-      "first": "2026-01-23",
+      "count": 425,
+      "first": "2025-03-10",
       "last": "2026-11-18",
       "lastValue": 5.07,
       "status": "ready",
@@ -120,8 +120,8 @@
       }
     },
     "us10y2ySpread": {
-      "count": 208,
-      "first": "2026-01-23",
+      "count": 426,
+      "first": "2025-03-10",
       "last": "2026-11-19",
       "lastValue": 0.28,
       "status": "ready",
@@ -153,8 +153,8 @@
       }
     },
     "fedFundsEffective": {
-      "count": 300,
-      "first": "2026-01-23",
+      "count": 619,
+      "first": "2025-03-10",
       "last": "2026-11-18",
       "lastValue": 3.88,
       "status": "ready",
@@ -35667,748 +35667,2112 @@
     },
     {
       "date": "2025-03-03",
-      "vix": 22.78
+      "vix": 22.78,
+      "taiex": 22756.25
     },
     {
       "date": "2025-03-04",
-      "vix": 23.51
+      "vix": 23.51,
+      "taiex": 22596.88
     },
     {
       "date": "2025-03-05",
-      "vix": 21.93
+      "vix": 21.93,
+      "taiex": 22871.9
     },
     {
       "date": "2025-03-06",
-      "vix": 24.87
+      "vix": 24.87,
+      "taiex": 22715.43
     },
     {
       "date": "2025-03-07",
-      "vix": 23.37
+      "vix": 23.37,
+      "taiex": 22576.07
     },
     {
       "date": "2025-03-10",
-      "vix": 27.86
+      "vix": 27.86,
+      "hyOas": 3.16,
+      "us10yYield": 4.22,
+      "us10y2ySpread": 0.33,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.8269997,
+      "taiex": 22459.15
     },
     {
       "date": "2025-03-11",
-      "vix": 26.92
+      "vix": 26.92,
+      "hyOas": 3.22,
+      "us10yYield": 4.28,
+      "us10y2ySpread": 0.34,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.8666,
+      "taiex": 22071.09
     },
     {
       "date": "2025-03-12",
-      "vix": 24.23
+      "vix": 24.23,
+      "hyOas": 3.2,
+      "us10yYield": 4.32,
+      "us10y2ySpread": 0.31,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.8688011,
+      "taiex": 22278.36
     },
     {
       "date": "2025-03-13",
-      "vix": 24.66
+      "vix": 24.66,
+      "hyOas": 3.4,
+      "us10yYield": 4.27,
+      "us10y2ySpread": 0.33,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.9062996,
+      "taiex": 21961.68
     },
     {
       "date": "2025-03-14",
-      "vix": 21.77
+      "vix": 21.77,
+      "hyOas": 3.25,
+      "us10yYield": 4.31,
+      "us10y2ySpread": 0.29,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.968399,
+      "taiex": 21968.05
+    },
+    {
+      "date": "2025-03-15",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-03-16",
+      "fedFundsEffective": 4.33
     },
     {
       "date": "2025-03-17",
-      "vix": 20.51
+      "vix": 20.51,
+      "hyOas": 3.18,
+      "us10yYield": 4.31,
+      "us10y2ySpread": 0.25,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.9259987,
+      "taiex": 22118.63
     },
     {
       "date": "2025-03-18",
-      "vix": 21.7
+      "vix": 21.7,
+      "hyOas": 3.23,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.25,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.9564018,
+      "taiex": 22271.67
     },
     {
       "date": "2025-03-19",
-      "vix": 19.9
+      "vix": 19.9,
+      "hyOas": 3.19,
+      "us10yYield": 4.25,
+      "us10y2ySpread": 0.26,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.9791985,
+      "taiex": 21960.83
     },
     {
       "date": "2025-03-20",
-      "vix": 19.8
+      "vix": 19.8,
+      "hyOas": 3.17,
+      "us10yYield": 4.24,
+      "us10y2ySpread": 0.29,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.0032997,
+      "taiex": 22377.26
     },
     {
       "date": "2025-03-21",
-      "vix": 19.28
+      "vix": 19.28,
+      "hyOas": 3.21,
+      "us10yYield": 4.25,
+      "us10y2ySpread": 0.31,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.9873009,
+      "taiex": 22209.1
+    },
+    {
+      "date": "2025-03-22",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-03-23",
+      "fedFundsEffective": 4.33
     },
     {
       "date": "2025-03-24",
-      "vix": 17.48
+      "vix": 17.48,
+      "hyOas": 3.05,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.3,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.9749985,
+      "taiex": 22106.64
     },
     {
       "date": "2025-03-25",
-      "vix": 17.15
+      "vix": 17.15,
+      "hyOas": 3.09,
+      "us10yYield": 4.31,
+      "us10y2ySpread": 0.35,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.0112991,
+      "taiex": 22273.19
     },
     {
       "date": "2025-03-26",
-      "vix": 18.33
+      "vix": 18.33,
+      "hyOas": 3.19,
+      "us10yYield": 4.35,
+      "us10y2ySpread": 0.37,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.0452995,
+      "taiex": 22260.29
     },
     {
       "date": "2025-03-27",
-      "vix": 18.69
+      "vix": 18.69,
+      "hyOas": 3.27,
+      "us10yYield": 4.38,
+      "us10y2ySpread": 0.41,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.088501,
+      "taiex": 21951.76
     },
     {
       "date": "2025-03-28",
-      "vix": 21.65
+      "vix": 21.65,
+      "hyOas": 3.47,
+      "us10yYield": 4.27,
+      "us10y2ySpread": 0.38,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.1114006,
+      "taiex": 21602.89
+    },
+    {
+      "date": "2025-03-29",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-03-30",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.1857986
     },
     {
       "date": "2025-03-31",
-      "vix": 22.28
+      "vix": 22.28,
+      "hyOas": 3.55,
+      "us10yYield": 4.23,
+      "us10y2ySpread": 0.34,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.2391014,
+      "taiex": 20695.9
     },
     {
       "date": "2025-04-01",
-      "vix": 21.77
+      "vix": 21.77,
+      "hyOas": 3.5,
+      "us10yYield": 4.17,
+      "us10y2ySpread": 0.3,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.2034988,
+      "taiex": 21280.17
     },
     {
       "date": "2025-04-02",
-      "vix": 21.51
+      "vix": 21.51,
+      "hyOas": 3.42,
+      "us10yYield": 4.2,
+      "us10y2ySpread": 0.29,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.2625008,
+      "taiex": 21298.22
     },
     {
       "date": "2025-04-03",
-      "vix": 30.02
+      "vix": 30.02,
+      "hyOas": 4.01,
+      "us10yYield": 4.06,
+      "us10y2ySpread": 0.35,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.0311012
     },
     {
       "date": "2025-04-04",
-      "vix": 45.31
+      "vix": 45.31,
+      "hyOas": 4.45,
+      "us10yYield": 4.01,
+      "us10y2ySpread": 0.33,
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-04-05",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-04-06",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.1624985
     },
     {
       "date": "2025-04-07",
-      "vix": 46.98
+      "vix": 46.98,
+      "hyOas": 4.61,
+      "us10yYield": 4.15,
+      "us10y2ySpread": 0.42,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.9800987,
+      "taiex": 19232.35
     },
     {
       "date": "2025-04-08",
-      "vix": 52.33
+      "vix": 52.33,
+      "hyOas": 4.57,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 33.0806999,
+      "taiex": 18459.95
     },
     {
       "date": "2025-04-09",
-      "vix": 33.62
+      "vix": 33.62,
+      "hyOas": 4.37,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.43,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.5881004,
+      "taiex": 17391.76
     },
     {
       "date": "2025-04-10",
-      "vix": 40.72
+      "vix": 40.72,
+      "hyOas": 4.42,
+      "us10yYield": 4.4,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.7863007,
+      "taiex": 19000.03
     },
     {
       "date": "2025-04-11",
-      "vix": 37.56
+      "vix": 37.56,
+      "hyOas": 4.26,
+      "us10yYield": 4.48,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "taiex": 19528.77
+    },
+    {
+      "date": "2025-04-12",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-04-13",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.3619995
     },
     {
       "date": "2025-04-14",
-      "vix": 30.89
+      "vix": 30.89,
+      "hyOas": 4.14,
+      "us10yYield": 4.38,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.3568001,
+      "taiex": 19513.09
     },
     {
       "date": "2025-04-15",
-      "vix": 30.12
+      "vix": 30.12,
+      "hyOas": 4.09,
+      "us10yYield": 4.35,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.5040016,
+      "taiex": 19857.67
     },
     {
       "date": "2025-04-16",
-      "vix": 32.64
+      "vix": 32.64,
+      "hyOas": 4.16,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.3787994,
+      "taiex": 19468.0
     },
     {
       "date": "2025-04-17",
-      "vix": 29.65
+      "vix": 29.65,
+      "hyOas": 4.02,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.33,
+      "taiex": 19338.73
+    },
+    {
+      "date": "2025-04-18",
+      "fedFundsEffective": 4.33,
+      "taiex": 19395.03
+    },
+    {
+      "date": "2025-04-19",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-04-20",
+      "fedFundsEffective": 4.33
     },
     {
       "date": "2025-04-21",
-      "vix": 33.82
+      "vix": 33.82,
+      "hyOas": 4.16,
+      "us10yYield": 4.42,
+      "us10y2ySpread": 0.67,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.4406013,
+      "taiex": 19106.2
     },
     {
       "date": "2025-04-22",
-      "vix": 30.57
+      "vix": 30.57,
+      "hyOas": 3.99,
+      "us10yYield": 4.41,
+      "us10y2ySpread": 0.65,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.5736008,
+      "taiex": 18793.43
     },
     {
       "date": "2025-04-23",
-      "vix": 28.45
+      "vix": 28.45,
+      "hyOas": 3.75,
+      "us10yYield": 4.4,
+      "us10y2ySpread": 0.59,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.5327988,
+      "taiex": 19639.14
     },
     {
       "date": "2025-04-24",
-      "vix": 26.47
+      "vix": 26.47,
+      "hyOas": 3.73,
+      "us10yYield": 4.32,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.4356003,
+      "taiex": 19478.81
     },
     {
       "date": "2025-04-25",
-      "vix": 24.84
+      "vix": 24.84,
+      "hyOas": 3.67,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "taiex": 19872.73
+    },
+    {
+      "date": "2025-04-26",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-04-27",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.519001
     },
     {
       "date": "2025-04-28",
-      "vix": 25.15
+      "vix": 25.15,
+      "hyOas": 3.73,
+      "us10yYield": 4.23,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.4258995,
+      "taiex": 20034.41
     },
     {
       "date": "2025-04-29",
-      "vix": 24.17
+      "vix": 24.17,
+      "hyOas": 3.74,
+      "us10yYield": 4.19,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.321701,
+      "taiex": 20232.63
     },
     {
       "date": "2025-04-30",
-      "vix": 24.7
+      "vix": 24.7,
+      "hyOas": 3.94,
+      "us10yYield": 4.17,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.0320015,
+      "taiex": 20235.03
     },
     {
       "date": "2025-05-01",
-      "vix": 24.6
+      "vix": 24.6,
+      "hyOas": 3.78,
+      "us10yYield": 4.25,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 32.111599
     },
     {
       "date": "2025-05-02",
-      "vix": 22.68
+      "vix": 22.68,
+      "hyOas": 3.6,
+      "us10yYield": 4.33,
+      "us10y2ySpread": 0.5,
+      "fedFundsEffective": 4.33,
+      "taiex": 20787.64
+    },
+    {
+      "date": "2025-05-03",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-05-04",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.7042999
     },
     {
       "date": "2025-05-05",
-      "vix": 23.64
+      "vix": 23.64,
+      "hyOas": 3.6,
+      "us10yYield": 4.36,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.1599998,
+      "taiex": 20532.99
     },
     {
       "date": "2025-05-06",
-      "vix": 24.76
+      "vix": 24.76,
+      "hyOas": 3.66,
+      "us10yYield": 4.3,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9776001,
+      "taiex": 20522.59
     },
     {
       "date": "2025-05-07",
-      "vix": 23.55
+      "vix": 23.55,
+      "hyOas": 3.67,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.48,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.3906994,
+      "taiex": 20546.49
     },
     {
       "date": "2025-05-08",
-      "vix": 22.48
+      "vix": 22.48,
+      "hyOas": 3.51,
+      "us10yYield": 4.37,
+      "us10y2ySpread": 0.47,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.2689991,
+      "taiex": 20543.4
     },
     {
       "date": "2025-05-09",
-      "vix": 21.9
+      "vix": 21.9,
+      "hyOas": 3.53,
+      "us10yYield": 4.37,
+      "us10y2ySpread": 0.49,
+      "fedFundsEffective": 4.33,
+      "taiex": 20915.04
+    },
+    {
+      "date": "2025-05-10",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-05-11",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.2464008
     },
     {
       "date": "2025-05-12",
-      "vix": 18.39
+      "vix": 18.39,
+      "hyOas": 3.15,
+      "us10yYield": 4.45,
+      "us10y2ySpread": 0.47,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.3931007,
+      "taiex": 21129.54
     },
     {
       "date": "2025-05-13",
-      "vix": 18.22
+      "vix": 18.22,
+      "hyOas": 3.09,
+      "us10yYield": 4.49,
+      "us10y2ySpread": 0.47,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.4249992,
+      "taiex": 21330.14
     },
     {
       "date": "2025-05-14",
-      "vix": 18.62
+      "vix": 18.62,
+      "hyOas": 3.1,
+      "us10yYield": 4.53,
+      "us10y2ySpread": 0.48,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.3397007,
+      "taiex": 21782.87
     },
     {
       "date": "2025-05-15",
-      "vix": 17.83
+      "vix": 17.83,
+      "hyOas": 3.2,
+      "us10yYield": 4.45,
+      "us10y2ySpread": 0.49,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.1669998,
+      "taiex": 21730.25
     },
     {
       "date": "2025-05-16",
-      "vix": 17.24
+      "vix": 17.24,
+      "hyOas": 3.16,
+      "us10yYield": 4.43,
+      "us10y2ySpread": 0.45,
+      "fedFundsEffective": 4.33,
+      "taiex": 21843.69
+    },
+    {
+      "date": "2025-05-17",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-05-18",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.2026005
     },
     {
       "date": "2025-05-19",
-      "vix": 18.14
+      "vix": 18.14,
+      "hyOas": 3.21,
+      "us10yYield": 4.46,
+      "us10y2ySpread": 0.49,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.1457996,
+      "taiex": 21523.83
     },
     {
       "date": "2025-05-20",
-      "vix": 18.09
+      "vix": 18.09,
+      "hyOas": 3.2,
+      "us10yYield": 4.48,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.1462994,
+      "taiex": 21526.03
     },
     {
       "date": "2025-05-21",
-      "vix": 20.87
+      "vix": 20.87,
+      "hyOas": 3.25,
+      "us10yYield": 4.58,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.0221004,
+      "taiex": 21803.91
     },
     {
       "date": "2025-05-22",
-      "vix": 20.28
+      "vix": 20.28,
+      "hyOas": 3.32,
+      "us10yYield": 4.54,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.0468998,
+      "taiex": 21670.96
     },
     {
       "date": "2025-05-23",
-      "vix": 22.29
+      "vix": 22.29,
+      "hyOas": 3.4,
+      "us10yYield": 4.51,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "taiex": 21652.24
+    },
+    {
+      "date": "2025-05-24",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-05-25",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9715004
     },
     {
       "date": "2025-05-26",
-      "vix": 20.57
+      "vix": 20.57,
+      "hyOas": 3.4,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9150009,
+      "taiex": 21536.57
     },
     {
       "date": "2025-05-27",
-      "vix": 18.96
+      "vix": 18.96,
+      "hyOas": 3.24,
+      "us10yYield": 4.43,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9647999,
+      "taiex": 21336.54
     },
     {
       "date": "2025-05-28",
-      "vix": 19.31
+      "vix": 19.31,
+      "hyOas": 3.23,
+      "us10yYield": 4.47,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9500008,
+      "taiex": 21357.72
     },
     {
       "date": "2025-05-29",
-      "vix": 19.18
+      "vix": 19.18,
+      "hyOas": 3.22,
+      "us10yYield": 4.43,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8500996,
+      "taiex": 21347.3
     },
     {
       "date": "2025-05-30",
-      "vix": 18.57
+      "vix": 18.57,
+      "hyOas": 3.31,
+      "us10yYield": 4.41,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-05-31",
+      "hyOas": 3.32,
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-06-01",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8710003
     },
     {
       "date": "2025-06-02",
-      "vix": 18.36
+      "vix": 18.36,
+      "hyOas": 3.27,
+      "us10yYield": 4.46,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9873009,
+      "taiex": 21002.71
     },
     {
       "date": "2025-06-03",
-      "vix": 17.69
+      "vix": 17.69,
+      "hyOas": 3.19,
+      "us10yYield": 4.46,
+      "us10y2ySpread": 0.5,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9659004,
+      "taiex": 21126.93
     },
     {
       "date": "2025-06-04",
-      "vix": 17.61
+      "vix": 17.61,
+      "hyOas": 3.23,
+      "us10yYield": 4.37,
+      "us10y2ySpread": 0.5,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9419994,
+      "taiex": 21618.09
     },
     {
       "date": "2025-06-05",
-      "vix": 18.48
+      "vix": 18.48,
+      "hyOas": 3.18,
+      "us10yYield": 4.4,
+      "us10y2ySpread": 0.48,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9452991,
+      "taiex": 21674.43
     },
     {
       "date": "2025-06-06",
-      "vix": 16.77
+      "vix": 16.77,
+      "hyOas": 3.09,
+      "us10yYield": 4.51,
+      "us10y2ySpread": 0.47,
+      "fedFundsEffective": 4.33,
+      "taiex": 21660.66
+    },
+    {
+      "date": "2025-06-07",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-06-08",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9176998
     },
     {
       "date": "2025-06-09",
-      "vix": 17.16
+      "vix": 17.16,
+      "hyOas": 3.12,
+      "us10yYield": 4.49,
+      "us10y2ySpread": 0.48,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9137993,
+      "taiex": 21790.29
     },
     {
       "date": "2025-06-10",
-      "vix": 16.95
+      "vix": 16.95,
+      "hyOas": 3.12,
+      "us10yYield": 4.47,
+      "us10y2ySpread": 0.46,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8889008,
+      "taiex": 22242.14
     },
     {
       "date": "2025-06-11",
-      "vix": 17.26
+      "vix": 17.26,
+      "hyOas": 3.12,
+      "us10yYield": 4.41,
+      "us10y2ySpread": 0.47,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8075008,
+      "taiex": 22470.1
     },
     {
       "date": "2025-06-12",
-      "vix": 18.02
+      "vix": 18.02,
+      "hyOas": 3.17,
+      "us10yYield": 4.36,
+      "us10y2ySpread": 0.46,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.5251999,
+      "taiex": 22287.82
     },
     {
       "date": "2025-06-13",
-      "vix": 20.82
+      "vix": 20.82,
+      "hyOas": 3.18,
+      "us10yYield": 4.41,
+      "us10y2ySpread": 0.45,
+      "fedFundsEffective": 4.33,
+      "taiex": 22072.95
+    },
+    {
+      "date": "2025-06-14",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-06-15",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.5049992
     },
     {
       "date": "2025-06-16",
-      "vix": 19.11
+      "vix": 19.11,
+      "hyOas": 3.1,
+      "us10yYield": 4.46,
+      "us10y2ySpread": 0.49,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.0049992,
+      "taiex": 22049.9
     },
     {
       "date": "2025-06-17",
-      "vix": 21.6
+      "vix": 21.6,
+      "hyOas": 3.17,
+      "us10yYield": 4.39,
+      "us10y2ySpread": 0.45,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.6471004,
+      "taiex": 22211.59
     },
     {
       "date": "2025-06-18",
-      "vix": 20.14
+      "vix": 20.14,
+      "hyOas": 3.16,
+      "us10yYield": 4.38,
+      "us10y2ySpread": 0.44,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.5417004,
+      "taiex": 22356.73
     },
     {
       "date": "2025-06-19",
-      "vix": 22.17
+      "vix": 22.17,
+      "hyOas": 3.16,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.5713005,
+      "taiex": 22003.5
     },
     {
       "date": "2025-06-20",
-      "vix": 20.62
+      "vix": 20.62,
+      "hyOas": 3.13,
+      "us10yYield": 4.38,
+      "us10y2ySpread": 0.48,
+      "fedFundsEffective": 4.33,
+      "taiex": 22045.74
+    },
+    {
+      "date": "2025-06-21",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-06-22",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.5330009
     },
     {
       "date": "2025-06-23",
-      "vix": 19.83
+      "vix": 19.83,
+      "hyOas": 3.12,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.5,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.6739006,
+      "taiex": 21732.02
     },
     {
       "date": "2025-06-24",
-      "vix": 17.48
+      "vix": 17.48,
+      "hyOas": 3.06,
+      "us10yYield": 4.3,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.4580994,
+      "taiex": 22188.76
     },
     {
       "date": "2025-06-25",
-      "vix": 16.76
+      "vix": 16.76,
+      "hyOas": 3.04,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.3418999,
+      "taiex": 22430.61
     },
     {
       "date": "2025-06-26",
-      "vix": 16.59
+      "vix": 16.59,
+      "hyOas": 3.04,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 28.8190002,
+      "taiex": 22492.34
     },
     {
       "date": "2025-06-27",
-      "vix": 16.32
+      "vix": 16.32,
+      "hyOas": 3.02,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 4.33,
+      "taiex": 22580.08
+    },
+    {
+      "date": "2025-06-28",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-06-29",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.0949993
     },
     {
       "date": "2025-06-30",
-      "vix": 16.73
+      "vix": 16.73,
+      "hyOas": 2.96,
+      "us10yYield": 4.24,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.2066002,
+      "taiex": 22256.02
     },
     {
       "date": "2025-07-01",
-      "vix": 16.83
+      "vix": 16.83,
+      "hyOas": 2.91,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.48,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.2259007,
+      "taiex": 22553.72
     },
     {
       "date": "2025-07-02",
-      "vix": 16.64
+      "vix": 16.64,
+      "hyOas": 2.88,
+      "us10yYield": 4.3,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 28.9680996,
+      "taiex": 22577.74
     },
     {
       "date": "2025-07-03",
-      "vix": 16.38
+      "vix": 16.38,
+      "hyOas": 2.8,
+      "us10yYield": 4.35,
+      "us10y2ySpread": 0.47,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 28.9171009,
+      "taiex": 22712.97
     },
     {
       "date": "2025-07-04",
-      "vix": 17.48
+      "vix": 17.48,
+      "hyOas": 2.8,
+      "fedFundsEffective": 4.33,
+      "taiex": 22547.5
+    },
+    {
+      "date": "2025-07-05",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-07-06",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 28.9009991
     },
     {
       "date": "2025-07-07",
-      "vix": 17.79
+      "vix": 17.79,
+      "hyOas": 2.86,
+      "us10yYield": 4.4,
+      "us10y2ySpread": 0.5,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.0683002,
+      "taiex": 22428.72
     },
     {
       "date": "2025-07-08",
-      "vix": 16.81
+      "vix": 16.81,
+      "hyOas": 2.92,
+      "us10yYield": 4.42,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.1070995,
+      "taiex": 22362.27
     },
     {
       "date": "2025-07-09",
-      "vix": 15.94
+      "vix": 15.94,
+      "hyOas": 2.94,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.48,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.2056007,
+      "taiex": 22527.01
     },
     {
       "date": "2025-07-10",
-      "vix": 15.78
+      "vix": 15.78,
+      "hyOas": 2.92,
+      "us10yYield": 4.35,
+      "us10y2ySpread": 0.49,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.243,
+      "taiex": 22693.25
     },
     {
       "date": "2025-07-11",
-      "vix": 16.4
+      "vix": 16.4,
+      "hyOas": 2.97,
+      "us10yYield": 4.43,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.33,
+      "taiex": 22751.03
+    },
+    {
+      "date": "2025-07-12",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-07-13",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.2129993
     },
     {
       "date": "2025-07-14",
-      "vix": 17.2
+      "vix": 17.2,
+      "hyOas": 2.95,
+      "us10yYield": 4.43,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.3460999,
+      "taiex": 22614.97
     },
     {
       "date": "2025-07-15",
-      "vix": 17.38
+      "vix": 17.38,
+      "hyOas": 2.95,
+      "us10yYield": 4.5,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.3880997,
+      "taiex": 22835.94
     },
     {
       "date": "2025-07-16",
-      "vix": 17.16
+      "vix": 17.16,
+      "hyOas": 3.0,
+      "us10yYield": 4.46,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.4009991,
+      "taiex": 23042.9
     },
     {
       "date": "2025-07-17",
-      "vix": 16.52
+      "vix": 16.52,
+      "hyOas": 2.91,
+      "us10yYield": 4.47,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.4032001,
+      "taiex": 23113.28
     },
     {
       "date": "2025-07-18",
-      "vix": 16.41
+      "vix": 16.41,
+      "hyOas": 2.93,
+      "us10yYield": 4.44,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 4.33,
+      "taiex": 23383.13
+    },
+    {
+      "date": "2025-07-19",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-07-20",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.3780003
     },
     {
       "date": "2025-07-21",
-      "vix": 16.65
+      "vix": 16.65,
+      "hyOas": 2.89,
+      "us10yYield": 4.38,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.3335991,
+      "taiex": 23340.56
     },
     {
       "date": "2025-07-22",
-      "vix": 16.5
+      "vix": 16.5,
+      "hyOas": 2.9,
+      "us10yYield": 4.35,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.3990002,
+      "taiex": 22987.92
     },
     {
       "date": "2025-07-23",
-      "vix": 15.37
+      "vix": 15.37,
+      "hyOas": 2.83,
+      "us10yYield": 4.4,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.2341995,
+      "taiex": 23318.67
     },
     {
       "date": "2025-07-24",
-      "vix": 15.39
+      "vix": 15.39,
+      "hyOas": 2.82,
+      "us10yYield": 4.43,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.3910007,
+      "taiex": 23373.73
     },
     {
       "date": "2025-07-25",
-      "vix": 14.93
+      "vix": 14.93,
+      "hyOas": 2.84,
+      "us10yYield": 4.4,
+      "us10y2ySpread": 0.49,
+      "fedFundsEffective": 4.33,
+      "taiex": 23364.38
+    },
+    {
+      "date": "2025-07-26",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-07-27",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.4720001
     },
     {
       "date": "2025-07-28",
-      "vix": 15.03
+      "vix": 15.03,
+      "hyOas": 2.82,
+      "us10yYield": 4.42,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.6569996,
+      "taiex": 23412.98
     },
     {
       "date": "2025-07-29",
-      "vix": 15.98
+      "vix": 15.98,
+      "hyOas": 2.86,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.48,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.6895008,
+      "taiex": 23201.52
     },
     {
       "date": "2025-07-30",
-      "vix": 15.48
+      "vix": 15.48,
+      "hyOas": 2.89,
+      "us10yYield": 4.38,
+      "us10y2ySpread": 0.44,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8279991,
+      "taiex": 23461.72
     },
     {
       "date": "2025-07-31",
-      "vix": 16.72
+      "vix": 16.72,
+      "hyOas": 2.86,
+      "us10yYield": 4.37,
+      "us10y2ySpread": 0.43,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9060001,
+      "taiex": 23542.52
     },
     {
       "date": "2025-08-01",
-      "vix": 20.38
+      "vix": 20.38,
+      "hyOas": 3.13,
+      "us10yYield": 4.23,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.33,
+      "taiex": 23434.38
+    },
+    {
+      "date": "2025-08-02",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-08-03",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8150005
     },
     {
       "date": "2025-08-04",
-      "vix": 17.52
+      "vix": 17.52,
+      "hyOas": 3.02,
+      "us10yYield": 4.22,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8841,
+      "taiex": 23378.94
     },
     {
       "date": "2025-08-05",
-      "vix": 17.85
+      "vix": 17.85,
+      "hyOas": 2.98,
+      "us10yYield": 4.22,
+      "us10y2ySpread": 0.5,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9374008,
+      "taiex": 23660.59
     },
     {
       "date": "2025-08-06",
-      "vix": 16.77
+      "vix": 16.77,
+      "hyOas": 2.98,
+      "us10yYield": 4.22,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9146996,
+      "taiex": 23447.36
     },
     {
       "date": "2025-08-07",
-      "vix": 16.57
+      "vix": 16.57,
+      "hyOas": 2.95,
+      "us10yYield": 4.23,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8080997,
+      "taiex": 24003.77
     },
     {
       "date": "2025-08-08",
-      "vix": 15.15
+      "vix": 15.15,
+      "hyOas": 2.94,
+      "us10yYield": 4.27,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "taiex": 24021.26
+    },
+    {
+      "date": "2025-08-09",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-08-10",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8509998
     },
     {
       "date": "2025-08-11",
-      "vix": 16.25
+      "vix": 16.25,
+      "hyOas": 2.94,
+      "us10yYield": 4.27,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.948,
+      "taiex": 24135.5
     },
     {
       "date": "2025-08-12",
-      "vix": 14.73
+      "vix": 14.73,
+      "hyOas": 2.93,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.8780994,
+      "taiex": 24158.36
     },
     {
       "date": "2025-08-13",
-      "vix": 14.49
+      "vix": 14.49,
+      "hyOas": 2.9,
+      "us10yYield": 4.24,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9396992,
+      "taiex": 24370.02
     },
     {
       "date": "2025-08-14",
-      "vix": 14.83
+      "vix": 14.83,
+      "hyOas": 2.89,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.0790005,
+      "taiex": 24238.1
     },
     {
       "date": "2025-08-15",
-      "vix": 15.09
+      "vix": 15.09,
+      "hyOas": 2.88,
+      "us10yYield": 4.33,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 4.33,
+      "taiex": 24334.48
+    },
+    {
+      "date": "2025-08-16",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-08-17",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 29.9890003
     },
     {
       "date": "2025-08-18",
-      "vix": 14.99
+      "vix": 14.99,
+      "hyOas": 2.88,
+      "us10yYield": 4.34,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.0251007,
+      "taiex": 24482.52
     },
     {
       "date": "2025-08-19",
-      "vix": 15.57
+      "vix": 15.57,
+      "hyOas": 2.9,
+      "us10yYield": 4.3,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.1072998,
+      "taiex": 24353.5
     },
     {
       "date": "2025-08-20",
-      "vix": 15.69
+      "vix": 15.69,
+      "hyOas": 2.94,
+      "us10yYield": 4.29,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.2800999,
+      "taiex": 23625.44
     },
     {
       "date": "2025-08-21",
-      "vix": 16.6
+      "vix": 16.6,
+      "hyOas": 2.95,
+      "us10yYield": 4.33,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.5160007,
+      "taiex": 23962.13
     },
     {
       "date": "2025-08-22",
-      "vix": 14.22
+      "vix": 14.22,
+      "hyOas": 2.88,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 4.33,
+      "taiex": 23764.47
+    },
+    {
+      "date": "2025-08-23",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-08-24",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.3673
     },
     {
       "date": "2025-08-25",
-      "vix": 14.79
+      "vix": 14.79,
+      "hyOas": 2.8,
+      "us10yYield": 4.28,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.4440002,
+      "taiex": 24277.38
     },
     {
       "date": "2025-08-26",
-      "vix": 14.62
+      "vix": 14.62,
+      "hyOas": 2.78,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.65,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.5466003,
+      "taiex": 24305.1
     },
     {
       "date": "2025-08-27",
-      "vix": 14.85
+      "vix": 14.85,
+      "hyOas": 2.78,
+      "us10yYield": 4.24,
+      "us10y2ySpread": 0.65,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.5750008,
+      "taiex": 24519.9
     },
     {
       "date": "2025-08-28",
-      "vix": 14.43
+      "vix": 14.43,
+      "hyOas": 2.75,
+      "us10yYield": 4.22,
+      "us10y2ySpread": 0.6,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.4927998,
+      "taiex": 24236.45
     },
     {
       "date": "2025-08-29",
-      "vix": 15.36
+      "vix": 15.36,
+      "hyOas": 2.82,
+      "us10yYield": 4.23,
+      "us10y2ySpread": 0.64,
+      "fedFundsEffective": 4.33,
+      "taiex": 24233.1
+    },
+    {
+      "date": "2025-08-30",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-08-31",
+      "hyOas": 2.84,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.5604992
     },
     {
       "date": "2025-09-01",
-      "vix": 16.12
+      "vix": 16.12,
+      "hyOas": 2.84,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.6252995,
+      "taiex": 24071.73
     },
     {
       "date": "2025-09-02",
-      "vix": 17.17
+      "vix": 17.17,
+      "hyOas": 2.92,
+      "us10yYield": 4.28,
+      "us10y2ySpread": 0.62,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.7439995,
+      "taiex": 24016.78
     },
     {
       "date": "2025-09-03",
-      "vix": 16.35
+      "vix": 16.35,
+      "hyOas": 2.88,
+      "us10yYield": 4.22,
+      "us10y2ySpread": 0.61,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.7220001,
+      "taiex": 24100.3
     },
     {
       "date": "2025-09-04",
-      "vix": 15.3
+      "vix": 15.3,
+      "hyOas": 2.84,
+      "us10yYield": 4.17,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.6940002,
+      "taiex": 24179.85
     },
     {
       "date": "2025-09-05",
-      "vix": 15.18
+      "vix": 15.18,
+      "hyOas": 2.83,
+      "us10yYield": 4.1,
+      "us10y2ySpread": 0.59,
+      "fedFundsEffective": 4.33,
+      "taiex": 24494.58
+    },
+    {
+      "date": "2025-09-06",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-09-07",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.4790001
     },
     {
       "date": "2025-09-08",
-      "vix": 15.11
+      "vix": 15.11,
+      "hyOas": 2.84,
+      "us10yYield": 4.05,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.3311005,
+      "taiex": 24547.38
     },
     {
       "date": "2025-09-09",
-      "vix": 15.04
+      "vix": 15.04,
+      "hyOas": 2.87,
+      "us10yYield": 4.08,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.3516006,
+      "taiex": 24855.18
     },
     {
       "date": "2025-09-10",
-      "vix": 15.35
+      "vix": 15.35,
+      "hyOas": 2.84,
+      "us10yYield": 4.04,
+      "us10y2ySpread": 0.5,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.2367992,
+      "taiex": 25192.59
     },
     {
       "date": "2025-09-11",
-      "vix": 14.71
+      "vix": 14.71,
+      "hyOas": 2.78,
+      "us10yYield": 4.01,
+      "us10y2ySpread": 0.49,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.2900009,
+      "taiex": 25215.71
     },
     {
       "date": "2025-09-12",
-      "vix": 14.76
+      "vix": 14.76,
+      "hyOas": 2.79,
+      "us10yYield": 4.06,
+      "us10y2ySpread": 0.5,
+      "fedFundsEffective": 4.33,
+      "taiex": 25474.64
+    },
+    {
+      "date": "2025-09-13",
+      "fedFundsEffective": 4.33
+    },
+    {
+      "date": "2025-09-14",
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.2849007
     },
     {
       "date": "2025-09-15",
-      "vix": 15.69
+      "vix": 15.69,
+      "hyOas": 2.75,
+      "us10yYield": 4.05,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.1940994,
+      "taiex": 25357.16
     },
     {
       "date": "2025-09-16",
-      "vix": 16.36
+      "vix": 16.36,
+      "hyOas": 2.79,
+      "us10yYield": 4.04,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.0471992,
+      "taiex": 25629.64
     },
     {
       "date": "2025-09-17",
-      "vix": 15.72
+      "vix": 15.72,
+      "hyOas": 2.79,
+      "us10yYield": 4.06,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.33,
+      "usdtwd": 30.0863991,
+      "taiex": 25438.25
     },
     {
       "date": "2025-09-18",
-      "vix": 15.7
+      "vix": 15.7,
+      "hyOas": 2.71,
+      "us10yYield": 4.11,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.08,
+      "usdtwd": 30.1105003,
+      "taiex": 25769.36
     },
     {
       "date": "2025-09-19",
-      "vix": 15.45
+      "vix": 15.45,
+      "hyOas": 2.72,
+      "us10yYield": 4.14,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 4.08,
+      "taiex": 25578.37
+    },
+    {
+      "date": "2025-09-20",
+      "fedFundsEffective": 4.08
+    },
+    {
+      "date": "2025-09-21",
+      "fedFundsEffective": 4.08,
+      "usdtwd": 30.2159996
     },
     {
       "date": "2025-09-22",
-      "vix": 16.1
+      "vix": 16.1,
+      "hyOas": 2.69,
+      "us10yYield": 4.15,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.2176991,
+      "taiex": 25880.6
     },
     {
       "date": "2025-09-23",
-      "vix": 16.64
+      "vix": 16.64,
+      "hyOas": 2.71,
+      "us10yYield": 4.12,
+      "us10y2ySpread": 0.59,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.2740002,
+      "taiex": 26247.37
     },
     {
       "date": "2025-09-24",
-      "vix": 16.18
+      "vix": 16.18,
+      "hyOas": 2.7,
+      "us10yYield": 4.16,
+      "us10y2ySpread": 0.59,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.3640995,
+      "taiex": 26196.73
     },
     {
       "date": "2025-09-25",
-      "vix": 16.74
+      "vix": 16.74,
+      "hyOas": 2.76,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.5615005,
+      "taiex": 26023.85
     },
     {
       "date": "2025-09-26",
-      "vix": 15.29
+      "vix": 15.29,
+      "hyOas": 2.75,
+      "us10yYield": 4.2,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 4.09,
+      "taiex": 25580.32
+    },
+    {
+      "date": "2025-09-27",
+      "fedFundsEffective": 4.09
+    },
+    {
+      "date": "2025-09-28",
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.4440002
     },
     {
       "date": "2025-09-29",
-      "vix": 16.12
+      "vix": 16.12,
+      "hyOas": 2.74,
+      "us10yYield": 4.15,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.4582005
     },
     {
       "date": "2025-09-30",
-      "vix": 16.28
+      "vix": 16.28,
+      "hyOas": 2.8,
+      "us10yYield": 4.16,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.4421005,
+      "taiex": 25820.54
     },
     {
       "date": "2025-10-01",
-      "vix": 16.29
+      "vix": 16.29,
+      "hyOas": 2.81,
+      "us10yYield": 4.12,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.4470005,
+      "taiex": 25982.91
     },
     {
       "date": "2025-10-02",
-      "vix": 16.63
+      "vix": 16.63,
+      "hyOas": 2.81,
+      "us10yYield": 4.1,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.4638004,
+      "taiex": 26378.39
     },
     {
       "date": "2025-10-03",
-      "vix": 16.65
+      "vix": 16.65,
+      "hyOas": 2.8,
+      "us10yYield": 4.13,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.09,
+      "taiex": 26761.06
+    },
+    {
+      "date": "2025-10-04",
+      "fedFundsEffective": 4.09
+    },
+    {
+      "date": "2025-10-05",
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.4200001
     },
     {
       "date": "2025-10-06",
-      "vix": 16.37
+      "vix": 16.37,
+      "hyOas": 2.76,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.5105
     },
     {
       "date": "2025-10-07",
-      "vix": 17.24
+      "vix": 17.24,
+      "hyOas": 2.82,
+      "us10yYield": 4.14,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 4.09,
+      "usdtwd": 30.5366993,
+      "taiex": 27211.95
     },
     {
       "date": "2025-10-08",
-      "vix": 16.3
+      "vix": 16.3,
+      "hyOas": 2.84,
+      "us10yYield": 4.13,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.1,
+      "usdtwd": 30.5249996,
+      "taiex": 27063.68
     },
     {
       "date": "2025-10-09",
-      "vix": 16.43
+      "vix": 16.43,
+      "hyOas": 2.95,
+      "us10yYield": 4.14,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.1,
+      "usdtwd": 30.5832996,
+      "taiex": 27301.92
     },
     {
       "date": "2025-10-10",
-      "vix": 21.66
+      "vix": 21.66,
+      "hyOas": 3.18,
+      "us10yYield": 4.05,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.1
+    },
+    {
+      "date": "2025-10-11",
+      "fedFundsEffective": 4.1
+    },
+    {
+      "date": "2025-10-12",
+      "fedFundsEffective": 4.1,
+      "usdtwd": 30.6650009
     },
     {
       "date": "2025-10-13",
-      "vix": 19.03
+      "vix": 19.03,
+      "hyOas": 3.18,
+      "fedFundsEffective": 4.1,
+      "usdtwd": 30.691,
+      "taiex": 26923.42
     },
     {
       "date": "2025-10-14",
-      "vix": 20.81
+      "vix": 20.81,
+      "hyOas": 3.11,
+      "us10yYield": 4.03,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.1,
+      "usdtwd": 30.6839008,
+      "taiex": 26793.15
     },
     {
       "date": "2025-10-15",
-      "vix": 20.64
+      "vix": 20.64,
+      "hyOas": 2.95,
+      "us10yYield": 4.05,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 4.1,
+      "usdtwd": 30.6098003,
+      "taiex": 27275.71
     },
     {
       "date": "2025-10-16",
-      "vix": 25.31
+      "vix": 25.31,
+      "hyOas": 3.04,
+      "us10yYield": 3.99,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 4.11,
+      "usdtwd": 30.6119003,
+      "taiex": 27647.87
     },
     {
       "date": "2025-10-17",
-      "vix": 20.78
+      "vix": 20.78,
+      "hyOas": 3.04,
+      "us10yYield": 4.02,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 4.11,
+      "taiex": 27302.37
+    },
+    {
+      "date": "2025-10-18",
+      "fedFundsEffective": 4.11
+    },
+    {
+      "date": "2025-10-19",
+      "fedFundsEffective": 4.11,
+      "usdtwd": 30.6219006
     },
     {
       "date": "2025-10-20",
-      "vix": 18.23
+      "vix": 18.23,
+      "hyOas": 2.99,
+      "us10yYield": 4.0,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.11,
+      "usdtwd": 30.5972996,
+      "taiex": 27688.63
     },
     {
       "date": "2025-10-21",
-      "vix": 17.87
+      "vix": 17.87,
+      "hyOas": 2.97,
+      "us10yYield": 3.98,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.11,
+      "usdtwd": 30.6772995,
+      "taiex": 27752.41
     },
     {
       "date": "2025-10-22",
-      "vix": 18.6
+      "vix": 18.6,
+      "hyOas": 3.01,
+      "us10yYield": 3.97,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.11,
+      "usdtwd": 30.7451,
+      "taiex": 27648.91
     },
     {
       "date": "2025-10-23",
-      "vix": 17.3
+      "vix": 17.3,
+      "hyOas": 2.96,
+      "us10yYield": 4.01,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.11,
+      "usdtwd": 30.7749996,
+      "taiex": 27532.26
     },
     {
       "date": "2025-10-24",
-      "vix": 16.37
+      "vix": 16.37,
+      "hyOas": 2.88,
+      "us10yYield": 4.02,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 4.11
+    },
+    {
+      "date": "2025-10-25",
+      "fedFundsEffective": 4.11
+    },
+    {
+      "date": "2025-10-26",
+      "fedFundsEffective": 4.11
     },
     {
       "date": "2025-10-27",
-      "vix": 15.79
+      "vix": 15.79,
+      "hyOas": 2.8,
+      "us10yYield": 4.01,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 4.12,
+      "usdtwd": 30.8332996,
+      "taiex": 27993.63
     },
     {
       "date": "2025-10-28",
-      "vix": 16.42
+      "vix": 16.42,
+      "hyOas": 2.82,
+      "us10yYield": 3.99,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 4.12,
+      "usdtwd": 30.6011009,
+      "taiex": 27949.11
     },
     {
       "date": "2025-10-29",
-      "vix": 16.92
+      "vix": 16.92,
+      "hyOas": 2.76,
+      "us10yYield": 4.08,
+      "us10y2ySpread": 0.49,
+      "fedFundsEffective": 4.12,
+      "usdtwd": 30.5431004,
+      "taiex": 28294.74
     },
     {
       "date": "2025-10-30",
-      "vix": 16.91
+      "vix": 16.91,
+      "hyOas": 2.85,
+      "us10yYield": 4.11,
+      "us10y2ySpread": 0.5,
+      "fedFundsEffective": 3.87,
+      "usdtwd": 30.6651993,
+      "taiex": 28287.53
     },
     {
       "date": "2025-10-31",
-      "vix": 17.44
+      "vix": 17.44,
+      "hyOas": 2.94,
+      "us10yYield": 4.11,
+      "us10y2ySpread": 0.51,
+      "fedFundsEffective": 3.86,
+      "usdtwd": 30.7306995,
+      "taiex": 28233.35
+    },
+    {
+      "date": "2025-11-01",
+      "fedFundsEffective": 3.86
+    },
+    {
+      "date": "2025-11-02",
+      "fedFundsEffective": 3.86
     },
     {
       "date": "2025-11-03",
-      "vix": 17.17
+      "vix": 17.17,
+      "hyOas": 3.04,
+      "us10yYield": 4.13,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 3.87,
+      "usdtwd": 30.7817993,
+      "taiex": 28334.59
     },
     {
       "date": "2025-11-04",
-      "vix": 19.0
+      "vix": 19.0,
+      "hyOas": 3.13,
+      "us10yYield": 4.1,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 3.87,
+      "usdtwd": 30.9030991,
+      "taiex": 28116.56
     },
     {
       "date": "2025-11-05",
-      "vix": 18.01
+      "vix": 18.01,
+      "hyOas": 3.05,
+      "us10yYield": 4.17,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 3.87,
+      "usdtwd": 30.9190006,
+      "taiex": 27717.06
     },
     {
       "date": "2025-11-06",
-      "vix": 19.5
+      "vix": 19.5,
+      "hyOas": 3.13,
+      "us10yYield": 4.11,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 3.87,
+      "usdtwd": 30.8929005,
+      "taiex": 27899.45
     },
     {
       "date": "2025-11-07",
-      "vix": 19.08
+      "vix": 19.08,
+      "hyOas": 3.15,
+      "us10yYield": 4.11,
+      "us10y2ySpread": 0.56,
+      "fedFundsEffective": 3.87,
+      "usdtwd": 30.9787998,
+      "taiex": 27651.41
+    },
+    {
+      "date": "2025-11-08",
+      "fedFundsEffective": 3.87
+    },
+    {
+      "date": "2025-11-09",
+      "fedFundsEffective": 3.87
     },
     {
       "date": "2025-11-10",
-      "vix": 17.6
+      "vix": 17.6,
+      "hyOas": 3.02,
+      "us10yYield": 4.13,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 3.87,
+      "usdtwd": 30.9668007,
+      "taiex": 27869.51
     },
     {
       "date": "2025-11-11",
-      "vix": 17.28
+      "vix": 17.28,
+      "hyOas": 3.02,
+      "fedFundsEffective": 3.87,
+      "usdtwd": 30.9668007,
+      "taiex": 27784.95
     },
     {
       "date": "2025-11-12",
-      "vix": 17.51
+      "vix": 17.51,
+      "hyOas": 3.02,
+      "us10yYield": 4.08,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 3.87,
+      "usdtwd": 30.9643002,
+      "taiex": 27947.09
     },
     {
       "date": "2025-11-13",
-      "vix": 20.0
+      "vix": 20.0,
+      "hyOas": 3.09,
+      "us10yYield": 4.11,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 3.88,
+      "usdtwd": 31.0641003,
+      "taiex": 27903.56
     },
     {
       "date": "2025-11-14",
-      "vix": 19.83
+      "vix": 19.83,
+      "hyOas": 3.07,
+      "us10yYield": 4.14,
+      "us10y2ySpread": 0.52,
+      "fedFundsEffective": 3.88,
+      "usdtwd": 31.1249008,
+      "taiex": 27397.5
+    },
+    {
+      "date": "2025-11-15",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2025-11-16",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2025-11-17",
-      "vix": 22.38
+      "vix": 22.38,
+      "hyOas": 3.13,
+      "us10yYield": 4.13,
+      "us10y2ySpread": 0.53,
+      "fedFundsEffective": 3.88,
+      "usdtwd": 30.5545006,
+      "taiex": 27447.31
     },
     {
       "date": "2025-11-18",
       "usdtwd": 31.1032,
-      "vix": 24.69
+      "vix": 24.69,
+      "hyOas": 3.2,
+      "us10yYield": 4.12,
+      "us10y2ySpread": 0.54,
+      "fedFundsEffective": 3.88,
+      "taiex": 26756.12
     },
     {
       "date": "2025-11-19",
@@ -36416,7 +37780,12 @@
       "usdtwd": 31.183,
       "vix": 23.66,
       "voo": 609.2,
-      "qqq": 599.87
+      "qqq": 599.87,
+      "hyOas": 3.17,
+      "us10yYield": 4.13,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 3.88,
+      "taiex": 26580.12
     },
     {
       "date": "2025-11-20",
@@ -36424,14 +37793,33 @@
       "usdtwd": 31.3521,
       "vix": 26.42,
       "voo": 599.96,
-      "qqq": 585.67
+      "qqq": 585.67,
+      "hyOas": 3.17,
+      "us10yYield": 4.1,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 3.88,
+      "taiex": 27426.36
     },
     {
       "date": "2025-11-21",
       "dxy": 100.18,
       "vix": 23.43,
       "voo": 605.93,
-      "qqq": 590.07
+      "qqq": 590.07,
+      "hyOas": 3.19,
+      "us10yYield": 4.06,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 3.88,
+      "usdtwd": 31.3521004,
+      "taiex": 26434.94
+    },
+    {
+      "date": "2025-11-22",
+      "fedFundsEffective": 3.88
+    },
+    {
+      "date": "2025-11-23",
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2025-11-24",
@@ -36439,7 +37827,12 @@
       "usdtwd": 31.4261,
       "vix": 20.52,
       "voo": 614.94,
-      "qqq": 605.16
+      "qqq": 605.16,
+      "hyOas": 3.15,
+      "us10yYield": 4.04,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 3.88,
+      "taiex": 26504.24
     },
     {
       "date": "2025-11-25",
@@ -36447,7 +37840,12 @@
       "usdtwd": 31.3881,
       "vix": 18.56,
       "voo": 620.66,
-      "qqq": 608.89
+      "qqq": 608.89,
+      "hyOas": 3.1,
+      "us10yYield": 4.01,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 3.88,
+      "taiex": 26912.17
     },
     {
       "date": "2025-11-26",
@@ -36455,19 +37853,42 @@
       "usdtwd": 31.2489,
       "vix": 17.19,
       "voo": 624.95,
-      "qqq": 614.27
+      "qqq": 614.27,
+      "hyOas": 3.0,
+      "us10yYield": 4.0,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 3.88,
+      "taiex": 27409.54
     },
     {
       "date": "2025-11-27",
       "usdtwd": 31.3147,
-      "vix": 17.21
+      "vix": 17.21,
+      "hyOas": 3.0,
+      "fedFundsEffective": 3.88,
+      "taiex": 27554.53
     },
     {
       "date": "2025-11-28",
       "dxy": 99.46,
       "vix": 16.35,
       "voo": 628.41,
-      "qqq": 619.25
+      "qqq": 619.25,
+      "hyOas": 2.95,
+      "us10yYield": 4.02,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 3.89,
+      "usdtwd": 31.3146992,
+      "taiex": 27626.48
+    },
+    {
+      "date": "2025-11-29",
+      "fedFundsEffective": 3.89
+    },
+    {
+      "date": "2025-11-30",
+      "hyOas": 2.92,
+      "fedFundsEffective": 3.89
     },
     {
       "date": "2025-12-01",
@@ -36475,7 +37896,12 @@
       "usdtwd": 31.396,
       "vix": 17.24,
       "voo": 625.52,
-      "qqq": 617.17
+      "qqq": 617.17,
+      "hyOas": 2.94,
+      "us10yYield": 4.09,
+      "us10y2ySpread": 0.55,
+      "fedFundsEffective": 3.89,
+      "taiex": 27342.53
     },
     {
       "date": "2025-12-02",
@@ -36483,7 +37909,12 @@
       "usdtwd": 31.402,
       "vix": 16.59,
       "voo": 626.58,
-      "qqq": 622.0
+      "qqq": 622.0,
+      "hyOas": 2.92,
+      "us10yYield": 4.09,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 3.89,
+      "taiex": 27564.27
     },
     {
       "date": "2025-12-03",
@@ -36491,7 +37922,12 @@
       "usdtwd": 31.3147,
       "vix": 16.08,
       "voo": 628.77,
-      "qqq": 623.52
+      "qqq": 623.52,
+      "hyOas": 2.89,
+      "us10yYield": 4.06,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 3.89,
+      "taiex": 27793.04
     },
     {
       "date": "2025-12-04",
@@ -36499,14 +37935,33 @@
       "usdtwd": 31.365,
       "vix": 15.78,
       "voo": 629.3,
-      "qqq": 622.94
+      "qqq": 622.94,
+      "hyOas": 2.88,
+      "us10yYield": 4.11,
+      "us10y2ySpread": 0.59,
+      "fedFundsEffective": 3.89,
+      "taiex": 27795.71
     },
     {
       "date": "2025-12-05",
       "dxy": 98.99,
       "vix": 15.41,
       "voo": 630.48,
-      "qqq": 625.48
+      "qqq": 625.48,
+      "hyOas": 2.85,
+      "us10yYield": 4.14,
+      "us10y2ySpread": 0.58,
+      "fedFundsEffective": 3.89,
+      "usdtwd": 31.3649998,
+      "taiex": 27980.89
+    },
+    {
+      "date": "2025-12-06",
+      "fedFundsEffective": 3.89
+    },
+    {
+      "date": "2025-12-07",
+      "fedFundsEffective": 3.89
     },
     {
       "date": "2025-12-08",
@@ -36514,7 +37969,12 @@
       "usdtwd": 31.1647,
       "vix": 16.66,
       "voo": 628.61,
-      "qqq": 624.28
+      "qqq": 624.28,
+      "hyOas": 2.89,
+      "us10yYield": 4.17,
+      "us10y2ySpread": 0.6,
+      "fedFundsEffective": 3.89,
+      "taiex": 28303.78
     },
     {
       "date": "2025-12-09",
@@ -36522,7 +37982,12 @@
       "usdtwd": 31.151,
       "vix": 16.93,
       "voo": 628.1,
-      "qqq": 625.05
+      "qqq": 625.05,
+      "hyOas": 2.89,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.57,
+      "fedFundsEffective": 3.89,
+      "taiex": 28182.6
     },
     {
       "date": "2025-12-10",
@@ -36530,7 +37995,12 @@
       "usdtwd": 31.077,
       "vix": 15.77,
       "voo": 632.16,
-      "qqq": 627.61
+      "qqq": 627.61,
+      "hyOas": 2.91,
+      "us10yYield": 4.13,
+      "us10y2ySpread": 0.59,
+      "fedFundsEffective": 3.89,
+      "taiex": 28400.73
     },
     {
       "date": "2025-12-11",
@@ -36538,14 +38008,33 @@
       "usdtwd": 31.1801,
       "vix": 14.85,
       "voo": 633.71,
-      "qqq": 625.58
+      "qqq": 625.58,
+      "hyOas": 2.88,
+      "us10yYield": 4.14,
+      "us10y2ySpread": 0.62,
+      "fedFundsEffective": 3.64,
+      "taiex": 28024.75
     },
     {
       "date": "2025-12-12",
       "dxy": 98.4,
       "vix": 15.74,
       "voo": 626.87,
-      "qqq": 613.62
+      "qqq": 613.62,
+      "hyOas": 2.91,
+      "us10yYield": 4.19,
+      "us10y2ySpread": 0.67,
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.1800995,
+      "taiex": 28198.02
+    },
+    {
+      "date": "2025-12-13",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2025-12-14",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2025-12-15",
@@ -36553,7 +38042,12 @@
       "usdtwd": 31.3287,
       "vix": 16.5,
       "voo": 625.96,
-      "qqq": 610.54
+      "qqq": 610.54,
+      "hyOas": 2.91,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.67,
+      "fedFundsEffective": 3.64,
+      "taiex": 27866.94
     },
     {
       "date": "2025-12-16",
@@ -36561,7 +38055,12 @@
       "usdtwd": 31.469,
       "vix": 16.48,
       "voo": 624.21,
-      "qqq": 611.75
+      "qqq": 611.75,
+      "hyOas": 2.98,
+      "us10yYield": 4.15,
+      "us10y2ySpread": 0.67,
+      "fedFundsEffective": 3.64,
+      "taiex": 27536.66
     },
     {
       "date": "2025-12-17",
@@ -36569,7 +38068,12 @@
       "usdtwd": 31.6321,
       "vix": 17.62,
       "voo": 617.35,
-      "qqq": 600.41
+      "qqq": 600.41,
+      "hyOas": 2.99,
+      "us10yYield": 4.16,
+      "us10y2ySpread": 0.67,
+      "fedFundsEffective": 3.64,
+      "taiex": 27525.17
     },
     {
       "date": "2025-12-18",
@@ -36577,14 +38081,33 @@
       "usdtwd": 31.5141,
       "vix": 16.87,
       "voo": 622.01,
-      "qqq": 609.11
+      "qqq": 609.11,
+      "hyOas": 2.95,
+      "us10yYield": 4.12,
+      "us10y2ySpread": 0.66,
+      "fedFundsEffective": 3.64,
+      "taiex": 27468.53
     },
     {
       "date": "2025-12-19",
       "dxy": 98.6,
       "vix": 14.91,
       "voo": 627.56,
-      "qqq": 617.05
+      "qqq": 617.05,
+      "hyOas": 2.9,
+      "us10yYield": 4.16,
+      "us10y2ySpread": 0.68,
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.5140991,
+      "taiex": 27696.35
+    },
+    {
+      "date": "2025-12-20",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2025-12-21",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2025-12-22",
@@ -36592,7 +38115,12 @@
       "usdtwd": 31.5322,
       "vix": 14.08,
       "voo": 629.73,
-      "qqq": 619.21
+      "qqq": 619.21,
+      "hyOas": 2.88,
+      "us10yYield": 4.17,
+      "us10y2ySpread": 0.73,
+      "fedFundsEffective": 3.64,
+      "taiex": 28149.64
     },
     {
       "date": "2025-12-23",
@@ -36600,25 +38128,51 @@
       "usdtwd": 31.4895,
       "vix": 14.0,
       "voo": 632.67,
-      "qqq": 622.11
+      "qqq": 622.11,
+      "hyOas": 2.83,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.7,
+      "fedFundsEffective": 3.64,
+      "taiex": 28310.47
     },
     {
       "date": "2025-12-24",
       "dxy": 97.98,
       "vix": 13.47,
       "voo": 634.78,
-      "qqq": 623.93
+      "qqq": 623.93,
+      "hyOas": 2.84,
+      "us10yYield": 4.15,
+      "us10y2ySpread": 0.68,
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.4895,
+      "taiex": 28371.98
     },
     {
       "date": "2025-12-25",
-      "usdtwd": 31.5702
+      "usdtwd": 31.5702,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2025-12-26",
       "dxy": 98.02,
       "vix": 13.6,
       "voo": 634.84,
-      "qqq": 623.89
+      "qqq": 623.89,
+      "hyOas": 2.86,
+      "us10yYield": 4.14,
+      "us10y2ySpread": 0.68,
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.5702,
+      "taiex": 28556.02
+    },
+    {
+      "date": "2025-12-27",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2025-12-28",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2025-12-29",
@@ -36626,7 +38180,12 @@
       "usdtwd": 31.3178,
       "vix": 14.2,
       "voo": 632.6,
-      "qqq": 620.87
+      "qqq": 620.87,
+      "hyOas": 2.87,
+      "us10yYield": 4.12,
+      "us10y2ySpread": 0.67,
+      "fedFundsEffective": 3.64,
+      "taiex": 28810.89
     },
     {
       "date": "2025-12-30",
@@ -36634,25 +38193,51 @@
       "usdtwd": 31.2436,
       "vix": 14.33,
       "voo": 631.72,
-      "qqq": 619.43
+      "qqq": 619.43,
+      "hyOas": 2.84,
+      "us10yYield": 4.14,
+      "us10y2ySpread": 0.69,
+      "fedFundsEffective": 3.64,
+      "taiex": 28707.13
     },
     {
       "date": "2025-12-31",
       "dxy": 98.28,
       "vix": 14.95,
       "voo": 627.13,
-      "qqq": 614.31
+      "qqq": 614.31,
+      "hyOas": 2.81,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.71,
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.2436008,
+      "taiex": 28963.6
     },
     {
       "date": "2026-01-01",
-      "usdtwd": 31.3035
+      "usdtwd": 31.3035,
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-01-02",
       "dxy": 98.42,
       "vix": 14.51,
       "voo": 628.3,
-      "qqq": 613.12
+      "qqq": 613.12,
+      "hyOas": 2.83,
+      "us10yYield": 4.19,
+      "us10y2ySpread": 0.72,
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.3034992,
+      "taiex": 29349.81
+    },
+    {
+      "date": "2026-01-03",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-01-04",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-01-05",
@@ -36660,7 +38245,12 @@
       "usdtwd": 31.4746,
       "vix": 14.9,
       "voo": 632.46,
-      "qqq": 617.99
+      "qqq": 617.99,
+      "hyOas": 2.81,
+      "us10yYield": 4.17,
+      "us10y2ySpread": 0.71,
+      "fedFundsEffective": 3.64,
+      "taiex": 30105.04
     },
     {
       "date": "2026-01-06",
@@ -36668,7 +38258,12 @@
       "usdtwd": 31.4921,
       "vix": 14.75,
       "voo": 636.21,
-      "qqq": 623.42
+      "qqq": 623.42,
+      "hyOas": 2.79,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.71,
+      "fedFundsEffective": 3.64,
+      "taiex": 30576.3
     },
     {
       "date": "2026-01-07",
@@ -36676,7 +38271,12 @@
       "usdtwd": 31.4491,
       "vix": 15.38,
       "voo": 634.17,
-      "qqq": 624.02
+      "qqq": 624.02,
+      "hyOas": 2.79,
+      "us10yYield": 4.15,
+      "us10y2ySpread": 0.68,
+      "fedFundsEffective": 3.64,
+      "taiex": 30435.47
     },
     {
       "date": "2026-01-08",
@@ -36684,14 +38284,33 @@
       "usdtwd": 31.5448,
       "vix": 15.45,
       "voo": 634.06,
-      "qqq": 620.47
+      "qqq": 620.47,
+      "hyOas": 2.76,
+      "us10yYield": 4.19,
+      "us10y2ySpread": 0.7,
+      "fedFundsEffective": 3.64,
+      "taiex": 30360.55
     },
     {
       "date": "2026-01-09",
       "dxy": 99.13,
       "vix": 14.49,
       "voo": 638.31,
-      "qqq": 626.65
+      "qqq": 626.65,
+      "hyOas": 2.74,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.64,
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.5447998,
+      "taiex": 30288.96
+    },
+    {
+      "date": "2026-01-10",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-01-11",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-01-12",
@@ -36699,7 +38318,12 @@
       "usdtwd": 31.5699,
       "vix": 15.12,
       "voo": 639.34,
-      "qqq": 627.17
+      "qqq": 627.17,
+      "hyOas": 2.74,
+      "us10yYield": 4.19,
+      "us10y2ySpread": 0.65,
+      "fedFundsEffective": 3.64,
+      "taiex": 30567.29
     },
     {
       "date": "2026-01-13",
@@ -36707,7 +38331,12 @@
       "usdtwd": 31.6169,
       "vix": 15.98,
       "voo": 638.03,
-      "qqq": 626.24
+      "qqq": 626.24,
+      "hyOas": 2.75,
+      "us10yYield": 4.18,
+      "us10y2ySpread": 0.65,
+      "fedFundsEffective": 3.64,
+      "taiex": 30707.22
     },
     {
       "date": "2026-01-14",
@@ -36715,7 +38344,12 @@
       "usdtwd": 31.5107,
       "vix": 16.75,
       "voo": 634.94,
-      "qqq": 619.55
+      "qqq": 619.55,
+      "hyOas": 2.76,
+      "us10yYield": 4.15,
+      "us10y2ySpread": 0.64,
+      "fedFundsEffective": 3.64,
+      "taiex": 30941.78
     },
     {
       "date": "2026-01-15",
@@ -36723,19 +38357,41 @@
       "usdtwd": 31.5642,
       "vix": 15.84,
       "voo": 636.62,
-      "qqq": 621.78
+      "qqq": 621.78,
+      "hyOas": 2.71,
+      "us10yYield": 4.17,
+      "us10y2ySpread": 0.61,
+      "fedFundsEffective": 3.64,
+      "taiex": 30810.58
     },
     {
       "date": "2026-01-16",
       "dxy": 99.39,
       "vix": 15.86,
       "voo": 636.09,
-      "qqq": 621.26
+      "qqq": 621.26,
+      "hyOas": 2.65,
+      "us10yYield": 4.24,
+      "us10y2ySpread": 0.65,
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.5641994,
+      "taiex": 31408.7
+    },
+    {
+      "date": "2026-01-17",
+      "fedFundsEffective": 3.64
+    },
+    {
+      "date": "2026-01-18",
+      "fedFundsEffective": 3.64
     },
     {
       "date": "2026-01-19",
       "usdtwd": 31.549,
-      "vix": 18.84
+      "vix": 18.84,
+      "hyOas": 2.65,
+      "fedFundsEffective": 3.64,
+      "taiex": 31639.29
     },
     {
       "date": "2026-01-20",
@@ -36743,7 +38399,12 @@
       "usdtwd": 31.6823,
       "vix": 20.09,
       "voo": 623.15,
-      "qqq": 608.06
+      "qqq": 608.06,
+      "hyOas": 2.73,
+      "us10yYield": 4.3,
+      "us10y2ySpread": 0.7,
+      "fedFundsEffective": 3.64,
+      "taiex": 31759.99
     },
     {
       "date": "2026-01-21",
@@ -36751,7 +38412,12 @@
       "usdtwd": 31.64,
       "vix": 16.9,
       "voo": 630.29,
-      "qqq": 616.28
+      "qqq": 616.28,
+      "hyOas": 2.69,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.66,
+      "fedFundsEffective": 3.64,
+      "taiex": 31246.37
     },
     {
       "date": "2026-01-22",
@@ -36759,7 +38425,12 @@
       "usdtwd": 31.584,
       "vix": 15.64,
       "voo": 633.57,
-      "qqq": 620.76
+      "qqq": 620.76,
+      "hyOas": 2.64,
+      "us10yYield": 4.26,
+      "us10y2ySpread": 0.65,
+      "fedFundsEffective": 3.64,
+      "taiex": 31746.08
     },
     {
       "date": "2026-01-23",
@@ -36770,7 +38441,9 @@
       "us10y2ySpread": 0.64,
       "voo": 633.83,
       "qqq": 622.72,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.5839996,
+      "taiex": 31961.51
     },
     {
       "date": "2026-01-24",
@@ -36790,7 +38463,8 @@
       "us10y2ySpread": 0.66,
       "voo": 637.09,
       "qqq": 625.46,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32064.52
     },
     {
       "date": "2026-01-27",
@@ -36802,7 +38476,8 @@
       "us10y2ySpread": 0.71,
       "voo": 639.7,
       "qqq": 631.13,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32317.92
     },
     {
       "date": "2026-01-28",
@@ -36814,7 +38489,8 @@
       "us10y2ySpread": 0.7,
       "voo": 639.6,
       "qqq": 633.22,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32803.82
     },
     {
       "date": "2026-01-29",
@@ -36826,7 +38502,8 @@
       "us10y2ySpread": 0.71,
       "voo": 638.27,
       "qqq": 629.43,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32536.27
     },
     {
       "date": "2026-01-30",
@@ -36837,11 +38514,14 @@
       "us10y2ySpread": 0.74,
       "voo": 636.22,
       "qqq": 621.87,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.3617001,
+      "taiex": 32063.75
     },
     {
       "date": "2026-01-31",
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "hyOas": 2.88
     },
     {
       "date": "2026-02-01",
@@ -36857,7 +38537,8 @@
       "us10y2ySpread": 0.72,
       "voo": 639.68,
       "qqq": 626.14,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 31624.03
     },
     {
       "date": "2026-02-03",
@@ -36869,7 +38550,8 @@
       "us10y2ySpread": 0.71,
       "voo": 634.15,
       "qqq": 616.52,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32195.36
     },
     {
       "date": "2026-02-04",
@@ -36881,7 +38563,8 @@
       "us10y2ySpread": 0.72,
       "voo": 630.91,
       "qqq": 605.75,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32289.81
     },
     {
       "date": "2026-02-05",
@@ -36893,7 +38576,8 @@
       "us10y2ySpread": 0.74,
       "voo": 623.1,
       "qqq": 597.03,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 31801.27
     },
     {
       "date": "2026-02-06",
@@ -36904,7 +38588,9 @@
       "us10y2ySpread": 0.72,
       "voo": 635.24,
       "qqq": 609.65,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.6487999,
+      "taiex": 31782.92
     },
     {
       "date": "2026-02-07",
@@ -36924,7 +38610,8 @@
       "us10y2ySpread": 0.74,
       "voo": 638.23,
       "qqq": 614.32,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32404.62
     },
     {
       "date": "2026-02-10",
@@ -36936,7 +38623,8 @@
       "us10y2ySpread": 0.71,
       "voo": 636.44,
       "qqq": 611.47,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33072.97
     },
     {
       "date": "2026-02-11",
@@ -36948,7 +38636,8 @@
       "us10y2ySpread": 0.66,
       "voo": 636.35,
       "qqq": 613.11,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33605.71
     },
     {
       "date": "2026-02-12",
@@ -36971,7 +38660,8 @@
       "us10y2ySpread": 0.64,
       "voo": 626.89,
       "qqq": 601.92,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.4169006
     },
     {
       "date": "2026-02-14",
@@ -37033,7 +38723,8 @@
       "us10y2ySpread": 0.6,
       "voo": 634.02,
       "qqq": 608.81,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.5790005
     },
     {
       "date": "2026-02-21",
@@ -37053,7 +38744,8 @@
       "us10y2ySpread": 0.6,
       "voo": 627.63,
       "qqq": 601.41,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33773.26
     },
     {
       "date": "2026-02-24",
@@ -37065,7 +38757,8 @@
       "us10y2ySpread": 0.61,
       "voo": 632.21,
       "qqq": 607.87,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 34700.82
     },
     {
       "date": "2026-02-25",
@@ -37077,7 +38770,8 @@
       "us10y2ySpread": 0.6,
       "voo": 637.53,
       "qqq": 616.68,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 35413.07
     },
     {
       "date": "2026-02-26",
@@ -37089,7 +38783,8 @@
       "us10y2ySpread": 0.6,
       "voo": 633.95,
       "qqq": 609.24,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 35414.49
     },
     {
       "date": "2026-02-27",
@@ -37100,11 +38795,13 @@
       "us10y2ySpread": 0.59,
       "voo": 631.04,
       "qqq": 607.29,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.2467995
     },
     {
       "date": "2026-02-28",
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "hyOas": 3.12
     },
     {
       "date": "2026-03-01",
@@ -37120,7 +38817,8 @@
       "us10y2ySpread": 0.58,
       "voo": 631.28,
       "qqq": 608.09,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 35095.09
     },
     {
       "date": "2026-03-03",
@@ -37132,7 +38830,8 @@
       "us10y2ySpread": 0.55,
       "voo": 625.72,
       "qqq": 601.58,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 34323.65
     },
     {
       "date": "2026-03-04",
@@ -37144,7 +38843,8 @@
       "us10y2ySpread": 0.55,
       "voo": 630.18,
       "qqq": 610.75,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32828.88
     },
     {
       "date": "2026-03-05",
@@ -37156,7 +38856,8 @@
       "us10y2ySpread": 0.56,
       "voo": 626.81,
       "qqq": 608.91,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33672.94
     },
     {
       "date": "2026-03-06",
@@ -37167,7 +38868,9 @@
       "us10y2ySpread": 0.59,
       "voo": 618.43,
       "qqq": 599.75,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.905899,
+      "taiex": 33599.54
     },
     {
       "date": "2026-03-07",
@@ -37187,7 +38890,8 @@
       "us10y2ySpread": 0.56,
       "voo": 623.8,
       "qqq": 607.76,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32110.42
     },
     {
       "date": "2026-03-10",
@@ -37199,7 +38903,8 @@
       "us10y2ySpread": 0.58,
       "voo": 622.72,
       "qqq": 607.77,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32771.87
     },
     {
       "date": "2026-03-11",
@@ -37211,7 +38916,8 @@
       "us10y2ySpread": 0.57,
       "voo": 622.03,
       "qqq": 607.69,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 34114.19
     },
     {
       "date": "2026-03-12",
@@ -37223,7 +38929,8 @@
       "us10y2ySpread": 0.51,
       "voo": 612.5,
       "qqq": 597.26,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33581.86
     },
     {
       "date": "2026-03-13",
@@ -37234,7 +38941,9 @@
       "us10y2ySpread": 0.55,
       "voo": 609.09,
       "qqq": 593.72,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.8957996,
+      "taiex": 33400.32
     },
     {
       "date": "2026-03-14",
@@ -37254,7 +38963,8 @@
       "us10y2ySpread": 0.55,
       "voo": 615.19,
       "qqq": 600.38,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33342.51
     },
     {
       "date": "2026-03-17",
@@ -37266,7 +38976,8 @@
       "us10y2ySpread": 0.52,
       "voo": 616.89,
       "qqq": 603.31,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33836.57
     },
     {
       "date": "2026-03-18",
@@ -37278,7 +38989,8 @@
       "us10y2ySpread": 0.5,
       "voo": 608.38,
       "qqq": 594.9,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 34348.58
     },
     {
       "date": "2026-03-19",
@@ -37290,7 +39002,8 @@
       "us10y2ySpread": 0.46,
       "voo": 606.75,
       "qqq": 593.02,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33689.68
     },
     {
       "date": "2026-03-20",
@@ -37301,7 +39014,9 @@
       "us10y2ySpread": 0.51,
       "voo": 597.94,
       "qqq": 582.06,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.8020992,
+      "taiex": 33543.88
     },
     {
       "date": "2026-03-21",
@@ -37321,7 +39036,8 @@
       "us10y2ySpread": 0.51,
       "voo": 604.43,
       "qqq": 588.0,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32722.5
     },
     {
       "date": "2026-03-24",
@@ -37333,7 +39049,8 @@
       "us10y2ySpread": 0.49,
       "voo": 602.38,
       "qqq": 583.98,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32612.24
     },
     {
       "date": "2026-03-25",
@@ -37345,7 +39062,8 @@
       "us10y2ySpread": 0.49,
       "voo": 605.66,
       "qqq": 587.82,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33439.11
     },
     {
       "date": "2026-03-26",
@@ -37357,7 +39075,8 @@
       "us10y2ySpread": 0.46,
       "voo": 594.92,
       "qqq": 573.79,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 33337.62
     },
     {
       "date": "2026-03-27",
@@ -37368,7 +39087,9 @@
       "us10y2ySpread": 0.56,
       "voo": 582.96,
       "qqq": 562.58,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.9300003,
+      "taiex": 33112.59
     },
     {
       "date": "2026-03-28",
@@ -37376,7 +39097,8 @@
     },
     {
       "date": "2026-03-29",
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.9769993
     },
     {
       "date": "2026-03-30",
@@ -37388,7 +39110,8 @@
       "us10y2ySpread": 0.53,
       "voo": 580.93,
       "qqq": 558.28,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 32518.16
     },
     {
       "date": "2026-03-31",
@@ -37400,7 +39123,8 @@
       "us10y2ySpread": 0.51,
       "voo": 597.55,
       "qqq": 577.18,
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "taiex": 31722.99
     },
     {
       "date": "2026-04-01",
@@ -37441,7 +39165,8 @@
     },
     {
       "date": "2026-04-05",
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.9629993
     },
     {
       "date": "2026-04-06",
@@ -37512,7 +39237,8 @@
     },
     {
       "date": "2026-04-12",
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.7670002
     },
     {
       "date": "2026-04-13",
@@ -37584,7 +39310,8 @@
     },
     {
       "date": "2026-04-19",
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.4680004
     },
     {
       "date": "2026-04-20",
@@ -37656,7 +39383,8 @@
     },
     {
       "date": "2026-04-26",
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.4400005
     },
     {
       "date": "2026-04-27",
@@ -37727,7 +39455,8 @@
     },
     {
       "date": "2026-05-03",
-      "fedFundsEffective": 3.64
+      "fedFundsEffective": 3.64,
+      "usdtwd": 31.5540009
     },
     {
       "date": "2026-05-04",
@@ -37799,7 +39528,8 @@
     },
     {
       "date": "2026-05-10",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.3010006
     },
     {
       "date": "2026-05-11",
@@ -37871,7 +39601,8 @@
     },
     {
       "date": "2026-05-17",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.5869999
     },
     {
       "date": "2026-05-18",
@@ -37943,7 +39674,8 @@
     },
     {
       "date": "2026-05-24",
-      "fedFundsEffective": 3.62
+      "fedFundsEffective": 3.62,
+      "usdtwd": 31.4389992
     },
     {
       "date": "2026-05-25",
@@ -38010,7 +39742,9 @@
     },
     {
       "date": "2026-05-31",
-      "fedFundsEffective": 3.62
+      "fedFundsEffective": 3.62,
+      "hyOas": 2.74,
+      "usdtwd": 31.4129009
     },
     {
       "date": "2026-06-01",
@@ -38082,7 +39816,8 @@
     },
     {
       "date": "2026-06-07",
-      "fedFundsEffective": 3.62
+      "fedFundsEffective": 3.62,
+      "usdtwd": 31.5881004
     },
     {
       "date": "2026-06-08",
@@ -38154,7 +39889,8 @@
     },
     {
       "date": "2026-06-14",
-      "fedFundsEffective": 3.62
+      "fedFundsEffective": 3.62,
+      "usdtwd": 31.6130009
     },
     {
       "date": "2026-06-15",
@@ -38220,7 +39956,8 @@
     },
     {
       "date": "2026-06-21",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.7019997
     },
     {
       "date": "2026-06-22",
@@ -38292,7 +40029,8 @@
     },
     {
       "date": "2026-06-28",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.8470001
     },
     {
       "date": "2026-06-29",
@@ -38359,7 +40097,8 @@
     },
     {
       "date": "2026-07-05",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.9279995
     },
     {
       "date": "2026-07-06",
@@ -38430,7 +40169,8 @@
     },
     {
       "date": "2026-07-12",
-      "fedFundsEffective": 3.62
+      "fedFundsEffective": 3.62,
+      "usdtwd": 32.0990982
     },
     {
       "date": "2026-07-13",
@@ -38502,7 +40242,8 @@
     },
     {
       "date": "2026-07-19",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 32.3129997
     },
     {
       "date": "2026-07-20",
@@ -38574,7 +40315,8 @@
     },
     {
       "date": "2026-07-26",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 32.3223
     },
     {
       "date": "2026-07-27",
@@ -38646,7 +40388,8 @@
     },
     {
       "date": "2026-08-02",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 32.2930984
     },
     {
       "date": "2026-08-03",
@@ -38724,7 +40467,8 @@
     },
     {
       "date": "2026-08-09",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 32.2350998
     },
     {
       "date": "2026-08-10",
@@ -38806,7 +40550,8 @@
     },
     {
       "date": "2026-08-16",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.9902
     },
     {
       "date": "2026-08-17",
@@ -38888,7 +40633,8 @@
     },
     {
       "date": "2026-08-23",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.8220005
     },
     {
       "date": "2026-08-24",
@@ -38970,7 +40716,8 @@
     },
     {
       "date": "2026-08-30",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.6259995
     },
     {
       "date": "2026-08-31",
@@ -39052,7 +40799,8 @@
     },
     {
       "date": "2026-09-06",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.6210003
     },
     {
       "date": "2026-09-07",
@@ -39129,7 +40877,8 @@
     },
     {
       "date": "2026-09-13",
-      "fedFundsEffective": 3.63
+      "fedFundsEffective": 3.63,
+      "usdtwd": 31.6762009
     },
     {
       "date": "2026-09-14",
@@ -39211,7 +40960,8 @@
     },
     {
       "date": "2026-09-20",
-      "fedFundsEffective": 3.88
+      "fedFundsEffective": 3.88,
+      "usdtwd": 31.8090992
     },
     {
       "date": "2026-09-21",
@@ -39290,7 +41040,8 @@
     },
     {
       "date": "2026-09-27",
-      "fedFundsEffective": 3.88
+      "fedFundsEffective": 3.88,
+      "usdtwd": 31.7786999
     },
     {
       "date": "2026-09-28",
@@ -39369,7 +41120,8 @@
     },
     {
       "date": "2026-10-04",
-      "fedFundsEffective": 3.88
+      "fedFundsEffective": 3.88,
+      "usdtwd": 31.8344002
     },
     {
       "date": "2026-10-05",
@@ -39452,7 +41204,8 @@
     },
     {
       "date": "2026-10-11",
-      "fedFundsEffective": 3.88
+      "fedFundsEffective": 3.88,
+      "usdtwd": 31.9160995
     },
     {
       "date": "2026-10-12",
@@ -39537,7 +41290,8 @@
     },
     {
       "date": "2026-10-18",
-      "fedFundsEffective": 3.88
+      "fedFundsEffective": 3.88,
+      "usdtwd": 32.387001
     },
     {
       "date": "2026-10-19",
@@ -39936,7 +41690,53 @@
       "foreignNetYi": -243.1221,
       "us10y2ySpread": 0.28,
       "voo": 658.01,
-      "qqq": 645.04
+      "qqq": 645.04,
+      "usdtwd": 32.9299011
+    },
+    {
+      "date": "2026-11-20",
+      "usdtwd": 33.0169983
     }
-  ]
+  ],
+  "backfillAudit": {
+    "targetObservations": 240,
+    "collectedAt": "2026-11-20T01:13:27.978338+00:00",
+    "before": {
+      "taiex": 157,
+      "dxy": 252,
+      "usdtwd": 212,
+      "vix": 9319,
+      "hyOas": 214,
+      "marginDailyYi": 71,
+      "foreignNetYi": 72,
+      "marginMaintenanceExEtf": 30,
+      "us10yYield": 207,
+      "us10y2ySpread": 208,
+      "voo": 252,
+      "qqq": 252,
+      "fedFundsEffective": 300
+    },
+    "after": {
+      "taiex": 421,
+      "dxy": 252,
+      "usdtwd": 444,
+      "vix": 9319,
+      "hyOas": 446,
+      "marginDailyYi": 71,
+      "foreignNetYi": 72,
+      "marginMaintenanceExEtf": 30,
+      "us10yYield": 425,
+      "us10y2ySpread": 426,
+      "voo": 252,
+      "qqq": 252,
+      "fedFundsEffective": 619
+    },
+    "unverifiedOrUnavailable": [],
+    "notes": [
+      "Existing data retained on overlapping dates",
+      "No forward filling or interpolating",
+      "TWSE market margin and foreign flows require independently validated column mappings",
+      "Exclude-ETF margin maintenance must only be filled from verified same-definition sources"
+    ]
+  }
 }
