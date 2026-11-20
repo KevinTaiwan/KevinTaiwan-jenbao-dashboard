@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-index-ohlc",
-  "generatedAt": "2026-11-20T08:43:03.937848+00:00",
+  "generatedAt": "2026-11-20T22:33:26.294825+00:00",
   "cutoff": "2026-11-20",
   "retention": "permanent-no-date-limit",
   "minimumTradingSessions": 240,
