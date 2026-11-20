@@ -275,6 +275,9 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 .technical-stack-plot>.technical-stack-svg{background:#fff}
 .technical-stack-plot .cross-cursor-line{stroke:#627b98;stroke-width:.7;stroke-dasharray:none;vector-effect:non-scaling-stroke}
 .technical-stack-plot .technical-stack-svg{cursor:crosshair}
+.technical-current-day{padding:5px 9px;font-size:11px;line-height:1.5;color:#24516b;background:#f0f9fc;border:1px solid #b7d4e2;border-radius:5px;font-variant-numeric:tabular-nums}
+.technical-k-provisional{opacity:.92}
+.technical-k-provisional rect{stroke-width:1.75;stroke-dasharray:none}
 .technical-stack-plot [data-tech-hover]{pointer-events:none}
 .technical-stack-plot [data-tech-hover] text{font-variant-numeric:tabular-nums}
 .technical-stack-readouts>div,.technical-stack-compact .technical-stack-readouts>div{
@@ -502,14 +505,6 @@ body.technical-fullscreen-active{overflow:hidden!important}
   .technical-stack-row .cross-sort-step{width:22px;height:22px}
 }
 
-.intraday-panel{margin:15px 0 20px;padding:15px;background:#f5fbff;color:#153148;border:1px solid #c4dfea;border-radius:11px}
-.intraday-panel h3{font-size:15px;margin:0 0 6px;color:#10364f}
-.intraday-help{font-size:11px;color:#527087;margin-bottom:12px}
-.intraday-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(295px,1fr));gap:12px}
-.intraday-tile{background:#fff;border:1px solid #d2e3ed;border-radius:9px;padding:12px;min-width:0}
-.intraday-tile strong{font-size:14px}.intraday-tile .intraday-numbers{font-size:12px;line-height:1.8}
-.intraday-tile svg{display:block;width:100%;height:145px;margin:10px 0 6px;background:#fff}
-.intraday-small{font-size:11px;color:#557083;line-height:1.6}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -526,11 +521,6 @@ body.technical-fullscreen-active{overflow:hidden!important}
 <div class="tabscreen visible" id="overview">
 <section class="hero page-hero" aria-label="市場總覽資料解讀"><div class="hero-copy"><div class="eyebrow">Daily Investment Intelligence / 公開市場資訊 · 本頁數據解讀</div><h1 id="headline">市場觀察數據待核對</h1><p id="summary">依目前可取得的本頁指標解讀；未取得的數據不作推論。</p><ul class="interpret-points" id="overviewInsights" aria-label="本頁解讀重點"></ul></div><div class="heroaside"><span>市場資料基準日</span><strong id="asof">—</strong><span id="syncstate">等待同步</span></div></section>
 
-<section class="intraday-panel" aria-label="即時盤中五分鐘K線">
-<h3>盤中 5 分鐘 K 線｜台灣加權與 S&amp;P 500</h3>
-<div class="intraday-help">每 5 分鐘排程抓取；指數報價、資料源與 GitHub 部署可能延遲。歷史日 K 線母檔不受盤中暫定值覆蓋。</div>
-<div class="intraday-grid" id="intradayTiles"><div class="intraday-small">尚未取得盤中 K 線資料，等待市場開盤與收集器成功執行。</div></div>
-</section>
 <div class="grid four" id="topmetrics"></div>
 <div class="sectionhead"><h2>市場核心監控</h2><span class="small">多因子交叉觀察，不代表買賣訊號</span></div>
 <div class="card market-cross">
@@ -584,6 +574,26 @@ function toast(message){const t=$('toast');t.textContent=message;t.style.display
 function validate(d){if(!d||d.schemaVersion!==2||d.audience!=='public-market'||typeof d.market!=='object'||!Array.isArray(d.ai)||!/^\d{4}-\d{2}-\d{2}$/.test(d.asOf))throw Error('公開市場 JSON 格式不符合規範');if(['portfolio','holdings','defense','rollingRisk','personal','account'].some(k=>Object.prototype.hasOwnProperty.call(d,k)))throw Error('公開資料包含不應出現的私人欄位');return d}
 let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
 let indexOhlcHistory=null,indexOhlcError="",techOhlcCache={taiex:[],sp500:[]};
+let intradayMarketData=null,intradayMarketError="";
+function marketLocalDay(key){
+ const zone=key==="sp500"?"America/New_York":"Asia/Taipei";
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+ const get=k=>parts.find(p=>p.type===k)?.value;
+ return get("year")+"-"+get("month")+"-"+get("day");
+}
+function provisionalDailyCandle(key){
+ const m=intradayMarketData?.markets?.[key],q=m?.latest;
+ if(m?.status!=="provisional"||m.date!==marketLocalDay(key)||!q)return null;
+ const stamp=Date.parse(q.lastCandleTime||"");
+ if(!Number.isFinite(stamp)||stamp>Date.now()+600000||Date.now()-stamp>86400000)return null;
+ const {open,high,low,close}=q;
+ if(![open,high,low,close].every(Number.isFinite)||low<=0||high<Math.max(open,low,close)||low>Math.min(open,high,close))return null;
+ if((techOhlcCache[key]||[]).some(row=>row.date>=m.date))return null;
+ return {date:m.date,open,high,low,close,provisional:true,quoteTime:q.lastCandleTime,source:m.source,
+  quoteAgeMinutes:Math.max(0,Math.round((Date.now()-stamp)/60000)),
+  turnoverYiTwd:key==="taiex"&&m.turnoverStatus==="verified_index_turnover_TWD"&&
+     Number.isFinite(m.turnoverYiTwd)&&m.turnoverYiTwd>=0?m.turnoverYiTwd:null};
+}
 let chartCursorDate=null,chartContext=null,chartPointerSvg=null,chartPointerId=null;
 const seriesConfig=[["taiex","加權指數","點","#69d8e0",0],["dxy","美元指數 DXY","","#80aaff",2],["usdtwd","USD/TWD","","#eac17b",3],["vix","VIX 波動率","","#c1a5fa",2],["hyOas","HY OAS","%","#7ae1b6",2],["marginDailyYi","融資餘額日增減","億元","#8bc8ed",2,"flow"],["foreignNetYi","外資現貨買賣超","億元","#eab380",2,"flow"],["foreignCumulativeYi","外資期間累積買賣超","億元","#8ad1ff",2,"cumulative"],["marginMaintenanceExEtf","融資維持率（扣ETF）","%","#eea1c3",2],["us10yYield","美國 10 年公債殖利率","%","#9dbdff",3],["us10y2ySpread","美國 10Y－2Y 公債利差","百分點","#ddc18f",3,"spread"],["voo","VOO｜S&P 500 ETF（美元）","美元","#79d4f2",2],["qqq","QQQ｜Nasdaq-100 ETF（美元）","美元","#ffbc8b",2],["fedFundsEffective","美國聯邦基金有效利率（EFFR／DFF）","%","#c7df80",3]];
 
@@ -751,13 +761,21 @@ function techOhlcSource(key){
 }
 function techOhlcRecords(key){
  const source=techOhlcSource(key);
- return source?techOhlcCache[source]||[]:[];
+ if(!source)return [];
+ const official=techOhlcCache[source]||[];
+ const day=provisionalDailyCandle(source);
+ return day?[...official,day]:official;
 }
 function techPriceObservations(raw,key){
  if(key==="taiexK"||key==="sp500K"){
   return techOhlcRecords(key).map(r=>({...r,value:r.close}));
  }
- return raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:r[key]}));
+ const published=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:r[key]}));
+ if(key==="taiex"){
+  const day=provisionalDailyCandle("taiex");
+  if(day&&!published.some(r=>r.date>=day.date))published.push({date:day.date,value:day.close,provisional:true});
+ }
+ return published;
 }
 function techKd(ohlcRows,period=9,smoothK=3,smoothD=3){
  const out=[];let priorK=50,priorD=50;
@@ -1019,7 +1037,8 @@ function showHistory(){
  const raw=marketHistoryData&&Array.isArray(marketHistoryData.rows)?marketHistoryData.rows:[],
        reference=data&&data.asOf?marketChartDate(data.asOf):Date.now(),
        lastPublished=raw.length?Math.max(...raw.map(r=>marketChartDate(r.date))):reference,
-       cutoff=Math.min(reference,Date.now(),lastPublished),
+       currentSessions=["taiex","sp500"].map(k=>provisionalDailyCandle(k)).filter(Boolean).map(r=>marketChartDate(r.date)),
+       cutoff=Math.min(Date.now(),Math.max(reference,lastPublished,...currentSessions)),
        start=cutoff-(chartDays-1)*86400000,end=cutoff;
  const TOP=35,BOTTOM=151,LEFT=38,RIGHT=758;
  // Each Monday immediately follows the preceding Friday: draw on weekday slots.
@@ -1052,8 +1071,8 @@ function showHistory(){
  });
  const uniqueDays=[...new Set([
   ...series.filter(s=>s.key!=="foreignCumulativeYi").flatMap(s=>s.rows.map(r=>r.date)),
-  ...techOhlcCache.taiex.filter(r=>marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).map(r=>r.date),
-  ...techOhlcCache.sp500.filter(r=>marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).map(r=>r.date)
+  ...techOhlcRecords("taiexK").filter(r=>marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).map(r=>r.date),
+  ...techOhlcRecords("sp500K").filter(r=>marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end).map(r=>r.date)
  ])].filter(marketIsWeekday).sort();
  let commonLo=Infinity,commonHi=-Infinity;
  if(chartMode==="indexed"){
@@ -1125,6 +1144,11 @@ function showHistory(){
    ).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>
     ({date:r.date,value:r.marketTurnoverYiTwd,ratio:r.dayTradeTurnoverSharePct})),start,end);
    else middle=techFiltered(techPriceObservations(raw,c.middle),start,end);
+   const turnoverToday=provisionalDailyCandle("taiex");
+   if(["marketTurnoverYiTwd","turnoverWithDayTrade"].includes(c.middle)&&Number.isFinite(turnoverToday?.turnoverYiTwd)&&
+      !middle.some(r=>r.date>=turnoverToday.date)){
+     middle.push({date:turnoverToday.date,value:turnoverToday.turnoverYiTwd,ratio:null,provisional:true});
+   }
   const compact=c.layout!=="standard";
   const panel=compact?[{start:27,end:185},{start:212,end:271},{start:299,end:365}]:[{start:30,end:270},{start:306,end:394},{start:430,end:535}];
   const svgBottom=compact?391:571;
@@ -1161,7 +1185,7 @@ function showHistory(){
    const bodyY=Math.min(yOpen,yClose),bodyHeight=Math.max(1.5,Math.abs(yClose-yOpen));
    // Red rising candles stay hollow; green falling candles are always solid-filled.
    const candleFill=color;
-   return '<g class="technical-k-candle'+(up?' technical-k-up':' technical-k-down')+'" data-k-date="'+r.date+'"><line x1="'+xp+'" x2="'+xp+'" y1="'+ys[0](r.high)+'" y2="'+ys[0](r.low)+'" stroke="'+color+'" stroke-width="1.3"/><rect x="'+(xp-candleWidth/2)+'" y="'+bodyY+'" width="'+candleWidth+'" height="'+bodyHeight+'" fill="'+candleFill+'" fill-opacity="1" stroke="'+color+'" stroke-width="1.4"/></g>';
+   return '<g class="technical-k-candle'+(up?' technical-k-up':' technical-k-down')+(r.provisional?' technical-k-provisional':'')+'" data-k-date="'+r.date+'" data-provisional="'+Boolean(r.provisional)+'"><line x1="'+xp+'" x2="'+xp+'" y1="'+ys[0](r.high)+'" y2="'+ys[0](r.low)+'" stroke="'+color+'" stroke-width="1.3"/><rect x="'+(xp-candleWidth/2)+'" y="'+bodyY+'" width="'+candleWidth+'" height="'+bodyHeight+'" fill="'+candleFill+'" fill-opacity="1" stroke="'+color+'" stroke-width="1.4"/></g>';
   }).join("");
   const priceLines=(c.top==="taiexK"||c.top==="sp500K"?candleSvg:line(top,"value",ys[0],"#1178a1",2.8))+(c.overlays.bb?line(upper,"value",ys[0],"#9d4edd",1.4,"5 4")+line(lower,"value",ys[0],"#9d4edd",1.4,"5 4"):"")+
    ma.map((m,i)=>c.overlays["ma"+m.n]?line(m.rows,"value",ys[0],["#e59c00","#dc4b6a","#2869cc","#26813e","#7741ca"][i],1.15,""):"").join("");
@@ -1174,6 +1198,9 @@ function showHistory(){
     '" stroke-width="'+(isMonetary?Math.max(1.5,Math.min(9,560/Math.max(1,sessionDates.length))):Math.max(2,Math.min(9,600/chartDays)))+'"/>'
    ).join(""):line(middleDisplay,"value",ys[1],"#bf6810",2.3);
    const midRatioLine=dualTurnover?line(middleDisplay,"ratio",ratioY,"#e97800",2):"";
+   const missingMoney=turnoverToday&&!Number.isFinite(turnoverToday.turnoverYiTwd)&&
+     ["marketTurnoverYiTwd","turnoverWithDayTrade"].includes(c.middle)?
+     '<text x="745" y="'+(panel[1].start+12)+'" text-anchor="end" font-size="10" fill="#a65c19">今日成交金額待資料來源</text>':"";
    const midRightAxis=dualTurnover?[0,.5,1].map(t=>{
     const y=panel[1].start+t*(panel[1].end-panel[1].start);
     return '<text x="762" y="'+(y+3)+'" text-anchor="start" font-size="9" fill="#a45d13">'+
@@ -1217,10 +1244,19 @@ function showHistory(){
     '<g data-tech-hover-compact visibility="hidden"><rect x="582" y="1" width="174" height="22" rx="3" fill="#f3f8fc" stroke="#a1b2c1" stroke-width=".7"/>'+
     '<text data-tech-compact-text x="669" y="16" text-anchor="middle" font-size="11" fill="#23435f" font-weight="700">—</text></g>'+
     '</g>';
-   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 840 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="840" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+priceLines+midLines+midRatioLine+midRightAxis+midLegend+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
-  const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
-  const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。中層可切換成交金額（億元）、當沖成交金額占比（%）或雙軸合併圖；雙軸左側為成交億元，右側為當沖占比，不使用成交股數。其他籌碼指標維持原定義。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
-  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 游標三層數值 v2026.11.20.3</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button></div></div>'+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
+   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 840 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="840" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+priceLines+midLines+midRatioLine+midRightAxis+midLegend+missingMoney+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
+  const latestDaily=topCandles.at(-1);
+   const currentDayNote=latestDaily?.provisional?
+    '<div class="technical-current-day" role="status">今日一根暫定日K｜'+esc(latestDaily.date)+
+      '　來源時間 '+esc(latestDaily.quoteTime||"—")+
+      '　開 '+historyFormat(latestDaily.open,2)+'　高 '+historyFormat(latestDaily.high,2)+
+      '　低 '+historyFormat(latestDaily.low,2)+'　最新 '+historyFormat(latestDaily.close,2)+
+      (c.top==="taiexK"?'　累積成交金額 '+(Number.isFinite(latestDaily.turnoverYiTwd)?
+       historyFormat(latestDaily.turnoverYiTwd,2)+' 億元':'暫無可信盤中金額來源'):"")+
+      '（非正式收盤；報價可能延遲）</div>':"";
+   const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
+  const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。指數日K最右側會顯示交易當日暫定K，盤中更新同一根，不覆蓋正式歷史母檔。中層可切換成交金額（億元）、當沖成交金額占比（%）或雙軸合併圖；雙軸左側為成交億元，右側為當沖占比，不使用成交股數。其他籌碼指標維持原定義。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
+  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 今日一根日K v2026.11.20.4</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
@@ -1554,52 +1590,17 @@ $('sources').innerHTML=(d.sources||[]).filter(s=>s&&typeof s.url==='string'&&/^h
 showPageInterpretations();
 }
 
-function intradaySvg(rows){
- if(!Array.isArray(rows)||!rows.length)return '<span class="intraday-small">K 線缺值</span>';
- const bars=rows.slice(-40).filter(b=>['open','high','low','close'].every(k=>Number.isFinite(b[k])));
- if(!bars.length)return '<span class="intraday-small">K 線缺值</span>';
- const high=Math.max(...bars.map(b=>b.high)),low=Math.min(...bars.map(b=>b.low)),span=Math.max(0.001,high-low);
- const W=640,H=140,pad=10,plotH=H-pad*2,step=(W-20)/bars.length;
- const yy=v=>pad+(high-v)/span*plotH;
- const lines=bars.map((b,i)=>{
-  const x=10+(i+.5)*step,up=b.close>=b.open,col=up?'#e83232':'#16bd4e',bodyTop=Math.min(yy(b.open),yy(b.close)),
-        bodyH=Math.max(1,Math.abs(yy(b.open)-yy(b.close)));
-  return '<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+yy(b.high).toFixed(1)+'" y2="'+yy(b.low).toFixed(1)+'" stroke="'+col+'" stroke-width="1.1"/>'+
-   '<rect x="'+(x-step*.34).toFixed(1)+'" y="'+bodyTop.toFixed(1)+'" width="'+Math.max(1,step*.68).toFixed(1)+'" height="'+bodyH.toFixed(1)+'" fill="'+col+'"/>';
- }).join('');
- return '<svg viewBox="0 0 640 140" role="img" aria-label="最近'+bars.length+'根五分鐘 K 線">'+lines+'</svg>';
-}
-function intradayCard(key,m,generatedAt){
- const label=key==='taiex'?'台灣加權指數':'S&P 500 指數';
- if(!m||!Array.isArray(m.candles)||!m.candles.length)return '';
- const f=v=>Number.isFinite(v)?v.toLocaleString('zh-TW',{maximumFractionDigits:2}):'—';
- const q=m.latest||{}, asof=q.lastCandleTime||'',latency=generatedAt?(Date.now()-Date.parse(generatedAt))/60000:null,
-   stale=!Number.isFinite(latency)||latency>30;
- const money=key==='taiex'
-   ? '成交金額 '+f(m.turnoverYiTwd)+' 億元 · 預估全日 '+f(m.projectedTurnoverYiTwd)+' 億元'
-   : '美股指數成交金額：尚無同口徑可靠來源';
- const warn=m.turnoverYiTwd==null?'成交金額及預估值尚無可核實的台幣成交值來源；不以股數代填。':
-  '預估全日成交額採簡單時間比例外推，盤初與尾盤誤差可能較大。';
- return '<div class="intraday-tile"><strong>'+label+'｜'+(stale?'歷史快照（非即時）':'盤中暫定')+'</strong>'+
-  '<div class="intraday-numbers">O '+f(q.open)+' ｜ H '+f(q.high)+' ｜ L '+f(q.low)+' ｜ C '+f(q.close)+'</div>'+
-  intradaySvg(m.candles)+
-  '<div class="intraday-numbers">'+money+'</div>'+
-  '<div class="intraday-small">資料時間：'+esc(asof.replace('T',' '))+' · '+m.candles.length+' 根 5 分鐘 K · '+esc(String(m.source||''))+
-  ' · 最新 K 線距現在 '+(Number.isFinite(Date.parse(asof))?Math.max(0,Math.round((Date.now()-Date.parse(asof))/60000))+' 分鐘':'未知')+'（含資料源及部署延遲）'+'</div>'+
-  '<div class="intraday-small">'+warn+'</div></div>';
-}
 async function fetchIntradayMarket(){
- const dest=$('intradayTiles');if(!dest)return;
  try{
-  const resp=await fetch('./intraday-market.json?c='+Date.now(),{cache:'no-store'});
-  if(!resp.ok)throw Error('尚未發布盤中快照');
-  const d=await resp.json();
-  if(d?.audience!=='public-market-intraday'||d?.schemaVersion!==1)throw Error('盤中檔格式不符');
-  const cards=['taiex','sp500'].map(k=>intradayCard(k,d.markets?.[k],d.generatedAt)).filter(Boolean);
-  dest.innerHTML=cards.join('')||'<div class="intraday-small">尚未有有效的 5 分鐘盤中報價。</div>';
- }catch(e){dest.textContent='盤中資料尚未就緒：'+e.message;}
+  const r=await fetch("./intraday-market.json?c="+Date.now(),{cache:"no-store"});
+  if(!r.ok)throw Error("HTTP "+r.status);
+  const d=await r.json();
+  if(d?.schemaVersion!==1||d?.audience!=="public-market-intraday"||
+    !d.markets||typeof d.markets!=="object")throw Error("盤中資料格式不符");
+  intradayMarketData=d;intradayMarketError="";
+ }catch(e){intradayMarketData=null;intradayMarketError=e.message}
+ showHistory();
 }
-
 async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();await Promise.all([fetchMarketHistory(),fetchIndexOhlc(),fetchIntradayMarket()]);loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
 $('reload').addEventListener('click',()=>sync(false));document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.tabscreen').forEach(s=>s.classList.toggle('visible',s.id===btn.dataset.tab))}));document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync(true)});sync(true);setInterval(()=>{if(!document.hidden)sync(true)},300000);
 </script></body></html>
