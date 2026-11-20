@@ -275,14 +275,6 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 .technical-stack-plot>.technical-stack-svg{background:#fff}
 .technical-stack-plot .cross-cursor-line{stroke:#627b98;stroke-width:.7;stroke-dasharray:none;vector-effect:non-scaling-stroke}
 .technical-stack-plot .technical-stack-svg{cursor:crosshair}
-/* Middle panel shortcuts remain visible even with the fullscreen control rail hidden. */
-.technical-middle-shortcuts{display:flex;align-items:center;flex-wrap:wrap;gap:5px 7px;padding:5px 8px;border:1px solid #d5e2eb;border-radius:6px;background:#f4f8fb;min-height:32px}
-.technical-middle-shortcuts>strong{font-size:11px;color:#294860;white-space:nowrap}
-.technical-middle-shortcuts button{appearance:none;cursor:pointer;border:1px solid #aebfcf;border-radius:5px;background:#fff;color:#314d62;font-size:11px;font-weight:650;line-height:1.2;padding:5px 9px;white-space:nowrap}
-.technical-middle-shortcuts button.active{background:#cde9f8;color:#0c4b6a;border-color:#3e99c5;box-shadow:inset 0 0 0 1px #3e99c5}
-.technical-middle-shortcuts button:focus-visible{outline:2px solid #157fae;outline-offset:2px}
-.technical-stack-fullscreen .technical-middle-shortcuts{flex:0 0 auto!important;padding:3px 6px;min-height:26px}
-@media(max-width:650px){.technical-middle-shortcuts{gap:4px;padding:5px}.technical-middle-shortcuts button{font-size:10px;padding:5px 7px}}
 .technical-stack-plot [data-tech-hover]{pointer-events:none}
 .technical-stack-plot [data-tech-hover] text{font-variant-numeric:tabular-nums}
 .technical-stack-readouts>div,.technical-stack-compact .technical-stack-readouts>div{
@@ -972,33 +964,42 @@ function syncChartCursor(date,pointerX=null){
   const candle=tech.topCandles.find(r=>r.date===selected);
   const hover=technicalSvg.querySelector('[data-tech-hover="1"]');
   if(hover){
-   const active=Number.isFinite(pointerX),price=candle?.close??top?.value;
-   const valid=Number.isFinite(price)&&Number.isFinite(ys[0]);
+   const active=Number.isFinite(pointerX);
    hover.setAttribute("visibility",active?"visible":"hidden");
    if(active){
-    for(const key of ["price","callout"]){
-     const el=hover.querySelector('[data-tech-hover-'+key+']');
-     if(el)el.setAttribute("visibility",valid?"visible":"hidden");
+    const values=[candle?.close??top?.value,mid?.value,oscValue];
+    const formatted=[
+     historyFormat(values[0],2),
+     historyFormat(values[1],2)+(tech.c.middle==="dayTradeTurnoverSharePct"?"%":""),
+     historyFormat(values[2],tech.c.oscillator==="MACD"?3:2)
+    ];
+    // Use a dedicated right gutter: the value labels never cover candles or signal curves.
+    for(let i=0;i<3;i++){
+     const group=hover.querySelector('[data-tech-hover-axis="'+i+'"]');
+     const valid=Number.isFinite(values[i])&&Number.isFinite(ys[i]);
+     if(group)group.setAttribute("visibility",valid?"visible":"hidden");
+     if(!valid)continue;
+     const y=Math.max(tech.panel[i].start+10,Math.min(tech.panel[i].end-10,ys[i]));
+     const rect=group.querySelector("rect"),txt=group.querySelector("text");
+     if(rect)rect.setAttribute("y",(y-9).toFixed(2));
+     if(txt){txt.setAttribute("y",(y+3.5).toFixed(2));txt.textContent=formatted[i]}
     }
-    const dx=Math.max(40,Math.min(642,techX-57));
-    const dateBox=hover.querySelector("[data-tech-date-box]"),dateText=hover.querySelector("[data-tech-date-text]");
+    const dateBox=hover.querySelector("[data-tech-date-box]");
+    const dateText=hover.querySelector("[data-tech-date-text]");
+    const dx=Math.max(38,Math.min(658,techX-50));
     if(dateBox)dateBox.setAttribute("x",dx.toFixed(2));
-    if(dateText){dateText.setAttribute("x",(dx+57).toFixed(2));dateText.textContent=selected}
-    if(valid){
-     // Daily OHLC: use the actual nearest trading session close, not intraday time.
-     const y=ys[0], px=Math.max(40,Math.min(572,techX>565?techX-197:techX+14));
-     const py=Math.max(tech.panel[0].start+4,Math.min(tech.panel[0].end-48,y-46));
-     const priceBox=hover.querySelector("[data-tech-price-box]"),priceText=hover.querySelector("[data-tech-price-text]");
-     if(priceBox)priceBox.setAttribute("y",(y-10).toFixed(2));
-     if(priceText){priceText.setAttribute("y",(y+4).toFixed(2));priceText.textContent=historyFormat(price,2)}
-     const popBox=hover.querySelector("[data-tech-popup-box]"),popDate=hover.querySelector("[data-tech-popup-date]"),popPrice=hover.querySelector("[data-tech-popup-price]");
-     if(popBox){popBox.setAttribute("x",px.toFixed(2));popBox.setAttribute("y",py.toFixed(2))}
-     if(popDate){popDate.setAttribute("x",(px+9).toFixed(2));popDate.setAttribute("y",(py+16).toFixed(2));popDate.textContent=marketViewDate(selected)+"｜日線"}
-     if(popPrice){popPrice.setAttribute("x",(px+9).toFixed(2));popPrice.setAttribute("y",(py+33).toFixed(2));popPrice.textContent=(candle?"收盤 ":"數值 ")+historyFormat(price,2)}
+    if(dateText){dateText.setAttribute("x",(dx+50).toFixed(2));dateText.textContent=selected}
+    // Compact price/date callout in the upper title band, above the candlesticks.
+    const compact=hover.querySelector("[data-tech-hover-compact]");
+    const price=values[0];
+    if(compact)compact.setAttribute("visibility",Number.isFinite(price)?"visible":"hidden");
+    if(Number.isFinite(price)){
+     const label=hover.querySelector("[data-tech-compact-text]");
+     if(label)label.textContent=selected.slice(5).replace("-","/")+"  收 "+historyFormat(price,2);
     }
    }
   }
-  put('[data-tech-readout="top"]',candle?("開 "+historyFormat(candle.open,2)+" · 高 "+historyFormat(candle.high,2)+" · 低 "+historyFormat(candle.low,2)+" · 收 "+historyFormat(candle.close,2)):top?historyFormat(top.value,2)+" · "+selected:"當日無數值");
+    put('[data-tech-readout="top"]',candle?("開 "+historyFormat(candle.open,2)+" · 高 "+historyFormat(candle.high,2)+" · 低 "+historyFormat(candle.low,2)+" · 收 "+historyFormat(candle.close,2)):top?historyFormat(top.value,2)+" · "+selected:"當日無數值");
   put('[data-tech-extra="top"]', [...tech.ma.filter(m=>tech.c.overlays["ma"+m.n]).map(m=>{const p=m.rows.find(r=>r.date===selected);return "MA"+m.n+" "+(p?historyFormat(p.value,2):"—")}),...(tech.c.overlays.bb?["BB20 "+(bb?historyFormat(bb.lower,2)+"–"+historyFormat(bb.upper,2):"—")]:[])].join(" · ")||"MA／BB 已全部關閉");
   for(const m of tech.ma){
    const item=m.rows.find(r=>r.date===selected);
@@ -1207,22 +1208,19 @@ function showHistory(){
    return '<text x="'+x(day)+'" y="'+(compact?384:559)+'" fill="#526475" text-anchor="middle" font-size="11">'+day.slice(5)+'</text>';
   }).join("");
   const hoverMarkup='<g data-tech-hover="1" visibility="hidden" pointer-events="none">'+
-    '<g data-tech-hover-price visibility="hidden"><rect data-tech-price-box x="2" y="0" width="93" height="20" rx="3" fill="#52677f"/><text data-tech-price-text x="48" y="0" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">—</text></g>'+
-    '<g><rect data-tech-date-box x="40" y="'+(svgBottom-25)+'" width="114" height="22" rx="3" fill="#52677f"/><text data-tech-date-text x="97" y="'+(svgBottom-10)+'" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">—</text></g>'+
-    '<g data-tech-hover-callout visibility="hidden"><rect data-tech-popup-box x="200" y="30" width="180" height="43" rx="4" fill="#f9fbfe" stroke="#8ba0b4"/><text data-tech-popup-date x="209" y="46" fill="#31475f" font-size="11">—</text><text data-tech-popup-price x="209" y="63" fill="#162f48" font-weight="700" font-size="12">—</text></g></g>';
-   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="780" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+priceLines+midLines+midRatioLine+midRightAxis+midLegend+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
-  const quickMiddleItems=[["marketTurnoverYiTwd","成交量（成交金額）"],
-    ["dayTradeTurnoverSharePct","當沖比例"],
-    ["turnoverWithDayTrade","成交量＋當沖"],
-    ["foreignNetYi","外資買賣超"]];
-   const quickMiddle='<div class="technical-middle-shortcuts" role="group" aria-label="中層資料快速切換">'+
-    '<strong>中層｜快速切換</strong>'+quickMiddleItems.map(([key,label])=>
-     '<button type="button" data-tech-middle-quick="'+key+'" class="'+(c.middle===key?"active":"")+
-     '" aria-pressed="'+(c.middle===key)+'" title="'+esc(techSeriesName(key))+'">'+esc(label)+'</button>'
-    ).join("")+'</div>';
-   const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
+    [0,1,2].map(i=>'<g data-tech-hover-axis="'+i+'" visibility="hidden">'+
+     '<rect x="761" y="0" width="77" height="18" rx="3" fill="'+["#415f80","#467ba6","#7259a2"][i]+'"/>'+
+     '<text x="799.5" y="0" fill="#fff" text-anchor="middle" font-size="10" font-weight="700">—</text></g>'
+    ).join("")+
+    '<g><rect data-tech-date-box x="38" y="'+(svgBottom-24)+'" width="100" height="21" rx="3" fill="#52677f"/>'+
+    '<text data-tech-date-text x="88" y="'+(svgBottom-9)+'" fill="#fff" text-anchor="middle" font-size="10" font-weight="700">—</text></g>'+
+    '<g data-tech-hover-compact visibility="hidden"><rect x="582" y="1" width="174" height="22" rx="3" fill="#f3f8fc" stroke="#a1b2c1" stroke-width=".7"/>'+
+    '<text data-tech-compact-text x="669" y="16" text-anchor="middle" font-size="11" fill="#23435f" font-weight="700">—</text></g>'+
+    '</g>';
+   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 840 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="840" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+priceLines+midLines+midRatioLine+midRightAxis+midLegend+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
+  const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。中層可切換成交金額（億元）、當沖成交金額占比（%）或雙軸合併圖；雙軸左側為成交億元，右側為當沖占比，不使用成交股數。其他籌碼指標維持原定義。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
-  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 中層切換 v2026.11.20.2</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button></div></div>'+quickMiddle+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
+  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 游標三層數值 v2026.11.20.3</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button></div></div>'+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
@@ -1279,7 +1277,7 @@ function selectCursorAtPointer(evt,svg){
  if(!Number.isFinite(svgX)){
   const rect=svg.getBoundingClientRect();
   if(!rect?.width)return;
-  svgX=(evt.clientX-rect.left)/rect.width*780;
+  svgX=(evt.clientX-rect.left)/rect.width*(svg.viewBox?.baseVal?.width||780);
  }
  svgX=Math.max(38,Math.min(758,svgX));
  const isTech=svg.dataset?.techSvg==="1";
@@ -1335,12 +1333,6 @@ crossHost.addEventListener("change",event=>{
  if(target&&!updateTechnicalSetting(target.dataset.techField,target.value))target.value=techSettings[target.dataset.techField];
 });
 crossHost.addEventListener("click",event=>{
- const middleQuick=event.target.closest?.("[data-tech-middle-quick]");
- if(middleQuick){
-  event.preventDefault();
-  updateTechnicalSetting("middle",middleQuick.dataset.techMiddleQuick);
-  return;
- }
  const fullscreenBtn=event.target.closest?.("[data-tech-fullscreen]");
  if(fullscreenBtn){event.preventDefault();toggleTechnicalFullscreen();return}
  const controlBtn=event.target.closest?.("[data-tech-controls-toggle]");
@@ -1379,7 +1371,7 @@ crossHost.addEventListener("keydown",event=>{
 function chartPointerX(evt,svg){
  let x=null;
  try{const ctm=svg.getScreenCTM?.();if(ctm&&typeof svg.createSVGPoint==="function"){const pt=svg.createSVGPoint();pt.x=evt.clientX;pt.y=evt.clientY||0;x=pt.matrixTransform(ctm.inverse()).x}}catch(e){}
- if(!Number.isFinite(x)){const rect=svg.getBoundingClientRect();if(!rect?.width)return null;x=(evt.clientX-rect.left)/rect.width*780}
+ if(!Number.isFinite(x)){const rect=svg.getBoundingClientRect();if(!rect?.width)return null;x=(evt.clientX-rect.left)/rect.width*(svg.viewBox?.baseVal?.width||780)}
  return x;
 }
 function chartStopDrag(){
