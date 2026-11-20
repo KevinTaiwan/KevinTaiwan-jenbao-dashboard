@@ -22,7 +22,7 @@
     "cnn": null,
     "marginBalanceYi": 4843.68,
     "marginDailyYi": -236.59,
-    "marginMaintenance": null,
+    "marginMaintenance": 128.31,
     "foreignNetYi": -243.12,
     "futuresNetContracts": -99219,
     "hyOas": 3.47,
@@ -33,7 +33,9 @@
     "oil": 82.91,
     "goldPrice": 3535.22,
     "ma120": 45340,
-    "ma240": 39368.24
+    "ma240": 39368.24,
+    "marginMaintenanceAsOf": "2026-11-19",
+    "marginMaintenanceScope": "TWSE financing maintenance excluding ETF (Wantgoo)"
   },
   "ai": [
     {
@@ -148,7 +150,7 @@
     {
       "label": "玩股網｜扣除ETF融資維持率",
       "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
-      "date": null
+      "date": "2026-11-19"
     },
     {
       "label": "MoneyDJ｜006208正式收盤",
@@ -222,8 +224,17 @@
     "11/18 SOFR=3.90%、IORB=3.90%、SOFR-IORB=0bp；TGCR=3.88%，11/19觀測值尚未核實。短端資金壓力未顯示同等惡化。",
     "VIX28.44、MOVE96.04為11/19觀測；美國10年5.021%、美元指數103.91、黃金3,535.22、USD/TWD32.993為11/20 10:29快照。",
     "11/19上市融資4,843.68億元、日減236.59億元；外資現貨-243.12億元、期貨淨空99,219口；11/20盤後籌碼尚未公布，勿當成11/20觀測。",
-    "玩股網扣ETF融資維持率未取得同日期新值，留空，嚴禁用整體維持率代填。",
+    "11/19玩股網扣ETF上市融資維持率128.31%；已核對與市場歷史同日期一致；並非11/20盤中值、非含ETF維持率、非證交所整戶擔保維持率。",
     "11/20起金管會第二波限空令，前日跌逾3.5%個股翌日平盤以下限放空、盤中借券賣出額度3%降至1%；限制不代表市場已經觸底。",
     "公開儲存庫僅包含市場、信用、流動性及公共新聞；嚴禁含個人持倉、交易或私人風險數據。"
-  ]
+  ],
+  "marginMaintenanceCoverage": {
+    "targetTradingDays": 240,
+    "observedTradingDays": 31,
+    "missingTradingDays": 209,
+    "targetFirst": "2025-11-21",
+    "targetLast": "2026-11-19",
+    "status": "partial",
+    "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
+  }
 }
