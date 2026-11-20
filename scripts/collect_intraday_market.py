@@ -2,8 +2,7 @@
 """Market-only intraday 5-minute OHLC and verified monetary turnover.
 
 Taiwan: Yahoo ^TWII five-minute *price* candles (may be delayed); optional
-Fugle IX0001 index candles with index 'volume' explicitly documented as
-traded monetary value, activated only when FUGLE_API_KEY is provisioned.
+An optional verified TWD-turnover provider with explicit currency and monetary bars;\nwithout it turnover and projection remain null.
 US: Yahoo ^GSPC five-minute price candles; index volume is NEVER labeled
 market turnover value. No fabricated monetary turnover or projections.
 
@@ -86,18 +85,27 @@ def yahoo(m,local):
     # Index 'volume' has no trustworthy TWD turnover monetary unit: exclude.
     return normalize(raw,local.date().isoformat(),m["tz"],m["open"],m["close"]),int(result.get("meta",{}).get("exchangeDataDelayedBy") or 0)
 
-def fugle(local,m):
-    key=os.environ.get("FUGLE_API_KEY","").strip()
-    if not key:return [],"no_verified_intraday_turnover_provider"
-    url="https://api.fugle.tw/marketdata/v1.0/stock/intraday/candles/IX0001?timeframe=5"
-    doc=read_json(url,{"X-API-KEY":key})
-    raw=[]
-    for bar in doc.get("data") or []:
-        raw.append({"time":bar.get("date"),"open":bar.get("open"),
-                    "high":bar.get("high"),"low":bar.get("low"),
-                    "close":bar.get("close"),"turnoverTwd":bar.get("volume")})
-    result=normalize(raw,local.date().isoformat(),m["tz"],m["open"],m["close"])
-    return result,"fugle_ix0001_index_volume_as_twd_turnover"
+def verified_turnover(local,m):
+    """Optional authenticated provider or trusted adapter, requiring explicit TWD currency.
+
+    Expected JSON: {date:'YYYY-MM-DD',currency:'TWD',bars:[{time,open,high,low,close,turnoverTwd}]}.
+    No provider configured means monetary turnover remains null.
+    """
+    url=os.environ.get("JENBAO_VERIFIED_TWD_TURNOVER_URL","").strip()
+    if not url or not url.startswith("https://"):
+        return [],"no_verified_intraday_TWD_turnover_source"
+    headers={}
+    if os.environ.get("JENBAO_TURNOVER_API_KEY"):
+        headers["Authorization"]="Bearer "+os.environ["JENBAO_TURNOVER_API_KEY"]
+    payload=read_json(url,headers)
+    if payload.get("currency")!="TWD" or payload.get("date")!=local.date().isoformat():
+        raise ValueError("turnover source missing explicit same-day TWD currency")
+    raw=payload.get("bars") or []
+    if not isinstance(raw,list) or not raw:
+        return [],"no_verified_bars"
+    if any(number(b.get("turnoverTwd")) is None for b in raw):
+        raise ValueError("turnover value not explicitly provided by provider")
+    return normalize(raw,local.date().isoformat(),m["tz"],m["open"],m["close"]),"verified_TWD_turnover_provider"
 
 def summarise(rows,now,market,mode,delayed):
     first,last=rows[0],rows[-1]
@@ -147,13 +155,13 @@ def main():
             print(name+" Yahoo unavailable:",str(ex)[:180])
         if name=="taiex":
             try:
-                fr,fmode=fugle(local,m)
+                fr,fmode=verified_turnover(local,m)
                 if fr:
                     rows=fr
-                    mode="Fugle IX0001 index 5m OHLC / monetary成交金額"
+                    mode="Verified index 5m OHLC / TWD monetary turnover"
                     delay=0
             except Exception as e:
-                print("Fugle turnover unavailable; never infer TWD from share volume:",str(e)[:180])
+                print("Verified TWD turnover provider unavailable; shares never used as money:",str(e)[:180])
         if not rows:
             print(name,"no actual same-session bars; preserved old data")
             continue
