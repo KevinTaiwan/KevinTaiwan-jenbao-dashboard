@@ -575,6 +575,155 @@ function validate(d){if(!d||d.schemaVersion!==2||d.audience!=='public-market'||t
 let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
 let indexOhlcHistory=null,indexOhlcError="",techOhlcCache={taiex:[],sp500:[]};
 let intradayMarketData=null,intradayMarketError="";
+let officialTodayMarket={date:null,turnoverYiTwd:null,dayTradeSharePct:null,asOf:null};
+let directQuoteStatus="尚未嘗試直接讀取",directQuoteCheckedAt="",liveFetching=false;
+const LIVE_FETCH_POLL_MS=60000,OFFICIAL_TWSE_CHECK_MS=300000;
+let lastTwseCheckAt=0;
+async function fetchPublicMarketUrl(url,timeout=6500){
+ // Only fixed official/public finance URLs. The public-only CORS relay is a fallback
+ // because GitHub Pages cannot fetch Yahoo / TWSE responses lacking CORS headers.
+ if(!/^https:\/\/(query[12]\.finance\.yahoo\.com|www\.twse\.com\.tw)\//.test(url))throw Error("Untrusted market URL");
+ const routes=[url,"https://proxy.cors.dev/"+url];let error="";
+ for(const route of routes){
+  try{
+   const controller=new AbortController();
+   const timer=setTimeout(()=>controller.abort(),timeout);
+   let response;
+   try{response=await fetch(route,{cache:"no-store",signal:controller.signal,headers:{Accept:"application/json"}})}
+   finally{clearTimeout(timer)}
+   if(!response.ok)throw Error("HTTP "+response.status);
+   const json=await response.json();
+   if(!json||typeof json!=="object")throw Error("Invalid JSON");
+   return {json,source:route===url?"官方／供應商直連":"公開資料跨網域轉接"};
+  }catch(e){error=String(e?.message||e)}
+ }
+ throw Error("行情來源不可由瀏覽器讀取："+error.slice(0,120));
+}
+function localMarketDateAt(ms,source){
+ const zone=source==="sp500"?"America/New_York":"Asia/Taipei";
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date(ms));
+ const v=k=>parts.find(p=>p.type===k)?.value;
+ return v("year")+"-"+v("month")+"-"+v("day");
+}
+function parseYahooDayQuote(doc,source){
+ const row=doc?.chart?.result?.[0],quote=row?.indicators?.quote?.[0];
+ if(!row||!quote||!Array.isArray(row.timestamp))return null;
+ const currentDay=marketLocalDay(source),points=[];
+ const valid=n=>typeof n==="number"&&Number.isFinite(n)&&n>0;
+ const times=row.timestamp,limits=source==="sp500"?[570,960]:[540,810];
+ const zone=source==="sp500"?"America/New_York":"Asia/Taipei";
+ const minuteFormatter=new Intl.DateTimeFormat("en-GB",{timeZone:zone,hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
+ for(let i=0;i<times.length;i++){
+  const epoch=times[i]*1000;
+  if(!Number.isFinite(epoch)||localMarketDateAt(epoch,source)!==currentDay)continue;
+  const timeParts=minuteFormatter.formatToParts(new Date(epoch));
+  const hh=Number(timeParts.find(p=>p.type==="hour")?.value),mm=Number(timeParts.find(p=>p.type==="minute")?.value);
+  const minute=hh*60+mm;
+  if(!Number.isFinite(minute)||minute<limits[0]||minute>limits[1])continue;
+  const candle={open:quote.open?.[i],high:quote.high?.[i],low:quote.low?.[i],close:quote.close?.[i]};
+  if(!Object.values(candle).every(valid)||candle.high<Math.max(candle.open,candle.close,candle.low)||
+     candle.low>Math.min(candle.open,candle.close,candle.high))continue;
+  points.push({time:epoch,...candle});
+ }
+ if(!points.length)return null;
+ points.sort((a,b)=>a.time-b.time);
+ const first=points[0],last=points.at(-1),meta=row.meta||{};
+ let hi=Math.max(...points.map(p=>p.high)),lo=Math.min(...points.map(p=>p.low)),close=last.close,latestTime=last.time;
+ const mt=Number(meta.regularMarketTime)*1000,mp=Number(meta.regularMarketPrice);
+ if(valid(mt)&&valid(mp)&&mt>=last.time&&mt<Date.now()+60000&&localMarketDateAt(mt,source)===currentDay){
+  close=mp;latestTime=mt;hi=Math.max(hi,mp);lo=Math.min(lo,mp);
+ }
+ return {market:source,date:currentDay,status:"provisional",source:"Yahoo Finance index chart",directBrowser:true,
+  latest:{open:first.open,high:hi,low:lo,close,lastCandleTime:new Date(latestTime).toISOString()},
+  turnoverYiTwd:null,turnoverStatus:"unavailable_not_inferred_from_shares",
+  quoteAgeMinutes:Math.max(0,Math.round((Date.now()-latestTime)/60000))};
+}
+async function directIndexQuote(source){
+ const code=source==="taiex"?"%5ETWII":"%5EGSPC";
+ const url="https://query1.finance.yahoo.com/v8/finance/chart/"+code+
+     "?interval=1m&range=1d&includePrePost=false";
+ const result=await fetchPublicMarketUrl(url);
+ const market=parseYahooDayQuote(result.json,source);
+ if(!market)throw Error("報價服務未提供本交易日有效資料");
+ market.source+="（"+result.source+"）";
+ return market;
+}
+function rocReportDate(v){
+ const m=String(v||"").match(/^(\d{2,3})\/(\d{1,2})\/(\d{1,2})$/);
+ return m?(Number(m[1])+1911)+"-"+m[2].padStart(2,"0")+"-"+m[3].padStart(2,"0"):null;
+}
+function officialReportTables(doc){
+ const tables=[];const visit=obj=>{
+  if(!obj||typeof obj!=="object")return;
+  if(Array.isArray(obj.fields)&&Array.isArray(obj.data))tables.push(obj);
+  if(Array.isArray(obj.tables))obj.tables.forEach(visit);
+ };visit(doc);return tables;
+}
+async function directOfficialToday(){
+ const day=marketLocalDay("taiex"),month=day.replace(/-/g,"").slice(0,6)+"01";
+ const cleaned=v=>String(v??"").replace(/[,%\s（）()]/g,"");
+ const val=v=>{const n=Number(String(v??"").replace(/[,％%\s]/g,""));return Number.isFinite(n)?n:null};
+ const q=t=>"https://www.twse.com.tw/rwd/zh/afterTrading/"+t+"?response=json&date="+month;
+ let ratio=null,turnover=null;
+ const responses=await Promise.allSettled([fetchPublicMarketUrl(q("TWTB4U2"),7200),fetchPublicMarketUrl(q("FMTQIK"),7200)]);
+ if(responses[0].status==="fulfilled"){
+  for(const table of officialReportTables(responses[0].value.json)){
+   const cols=table.fields.map(cleaned);
+   const ix=(name,share)=>cols.findIndex(c=>c.includes(name)&&c.includes("占市場比重")===share);
+   const bi=ix("當日沖銷交易總買進成交金額",true),si=ix("當日沖銷交易總賣出成交金額",true);
+   if(bi<0||si<0)continue;
+   for(const row of table.data){
+    if(!Array.isArray(row)||rocReportDate(row[0])!==day)continue;
+    const buy=val(row[bi]),sell=val(row[si]);
+    if(buy!==null&&sell!==null&&buy>=0&&buy<=100&&sell>=0&&sell<=100)ratio=(buy+sell)/2;
+   }
+  }
+ }
+ if(responses[1].status==="fulfilled"){
+  for(const table of officialReportTables(responses[1].value.json)){
+   const i=table.fields.map(cleaned).findIndex(f=>f==="成交金額");
+   if(i<0)continue;
+   for(const row of table.data){
+    if(!Array.isArray(row)||rocReportDate(row[0])!==day)continue;
+    const n=val(row[i]);
+    if(n!==null&&n>0)turnover=n/1e8;
+   }
+  }
+ }
+ officialTodayMarket={date:day,turnoverYiTwd:turnover,dayTradeSharePct:ratio,asOf:new Date().toISOString()};
+}
+async function refreshDirectMarket(){
+ if(liveFetching)return;
+ liveFetching=true;
+ try{
+  const keys=["taiex","sp500"];
+  const results=await Promise.allSettled(keys.map(directIndexQuote));
+  if(!intradayMarketData||typeof intradayMarketData.markets!=="object")intradayMarketData={markets:{}};
+  let got=0,summary=[];
+  for(let i=0;i<keys.length;i++){
+   const entry=results[i];if(entry.status!=="fulfilled"){summary.push(keys[i]+" 未連線");continue}
+   const incoming=entry.value,previous=intradayMarketData.markets[keys[i]];
+   const ti=Date.parse(incoming.latest.lastCandleTime),tp=Date.parse(previous?.latest?.lastCandleTime||"");
+   if(!previous||!Number.isFinite(tp)||ti>=tp){
+    intradayMarketData.markets[keys[i]]=incoming;got++;
+   }
+   summary.push((keys[i]==="taiex"?"台股":"美股")+" "+incoming.quoteAgeMinutes+"分延遲");
+  }
+  directQuoteCheckedAt=new Date().toISOString();
+  directQuoteStatus=got?"瀏覽器行情："+summary.join("｜"):"直讀失敗，保留 GitHub 備援行情";
+  if(Date.now()-lastTwseCheckAt>OFFICIAL_TWSE_CHECK_MS){
+   lastTwseCheckAt=Date.now();
+   // Day-trade share is a post-close report. Do not infer intraday day-trades.
+   const localNow=new Date().toLocaleString("en-GB",{timeZone:"Asia/Taipei",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
+   const [hour,minute]=localNow.split(":").map(Number);
+   if(hour>13||(hour===13&&minute>=35)){
+    try{await directOfficialToday()}catch(e){/* keep last verified report */}
+   }
+  }
+  showHistory();
+ }finally{liveFetching=false}
+}
+
 function marketLocalDay(key){
  const zone=key==="sp500"?"America/New_York":"Asia/Taipei";
  const parts=new Intl.DateTimeFormat("en-US",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
