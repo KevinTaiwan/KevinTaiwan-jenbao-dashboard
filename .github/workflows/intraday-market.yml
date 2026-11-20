@@ -1,13 +1,5 @@
-name: Intraday index OHLC every 5 minutes
+name: Manual legacy intraday collector (schedule disabled)
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/collect_intraday_market.py'
-      - 'scripts/validate_intraday_market.py'
-      - '.github/workflows/intraday-market.yml'
-  schedule:
-    - cron: '*/5 * * * 1-5'
   workflow_dispatch:
 permissions:
   contents: write
