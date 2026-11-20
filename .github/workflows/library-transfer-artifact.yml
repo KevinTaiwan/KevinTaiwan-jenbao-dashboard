@@ -3,9 +3,13 @@ on:
   push:
     branches: [main]
     paths:
-      - 'public/*.json'
+      - 'public/market-history.json'
+      - 'public/market-data.json'
+      - 'public/index-ohlc-history.json'
       - '.github/workflows/library-transfer-artifact.yml'
   workflow_dispatch:
+  schedule:
+    - cron: '25 * * * *' # package fresh intraday snapshot before Library hourly sync
 permissions:
   contents: write
 concurrency:
@@ -23,6 +27,8 @@ jobs:
           stage=pathlib.Path("library-transfer")
           stage.mkdir(exist_ok=True)
           required=["market-history.json","market-data.json"]
+          if pathlib.Path("public/intraday-market.json").exists():
+            required.append("intraday-market.json")
           extras=sorted(p.name for p in pathlib.Path("public").glob("*ohlc*.json"))
           names=list(dict.fromkeys(required+extras))
           files=[]
