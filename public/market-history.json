@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-20T05:00:19.338Z",
-  "cutoff": "2026-11-19",
+  "generatedAt": "2026-11-20T08:43:03.937848+00:00",
+  "cutoff": "2026-11-20",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
     "taiex": "index pts",
@@ -25,10 +25,10 @@
   },
   "stats": {
     "taiex": {
-      "count": 421,
+      "count": 422,
       "first": "2025-03-03",
-      "last": "2026-11-19",
-      "lastValue": 38426.89,
+      "last": "2026-11-20",
+      "lastValue": 36033.29,
       "status": "ready",
       "source": {
         "name": "TWSE FMTQIK daily index level; Library market-only seed",
@@ -95,10 +95,10 @@
       }
     },
     "foreignNetYi": {
-      "count": 240,
+      "count": 241,
       "first": "2025-11-21",
-      "last": "2026-11-19",
-      "lastValue": -243.1221,
+      "last": "2026-11-20",
+      "lastValue": -94.1307,
       "status": "ready",
       "source": {
         "name": "TWSE BFI82U foreign cash investment net amount, TWD 100m",
@@ -114,17 +114,17 @@
       "first": "2025-11-21",
       "last": "2026-11-19",
       "lastValue": 128.31,
-      "status": "ready",
+      "status": "partial",
       "source": {
         "name": "Wantgoo exclude-ETF financing maintenance chart and dated table",
         "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
       },
       "targetTradingDays": 240,
-      "observedInTarget": 240,
-      "missingInTarget": 0,
-      "coveragePct": 100,
-      "targetFirst": "2025-11-21",
-      "targetLast": "2026-11-19",
+      "observedInTarget": 239,
+      "missingInTarget": 1,
+      "coveragePct": 99.58,
+      "targetFirst": "2025-11-24",
+      "targetLast": "2026-11-20",
       "dataScope": "TWSE listed-stock financing maintenance excluding ETFs; vendor-provided, distinct from all-market margin ratio and official whole-account collateral ratio",
       "note": "179 missing dates backfilled from Wantgoo chart cursor readouts. All 61 existing dated values matched the chart or dated table. No imputation."
     },
@@ -184,15 +184,15 @@
       }
     },
     "marketTurnoverYiTwd": {
-      "count": 421,
+      "count": 422,
       "status": "ready",
       "source": {
         "name": "TWSE whole-market成交金額 (億元)",
         "url": "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK"
       },
       "first": "2025-03-03",
-      "last": "2026-11-19",
-      "lastValue": 9429.889765
+      "last": "2026-11-20",
+      "lastValue": 9323.206211
     },
     "dayTradeTurnoverYiTwd": {
       "count": 421,
@@ -217,10 +217,10 @@
       "lastValue": 41.326
     },
     "foreignCumulativeYi": {
-      "count": 240,
+      "count": 241,
       "first": "2025-11-21",
-      "last": "2026-11-19",
-      "lastValue": -33686.889,
+      "last": "2026-11-20",
+      "lastValue": -33781.0197,
       "status": "ready",
       "source": {
         "name": "Cumulative sum of daily foreignNetYi, starting from zero immediately before 2025-11-21"
@@ -43741,17 +43741,24 @@
       "dayTradeTurnoverSharePct": 41.326,
       "marginMaintenanceExEtf": 128.31,
       "foreignCumulativeYi": -33686.889
+    },
+    {
+      "date": "2026-11-20",
+      "taiex": 36033.29,
+      "marketTurnoverYiTwd": 9323.206211,
+      "foreignNetYi": -94.1307,
+      "foreignCumulativeYi": -33781.0197
     }
   ],
   "twseTurnoverAudit": {
     "generatedAt": "2026-11-20T02:45:22.818875+00:00",
     "target": 240,
     "counts": {
-      "marketTurnoverYiTwd": 421,
+      "marketTurnoverYiTwd": 422,
       "dayTradeTurnoverYiTwd": 421,
       "dayTradeTurnoverSharePct": 421
     },
-    "marketDatesDownloaded": 421,
+    "marketDatesDownloaded": 422,
     "dayTradeDatesDownloaded": 421,
     "dayTradeDatesReconciled": 421,
     "sourceIssues": [],
@@ -43766,15 +43773,17 @@
   },
   "marginMaintenance240dAudit": {
     "target": 240,
-    "targetFirst": "2025-11-21",
-    "targetLast": "2026-11-19",
-    "observed": 240,
-    "missing": 0,
-    "status": "complete",
+    "targetFirst": "2025-11-24",
+    "targetLast": "2026-11-20",
+    "observed": 239,
+    "missing": 1,
+    "status": "partial",
     "source": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
-    "missingDates": [],
+    "missingDates": [
+      "2026-11-20"
+    ],
     "historyPreserved": true,
-    "caveat": "Coverage validated against the last 240 TAIEX trading dates through 2026-11-19. Values directly observed; no imputation.",
+    "caveat": "Latest 240 TAIEX sessions. WantGoo dated table ends on 2026-11-19; no imputation.",
     "sourceSnapshots": [
       {
         "asOf": "2026-08-07",
