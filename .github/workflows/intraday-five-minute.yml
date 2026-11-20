@@ -1,4 +1,4 @@
-name: Collect 5-minute public market intraday OHLC
+name: Refresh current-session daily candle inputs every 5 minutes
 on:
   push:
     branches: [main]
@@ -8,8 +8,8 @@ on:
       - '.github/workflows/intraday-five-minute.yml'
   workflow_dispatch:
   schedule:
-    - cron: '*/5 1-5 * * 1-5'   # Taiwan regular trading, 09:00-13:30 Asia/Taipei
-    - cron: '*/5 13-22 * * 1-5' # US regular trading, DST-aware in collector
+    - cron: '*/5 1-5 * * 1-5'   # Taiwan session: sample data feeding one provisional daily candle
+    - cron: '*/5 13-22 * * 1-5' # US session: collector guards local New York trading hours
 permissions:
   contents: write
 concurrency:
@@ -40,6 +40,6 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add public/intraday-market.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Update provisional index 5-minute OHLC [skip ci]'
+          git commit -m 'Refresh provisional daily OHLC snapshot [market-session]'
           git pull --rebase origin main
           git push origin HEAD:main
