@@ -12,6 +12,9 @@ import urllib.request
 
 PATH = pathlib.Path("public/market-history.json")
 TODAY = dt.datetime.now(dt.timezone.utc).date()
+# Do not insert today's intraday FX or index quote into the verified daily archive.
+# Refresh workflow advances the official cutoff once dates are properly validated.
+ARCHIVE_CUTOFF = dt.date.fromisoformat(json.loads(PATH.read_text(encoding="utf-8"))["cutoff"])
 START = TODAY - dt.timedelta(days=620)
 UA = {"User-Agent": "Mozilla/5.0 JenbaoMarketHistory/1.0", "Accept": "application/json,text/csv,*/*"}
 FRED = {"hyOas": "BAMLH0A0HYM2", "us10yYield": "DGS10",
@@ -45,7 +48,7 @@ def insert(rows, key, date, value):
         d = dt.date.fromisoformat(date)
     except ValueError:
         return
-    if d > TODAY:
+    if d > TODAY or d > ARCHIVE_CUTOFF:
         return
     # Existing verified data wins on overlapping dates.
     rows.setdefault(date, {}).setdefault(key, value)
