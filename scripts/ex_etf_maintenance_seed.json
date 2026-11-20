@@ -6,7 +6,7 @@
   "provenance": {
     "publisher": "Wantgoo",
     "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
-    "description": "Published TAIEX listed-market financing maintenance ratio explicitly excluding ETFs, daily history as indexed on 2026-11-19; no estimates or interpolation"
+    "description": "Published TAIEX listed-market financing maintenance ratio explicitly excluding ETFs, daily observed values through 2026-11-19 as verified on 2026-11-20; no estimates or interpolation"
   },
   "rows": [
     {
@@ -128,6 +128,10 @@
     {
       "date": "2026-11-18",
       "value": 136.69
+    },
+    {
+      "date": "2026-11-19",
+      "value": 128.31
     }
   ]
 }
