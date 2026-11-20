@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-20T11:50:55.824805+00:00",
+  "generatedAt": "2026-11-20T14:30:40+00:00",
   "cutoff": "2026-11-20",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -73,10 +73,10 @@
       }
     },
     "hyOas": {
-      "count": 440,
+      "count": 441,
       "first": "2025-03-10",
-      "last": "2026-11-18",
-      "lastValue": 3.47,
+      "last": "2026-11-19",
+      "lastValue": 3.52,
       "status": "ready",
       "source": {
         "name": "FRED BAMLH0A0HYM2 daily observations (ICE BofA HY OAS, percent)",
@@ -231,10 +231,10 @@
       }
     },
     "creditBelow130Accounts": {
-      "count": 74,
+      "count": 75,
       "first": "2026-08-03",
-      "last": "2026-11-19",
-      "lastValue": 2947,
+      "last": "2026-11-20",
+      "lastValue": 6462,
       "status": "partial",
       "source": {
         "name": "TWSE BFIJ3U_TREND belowAccNum",
@@ -242,10 +242,10 @@
       }
     },
     "creditCallAmountTwd": {
-      "count": 74,
+      "count": 75,
       "first": "2026-08-03",
-      "last": "2026-11-19",
-      "lastValue": 2964159000,
+      "last": "2026-11-20",
+      "lastValue": 6463856762,
       "status": "partial",
       "source": {
         "name": "TWSE BFIJ3U_TREND callAmt",
@@ -253,10 +253,10 @@
       }
     },
     "creditDisposalAccounts": {
-      "count": 74,
+      "count": 75,
       "first": "2026-08-03",
-      "last": "2026-11-19",
-      "lastValue": 520,
+      "last": "2026-11-20",
+      "lastValue": 632,
       "status": "partial",
       "source": {
         "name": "TWSE BFIJ3U_TREND exeAccNum",
@@ -264,10 +264,10 @@
       }
     },
     "creditDisposalAmountTwd": {
-      "count": 74,
+      "count": 75,
       "first": "2026-08-03",
-      "last": "2026-11-19",
-      "lastValue": 918355880,
+      "last": "2026-11-20",
+      "lastValue": 1495357574,
       "status": "partial",
       "source": {
         "name": "TWSE BFIJ3U_TREND exeAmt",
@@ -44084,14 +44084,19 @@
       "creditBelow130Accounts": 2947,
       "creditCallAmountTwd": 2964159000,
       "creditDisposalAccounts": 520,
-      "creditDisposalAmountTwd": 918355880
+      "creditDisposalAmountTwd": 918355880,
+      "hyOas": 3.52
     },
     {
       "date": "2026-11-20",
       "taiex": 36033.29,
       "marketTurnoverYiTwd": 9323.206211,
       "foreignNetYi": -94.1307,
-      "foreignCumulativeYi": -33781.0197
+      "foreignCumulativeYi": -33781.0197,
+      "creditBelow130Accounts": 6462,
+      "creditCallAmountTwd": 6463856762,
+      "creditDisposalAccounts": 632,
+      "creditDisposalAmountTwd": 1495357574
     }
   ],
   "twseTurnoverAudit": {
