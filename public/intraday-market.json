@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "audience": "public-market-intraday",
+  "generatedAt": "2026-11-20T03:29:29+00:00",
+  "asOfTaipei": "2026-11-20T11:29:29+08:00",
+  "refreshIntentMinutes": 5,
+  "actualQuoteDelayVaries": true,
+  "tradingSessions": "TAIEX 09:00-13:30 Asia/Taipei; SP500 09:30-16:00 America/New_York",
+  "markets": {
+    "taiex": {
+      "market": "taiex",
+      "date": "2026-11-20",
+      "status": "provisional",
+      "source": "Yahoo Finance 5m index quote (delayed/indicative)",
+      "sourceDelayMinutes": 0,
+      "latest": {
+        "open": 37646.1289,
+        "high": 37646.1289,
+        "low": 35959.0312,
+        "close": 36051.8906,
+        "lastCandleTime": "2026-11-20T11:09:25+08:00"
+      },
+      "candles": [
+        {
+          "time": "2026-11-20T09:00:00+08:00",
+          "open": 37646.1289,
+          "high": 37646.1289,
+          "low": 36907.5117,
+          "close": 36937.3789
+        },
+        {
+          "time": "2026-11-20T09:05:00+08:00",
+          "open": 36967.4219,
+          "high": 37337.8398,
+          "low": 36753.3203,
+          "close": 37149.9297
+        },
+        {
+          "time": "2026-11-20T09:10:00+08:00",
+          "open": 37123.0391,
+          "high": 37125.8711,
+          "low": 36856.4219,
+          "close": 36876.1211
+        },
+        {
+          "time": "2026-11-20T09:15:00+08:00",
+          "open": 36864.4297,
+          "high": 37010.4102,
+          "low": 36766.7109,
+          "close": 36985.8789
+        },
+        {
+          "time": "2026-11-20T09:20:00+08:00",
+          "open": 36989.0586,
+          "high": 37024.1016,
+          "low": 36887.3516,
+          "close": 36896.8906
+        },
+        {
+          "time": "2026-11-20T09:25:00+08:00",
+          "open": 36930.7383,
+          "high": 37062.6719,
+          "low": 36860.5508,
+          "close": 36872.5898
+        },
+        {
+          "time": "2026-11-20T09:30:00+08:00",
+          "open": 36907.6094,
+          "high": 36923.0508,
+          "low": 36670.0586,
+          "close": 36684.1914
+        },
+        {
+          "time": "2026-11-20T09:35:00+08:00",
+          "open": 36683.4414,
+          "high": 36683.4414,
+          "low": 36478.4688,
+          "close": 36478.4688
+        },
+        {
+          "time": "2026-11-20T09:40:00+08:00",
+          "open": 36478.2109,
+          "high": 36544.4219,
+          "low": 36357.75,
+          "close": 36480.5195
+        },
+        {
+          "time": "2026-11-20T09:45:00+08:00",
+          "open": 36473.4297,
+          "high": 36659.7305,
+          "low": 36429.4688,
+          "close": 36479.5117
+        },
+        {
+          "time": "2026-11-20T09:50:00+08:00",
+          "open": 36477.7305,
+          "high": 36508.3984,
+          "low": 36309.9883,
+          "close": 36349.4297
+        },
+        {
+          "time": "2026-11-20T09:55:00+08:00",
+          "open": 36344.9609,
+          "high": 36344.9609,
+          "low": 36165.1797,
+          "close": 36167.1211
+        },
+        {
+          "time": "2026-11-20T10:00:00+08:00",
+          "open": 36206.6914,
+          "high": 36271.0,
+          "low": 36162.9609,
+          "close": 36267.2383
+        },
+        {
+          "time": "2026-11-20T10:05:00+08:00",
+          "open": 36231.6992,
+          "high": 36519.9492,
+          "low": 36213.5,
+          "close": 36519.9492
+        },
+        {
+          "time": "2026-11-20T10:10:00+08:00",
+          "open": 36481.0,
+          "high": 36544.9414,
+          "low": 36423.6719,
+          "close": 36509.5117
+        },
+        {
+          "time": "2026-11-20T10:15:00+08:00",
+          "open": 36549.1719,
+          "high": 36561.9688,
+          "low": 36434.3008,
+          "close": 36545.1719
+        },
+        {
+          "time": "2026-11-20T10:20:00+08:00",
+          "open": 36503.8711,
+          "high": 36503.8711,
+          "low": 36279.9492,
+          "close": 36283.0781
+        },
+        {
+          "time": "2026-11-20T10:25:00+08:00",
+          "open": 36323.8086,
+          "high": 36389.8008,
+          "low": 36245.9688,
+          "close": 36245.9688
+        },
+        {
+          "time": "2026-11-20T10:30:00+08:00",
+          "open": 36282.6992,
+          "high": 36282.6992,
+          "low": 36093.3594,
+          "close": 36093.3594
+        },
+        {
+          "time": "2026-11-20T10:35:00+08:00",
+          "open": 36136.2891,
+          "high": 36196.3789,
+          "low": 36071.8203,
+          "close": 36146.6094
+        },
+        {
+          "time": "2026-11-20T10:40:00+08:00",
+          "open": 36148.5312,
+          "high": 36148.5312,
+          "low": 36017.7383,
+          "close": 36091.2109
+        },
+        {
+          "time": "2026-11-20T10:45:00+08:00",
+          "open": 36045.9883,
+          "high": 36070.3203,
+          "low": 35968.5898,
+          "close": 36007.2383
+        },
+        {
+          "time": "2026-11-20T10:50:00+08:00",
+          "open": 36006.8711,
+          "high": 36042.6992,
+          "low": 35959.0312,
+          "close": 36040.0781
+        },
+        {
+          "time": "2026-11-20T10:55:00+08:00",
+          "open": 36041.5898,
+          "high": 36140.5898,
+          "low": 35997.4609,
+          "close": 36081.5703
+        },
+        {
+          "time": "2026-11-20T11:00:00+08:00",
+          "open": 36080.7383,
+          "high": 36083.6797,
+          "low": 36014.25,
+          "close": 36040.0
+        },
+        {
+          "time": "2026-11-20T11:05:00+08:00",
+          "open": 36036.0,
+          "high": 36071.6719,
+          "low": 35968.8281,
+          "close": 36056.7695
+        },
+        {
+          "time": "2026-11-20T11:09:25+08:00",
+          "open": 36051.8906,
+          "high": 36051.8906,
+          "low": 36051.8906,
+          "close": 36051.8906
+        }
+      ],
+      "turnoverYiTwd": null,
+      "projectedTurnoverYiTwd": null,
+      "projectionMethod": null,
+      "projectionIsEstimate": false,
+      "turnoverStatus": "unavailable_not_inferred_from_shares",
+      "note": "OHLC are 5-minute provisional candles, not official closing values. Volume is monetary turnover (億元), never index share count.",
+      "quoteAgeMinutes": 20.1
+    }
+  },
+  "updatedMarkets": [
+    "taiex"
+  ],
+  "safetyNotes": [
+    "Quote prices can be delayed; GitHub schedule and GitHub Pages deployment have additional latency.",
+    "Market turnover is 成交金額 (億元), never shares. Missing verified source => null.",
+    "Estimated full-day turnover is a naive linear extrapolation, not a closing forecast.",
+    "Intraday candles are not appended to official closing daily master."
+  ]
+}
