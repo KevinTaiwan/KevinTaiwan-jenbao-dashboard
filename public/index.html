@@ -275,6 +275,14 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 .technical-stack-plot>.technical-stack-svg{background:#fff}
 .technical-stack-plot .cross-cursor-line{stroke:#627b98;stroke-width:.7;stroke-dasharray:none;vector-effect:non-scaling-stroke}
 .technical-stack-plot .technical-stack-svg{cursor:crosshair}
+/* Middle panel shortcuts remain visible even with the fullscreen control rail hidden. */
+.technical-middle-shortcuts{display:flex;align-items:center;flex-wrap:wrap;gap:5px 7px;padding:5px 8px;border:1px solid #d5e2eb;border-radius:6px;background:#f4f8fb;min-height:32px}
+.technical-middle-shortcuts>strong{font-size:11px;color:#294860;white-space:nowrap}
+.technical-middle-shortcuts button{appearance:none;cursor:pointer;border:1px solid #aebfcf;border-radius:5px;background:#fff;color:#314d62;font-size:11px;font-weight:650;line-height:1.2;padding:5px 9px;white-space:nowrap}
+.technical-middle-shortcuts button.active{background:#cde9f8;color:#0c4b6a;border-color:#3e99c5;box-shadow:inset 0 0 0 1px #3e99c5}
+.technical-middle-shortcuts button:focus-visible{outline:2px solid #157fae;outline-offset:2px}
+.technical-stack-fullscreen .technical-middle-shortcuts{flex:0 0 auto!important;padding:3px 6px;min-height:26px}
+@media(max-width:650px){.technical-middle-shortcuts{gap:4px;padding:5px}.technical-middle-shortcuts button{font-size:10px;padding:5px 7px}}
 .technical-stack-plot [data-tech-hover]{pointer-events:none}
 .technical-stack-plot [data-tech-hover] text{font-variant-numeric:tabular-nums}
 .technical-stack-readouts>div,.technical-stack-compact .technical-stack-readouts>div{
@@ -1189,9 +1197,18 @@ function showHistory(){
     '<g><rect data-tech-date-box x="40" y="'+(svgBottom-25)+'" width="114" height="22" rx="3" fill="#52677f"/><text data-tech-date-text x="97" y="'+(svgBottom-10)+'" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">—</text></g>'+
     '<g data-tech-hover-callout visibility="hidden"><rect data-tech-popup-box x="200" y="30" width="180" height="43" rx="4" fill="#f9fbfe" stroke="#8ba0b4"/><text data-tech-popup-date x="209" y="46" fill="#31475f" font-size="11">—</text><text data-tech-popup-price x="209" y="63" fill="#162f48" font-weight="700" font-size="12">—</text></g></g>';
    const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 780 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="780" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+priceLines+midLines+midRatioLine+midRightAxis+midLegend+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
-  const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
+  const quickMiddleItems=[["marketTurnoverYiTwd","成交量（成交金額）"],
+    ["dayTradeTurnoverSharePct","當沖比例"],
+    ["turnoverWithDayTrade","成交量＋當沖"],
+    ["foreignNetYi","外資買賣超"]];
+   const quickMiddle='<div class="technical-middle-shortcuts" role="group" aria-label="中層資料快速切換">'+
+    '<strong>中層｜快速切換</strong>'+quickMiddleItems.map(([key,label])=>
+     '<button type="button" data-tech-middle-quick="'+key+'" class="'+(c.middle===key?"active":"")+
+     '" aria-pressed="'+(c.middle===key)+'" title="'+esc(techSeriesName(key))+'">'+esc(label)+'</button>'
+    ).join("")+'</div>';
+   const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。中層可切換成交金額（億元）、當沖成交金額占比（%）或雙軸合併圖；雙軸左側為成交億元，右側為當沖占比，不使用成交股數。其他籌碼指標維持原定義。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
-  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 全螢幕工具列</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button></div></div>'+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
+  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 中層切換 v2026.11.20.2</span><div class="technical-stack-instructions">價格／籌碼／動能，同步日期比較</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button></div></div>'+quickMiddle+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
@@ -1304,6 +1321,12 @@ crossHost.addEventListener("change",event=>{
  if(target&&!updateTechnicalSetting(target.dataset.techField,target.value))target.value=techSettings[target.dataset.techField];
 });
 crossHost.addEventListener("click",event=>{
+ const middleQuick=event.target.closest?.("[data-tech-middle-quick]");
+ if(middleQuick){
+  event.preventDefault();
+  updateTechnicalSetting("middle",middleQuick.dataset.techMiddleQuick);
+  return;
+ }
  const fullscreenBtn=event.target.closest?.("[data-tech-fullscreen]");
  if(fullscreenBtn){event.preventDefault();toggleTechnicalFullscreen();return}
  const controlBtn=event.target.closest?.("[data-tech-controls-toggle]");
