@@ -1585,7 +1585,7 @@ function intradayCard(key,m,generatedAt){
   intradaySvg(m.candles)+
   '<div class="intraday-numbers">'+money+'</div>'+
   '<div class="intraday-small">資料時間：'+esc(asof.replace('T',' '))+' · '+m.candles.length+' 根 5 分鐘 K · '+esc(String(m.source||''))+
-  ' · 報價延遲 '+(Number.isFinite(m.sourceDelayMinutes)?m.sourceDelayMinutes+' 分鐘':'未明')+'</div>'+
+  ' · 最新 K 線距現在 '+(Number.isFinite(Date.parse(asof))?Math.max(0,Math.round((Date.now()-Date.parse(asof))/60000))+' 分鐘':'未知')+'（含資料源及部署延遲）'+'</div>'+
   '<div class="intraday-small">'+warn+'</div></div>';
 }
 async function fetchIntradayMarket(){
