@@ -509,6 +509,15 @@ body.technical-fullscreen-active{overflow:hidden!important}
   .technical-stack-row .cross-drag-handle{padding:3px 5px;font-size:10px}
   .technical-stack-row .cross-sort-step{width:22px;height:22px}
 }
+
+.intraday-panel{margin:15px 0 20px;padding:15px;background:#f5fbff;color:#153148;border:1px solid #c4dfea;border-radius:11px}
+.intraday-panel h3{font-size:15px;margin:0 0 6px;color:#10364f}
+.intraday-help{font-size:11px;color:#527087;margin-bottom:12px}
+.intraday-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(295px,1fr));gap:12px}
+.intraday-tile{background:#fff;border:1px solid #d2e3ed;border-radius:9px;padding:12px;min-width:0}
+.intraday-tile strong{font-size:14px}.intraday-tile .intraday-numbers{font-size:12px;line-height:1.8}
+.intraday-tile svg{display:block;width:100%;height:145px;margin:10px 0 6px;background:#fff}
+.intraday-small{font-size:11px;color:#557083;line-height:1.6}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -525,6 +534,11 @@ body.technical-fullscreen-active{overflow:hidden!important}
 <div class="tabscreen visible" id="overview">
 <section class="hero page-hero" aria-label="市場總覽資料解讀"><div class="hero-copy"><div class="eyebrow">Daily Investment Intelligence / 公開市場資訊 · 本頁數據解讀</div><h1 id="headline">市場觀察數據待核對</h1><p id="summary">依目前可取得的本頁指標解讀；未取得的數據不作推論。</p><ul class="interpret-points" id="overviewInsights" aria-label="本頁解讀重點"></ul></div><div class="heroaside"><span>市場資料基準日</span><strong id="asof">—</strong><span id="syncstate">等待同步</span></div></section>
 
+<section class="intraday-panel" aria-label="即時盤中五分鐘K線">
+<h3>盤中 5 分鐘 K 線｜台灣加權與 S&amp;P 500</h3>
+<div class="intraday-help">每 5 分鐘排程抓取；指數報價、資料源與 GitHub 部署可能延遲。歷史日 K 線母檔不受盤中暫定值覆蓋。</div>
+<div class="intraday-grid" id="intradayTiles"><div class="intraday-small">尚未取得盤中 K 線資料，等待市場開盤與收集器成功執行。</div></div>
+</section>
 <div class="grid four" id="topmetrics"></div>
 <div class="sectionhead"><h2>市場核心監控</h2><span class="small">多因子交叉觀察，不代表買賣訊號</span></div>
 <div class="card market-cross">
@@ -1547,6 +1561,53 @@ $('aiRows').innerHTML=(d.ai||[]).map(a=>`<tr><td>${esc(a.name)}</td><td>${esc(a.
 $('sources').innerHTML=(d.sources||[]).filter(s=>s&&typeof s.url==='string'&&/^https:\/\//.test(s.url)).map(s=>`<a class="source" rel="noopener noreferrer" target="_blank" href="${esc(s.url)}">${esc(s.label||s.url)}</a>`).join('')||'<span class="small">尚未附上公開來源</span>'; $('lastLoaded').textContent=`最後讀取：${new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei'})}`;
 showPageInterpretations();
 }
-async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();await Promise.all([fetchMarketHistory(),fetchIndexOhlc()]);loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
+
+function intradaySvg(rows){
+ if(!Array.isArray(rows)||!rows.length)return '<span class="intraday-small">K 線缺值</span>';
+ const bars=rows.slice(-40).filter(b=>['open','high','low','close'].every(k=>Number.isFinite(b[k])));
+ if(!bars.length)return '<span class="intraday-small">K 線缺值</span>';
+ const high=Math.max(...bars.map(b=>b.high)),low=Math.min(...bars.map(b=>b.low)),span=Math.max(0.001,high-low);
+ const W=640,H=140,pad=10,plotH=H-pad*2,step=(W-20)/bars.length;
+ const yy=v=>pad+(high-v)/span*plotH;
+ const lines=bars.map((b,i)=>{
+  const x=10+(i+.5)*step,up=b.close>=b.open,col=up?'#e83232':'#16bd4e',bodyTop=Math.min(yy(b.open),yy(b.close)),
+        bodyH=Math.max(1,Math.abs(yy(b.open)-yy(b.close)));
+  return '<line x1="'+x.toFixed(1)+'" x2="'+x.toFixed(1)+'" y1="'+yy(b.high).toFixed(1)+'" y2="'+yy(b.low).toFixed(1)+'" stroke="'+col+'" stroke-width="1.1"/>'+
+   '<rect x="'+(x-step*.34).toFixed(1)+'" y="'+bodyTop.toFixed(1)+'" width="'+Math.max(1,step*.68).toFixed(1)+'" height="'+bodyH.toFixed(1)+'" fill="'+col+'"/>';
+ }).join('');
+ return '<svg viewBox="0 0 640 140" role="img" aria-label="最近'+bars.length+'根五分鐘 K 線">'+lines+'</svg>';
+}
+function intradayCard(key,m,generatedAt){
+ const label=key==='taiex'?'台灣加權指數':'S&P 500 指數';
+ if(!m||!Array.isArray(m.candles)||!m.candles.length)return '';
+ const f=v=>Number.isFinite(v)?v.toLocaleString('zh-TW',{maximumFractionDigits:2}):'—';
+ const q=m.latest||{}, asof=q.lastCandleTime||'',latency=generatedAt?(Date.now()-Date.parse(generatedAt))/60000:null,
+   stale=!Number.isFinite(latency)||latency>30;
+ const money=key==='taiex'
+   ? '成交金額 '+f(m.turnoverYiTwd)+' 億元 · 預估全日 '+f(m.projectedTurnoverYiTwd)+' 億元'
+   : '美股指數成交金額：尚無同口徑可靠來源';
+ const warn=m.turnoverYiTwd==null?'成交金額及預估值尚無可核實的台幣成交值來源；不以股數代填。':
+  '預估全日成交額採簡單時間比例外推，盤初與尾盤誤差可能較大。';
+ return '<div class="intraday-tile"><strong>'+label+'｜'+(stale?'歷史快照（非即時）':'盤中暫定')+'</strong>'+
+  '<div class="intraday-numbers">O '+f(q.open)+' ｜ H '+f(q.high)+' ｜ L '+f(q.low)+' ｜ C '+f(q.close)+'</div>'+
+  intradaySvg(m.candles)+
+  '<div class="intraday-numbers">'+money+'</div>'+
+  '<div class="intraday-small">資料時間：'+esc(asof.replace('T',' '))+' · '+m.candles.length+' 根 5 分鐘 K · '+esc(String(m.source||''))+
+  ' · 報價延遲 '+(Number.isFinite(m.sourceDelayMinutes)?m.sourceDelayMinutes+' 分鐘':'未明')+'</div>'+
+  '<div class="intraday-small">'+warn+'</div></div>';
+}
+async function fetchIntradayMarket(){
+ const dest=$('intradayTiles');if(!dest)return;
+ try{
+  const resp=await fetch('./intraday-market.json?c='+Date.now(),{cache:'no-store'});
+  if(!resp.ok)throw Error('尚未發布盤中快照');
+  const d=await resp.json();
+  if(d?.audience!=='public-market-intraday'||d?.schemaVersion!==1)throw Error('盤中檔格式不符');
+  const cards=['taiex','sp500'].map(k=>intradayCard(k,d.markets?.[k],d.generatedAt)).filter(Boolean);
+  dest.innerHTML=cards.join('')||'<div class="intraday-small">尚未有有效的 5 分鐘盤中報價。</div>';
+ }catch(e){dest.textContent='盤中資料尚未就緒：'+e.message;}
+}
+
+async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();await Promise.all([fetchMarketHistory(),fetchIndexOhlc(),fetchIntradayMarket()]);loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
 $('reload').addEventListener('click',()=>sync(false));document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.tabscreen').forEach(s=>s.classList.toggle('visible',s.id===btn.dataset.tab))}));document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync(true)});sync(true);setInterval(()=>{if(!document.hidden)sync(true)},300000);
 </script></body></html>
