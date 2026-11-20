@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-20T14:30:40+00:00",
+  "generatedAt": "2026-11-20T22:37:23+00:00",
   "cutoff": "2026-11-20",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -40,10 +40,10 @@
       }
     },
     "dxy": {
-      "count": 252,
+      "count": 253,
       "first": "2025-11-19",
-      "last": "2026-11-19",
-      "lastValue": 103.944,
+      "last": "2026-11-20",
+      "lastValue": 103.84,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance DX-Y.NYB daily market close (not ICE licensed feed)",
@@ -84,10 +84,10 @@
       }
     },
     "marginDailyYi": {
-      "count": 240,
+      "count": 241,
       "first": "2025-11-21",
-      "last": "2026-11-19",
-      "lastValue": -236.5831,
+      "last": "2026-11-20",
+      "lastValue": -491.4109,
       "status": "ready",
       "source": {
         "name": "TWSE MI_MARGN finance outstanding daily change, includes ETFs, TWD 100m",
@@ -133,10 +133,10 @@
       "note": "179 missing dates backfilled from Wantgoo chart cursor readouts. All 61 existing dated values matched the chart or dated table. No imputation."
     },
     "us10yYield": {
-      "count": 425,
+      "count": 426,
       "first": "2025-03-10",
-      "last": "2026-11-18",
-      "lastValue": 5.07,
+      "last": "2026-11-19",
+      "lastValue": 5.04,
       "status": "ready",
       "source": {
         "name": "FRED DGS10 daily observations",
@@ -144,10 +144,10 @@
       }
     },
     "us10y2ySpread": {
-      "count": 426,
+      "count": 427,
       "first": "2025-03-10",
-      "last": "2026-11-19",
-      "lastValue": 0.28,
+      "last": "2026-11-20",
+      "lastValue": 0.29,
       "status": "ready",
       "source": {
         "name": "FRED T10Y2Y daily observations",
@@ -155,10 +155,10 @@
       }
     },
     "voo": {
-      "count": 252,
+      "count": 253,
       "first": "2025-11-19",
-      "last": "2026-11-19",
-      "lastValue": 658.01,
+      "last": "2026-11-20",
+      "lastValue": 635.54,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance VOO daily ETF Close, USD, unadjusted; excludes distributions",
@@ -166,10 +166,10 @@
       }
     },
     "qqq": {
-      "count": 252,
+      "count": 253,
       "first": "2025-11-19",
-      "last": "2026-11-19",
-      "lastValue": 645.04,
+      "last": "2026-11-20",
+      "lastValue": 608.45,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance QQQ daily ETF Close, USD, unadjusted; excludes distributions",
@@ -177,9 +177,9 @@
       }
     },
     "fedFundsEffective": {
-      "count": 619,
+      "count": 620,
       "first": "2025-03-10",
-      "last": "2026-11-18",
+      "last": "2026-11-19",
       "lastValue": 3.88,
       "status": "ready",
       "source": {
@@ -44085,7 +44085,9 @@
       "creditCallAmountTwd": 2964159000,
       "creditDisposalAccounts": 520,
       "creditDisposalAmountTwd": 918355880,
-      "hyOas": 3.52
+      "hyOas": 3.52,
+      "us10yYield": 5.04,
+      "fedFundsEffective": 3.88
     },
     {
       "date": "2026-11-20",
@@ -44096,7 +44098,12 @@
       "creditBelow130Accounts": 6462,
       "creditCallAmountTwd": 6463856762,
       "creditDisposalAccounts": 632,
-      "creditDisposalAmountTwd": 1495357574
+      "creditDisposalAmountTwd": 1495357574,
+      "dxy": 103.84,
+      "marginDailyYi": -491.4109,
+      "us10y2ySpread": 0.29,
+      "voo": 635.54,
+      "qqq": 608.45
     }
   ],
   "twseTurnoverAudit": {
