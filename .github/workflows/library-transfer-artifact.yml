@@ -1,0 +1,68 @@
+name: Prepare verifiable ChatGPT Library JSON transfer
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/*.json'
+      - '.github/workflows/library-transfer-artifact.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: library-transfer-prep
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON and create byte-exact source manifest
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, pathlib, shutil
+          stage=pathlib.Path("library-transfer")
+          stage.mkdir(exist_ok=True)
+          required=["market-history.json","market-data.json"]
+          extras=sorted(p.name for p in pathlib.Path("public").glob("*ohlc*.json"))
+          names=list(dict.fromkeys(required+extras))
+          files=[]
+          for name in names:
+            source=pathlib.Path("public")/name
+            raw=source.read_bytes()
+            doc=json.loads(raw)
+            dest=stage/name
+            shutil.copyfile(source,dest)
+            files.append({"file":name,"bytes":len(raw),"sha256":hashlib.sha256(raw).hexdigest(),
+              "git_blob_sha1":hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest(),
+              "schema_version":doc.get("schemaVersion"),"rows":len(doc.get("rows",[])) if isinstance(doc.get("rows"),list) else None})
+          (stage/"transfer-checksums.json").write_text(json.dumps({"files":files},ensure_ascii=False,indent=2)+"\n")
+          print(json.dumps(files,ensure_ascii=False))
+          PY
+      - name: Upload JSON transfer artifact
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: jenbao-market-data-transfer
+          path: library-transfer/
+          retention-days: 10
+          if-no-files-found: error
+          compression-level: 6
+      - name: Save downloadable artifact reference
+        env:
+          RUN_ID: ${{ github.run_id }}
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          mkdir -p .sync
+          python3 - <<'PY'
+          import os,json,datetime,pathlib
+          obj={"runId":int(os.environ["RUN_ID"]),"artifactId":int(os.environ["ARTIFACT_ID"]),
+               "repository":"KevinTaiwan/KevinTaiwan-jenbao-dashboard",
+               "sourceHeadSha":os.environ["HEAD_SHA"],"createdAt":datetime.datetime.now(datetime.timezone.utc).isoformat(),
+               "artifactName":"jenbao-market-data-transfer","compression":"zip"}
+          pathlib.Path(".sync/library-transfer-artifact.json").write_text(json.dumps(obj,indent=2)+"\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .sync/library-transfer-artifact.json
+          git diff --cached --quiet || (git commit -m 'Record library JSON transfer artifact [skip ci]' && git push)
