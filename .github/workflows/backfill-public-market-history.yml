@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/backfill_public_market_history.py'
       - 'scripts/backfill_twse_flows.py'
+      - 'scripts/backfill_twse_market_activity.py'
       - '.github/workflows/backfill-public-market-history.yml'
   workflow_dispatch:
   schedule:
@@ -23,6 +24,8 @@ jobs:
         run: python3 scripts/backfill_public_market_history.py
       - name: Backfill TWSE foreign investment and margin history
         run: python3 scripts/backfill_twse_flows.py
+      - name: Backfill TWSE market volume and day-trade ratios
+        run: python3 scripts/backfill_twse_market_activity.py
       - name: Commit updated public market history
         run: |
           if git diff --quiet -- public/market-history.json; then
