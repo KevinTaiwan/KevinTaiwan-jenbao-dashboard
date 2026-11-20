@@ -1,0 +1,45 @@
+name: Collect 5-minute public market intraday OHLC
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/collect_intraday_market.py'
+      - 'scripts/validate_intraday_market.py'
+      - '.github/workflows/intraday-five-minute.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 1-5 * * 1-5'   # Taiwan regular trading, 09:00-13:30 Asia/Taipei
+    - cron: '*/5 13-22 * * 1-5' # US regular trading, DST-aware in collector
+permissions:
+  contents: write
+concurrency:
+  group: jenbao-intraday-five-minute
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify market-only five-minute intraday data
+        env:
+          JENBAO_VERIFIED_TWD_TURNOVER_URL: ${{ vars.JENBAO_VERIFIED_TWD_TURNOVER_URL }}
+          JENBAO_TURNOVER_API_KEY: ${{ secrets.JENBAO_TURNOVER_API_KEY }}
+        run: |
+          python3 -u scripts/collect_intraday_market.py
+          if test -f public/intraday-market.json; then
+            python3 scripts/validate_intraday_market.py public/intraday-market.json
+          fi
+      - name: Publish only changed market bars
+        run: |
+          if git diff --quiet -- public/intraday-market.json && test -z "$(git ls-files --others --exclude-standard public/intraday-market.json)"; then
+            echo "No fresh changed bars"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/intraday-market.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Update provisional index 5-minute OHLC [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
