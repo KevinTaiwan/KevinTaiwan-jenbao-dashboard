@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-21T05:35:04+00:00",
-  "cutoff": "2026-11-20",
+  "generatedAt": "2026-11-21T22:29:45+00:00",
+  "cutoff": "2026-11-21",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
     "taiex": "index pts",
@@ -62,10 +62,10 @@
       }
     },
     "vix": {
-      "count": 9320,
+      "count": 9321,
       "first": "1990-01-02",
-      "last": "2026-11-19",
-      "lastValue": 28.44,
+      "last": "2026-11-20",
+      "lastValue": 35.89,
       "status": "ready",
       "source": {
         "name": "Cboe VIX Index official daily close",
@@ -126,7 +126,7 @@
       "targetTradingDays": 240,
       "observedInTarget": 240,
       "missingInTarget": 0,
-      "coveragePct": 100,
+      "coveragePct": 100.0,
       "targetFirst": "2025-11-24",
       "targetLast": "2026-11-20",
       "dataScope": "TWSE listed-stock financing maintenance excluding ETFs; vendor-provided, distinct from all-market margin ratio and official whole-account collateral ratio",
@@ -56543,7 +56543,8 @@
       "usdtwd": 33.026299,
       "dayTradeTurnoverYiTwd": 3226.410998,
       "dayTradeTurnoverSharePct": 34.6062,
-      "marginMaintenanceExEtf": 119.53
+      "marginMaintenanceExEtf": 119.53,
+      "vix": 35.89
     }
   ],
   "twseTurnoverAudit": {
