@@ -7,3 +7,5 @@
 - taiex-5m.csv 和 sp500-5m.csv 採 Yahoo Finance 指數日內 OHLC，時間戳含各交易所時差。一日內可能只取得部分五分鐘棒。正式日 K 見 public/index-ohlc-history.json。
 - macro-releases.csv 依 FRED 原系列代碼與觀測期間保存月報、季報。期間標籤與首次公布日期分開解讀，檔案記錄下載時可取得的修訂值。
 - scripts/refresh_extended_history.py 更新可公開的補充日資料、低頻資料與盤中紀錄；已保存的數值優先。既有日資料與盤中快照仍由原收集程式更新。
+
+CNN 情緒分數取自 whit3rabbit/fear-greed-data 保存的 CNN 歷史值（2021-02-01 起）。外資期貨部位採期交所 TXF 外資及陸資多空未平倉口數淨額，逐筆核對多方減空方。

@@ -21,10 +21,10 @@ BUND = "https://api.statistiken.bundesbank.de/rest/download/BBSSY/D.REN.EUR.A630
 TODAY = dt.datetime.now(dt.timezone.utc).date()
 START = (TODAY - dt.timedelta(days=1850)).isoformat()
 
-def download(url):
+def download(url,encoding="utf-8-sig"):
     request = urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
     with urllib.request.urlopen(request, timeout=25) as response:
-        return response.read().decode("utf-8-sig")
+        return response.read().decode(encoding)
 
 def yahoo(symbol, interval):
     period = "5y" if interval == "1d" else "1mo"
@@ -97,6 +97,32 @@ def main():
         merge(daily,"date",((r[0],{"de10y":float(r[1])}) for r in data if len(r)>1 and
               len(r[0])==10 and r[0][4]=="-" and r[1] not in (".","") and dt.date.fromisoformat(r[0])<TODAY))
     collect("Bund",bund)
+    def sentiment():
+        # CSV mirror of dated CNN observations. Skip ambiguous duplicate dates.
+        url="https://raw.githubusercontent.com/whit3rabbit/fear-greed-data/main/datasets/cnn_fear_greed.csv"
+        scores={}
+        for row in csv.DictReader(io.StringIO(download(url))):
+            day=dt.date.fromisoformat(row["Date"])
+            value=float(row["Fear Greed"])
+            if dt.date(2021,2,1)<=day<TODAY and 0<=value<=100:
+                scores.setdefault(day.isoformat(),set()).add(value)
+        merge(daily,"date",((d,{"cnnFearGreed":next(iter(values))}) for d,values in scores.items() if len(values)==1))
+    collect("CNN historical mirror",sentiment)
+    def futures_positions():
+        # Download within the exchange's rolling three-year window.
+        args=urllib.parse.urlencode({"queryStartDate":(TODAY-dt.timedelta(days=1090)).strftime("%Y/%m/%d"),
+            "queryEndDate":(TODAY-dt.timedelta(days=1)).strftime("%Y/%m/%d"),"commodityId":"TXF"})
+        url="https://www.taifex.com.tw/cht/3/futContractsDateDown?"+args
+        observations=[]
+        for row in csv.DictReader(io.StringIO(download(url,"cp950"))):
+            if row["商品名稱"]!="臺股期貨" or row["身份別"]!="外資及陸資":continue
+            net=int(row["多空未平倉口數淨額"])
+            if net!=int(row["多方未平倉口數"])-int(row["空方未平倉口數"]):continue
+            day=dt.datetime.strptime(row["日期"],"%Y/%m/%d").date()
+            if day<TODAY:observations.append((day.isoformat(),{"foreignTxOpenInterestNetContracts":net}))
+        if not observations:raise ValueError("No dated TXF open-interest observations")
+        merge(daily,"date",observations)
+    collect("TAIFEX TXF",futures_positions)
     for name,symbol in [("taiex","^TWII"),("sp500","^GSPC")]:
         collect(symbol,lambda:merge(ROOT/(name+"-5m.csv"),"time",((t.isoformat(),r)
             for t,r in yahoo(symbol,"5m") if t.minute%5==0 and t.second==0 and
