@@ -15,7 +15,7 @@ FIELDS = {
 
 
 def merge_credit(doc):
-    window = [r for r in doc["rows"] if "taiex" in r][-240:]
+    window = [r for r in doc["rows"] if "taiex" in r][-1000:]
     gaps = {r["date"] for r in window if r["date"] >= FIRST and not FIELDS.keys() <= r.keys()}
     rows = {r["date"]: r for r in window}
     pending = {}
@@ -49,6 +49,6 @@ def merge_credit(doc):
         doc["units"][key] = unit
         doc["stats"][key] = dict(count=len(series), first=series[0]["date"],
             last=series[-1]["date"], lastValue=series[-1][key],
-            status="ready" if len(series) >= 240 else "partial",
+            status="ready" if len(series) >= 1000 else "partial",
             source={"name": "TWSE BFIJ3U_TREND " + FIELDS[key][0], "url": URL})
     return len(pending)

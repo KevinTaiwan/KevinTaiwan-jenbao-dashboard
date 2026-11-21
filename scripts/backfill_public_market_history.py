@@ -15,7 +15,7 @@ TODAY = dt.datetime.now(dt.timezone.utc).date()
 # Do not insert today's intraday FX or index quote into the verified daily archive.
 # Refresh workflow advances the official cutoff once dates are properly validated.
 ARCHIVE_CUTOFF = dt.date.fromisoformat(json.loads(PATH.read_text(encoding="utf-8"))["cutoff"])
-START = TODAY - dt.timedelta(days=620)
+START = TODAY - dt.timedelta(days=1570)
 UA = {"User-Agent": "Mozilla/5.0 JenbaoMarketHistory/1.0", "Accept": "application/json,text/csv,*/*"}
 FRED = {"hyOas": "BAMLH0A0HYM2", "us10yYield": "DGS10",
         "us10y2ySpread": "T10Y2Y", "fedFundsEffective": "DFF"}
@@ -132,12 +132,12 @@ def main():
         if series:
             stat.update(count=len(series), first=series[0][0], last=series[-1][0],
                         lastValue=series[-1][1])
-            stat["status"] = "ready" if len(series) >= 240 else "partial"
+            stat["status"] = "ready" if len(series) >= 1000 else "partial"
         else:
             stat.update(count=0, status="partial")
     payload["generatedAt"] = dt.datetime.now(dt.timezone.utc).isoformat()
     payload["backfillAudit"] = {
-        "targetObservations": 240, "collectedAt": payload["generatedAt"],
+        "targetObservations": 1000, "collectedAt": payload["generatedAt"],
         "before": original, "after": {k: payload["stats"][k]["count"] for k in payload["units"]},
         "unverifiedOrUnavailable": errors,
         "notes": ["Existing data retained on overlapping dates", "No forward filling or interpolating",

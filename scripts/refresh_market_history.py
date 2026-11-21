@@ -154,12 +154,14 @@ def fetch_yahoo(symbol, key):
     url=f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(symbol,safe='')}?interval=1d&range=1y"
     d=json.loads(get(url))
     item=d["chart"]["result"][0]
+    if item["meta"]["symbol"] != symbol: raise ValueError("Unexpected market symbol")
+    timezone=ZoneInfo(item["meta"]["exchangeTimezoneName"])
     timestamps=item.get("timestamp",[])
     quote=item["indicators"]["quote"][0]["close"]
     count=0
     for ts,close in zip(timestamps,quote):
         if close is None:continue
-        day=dt.datetime.fromtimestamp(int(ts),tz=ZoneInfo("America/New_York")).date().isoformat()
+        day=dt.datetime.fromtimestamp(int(ts),tz=timezone).date().isoformat()
         add(key,day,close)
         count+=1
     if count<50:raise ValueError(f"Yahoo {symbol} returned only {count} rows")

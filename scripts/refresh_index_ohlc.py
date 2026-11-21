@@ -154,10 +154,10 @@ def fetch_twse_month(year,month):
     raise ValueError(f"TWSE {date}: "+"; ".join(failures))
 
 def fetch_twse():
-    # The initial fetch reaches significantly beyond the 240-session goal;
+    # The initial fetch reaches significantly beyond the 1,000-session goal;
     # subsequent runs request the most recent 2 months, not all history again.
-    backfill=(not DEST.exists()) or len(ARCHIVE["taiex"])<MIN_DAYS
-    months=20 if backfill else 2
+    backfill=(not DEST.exists()) or len(ARCHIVE["taiex"])<1000
+    months=55 if backfill else 2
     total=0
     for i in range(months):
         target=month_start(TODAY.year,TODAY.month-i)
@@ -172,10 +172,10 @@ def fetch_twse():
     return total
 
 def fetch_yahoo(symbol,key,source):
-    # Two years at bootstrap ensures at least 240 S&P/TW sessions.
+    # Fetch five years for the 1,000-session collection target.
     # Every future refresh merges new and revised rows without trimming old dates.
-    backfill=(not DEST.exists()) or len(ARCHIVE[key])<MIN_DAYS
-    query="range=2y" if backfill else "range=3mo"
+    backfill=(not DEST.exists()) or len(ARCHIVE[key])<1000
+    query="range=5y" if backfill else "range=3mo"
     last_error=None
     for host in ("query1.finance.yahoo.com","query2.finance.yahoo.com"):
         url=f"https://{host}/v8/finance/chart/{urllib.parse.quote(symbol,safe='')}?interval=1d&{query}"
@@ -324,14 +324,14 @@ def main():
     fetch_twse()
     # Official TWSE OHLC is preferred. Fill uncovered dates from ^TWII
     # without overwriting any official observation.
-    if len(ARCHIVE["taiex"])<MIN_DAYS:
+    if len(ARCHIVE["taiex"])<1000:
         fetch_yahoo("^TWII","taiex","YAHOO_TWII")
     fetch_cboe_spx()
     # Unavailable Cboe observations can be augmented from Yahoo; official bars win.
     fetch_yahoo("^GSPC","sp500","YAHOO_GSPC")
-    if len(ARCHIVE["sp500"])<MIN_DAYS:
+    if len(ARCHIVE["sp500"])<1000:
         fetch_stooq_spx()
-    if len(ARCHIVE["sp500"])<MIN_DAYS:
+    if len(ARCHIVE["sp500"])<1000:
         fetch_public_sp500_duckdb()
     finish()
 

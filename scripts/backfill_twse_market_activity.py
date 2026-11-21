@@ -20,7 +20,7 @@ from zoneinfo import ZoneInfo
 
 FILE=pathlib.Path("public/market-history.json")
 TODAY=dt.datetime.now(ZoneInfo("Asia/Taipei")).date()
-TARGET=240
+TARGET=1000
 HEADERS={"User-Agent":"Mozilla/5.0 (compatible; JenbaoPublicMarketData/1.0)",
          "Accept":"application/json"}
 KEYS={
@@ -67,7 +67,8 @@ def fetch(url):
 
 def get_report(path,month):
     params=urllib.parse.urlencode({"response":"json","date":month.strftime("%Y%m%d")})
-    for hostpath in (f"https://www.twse.com.tw/rwd/zh/afterTrading/{path}",
+    section = "dayTrading" if path == "TWTB4U2" else "afterTrading"
+    for hostpath in (f"https://www.twse.com.tw/rwd/zh/{section}/{path}",
                      f"https://www.twse.com.tw/exchangeReport/{path}"):
         doc=fetch(hostpath+"?"+params)
         if isinstance(doc,dict) and (doc.get("data") or doc.get("tables")):
@@ -127,7 +128,7 @@ def extract_daytrade(obj):
     return result
 
 def months():
-    start=(TODAY-dt.timedelta(days=600)).replace(day=1)
+    start=(TODAY-dt.timedelta(days=1570)).replace(day=1)
     out=[]
     while start<=TODAY:
         out.append(start)
@@ -164,9 +165,10 @@ def main():
     mismatch=[]
     paired=0
     for day,value in sorted(market.items()):
-        rows.setdefault(day,{"date":day})["marketTurnoverYiTwd"]=value
+        if day <= doc["cutoff"]:
+            rows.setdefault(day,{"date":day}).setdefault("marketTurnoverYiTwd",value)
     for day,(buy,sell,buyratio,sellratio) in sorted(daytrade.items()):
-        if day not in market:continue
+        if day not in market or day > doc["cutoff"]:continue
         total_yi=market[day]
         if total_yi<=0:continue
         mean_yi=(buy+sell)/2/1e8
@@ -179,8 +181,8 @@ def main():
                              "twseOfficial":round(official,3)})
             continue
         entry=rows.setdefault(day,{"date":day})
-        entry["dayTradeTurnoverYiTwd"]=round(mean_yi,6)
-        entry["dayTradeTurnoverSharePct"]=round(ratio,4)
+        entry.setdefault("dayTradeTurnoverYiTwd",round(mean_yi,6))
+        entry.setdefault("dayTradeTurnoverSharePct",round(ratio,4))
         paired+=1
 
     doc["units"]={
