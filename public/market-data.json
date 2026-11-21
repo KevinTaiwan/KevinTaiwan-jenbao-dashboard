@@ -3,9 +3,9 @@
   "audience": "public-market",
   "asOf": "2026-11-20",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-20 17:24 Asia/Taipei｜台股正式收盤、美股11/19收盤及國際盤中參考",
+  "updatedAt": "2026-11-21T05:35:04+00:00",
   "headline": "11/20台股收36,033.29(-6.23%)，信用利差持續擴大、融資斷頭升溫；MA240=39,408.23",
-  "summary": "台股11/20正式收36,033.29(-2,393.60、-6.23%)，盤中低35,738.68，交易所指數成交額8,773.50億元。11/20外資-94.13億、投信-87.49億、自營商-340.84億。11/19上市融資4,843.68億、日減236.59億；11/19扣ETF維持率128.31%、全市場擔保維持率156.18%，追繳2947戶/29.64億、處分520戶/9.18億。FRED 11/18 HY OAS 347bp(+4)、Single-B373bp(+5)、SOFR-IORB0bp。VIX17:23參考28.75，與美股11/19正式收盤28.44不同。",
+  "summary": "台股11/20正式收36,033.29(-2,393.60、-6.23%)，盤中低35,738.68，交易所指數成交額8,773.50億元。11/20外資-94.13億、投信-87.49億、自營商-340.84億。11/19上市融資4,843.68億、日減236.59億；11/19扣ETF維持率128.31%、全市場擔保維持率156.18%，追繳2947戶/29.64億、處分520戶/9.18億。FRED 11/18 HY OAS 347bp(+4)、Single-B373bp(+5)、SOFR-IORB0bp。VIX17:23參考28.75，與美股11/19正式收盤28.44不同。 11/21補核11/20上市融資4,352.27億、日減491.41億，扣ETF維持率119.53%。11/20外資不含外資自營商為-95.10543572億，與上述既存值有口徑差異。",
   "market": {
     "taiex": 36033.29,
     "taiexChange": -6.23,
@@ -20,9 +20,9 @@
     "us10y": 4.998,
     "de10y": 3.3428,
     "cnn": null,
-    "marginBalanceYi": 4843.68,
-    "marginDailyYi": -236.59,
-    "marginMaintenance": 128.31,
+    "marginBalanceYi": 4352.27,
+    "marginDailyYi": -491.41,
+    "marginMaintenance": 119.53,
     "foreignNetYi": -94.13,
     "futuresNetContracts": -97863,
     "hyOas": 3.47,
@@ -34,7 +34,7 @@
     "goldPrice": 3581.77,
     "ma120": 45281.24,
     "ma240": 39408.23,
-    "marginMaintenanceAsOf": "2026-11-19",
+    "marginMaintenanceAsOf": "2026-11-20",
     "marginMaintenanceScope": "TWSE financing maintenance excluding ETF (Wantgoo)"
   },
   "ai": [
@@ -156,6 +156,21 @@
       "label": "證交所｜上市融資斷頭與追繳",
       "url": "https://www.twse.com.tw/dashboard/zh/index.html",
       "date": "2026-11-19"
+    },
+    {
+      "label": "玩股網｜11/20 扣除 ETF 融資維持率",
+      "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
+      "date": "2026-11-20"
+    },
+    {
+      "label": "證交所｜11/20 上市信用交易統計",
+      "url": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN",
+      "date": "2026-11-20"
+    },
+    {
+      "label": "證交所｜11/20 外資及陸資（不含外資自營商）",
+      "url": "https://www.twse.com.tw/rwd/zh/fund/BFI82U",
+      "date": "2026-11-20"
     }
   ],
   "marketHistory": [
@@ -232,15 +247,17 @@
     "國際盤中11/20 17:24：USD/TWD32.999、DXY103.85、US10Y4.998%、WTI81.60、黃金期貨3,581.77美元；均非同步官方收盤價。",
     "公開GitHub只含公開行情與市場風險，嚴禁個人持股、資產淨值、D1或私人Beta。",
     "MA240=39,368.24為截至11/19完整240日正式收盤價來源的已核實數值，非11/20盤中即時計算；絕不能拿MA260數值冒充MA240。",
-    "2026/11/20歷史來源回填：以先前日期2026/08/07之玩股網網頁表格，新增2026/06/26至08/07共30筆扣ETF融資維持率；每筆日期與大盤收盤值均核對通過。連同既有10/05至11/19共61/240日，仍缺179日；未以滑鼠游標自動擷取圖表。"
+    "2026/11/20歷史來源回填：以先前日期2026/08/07之玩股網網頁表格，新增2026/06/26至08/07共30筆扣ETF融資維持率；每筆日期與大盤收盤值均核對通過。連同既有10/05至11/19共61/240日，仍缺179日；未以滑鼠游標自動擷取圖表。",
+    "2026/11/21 核對 11/20 收盤後資料：上市融資餘額 4,352.27 億元，當日減少 491.41 億元。玩股網扣 ETF 維持率 119.53%，最近 240 個台股交易日均有值。",
+    "11/20 證交所 BFI82U 外資及陸資（不含外資自營商）為 -95.10543572 億元，玩股網顯示 -95.11 億元。母檔原載 -94.1307 億元照錄，11/20 外資日值及依該值計算的累積數保留口徑差異。"
   ],
   "marginMaintenanceCoverage": {
     "targetTradingDays": 240,
-    "observedTradingDays": 61,
-    "missingTradingDays": 179,
-    "targetFirst": "2025-11-21",
-    "targetLast": "2026-11-19",
-    "status": "partial",
+    "observedTradingDays": 240,
+    "missingTradingDays": 0,
+    "targetFirst": "2025-11-24",
+    "targetLast": "2026-11-20",
+    "status": "complete",
     "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
   }
 }

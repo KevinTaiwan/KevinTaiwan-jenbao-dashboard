@@ -9,3 +9,5 @@
 - scripts/refresh_extended_history.py 更新可公開的補充日資料、低頻資料與盤中紀錄；已保存的數值優先。既有日資料與盤中快照仍由原收集程式更新。
 
 CNN 情緒分數取自 whit3rabbit/fear-greed-data 保存的 CNN 歷史值（2021-02-01 起）。外資期貨部位採期交所 TXF 外資及陸資多空未平倉口數淨額，逐筆核對多方減空方。
+
+截至 2026-11-20，外資現貨及上市融資回補採 FinMind 的 TaiwanStockTotalInstitutionalInvestors（Foreign_Investor）與 TaiwanStockTotalMarginPurchaseShortSale（MarginPurchaseMoney），跨期抽查 18 日，分別與證交所 BFI82U、MI_MARGN 核對。融資餘額為今日餘額，融資日變動為同一日報表的今日減前日餘額，單位均為億元。外資累積值沿用 2025-11-20 收盤為零的基準，較早日期由該點按交易日反推。11/20 外資日值原存 -94.1307 億元，證交所不含外資自營商為 -95.10543572 億元，原日值及連動累積值照錄。扣 ETF 維持率僅採玩股網明列的日值，其核對紀錄在 market-history.json 的 marginMaintenance240dAudit。
