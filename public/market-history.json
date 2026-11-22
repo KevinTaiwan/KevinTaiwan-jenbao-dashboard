@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-21T22:29:45+00:00",
-  "cutoff": "2026-11-21",
+  "generatedAt": "2026-11-22T22:37:00+00:00",
+  "cutoff": "2026-11-22",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
     "taiex": "index pts",
