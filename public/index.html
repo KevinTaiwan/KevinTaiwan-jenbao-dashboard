@@ -840,11 +840,13 @@ function techReadout(key,value){
 }
 const TECH_STACK_KEY="jb-technical-stack-v1";
 function readTechnicalStackSettings(){
- const defaults={top:"taiex",middle:"foreignNetYi",bottomSource:"follow",oscillator:"MACD",layout:"compact",overlays:{ma5:false,ma10:false,ma20:false,ma60:false,ma240:false,bb:false}};
+ const defaults={right:"off",compareMode:"raw",top:"taiex",middle:"foreignNetYi",bottomSource:"follow",oscillator:"MACD",layout:"compact",overlays:{ma5:false,ma10:false,ma20:false,ma60:false,ma240:false,bb:false}};
  try{
   const x=JSON.parse(localStorage.getItem(TECH_STACK_KEY)||"null");
   if(x&&typeof x==="object"&&!Array.isArray(x)){
    return {
+    right:TECH_SOURCE_KEYS.includes(x.right)&&x.right!=="turnoverWithDayTrade"?x.right:"off",
+    compareMode:x.compareMode==="indexed"?"indexed":"raw",
     top:TECH_SOURCE_KEYS.includes(x.top)?x.top:defaults.top,
     middle:TECH_SOURCE_KEYS.includes(x.middle)?x.middle:defaults.middle,
     bottomSource:x.bottomSource==="follow"||TECH_PRICE_KEYS.includes(x.bottomSource)?x.bottomSource:defaults.bottomSource,
@@ -898,7 +900,7 @@ document.addEventListener("keydown",event=>{
 });
 
 function updateTechnicalSetting(field,value){
- const valid=field==="top"?TECH_SOURCE_KEYS.includes(value):field==="middle"?TECH_SOURCE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI","KD"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
+ const valid=field==="right"?value==="off"||(TECH_SOURCE_KEYS.includes(value)&&value!=="turnoverWithDayTrade"):field==="compareMode"?["raw","indexed"].includes(value):field==="top"?TECH_SOURCE_KEYS.includes(value):field==="middle"?TECH_SOURCE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI","KD"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
  if(!valid)return false;
  techSettings={...techSettings,[field]:value};
  try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
@@ -1171,6 +1173,8 @@ function syncChartCursor(date,pointerX=null){
    for(const o of [hl,dot])if(o){o.setAttribute("visibility",visible?"visible":"hidden");if(visible){if(o===hl){o.setAttribute("y1",String(ys[i]));o.setAttribute("y2",String(ys[i]))}else{o.setAttribute("cx",techX.toFixed(2));o.setAttribute("cy",String(ys[i]))}}}
   }
   const put=(q,v)=>{const element=host.querySelector(q);if(element)element.textContent=v};
+  const rightRow=tech.rightByDate.get(selected);
+  put("[data-tech-right-value]",selected+"｜"+(rightRow?techReadout(tech.c.right,rightRow.value)+(tech.indexed?"（指數 "+historyFormat(rightRow.value*tech.rightScale,2)+"）":""):"無當日觀測"));
   const candle=tech.topCandles.find(r=>r.date===selected);
   const hover=technicalSvg.querySelector('[data-tech-hover="1"]');
   if(hover){
@@ -1179,7 +1183,7 @@ function syncChartCursor(date,pointerX=null){
    if(active){
     const values=[candle?.close??top?.value,mid?.value,oscValue];
     const formatted=[
-     techReadout(tech.c.top,values[0]),
+     tech.indexed&&Number.isFinite(values[0])?historyFormat(values[0]*tech.leftScale,2):techReadout(tech.c.top,values[0]),
      techReadout(tech.c.middle,values[1])+(tech.c.middle==="dayTradeTurnoverSharePct"?"%":""),
      historyFormat(values[2],tech.c.oscillator==="MACD"?3:2)
     ];
@@ -1348,11 +1352,22 @@ function showHistory(){
  const technicalStack=(()=>{
   const c=techSettings,bottomKey=c.bottomSource==="follow"?c.top:c.bottomSource;
   const fullTop=techObservations(raw,c.top),fullBottom=bottomKey===c.top?fullTop:techObservations(raw,bottomKey);
-  const topCandles=techFiltered(techOhlcRecords(c.top),start,end);
+  const paired=c.right!=="off"&&c.top!=="turnoverWithDayTrade";
+  const rightRows=paired?techFiltered(techObservations(raw,c.right),start,end):[];
+  const leftRows=techFiltered(fullTop,start,end);
+  const rightByDate=new Map(rightRows.map(row=>[row.date,row]));
+  const requestedIndex=paired&&c.compareMode==="indexed";
+  const base=requestedIndex?leftRows.find(row=>rightByDate.has(row.date)):null;
+  const indexed=Boolean(base&&base.value>0&&rightByDate.get(base.date).value>0);
+  const leftScale=indexed?100/base.value:1;
+  const rightScale=indexed?100/rightByDate.get(base.date).value:1;
+  const plotStart=indexed?marketChartDate(base.date):start;
+  const right=indexed?rightRows.filter(row=>row.date>=base.date):rightRows;
+  const topCandles=techFiltered(techOhlcRecords(c.top),plotStart,end);
   const kdCandles=techOhlcRecords(bottomKey);
   const kdAvailable=kdCandles.length>=9;
-  const top=techFiltered(fullTop,start,end),ma=[5,10,20,60,240].map(n=>({n,rows:techFiltered(techRolling(fullTop,n),start,end)}));
-  const bb=techFiltered(techBollinger(fullTop),start,end);
+  const top=indexed?leftRows.filter(row=>row.date>=base.date):leftRows,ma=[5,10,20,60,240].map(n=>({n,rows:techFiltered(techRolling(fullTop,n),plotStart,end)}));
+  const bb=techFiltered(techBollinger(fullTop),plotStart,end);
   const osc=techFiltered(c.oscillator==="RSI"?techRsi(fullBottom):c.oscillator==="KD"?(kdAvailable?techKd(kdCandles):[]):techMacd(fullBottom),start,end);
   const middle=techFiltered(techObservations(raw,c.middle),start,end);
   const turnoverToday=provisionalDailyCandle("taiex");
@@ -1360,7 +1375,7 @@ function showHistory(){
   const compact=c.layout!=="standard";
   const panel=compact?[{start:27,end:185},{start:212,end:271},{start:299,end:365}]:[{start:30,end:270},{start:306,end:394},{start:430,end:535}];
   const svgBottom=compact?391:571;
-  const sessionScale=marketSessionScale([...top,...topCandles,...middle,...osc].map(r=>r.date));
+  const sessionScale=marketSessionScale([...top,...topCandles,...middle,...osc,...right].map(r=>r.date));
   const sessionDates=sessionScale.days;
   const x=d=>sessionScale.days.length?sessionScale.x(d):X(marketChartDate(d));
   const bounds=(values,zero=false)=>{
@@ -1369,16 +1384,25 @@ function showHistory(){
    const pad=Math.max((hi-lo)*.07,Math.abs(hi)*.002,.0001);
    return [lo-pad,hi+pad];
   };
-  const [t0,t1]=bounds([...top.map(r=>r.value),...topCandles.flatMap(r=>[r.high,r.low]),...(c.overlays.bb?bb.flatMap(r=>[r.upper,r.lower]):[]),...ma.filter(m=>c.overlays["ma"+m.n]).flatMap(m=>m.rows.map(r=>r.value))]);
+  const leftValues=[...top.map(r=>r.value),...topCandles.flatMap(r=>[r.high,r.low]),...(c.overlays.bb?bb.flatMap(r=>[r.upper,r.lower]):[]),...ma.filter(m=>c.overlays["ma"+m.n]).flatMap(m=>m.rows.map(r=>r.value))];
+  const [t0,t1]=bounds(indexed?[...leftValues.map(v=>v*leftScale),...right.map(r=>r.value*rightScale)]:leftValues);
+  const signedRight=["foreignNetYi","foreignCumulativeYi","marginDailyYi","us10y2ySpread"].includes(c.right);
+  const [r0,r1]=indexed?[t0,t1]:bounds(right.map(r=>r.value),signedRight);
+  const rightY=v=>panel[0].end-(v*rightScale-r0)/(r1-r0)*(panel[0].end-panel[0].start);
   const dualTurnover=c.middle==="turnoverWithDayTrade";
    const isMonetary=dualTurnover||c.middle==="marketTurnoverYiTwd";
-   const [m0,m1]=bounds(techIsCandle(c.middle)?middle.flatMap(r=>[r.high,r.low]):middle.map(r=>r.value),isMonetary||["foreignNetYi","marginDailyYi"].includes(c.middle));
+   const [m0,m1]=bounds(techIsCandle(c.middle)?middle.flatMap(r=>[r.high,r.low]):middle.map(r=>r.value),isMonetary||["creditCallAmountTwd","foreignNetYi","marginDailyYi"].includes(c.middle));
    const ratioBounds=dualTurnover?bounds(middle.map(r=>r.ratio)):[0,100];
    const ratioY=v=>panel[1].end-(v-ratioBounds[0])/(ratioBounds[1]-ratioBounds[0])*(panel[1].end-panel[1].start);
   const oscillatorValues=c.oscillator==="RSI"||c.oscillator==="KD"?[0,100]:osc.flatMap(r=>[r.macd,r.signal,r.hist]);
   const [o0,o1]=c.oscillator==="RSI"||c.oscillator==="KD"?[0,100]:bounds(oscillatorValues,true);
-  const ys=[(v)=>panel[0].end-(v-t0)/(t1-t0)*(panel[0].end-panel[0].start),(v)=>panel[1].end-(v-m0)/(m1-m0)*(panel[1].end-panel[1].start),(v)=>panel[2].end-(v-o0)/(o1-o0)*(panel[2].end-panel[2].start)];
+  const ys=[(v)=>panel[0].end-(v*leftScale-t0)/(t1-t0)*(panel[0].end-panel[0].start),(v)=>panel[1].end-(v-m0)/(m1-m0)*(panel[1].end-panel[1].start),(v)=>panel[2].end-(v-o0)/(o1-o0)*(panel[2].end-panel[2].start)];
   const line=(rows,key,y,color,stroke=2,dash="")=>rows.length===1&&Number.isFinite(rows[0][key])?'<circle cx="'+x(rows[0].date)+'" cy="'+y(rows[0][key])+'" r="2.5" fill="'+color+'"/>':rows.filter(r=>Number.isFinite(r[key])).length<2?"":'<polyline points="'+rows.filter(r=>Number.isFinite(r[key])).map(r=>x(r.date).toFixed(1)+","+y(r[key]).toFixed(1)).join(" ")+'" fill="none" stroke="'+color+'" stroke-width="'+stroke+'" stroke-linecap="round" stroke-linejoin="round"'+(dash?' stroke-dasharray="'+dash+'"':"")+'/>';
+  const rightColor="#965119";
+  const rightPlot=paired&&right.length?line(right,"value",rightY,rightColor,1.6)+[0,.5,1].map(k=>{
+   const value=r1-(r1-r0)*k,y=panel[0].start+(panel[0].end-panel[0].start)*k;
+   return '<text x="762" y="'+(y+3)+'" fill="'+rightColor+'" font-size="10">'+historyFormat(value,2)+'</text>';
+  }).join("")+(signedRight&&!indexed?'<line x1="38" x2="758" y1="'+rightY(0)+'" y2="'+rightY(0)+'" stroke="'+rightColor+'" stroke-width=".6"/>':""):"";
   const grid=panel.map((a,i)=>{
    const bound=[[t0,t1],[m0,m1],[o0,o1]][i];
    return '<rect x="38" y="'+a.start+'" width="720" height="'+(a.end-a.start)+'" fill="none" stroke="#d0d7de"/>'+[0,.5,1].map(k=>{const y=a.start+(a.end-a.start)*k;return '<line x1="38" x2="758" y1="'+y+'" y2="'+y+'" stroke="#e7ebef" stroke-width=".7"/><text x="33" y="'+(y+3)+'" fill="#41566b" text-anchor="end" font-size="10">'+historyFormat(bound[1]-(bound[1]-bound[0])*k,2)+'</text>'}).join("");
@@ -1401,7 +1425,7 @@ function showHistory(){
    ma.map((m,i)=>c.overlays["ma"+m.n]?line(m.rows,"value",ys[0],["#e59c00","#dc4b6a","#2869cc","#26813e","#7741ca"][i],1.15,""):"").join("");
   const middleDisplay=middle.filter(r=>sessionScale.positions.has(r.date));
   const oscDisplay=osc.filter(r=>sessionScale.positions.has(r.date));
-  const midBars=["foreignNetYi","marginDailyYi","marketTurnoverYiTwd","turnoverWithDayTrade"].includes(c.middle);
+  const midBars=["creditCallAmountTwd","foreignNetYi","marginDailyYi","marketTurnoverYiTwd","turnoverWithDayTrade"].includes(c.middle);
    const midLines=techIsCandle(c.middle)?drawCandles(middleDisplay,ys[1]):midBars?middleDisplay.map(r=>
     '<line x1="'+x(r.date)+'" x2="'+x(r.date)+'" y1="'+ys[1](0)+'" y2="'+ys[1](r.value)+
     '" stroke="'+(isMonetary?"#438fca":r.value>=0?"#d41c1c":"#65b206")+
@@ -1448,7 +1472,10 @@ function showHistory(){
   const cross=panel.map((a,i)=>'<line data-tech-hline="'+i+'" x1="38" x2="758" y1="0" y2="0" visibility="hidden" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'" stroke-width=".7" vector-effect="non-scaling-stroke"/><circle data-tech-point="'+i+'" cx="38" cy="0" r="4" visibility="hidden" fill="#ffffff" stroke="'+["#007e9b","#bc7415","#7952bc"][i]+'"/>').join("");
   const label=(name,code,selected,opts)=>'<label>'+name+'<select data-tech-field="'+code+'" aria-label="'+name+'">'+opts+'</select></label>';
   const controls='<div class="technical-stack-selectors">'+
-   label("上層來源","top",c.top,techOptions(TECH_SOURCE_KEYS,c.top))+
+   label("上層左軸","top",c.top,techOptions(TECH_SOURCE_KEYS,c.top))+
+   (c.top==="turnoverWithDayTrade"?"":label("上層右軸（折線）","right",c.right,'<option value="off">關閉</option>'+techOptions(TECH_SOURCE_KEYS.filter(k=>k!=="turnoverWithDayTrade"),c.right)))+
+   (paired?label("上層刻度","compareMode",c.compareMode,'<option value="raw">原始值</option><option value="indexed"'+(c.compareMode==="indexed"?' selected':'')+'>共同起點 100</option>'):"")+
+   '<button type="button" data-tech-risk-preset>加權日 K × 融資維持率</button>'+
    label("中層來源","middle",c.middle,techOptions(TECH_SOURCE_KEYS,c.middle))+
    label("下層指標來源","bottomSource",c.bottomSource,'<option value="follow"'+(c.bottomSource==="follow"?' selected':'')+'>跟隨上層</option>'+techOptions(TECH_PRICE_KEYS,c.bottomSource))+
    label("下層指標類型","oscillator",c.oscillator,["MACD","RSI","KD"].map(k=>'<option value="'+k+'"'+(c.oscillator===k?' selected':'')+'>'+k+'</option>').join(""))+'</div>';
@@ -1472,7 +1499,7 @@ function showHistory(){
     '<g data-tech-hover-compact visibility="hidden"><rect x="582" y="1" width="174" height="22" rx="3" fill="#f3f8fc" stroke="#a1b2c1" stroke-width=".7"/>'+
     '<text data-tech-compact-text x="669" y="16" text-anchor="middle" font-size="11" fill="#23435f" font-weight="700">—</text></g>'+
     '</g>';
-   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 840 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="840" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+maintenanceHint+priceLines+topRatio+midLines+midRatioLine+midRightAxis+midLegend+missingMoney+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
+   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 840 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="840" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+maintenanceHint+priceLines+rightPlot+topRatio+midLines+midRatioLine+midRightAxis+midLegend+missingMoney+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
   const latestDaily=topCandles.at(-1);
    const directNote='<div class="technical-current-day" role="status">'+esc(directQuoteStatus)+
       '｜K線查詢間隔 60 秒（供應商延遲可能較長）'+
@@ -1490,7 +1517,8 @@ function showHistory(){
       '（非正式收盤；報價可能延遲）</div>':"";
    const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層："+techSeriesName(c.middle)+"")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。指數日K最右側會顯示交易當日暫定K，盤中更新同一根，不覆蓋正式歷史母檔。上層與中層可獨立切換全部資料，包括成交金額（億元）、當沖成交金額占比（%）或雙軸合併圖；雙軸左側為成交億元，右側為當沖占比，不使用成交股數。其他籌碼指標維持原定義。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
-  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 長期時間軸 v2026.11.22.1</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
+  const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
+  return {sessionScale,topCandles,rightByDate,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 長期時間軸 v2026.11.22.1</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+compareNote+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
@@ -1619,6 +1647,11 @@ crossHost.addEventListener("click",event=>{
  }
  const layoutBtn=event.target.closest?.("[data-tech-layout]");
  if(layoutBtn){updateTechnicalSetting("layout",layoutBtn.dataset.techLayout);event.preventDefault();return}
+ if(event.target.closest?.("[data-tech-risk-preset]")){
+  techSettings={...techSettings,top:"taiexK",right:"marginMaintenanceExEtf",compareMode:"raw",middle:"creditCallAmountTwd"};
+  try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
+  showHistory();return;
+ }
  const overlayBtn=event.target.closest?.("[data-tech-overlay]");
  if(overlayBtn){toggleTechnicalOverlay(overlayBtn.dataset.techOverlay);event.preventDefault();return}
  const maBtn=event.target.closest?.("[data-ma-key][data-ma-period]");
