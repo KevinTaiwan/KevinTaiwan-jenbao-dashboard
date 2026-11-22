@@ -58,9 +58,31 @@ jobs:
           if test -f public/intraday-market.json; then python3 scripts/validate_intraday_market.py public/intraday-market.json; fi
           python3 - <<'PY'
           from pathlib import Path
-          allowed={'index.html','market-data.json','market-history.json','index-ohlc-history.json','intraday-market.json','.nojekyll'}
+          import json
+          import math
+          from datetime import date
+          allowed={'market-center-history.json','index.html','market-data.json','market-history.json','index-ohlc-history.json','intraday-market.json','.nojekyll'}
           files={p.name for p in Path('public').rglob('*') if p.is_file()}
           if files-allowed:raise SystemExit('Unsafe unexpected public files: '+repr(files-allowed))
+          center_path=Path('public/market-center-history.json')
+          if center_path.exists():
+              series=json.loads(center_path.read_text(encoding='utf-8'))
+              expected=set(["006208TW","2330TW","DRTSCILM","IXIC","PAYEMS","PCEC96","RSAFS","SOX","UMCSENT","acm10","cccOas","cccYield","cnnFearGreed","delinq","foreignTxOpenInterestNetContracts","forwardPe","gdp","goldFuturesUsd","goldSpot","inflation5y5y","iorb","marginBalanceYi","mortgage","move","nfci","orders","singleBOas","sofr","sofrMinusIorbBp","t10yie","t5yie","tgcr","twNet","twPb","twPe","us1y","us2y","us30y","us3y","us5y","willing","wtiFuturesUsd"])
+              if not isinstance(series, dict) or set(series) != expected:
+                  raise SystemExit('Unexpected market center series')
+              for key, rows in series.items():
+                  if not isinstance(rows, list) or not rows:
+                      raise SystemExit(f'Missing market center observations: {key}')
+                  previous = ''
+                  for row in rows:
+                      if not isinstance(row, list) or len(row) != 2:
+                          raise SystemExit(f'Invalid market center observation: {key}')
+                      day, value = row
+                      if (not isinstance(day, str) or date.fromisoformat(day).isoformat() != day
+                              or day <= previous or type(value) not in (int, float)
+                              or not math.isfinite(value)):
+                          raise SystemExit(f'Invalid market center observation: {key}')
+                      previous = day
           if '<script src=' in Path('public/index.html').read_text():raise SystemExit('External script is not allowed')
           print('Public-only deployment checks: PASS')
           PY
