@@ -329,7 +329,7 @@ main{max-width:1480px;padding:31px 32px 76px;margin:auto}.hero{position:relative
 .technical-stack-fullscreen-btn{background:#d0eefa;border-color:#5ba8c4;font-weight:700;color:#12465e}
 .technical-stack-fullscreen-btn:focus-visible,.technical-stack-toggle-controls:focus-visible,
 .technical-stack-fullscreen-windows button:focus-visible{outline:2px solid #0094ad;outline-offset:2px}
-.technical-stack-fullscreen-windows{display:none;gap:3px;align-items:center}
+.technical-stack-fullscreen-windows{display:none;flex-wrap:wrap;gap:3px;align-items:center}
 .technical-stack-fullscreen-windows button{padding:4px 6px;font-size:10px}
 .technical-stack-fullscreen-windows button.active{background:#d8effb;border-color:#328faf;color:#07506a}
 .technical-stack-toggle-controls{display:none}
@@ -525,7 +525,7 @@ body.technical-fullscreen-active{overflow:hidden!important}
 <div class="sectionhead"><h2>市場核心監控</h2><span class="small">多因子交叉觀察，不代表買賣訊號</span></div>
 <div class="card market-cross">
 <div class="cross-head"><div><div class="subhead">十四指標走勢＋三層技術分析｜同步時間軸</div><div class="small">原有 14 張指標圖維持原始 Y 軸及 MA5／20／60／240；另新增可獨立選上、中、下層資料來源的三層技術圖（價格折線＋MA／布林通道、市場指標或籌碼副圖、MACD／RSI）。所有圖可排序；三層技術圖滑鼠移入即顯示日期與價格十字線，其餘指標圖可按住時間線拖動。</div></div>
-<div class="cross-controls" aria-label="歷史圖切換"><button class="button" type="button" data-window="20">20日</button><button class="button" type="button" data-window="60">60日</button><button class="button active" type="button" data-window="120">120日</button><button class="button" type="button" data-window="240">240日</button><button class="button" type="button" data-mode="raw">原始值</button><button class="button" type="button" data-mode="indexed">起點=100</button></div></div>
+<div class="cross-controls" aria-label="歷史圖切換"><button class="button" type="button" data-window="20">20日</button><button class="button" type="button" data-window="60">60日</button><button class="button active" type="button" data-window="120">120日</button><button class="button" type="button" data-window="240">240日</button><button class="button" type="button" data-window="3y">3年</button><button class="button" type="button" data-window="5y">5年</button><button class="button" type="button" data-window="10y">10年</button><button class="button" type="button" data-window="max">Max</button><button class="button" type="button" data-mode="raw">原始值</button><button class="button" type="button" data-mode="indexed">起點=100</button></div></div>
 <div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">三層技術圖滑鼠移入即同步；其餘圖可按住時間線拖曳</span></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="十五張圖同步時間游標；三層圖滑鼠移動即定位，其餘圖可拖曳時間線，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
 <div id="historynote" class="small cross-note">歷史資料正在載入…</div></div>
 <div class="sectionhead"><h2>市場狀態與信用溫度｜最新觀測</h2><span class="small">保留個別指標原始單位</span></div><div class="grid two"><div class="card"><div id="coreSignals"></div></div><div class="card"><div class="subhead">跨市場解讀原則</div><p class="small" style="line-height:2">股市下跌若與 DXY、USD/TWD、VIX 同時走高，應留意跨境資金與避險需求；只有 HY OAS 也連續擴大，信用風險的證據才更完整。不同市場休市日、報價時段及利差發布延遲都會產生時間差。</p><div class="separator"></div><p class="small">原始值模式：各張圖獨立縱軸，便於觀察自身轉折。起點=100：五圖共用同一縱軸比例，適合比較相對變化幅度。</p></div></div>
@@ -572,7 +572,7 @@ function fmt(v,u='',d=2){return typeof v==='number'&&Number.isFinite(v)?v.toLoca
 function card(title,value,sub='',tone=''){return `<div class="card"><div class="label">${esc(title)}</div><div class="big ${tone}">${esc(value)}</div><div class="small">${esc(sub)}</div></div>`}
 function toast(message){const t=$('toast');t.textContent=message;t.style.display='block';clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.style.display='none',3600)}
 function validate(d){if(!d||d.schemaVersion!==2||d.audience!=='public-market'||typeof d.market!=='object'||!Array.isArray(d.ai)||!/^\d{4}-\d{2}-\d{2}$/.test(d.asOf))throw Error('公開市場 JSON 格式不符合規範');if(['portfolio','holdings','defense','rollingRisk','personal','account'].some(k=>Object.prototype.hasOwnProperty.call(d,k)))throw Error('公開資料包含不應出現的私人欄位');return d}
-let marketHistoryData=null, marketHistoryError="",chartDays=120,chartMode="raw";
+let marketHistoryData=null, marketHistoryError="",chartDays="120",chartMode="raw";
 let indexOhlcHistory=null,indexOhlcError="",techOhlcCache={taiex:[],sp500:[]};
 let intradayMarketData=null,intradayMarketError="";
 let officialTodayMarket={date:null,turnoverYiTwd:null,dayTradeSharePct:null,asOf:null};
@@ -1203,6 +1203,22 @@ function syncChartCursor(date,pointerX=null){
  }
 
 }
+const chartWindows={"20":"20日","60":"60日","120":"120日","240":"240日","3y":"3年","5y":"5年","10y":"10年",max:"Max"};
+function longWindowStart(key,cutoff,raw){
+ if(key==="max"){
+  let earliest=cutoff;
+  for(const rows of [raw,techOhlcCache.taiex,techOhlcCache.sp500]){
+   for(const row of rows){
+    const time=marketChartDate(row.date);
+    if(time<earliest)earliest=time;
+   }
+  }
+  return earliest;
+ }
+ const day=new Date(cutoff);
+ day.setUTCFullYear(day.getUTCFullYear()-parseInt(key,10));
+ return day.getTime();
+}
 function showHistory(){
  const host=$("marketCrossCharts"),note=$("historynote");
  const raw=marketHistoryData&&Array.isArray(marketHistoryData.rows)?marketHistoryData.rows:[],
@@ -1212,9 +1228,10 @@ function showHistory(){
        cutoff=Math.min(Date.now(),Math.max(reference,lastPublished,...currentSessions)),
        archivedSessions=[...new Set(raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r.taiex)).map(r=>r.date))]
           .filter(day=>marketChartDate(day)<=cutoff).sort(),
-       windowSessions=archivedSessions.slice(-chartDays),
+       longWindow=chartDays==="max"||chartDays.endsWith("y"),
+       windowSessions=longWindow?[]:archivedSessions.slice(-Number(chartDays)),
        // Count completed TAIEX trading sessions, not calendar days. Provisional K-lines may extend the right edge.
-       start=windowSessions.length?marketChartDate(windowSessions[0]):cutoff-(chartDays-1)*86400000,end=cutoff;
+       start=longWindow?longWindowStart(chartDays,cutoff,raw):windowSessions.length?marketChartDate(windowSessions[0]):cutoff-(chartDays-1)*86400000,end=cutoff;
  const TOP=35,BOTTOM=151,LEFT=38,RIGHT=758;
  // Each Monday immediately follows the preceding Friday: draw on weekday slots.
  // This affects presentation only; all original source observations remain stored.
@@ -1265,7 +1282,7 @@ function showHistory(){
   const days=scale?.days?.length?scale.days:timelineDays;
   const index=Math.round((days.length-1)*n);
   const day=days[index]||new Date(start).toISOString().slice(0,10),px=scale?.days?.length?scale.x(day):X(marketChartDate(day));
-  return '<line x1="'+px+'" y1="'+BOTTOM+'" x2="'+px+'" y2="'+(BOTTOM+5)+'" stroke="#57748d"/>'+svgText(px,startY,day.slice(5),"middle");
+  return '<line x1="'+px+'" y1="'+BOTTOM+'" x2="'+px+'" y2="'+(BOTTOM+5)+'" stroke="#57748d"/>'+svgText(px,startY,(longWindow?day.slice(0,7):day.slice(5)),"middle");
  }).join("");
  const cursor=(color)=>'<line class="cross-cursor-horizontal" x1="'+LEFT+'" y1="0" x2="'+RIGHT+'" y2="0" visibility="hidden"/><line class="cross-cursor-line" x1="'+LEFT+'" y1="24" x2="'+LEFT+'" y2="'+BOTTOM+'"/><circle class="cross-cursor-halo" cx="'+LEFT+'" cy="0" r="7" visibility="hidden"/><circle class="cross-cursor-point" cx="'+LEFT+'" cy="0" r="4.5" fill="'+color+'" visibility="hidden"/><g class="cross-cursor-tooltip"><rect x="38" y="1" width="138" height="21"/><text x="107" y="15" text-anchor="middle">選取日期</text></g>';
  const renderRow=(s)=>{
@@ -1289,7 +1306,7 @@ function showHistory(){
   const yDigits=chartMode==="indexed"&&s.kind==="line"?1:digits;
   const ylabels=svgText(33,38,historyFormat(hi,yDigits),"end")+svgText(33,BOTTOM+3,historyFormat(lo,yDigits),"end");
   const baseline=s.kind==="spread"||s.kind==="cumulative"||s.kind==="flow"?'<line x1="'+LEFT+'" y1="'+Y(0)+'" x2="'+RIGHT+'" y2="'+Y(0)+'" stroke="#a6bbc9" stroke-dasharray="4,5"/>':chartMode==="indexed"&&s.kind==="line"?'<line x1="'+LEFT+'" y1="'+Y(100)+'" x2="'+RIGHT+'" y2="'+Y(100)+'" stroke="#c7b27b" stroke-dasharray="4,6" opacity=".7"/>':"";
-  const bars=s.kind==="flow"?chartRows.map(p=>'<line x1="'+s.scale.x(p.date).toFixed(1)+'" x2="'+s.scale.x(p.date).toFixed(1)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(p.v).toFixed(1)+'" stroke="'+(p.v>=0?"#f0a6b5":"#75d6a7")+'" stroke-width="'+Math.max(2,Math.min(12,600/chartDays)).toFixed(1)+'" stroke-linecap="round"/>').join(""):"";
+  const bars=s.kind==="flow"?chartRows.map(p=>'<line x1="'+s.scale.x(p.date).toFixed(1)+'" x2="'+s.scale.x(p.date).toFixed(1)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(p.v).toFixed(1)+'" stroke="'+(p.v>=0?"#f0a6b5":"#75d6a7")+'" stroke-width="'+Math.max(2,Math.min(12,600/Math.max(1,longWindow?timelineDays.length:Number(chartDays)))).toFixed(1)+'" stroke-linecap="round"/>').join(""):"";
   const main=s.kind==="flow"?bars:'<polyline points="'+plot+'" stroke="'+color+'" fill="none" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>';
   const maCurves=MA_PERIODS.map(n=>{
    if(!maIsOn(s.key,n))return "";
@@ -1337,12 +1354,12 @@ function showHistory(){
   const compact=c.layout!=="standard";
   const panel=compact?[{start:27,end:185},{start:212,end:271},{start:299,end:365}]:[{start:30,end:270},{start:306,end:394},{start:430,end:535}];
   const svgBottom=compact?391:571;
-  const sessionScale=marketSessionScale(top.map(r=>r.date));
+  const sessionScale=marketSessionScale(longWindow?[...top,...topCandles,...middle,...osc].map(r=>r.date):top.map(r=>r.date));
   const sessionDates=sessionScale.days;
   const x=d=>sessionScale.days.length?sessionScale.x(d):X(marketChartDate(d));
   const bounds=(values,zero=false)=>{
    const nums=values.filter(Number.isFinite);
-   const a=nums.length?Math.min(...nums):0,b=nums.length?Math.max(...nums):1,lo=zero?Math.min(a,0):a,hi=zero?Math.max(b,0):b;
+   const a=nums.length?nums.reduce((a,v)=>Math.min(a,v),Infinity):0,b=nums.length?nums.reduce((b,v)=>Math.max(b,v),-Infinity):1,lo=zero?Math.min(a,0):a,hi=zero?Math.max(b,0):b;
    const pad=Math.max((hi-lo)*.07,Math.abs(hi)*.002,.0001);
    return [lo-pad,hi+pad];
   };
@@ -1380,7 +1397,7 @@ function showHistory(){
    const midLines=midBars?middleDisplay.map(r=>
     '<line x1="'+x(r.date)+'" x2="'+x(r.date)+'" y1="'+ys[1](0)+'" y2="'+ys[1](r.value)+
     '" stroke="'+(isMonetary?"#438fca":r.value>=0?"#d41c1c":"#65b206")+
-    '" stroke-width="'+(isMonetary?Math.max(1.5,Math.min(9,560/Math.max(1,sessionDates.length))):Math.max(2,Math.min(9,600/chartDays)))+'"/>'
+    '" stroke-width="'+(isMonetary?Math.max(1.5,Math.min(9,560/Math.max(1,sessionDates.length))):Math.max(2,Math.min(9,600/Math.max(1,longWindow?timelineDays.length:Number(chartDays)))))+'"/>'
    ).join(""):line(middleDisplay,"value",ys[1],"#bf6810",2.3);
    const midRatioLine=dualTurnover?line(middleDisplay,"ratio",ratioY,"#e97800",2):"";
    const twToday=marketLocalDay("taiex"),noSameDay=middle.every(r=>r.date!==twToday);
@@ -1409,7 +1426,7 @@ function showHistory(){
    let oscLines;
   if(c.oscillator==="MACD"){
    oscLines='<line x1="38" x2="758" y1="'+ys[2](0)+'" y2="'+ys[2](0)+'" stroke="#7b8794" stroke-dasharray="5 4"/>'+
-   oscDisplay.filter(r=>Number.isFinite(r.hist)).map(r=>'<line x1="'+x(r.date)+'" x2="'+x(r.date)+'" y1="'+ys[2](0)+'" y2="'+ys[2](r.hist)+'" stroke="'+(r.hist>=0?"#2f9c4d":"#d94a4a")+'" stroke-width="'+Math.max(2,Math.min(8,600/chartDays))+'"/>').join("")+
+   oscDisplay.filter(r=>Number.isFinite(r.hist)).map(r=>'<line x1="'+x(r.date)+'" x2="'+x(r.date)+'" y1="'+ys[2](0)+'" y2="'+ys[2](r.hist)+'" stroke="'+(r.hist>=0?"#2f9c4d":"#d94a4a")+'" stroke-width="'+Math.max(2,Math.min(8,600/Math.max(1,longWindow?timelineDays.length:Number(chartDays))))+'"/>').join("")+
    line(oscDisplay,"macd",ys[2],"#0879ad",2)+line(oscDisplay,"signal",ys[2],"#d08100",2);
   } else if(c.oscillator==="KD"){
    oscLines=kdAvailable?line(oscDisplay,"k",ys[2],"#0879ad",2.5)+line(oscDisplay,"d",ys[2],"#ce8100",2.3)+[20,80].map(v=>'<line x1="38" x2="758" y1="'+ys[2](v)+'" y2="'+ys[2](v)+'" stroke="#bcb5c3" stroke-dasharray="5 5"/>').join(""):'<text x="42" y="'+((panel[2].start+panel[2].end)/2)+'" fill="#80502c" font-size="12">KD 需要加權或 S&amp;P 500 指數的完整 OHLC</text>';
@@ -1429,7 +1446,7 @@ function showHistory(){
   const xticks=[0,.25,.5,.75,1].map(k=>{
    const days=sessionDates.length?sessionDates:timelineDays;
    const day=days[Math.round((days.length-1)*k)]||new Date(start).toISOString().slice(0,10);
-   return '<text x="'+x(day)+'" y="'+(compact?384:559)+'" fill="#526475" text-anchor="middle" font-size="11">'+day.slice(5)+'</text>';
+   return '<text x="'+x(day)+'" y="'+(compact?384:559)+'" fill="#526475" text-anchor="middle" font-size="11">'+(longWindow?day.slice(0,7):day.slice(5))+'</text>';
   }).join("");
   const hoverMarkup='<g data-tech-hover="1" visibility="hidden" pointer-events="none">'+
     [0,1,2].map(i=>'<g data-tech-hover-axis="'+i+'" visibility="hidden">'+
@@ -1459,13 +1476,13 @@ function showHistory(){
       '（非正式收盤；報價可能延遲）</div>':"";
    const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層：籌碼")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。指數日K最右側會顯示交易當日暫定K，盤中更新同一根，不覆蓋正式歷史母檔。中層可切換成交金額（億元）、當沖成交金額占比（%）或雙軸合併圖；雙軸左側為成交億元，右側為當沖占比，不使用成交股數。其他籌碼指標維持原定義。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
-  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 信用交易指標 v2026.11.20.9</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+[20,60,120,240].map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+n+'日</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
+  return {sessionScale,topCandles,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 長期時間軸 v2026.11.22.1</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
  chartContext={start,end,series,dates:uniqueDays,x:X,timelineDays,technicalStack};
  const counts=series.map(s=>s.label+":"+s.rows.length).join("｜");
- note.textContent="顯示範圍：最近 "+chartDays+" 個已收盤台股交易日（"+(windowSessions[0]||"—")+" 至 "+(windowSessions.at(-1)||"—")+"）；盤中暫定 K 線可能另顯示當日。外資買賣超及外資累積買賣超均採用 market-history.json 的逐日資料。外資累積值以 2025/11/20 收盤為零，切換圖表區間時沿用同一基準。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
+ note.textContent="顯示範圍："+(longWindow?(chartDays==="max"?"Max 全部歷史":"最近 "+chartWindows[chartDays]):"最近 "+chartDays+" 個已收盤台股交易日")+"（"+(longWindow?new Date(start).toISOString().slice(0,10):windowSessions[0]||"—")+" 至 "+(longWindow?new Date(end).toISOString().slice(0,10):windowSessions.at(-1)||"—")+"）；盤中暫定 K 線可能另顯示當日。外資買賣超及外資累積買賣超均採用 market-history.json 的逐日資料。外資累積值以 2025/11/20 收盤為零，切換圖表區間時沿用同一基準。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
  if(uniqueDays.length)syncChartCursor(chartCursorDate||uniqueDays.at(-1));
  else{$("crossCursorDate").textContent="無可比較日期";$("crossCursorCoverage").textContent="等待歷史資料"}
 }
@@ -1578,10 +1595,10 @@ crossHost.addEventListener("click",event=>{
  if(controlBtn){event.preventDefault();toggleTechnicalControls();return}
  const win=event.target.closest?.("[data-tech-window]");
  if(win){
-  const n=Number(win.dataset.techWindow);
-  if([20,60,120,240].includes(n)){
+  const n=win.dataset.techWindow;
+  if(Object.hasOwn(chartWindows,n)){
    chartDays=n;
-   document.querySelectorAll("[data-window]").forEach(b=>b.classList.toggle("active",Number(b.dataset.window)===n));
+   document.querySelectorAll("[data-window]").forEach(b=>b.classList.toggle("active",b.dataset.window===n));
    showHistory();
   }
   event.preventDefault();return;
@@ -1668,7 +1685,7 @@ crossHost.addEventListener("keydown",event=>{
  if(next){event.preventDefault();syncChartCursor(next)}
 });
 document.querySelectorAll("[data-window]").forEach(btn=>btn.addEventListener("click",()=>{
- chartDays=Number(btn.dataset.window);document.querySelectorAll("[data-window]").forEach(b=>b.classList.toggle("active",b===btn));showHistory()
+ chartDays=btn.dataset.window;document.querySelectorAll("[data-window]").forEach(b=>b.classList.toggle("active",b===btn));showHistory()
 }));
 document.querySelectorAll("[data-mode]").forEach(btn=>btn.addEventListener("click",()=>{
  chartMode=btn.dataset.mode;document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("active",b===btn));showHistory()
