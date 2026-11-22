@@ -830,9 +830,252 @@ const TECH_CREDIT_SERIES={
  creditDisposalAccounts:{label:"次一營業日應處分戶數",unit:"戶",divisor:1},
  creditDisposalAmountTwd:{label:"次一營業日應處分金額（億元）",unit:"億元",divisor:1e8}
 };
-const TECH_SOURCE_KEYS=[...TECH_PRICE_KEYS,...Object.keys(TECH_CREDIT_SERIES),
- "foreignNetYi","marginDailyYi","foreignCumulativeYi","marginMaintenanceExEtf","marketTurnoverYiTwd",
- "dayTradeTurnoverYiTwd","dayTradeTurnoverSharePct","turnoverWithDayTrade"];
+const TECH_GROUPS={
+ "台灣｜股票、ETF 與指數": "taiex taiexK 2330TW 006208TW",
+ "台灣｜法人、期貨與融資": "foreignNetYi foreignCumulativeYi foreignTxOpenInterestNetContracts marginBalanceYi marginDailyYi marginMaintenanceExEtf",
+ "台灣｜追繳與處分": "creditBelow130Accounts creditCallAmountTwd creditDisposalAccounts creditDisposalAmountTwd",
+ "台灣｜成交與當沖": "marketTurnoverYiTwd dayTradeTurnoverYiTwd dayTradeTurnoverSharePct turnoverWithDayTrade",
+ "台灣｜估值、獲利與外銷": "twPe twPb twNet orders",
+ "美國｜股票、ETF 與估值": "sp500K IXIC SOX voo qqq forwardPe",
+ "美國｜市場情緒與波動": "vix move cnnFearGreed",
+ "美國｜企業信用": "hyOas singleBOas cccOas cccYield",
+ "美國｜政策利率與短期資金": "fedFundsEffective sofr iorb sofrMinusIorbBp tgcr",
+ "美國｜公債曲線與期限溢酬": "us1y us2y us3y us5y us10yYield us30y us10y2ySpread acm10",
+ "美國｜通膨預期": "t5yie t10yie inflation5y5y",
+ "美國｜經濟、就業與消費": "gdp PAYEMS PCEC96 RSAFS UMCSENT",
+ "美國｜金融狀況、銀行與房貸": "nfci delinq willing DRTSCILM mortgage",
+ "跨市場｜外匯": "usdtwd dxy",
+ "全球｜貴金屬與能源": "goldSpot goldFuturesUsd wtiFuturesUsd"
+};
+const TECH_SOURCE_KEYS=Object.values(TECH_GROUPS).flatMap(keys=>keys.split(" "));
+const CENTER_META={
+ "2330TW": [
+  "台積電 2330（元）",
+  "日",
+  "Yahoo Finance 收盤價"
+ ],
+ "006208TW": [
+  "富邦台50 006208（元）",
+  "日",
+  "Yahoo Finance 收盤價"
+ ],
+ "IXIC": [
+  "Nasdaq 綜合指數",
+  "日",
+  "Yahoo Finance 收盤價"
+ ],
+ "SOX": [
+  "費城半導體指數",
+  "日",
+  "Yahoo Finance 收盤價"
+ ],
+ "foreignTxOpenInterestNetContracts": [
+  "外資台指期淨未平倉（口）",
+  "日",
+  "daily.csv"
+ ],
+ "marginBalanceYi": [
+  "上市融資餘額（億元）",
+  "日",
+  "daily.csv"
+ ],
+ "cnnFearGreed": [
+  "CNN 恐懼與貪婪指數",
+  "日",
+  "daily.csv"
+ ],
+ "move": [
+  "MOVE 美債波動率",
+  "日",
+  "daily.csv"
+ ],
+ "goldFuturesUsd": [
+  "黃金期貨（美元／盎司）",
+  "日",
+  "daily.csv"
+ ],
+ "wtiFuturesUsd": [
+  "WTI 原油期貨（美元／桶）",
+  "日",
+  "daily.csv"
+ ],
+ "tgcr": [
+  "TGCR（%）",
+  "日",
+  "daily.csv"
+ ],
+ "us1y": [
+  "美債 1 年殖利率（%）",
+  "日",
+  "daily.csv"
+ ],
+ "us2y": [
+  "美債 2 年殖利率（%）",
+  "日",
+  "daily.csv"
+ ],
+ "us3y": [
+  "美債 3 年殖利率（%）",
+  "日",
+  "daily.csv"
+ ],
+ "us5y": [
+  "美債 5 年殖利率（%）",
+  "日",
+  "daily.csv"
+ ],
+ "us30y": [
+  "美債 30 年殖利率（%）",
+  "日",
+  "daily.csv"
+ ],
+ "goldSpot": [
+  "黃金現貨（美元／盎司）",
+  "日",
+  "MetalCharts 收盤價"
+ ],
+ "cccOas": [
+  "CCC 級及以下信用利差（%）",
+  "日",
+  "FRED BAMLH0A3HYC"
+ ],
+ "cccYield": [
+  "CCC 級及以下有效殖利率（%）",
+  "日",
+  "FRED BAMLH0A3HYCEY"
+ ],
+ "singleBOas": [
+  "Single-B 信用利差（%）",
+  "日",
+  "FRED BAMLH0A2HYB"
+ ],
+ "sofr": [
+  "SOFR（%）",
+  "日",
+  "FRED SOFR"
+ ],
+ "iorb": [
+  "IORB（%）",
+  "日",
+  "FRED IORB"
+ ],
+ "t5yie": [
+  "5 年通膨預期（%）",
+  "日",
+  "FRED T5YIE"
+ ],
+ "t10yie": [
+  "10 年通膨預期（%）",
+  "日",
+  "FRED T10YIE"
+ ],
+ "inflation5y5y": [
+  "5Y5Y 遠期通膨預期（%）",
+  "日",
+  "FRED T5YIFR"
+ ],
+ "gdp": [
+  "美國實質 GDP（十億鏈鎖美元）",
+  "季",
+  "FRED GDPC1"
+ ],
+ "nfci": [
+  "NFCI 金融狀況指數",
+  "週",
+  "FRED NFCI"
+ ],
+ "delinq": [
+  "商業貸款拖欠率（%）",
+  "季",
+  "FRED DRBLACBS"
+ ],
+ "willing": [
+  "銀行承作消費分期貸款淨意願（%）",
+  "季",
+  "FRED DRIWCIL"
+ ],
+ "mortgage": [
+  "30 年固定房貸利率（%）",
+  "週",
+  "FRED MORTGAGE30US"
+ ],
+ "sofrMinusIorbBp": [
+  "SOFR−IORB（基點）",
+  "日",
+  "同日 SOFR 減 IORB"
+ ],
+ "acm10": [
+  "ACM 10 年期限溢酬（%）",
+  "日",
+  "紐約聯準銀行 ACM"
+ ],
+ "forwardPe": [
+  "美股預估本益比（倍）",
+  "月",
+  "聯準會金融穩定報告"
+ ],
+ "DRTSCILM": [
+  "銀行收緊大中型企業工商貸款標準淨比例（%）",
+  "季",
+  "FRED DRTSCILM"
+ ],
+ "PAYEMS": [
+  "非農就業（千人）",
+  "月",
+  "FRED PAYEMS"
+ ],
+ "PCEC96": [
+  "實質個人消費支出（十億鏈鎖美元）",
+  "月",
+  "FRED PCEC96"
+ ],
+ "RSAFS": [
+  "零售及餐飲銷售（百萬美元）",
+  "月",
+  "FRED RSAFS"
+ ],
+ "UMCSENT": [
+  "密西根大學消費者信心",
+  "月",
+  "FRED UMCSENT"
+ ],
+ "orders": [
+  "台灣外銷訂單（億美元）",
+  "月",
+  "經濟部"
+ ],
+ "twPe": [
+  "台股本益比（倍）",
+  "月",
+  "MacroMicro 近期觀測"
+ ],
+ "twPb": [
+  "台股淨值比（倍）",
+  "月",
+  "MacroMicro 近期觀測"
+ ],
+ "twNet": [
+  "上市公司稅後淨利（原表數值）",
+  "季",
+  "MacroMicro 近期觀測"
+ ]
+};
+let centerRows={},centerError="",centerLoading=null;
+function fetchCenterHistory(){
+ if(centerLoading)return centerLoading;
+ centerLoading=fetch("./market-center-history.json",{cache:"no-cache"}).then(async response=>{
+  if(!response.ok)throw Error("HTTP "+response.status);
+  const input=await response.json(),next={};
+  for(const key of Object.keys(CENTER_META)){
+   if(!Array.isArray(input[key])||!input[key].length)throw Error("缺少 "+key);
+   next[key]=input[key].map(([date,value])=>({date,value}));
+  }
+  centerRows=next;centerError="";
+ }).catch(e=>{centerError="資料中心歷史檔載入失敗："+e.message;centerLoading=null}).finally(showHistory);
+ return centerLoading;
+}
+const FED_REPORTS=[["2026-11-20","https://www.spf.com.tw/upload/sinopac/researchContent/1a1f68051f800000056d.pdf"],["2026-11-19","https://www.spf.com.tw/upload/sinopac/researchContent/1a1f1fd3fa6000004b1a.pdf"],["2026-11-18","https://www.spf.com.tw/upload/sinopac/researchContent/1a1ec32880d000008624.pdf"],["2026-11-17","https://www.spf.com.tw/upload/sinopac/researchContent/1a1e70ebfb20000002b2.pdf"],["2026-11-16","https://www.spf.com.tw/upload/sinopac/researchContent/1a1e1e82d6e000002d3c.pdf"],["2026-11-13","https://www.spf.com.tw/upload/sinopac/researchContent/1a1d28b2a370000048c2.pdf"],["2026-11-12","https://www.spf.com.tw/upload/sinopac/researchContent/1a1cd404ab300000579e.pdf"],["2026-11-11","https://www.spf.com.tw/upload/sinopac/researchContent/1a1c8304bdf000008251.pdf"],["2026-11-10","https://www.spf.com.tw/upload/sinopac/researchContent/1a1c2ee4b95000009c3e.pdf"],["2026-11-09","https://www.spf.com.tw/upload/sinopac/researchContent/1a1bddf6850000008e0a.pdf"],["2026-11-06","https://www.spf.com.tw/upload/sinopac/researchContent/1a1ae597a8e00000870b.pdf"],["2026-11-05","https://www.spf.com.tw/upload/sinopac/researchContent/1a1a92fe0cb00000b358.pdf"],["2026-11-04","https://www.spf.com.tw/upload/sinopac/researchContent/1a1a40df64f000001e3c.pdf"],["2026-11-03","https://www.spf.com.tw/upload/sinopac/researchContent/1a19eef4ab400000a853.pdf"],["2026-11-02","https://www.spf.com.tw/upload/sinopac/researchContent/1a199c1aaa2000008bfc.pdf"],["2026-10-30","https://www.spf.com.tw/upload/sinopac/researchContent/1a18a81fc02000002f20.pdf"],["2026-10-29","https://www.spf.com.tw/upload/sinopac/researchContent/1a1852fc3700000062db.pdf"],["2026-10-28","https://www.spf.com.tw/upload/sinopac/researchContent/1a18004c7960000095e7.pdf"],["2026-10-27","https://www.spf.com.tw/upload/sinopac/researchContent/1a17b03fc9c000006ea3.pdf"],["2026-10-22","https://www.spf.com.tw/upload/sinopac/researchContent/1a1613bfef400000658c.pdf"],["2026-10-21","https://www.spf.com.tw/upload/sinopac/researchContent/1a15c17cd7a000004a7a.pdf"],["2026-10-20","https://www.spf.com.tw/upload/sinopac/researchContent/1a156c7ce770000044ac.pdf"],["2026-10-19","https://www.spf.com.tw/upload/sinopac/researchContent/1a151b2b31b0000050f5.pdf"],["2026-10-16","https://www.spf.com.tw/upload/sinopac/researchContent/1a14231bf3100000895b.pdf"],["2026-10-15","https://www.spf.com.tw/upload/sinopac/researchContent/1a13d2e93fe00000221c.pdf"],["2026-10-14","https://www.spf.com.tw/upload/sinopac/researchContent/1a138152e56000002b7a.pdf"],["2026-10-13","https://www.spf.com.tw/upload/sinopac/researchContent/1a132ce033c000002985.pdf"],["2026-10-12","https://www.spf.com.tw/upload/sinopac/researchContent/1a12dd046650000002a2.pdf"],["2026-10-08","https://www.spf.com.tw/upload/sinopac/researchContent/1a118fe58480000005e7.pdf"],["2026-10-07","https://www.spf.com.tw/upload/sinopac/researchContent/1a114895e840000090a4.pdf"],["2026-10-06","https://www.spf.com.tw/upload/sinopac/researchContent/1a10ecc3c1c00000c100.pdf"],["2026-10-05","https://www.spf.com.tw/upload/sinopac/researchContent/1a109a74f55000004803.pdf"],["2026-10-02","https://www.spf.com.tw/upload/sinopac/researchContent/1a0fa18eda8000002503.pdf"],["2026-10-01","https://www.spf.com.tw/upload/sinopac/researchContent/1a0f535b129000000cd5.pdf"],["2026-09-30","https://www.spf.com.tw/upload/sinopac/researchContent/1a0efce81d8000009097.pdf"],["2026-09-29","https://www.spf.com.tw/upload/sinopac/researchContent/1a0eaf10d7a00000bf00.pdf"],["2026-09-24","https://www.spf.com.tw/upload/sinopac/researchContent/1a0d10701bf000000587.pdf"],["2026-09-23","https://www.spf.com.tw/upload/sinopac/researchContent/1a0cbf47f9700000681c.pdf"],["2026-09-22","https://www.spf.com.tw/upload/sinopac/researchContent/1a0c6b1aa6c00000ade9.pdf"],["2026-09-21","https://www.spf.com.tw/upload/sinopac/researchContent/1a0c1723054000009986.pdf"],["2026-09-18","https://www.spf.com.tw/upload/sinopac/researchContent/1a0b1fc79d900000bc02.pdf"],["2026-09-17","https://www.spf.com.tw/upload/sinopac/researchContent/1a0acdd3609000001db1.pdf"],["2026-09-16","https://www.spf.com.tw/upload/sinopac/researchContent/1a0a7eaacff00000b14f.pdf"],["2026-09-15","https://www.spf.com.tw/upload/sinopac/researchContent/1a0a28d4b3800000454b.pdf"],["2026-09-14","https://www.spf.com.tw/upload/sinopac/researchContent/1a09d63c130000003040.pdf"],["2026-09-11","https://www.spf.com.tw/upload/sinopac/researchContent/1a08df1609700000acc7.pdf"],["2026-09-10","https://www.spf.com.tw/upload/sinopac/researchContent/1a088cd95cc000006fe9.pdf"],["2026-09-09","https://www.spf.com.tw/upload/sinopac/researchContent/1a083ee32810000030df.pdf"],["2026-09-08","https://www.spf.com.tw/upload/sinopac/researchContent/1a07e811179000001335.pdf"],["2026-09-07","https://www.spf.com.tw/upload/sinopac/researchContent/1a0794d54ca000002233.pdf"],["2026-09-04","https://www.spf.com.tw/upload/sinopac/researchContent/1a069ed6d7b000007005.pdf"],["2026-09-03","https://www.spf.com.tw/upload/sinopac/researchContent/1a064bbe711000003e3e.pdf"],["2026-09-02","https://www.spf.com.tw/upload/sinopac/researchContent/1a05fb13d42000009921.pdf"],["2026-09-01","https://www.spf.com.tw/upload/sinopac/researchContent/1a05a70fb090000037f1.pdf"],["2026-08-31","https://www.spf.com.tw/upload/sinopac/researchContent/1a05541f493000008de1.pdf"],["2026-08-28","https://www.spf.com.tw/upload/sinopac/researchContent/1a045e6b51f00000bb43.pdf"],["2026-08-27","https://www.spf.com.tw/upload/sinopac/researchContent/1a040c1d78e000005ae8.pdf"],["2026-08-26","https://www.spf.com.tw/upload/sinopac/researchContent/1a03b9121250000078e9.pdf"],["2026-08-25","https://www.spf.com.tw/upload/sinopac/researchContent/1a0366e0b15000001956.pdf"],["2026-08-24","https://www.spf.com.tw/upload/sinopac/researchContent/1a03144d02d000004507.pdf"],["2026-08-21","https://www.spf.com.tw/upload/sinopac/researchContent/1a0220b72be00000212b.pdf"],["2026-08-20","https://www.spf.com.tw/upload/sinopac/researchContent/1a01cc7b7a9000005354.pdf"],["2026-08-19","https://www.spf.com.tw/upload/sinopac/researchContent/1a017bff9db00000c32e.pdf"],["2026-08-14","https://www.spf.com.tw/upload/sinopac/researchContent/19ffdd0f79800000237f.pdf"],["2026-08-13","https://www.spf.com.tw/upload/sinopac/researchContent/19ff8ae32fc0000084a9.pdf"],["2026-08-12","https://www.spf.com.tw/upload/sinopac/researchContent/19ff393cd1c000000e49.pdf"],["2026-08-11","https://www.spf.com.tw/upload/sinopac/researchContent/19fee4e4987000001222.pdf"],["2026-08-10","https://www.spf.com.tw/upload/sinopac/researchContent/19fe924091a000004a89.pdf"],["2026-08-07","https://www.spf.com.tw/upload/sinopac/researchContent/19fd9da94bb000000d71.pdf"],["2026-08-06","https://www.spf.com.tw/upload/sinopac/researchContent/19fd48f5617000004ede.pdf"],["2026-08-05","https://www.spf.com.tw/upload/sinopac/researchContent/19fcf8ce9e60000047e3.pdf"],["2026-08-04","https://www.spf.com.tw/upload/sinopac/researchContent/19fca3e5a7f000009e94.pdf"],["2026-08-03","https://www.spf.com.tw/upload/sinopac/researchContent/19fc521bf46000000c07.pdf"],["2026-07-31","https://www.spf.com.tw/upload/sinopac/researchContent/19fb59ab062000002297.pdf"],["2026-07-30","https://www.spf.com.tw/upload/sinopac/researchContent/19fb080d420000009467.pdf"],["2026-07-29","https://www.spf.com.tw/upload/sinopac/researchContent/19fab65ecba0000060a4.pdf"],["2026-07-28","https://www.spf.com.tw/upload/sinopac/researchContent/19fa635595b000004015.pdf"],["2026-07-27","https://www.spf.com.tw/upload/sinopac/researchContent/19fa10fd129000005829.pdf"],["2026-07-24","https://www.spf.com.tw/upload/sinopac/researchContent/19f91a8767900000718d.pdf"],["2026-07-23","https://www.spf.com.tw/upload/sinopac/researchContent/19f8c6a1de700000ac52.pdf"],["2026-07-22","https://www.spf.com.tw/upload/sinopac/researchContent/19f8771c3d4000004633.pdf"],["2026-07-21","https://www.spf.com.tw/upload/sinopac/researchContent/19f821b45c500000b4d8.pdf"],["2026-07-20","https://www.spf.com.tw/upload/sinopac/researchContent/19f7d05d4760000019e9.pdf"],["2026-07-17","https://www.spf.com.tw/upload/sinopac/researchContent/19f6d8d22a50000047b4.pdf"],["2026-07-16","https://www.spf.com.tw/upload/sinopac/researchContent/19f6866078f000000b6b.pdf"],["2026-07-15","https://www.spf.com.tw/upload/sinopac/researchContent/19f634377a3000007d2f.pdf"],["2026-07-14","https://www.spf.com.tw/upload/sinopac/researchContent/19f5e12df670000087a9.pdf"],["2026-07-13","https://www.spf.com.tw/upload/sinopac/researchContent/19f58ec182600000abd7.pdf"],["2026-07-09","https://www.spf.com.tw/upload/sinopac/researchContent/19f44824eff000005a9a.pdf"],["2026-07-08","https://www.spf.com.tw/upload/sinopac/researchContent/19f3f3c85e5000002812.pdf"],["2026-07-07","https://www.spf.com.tw/upload/sinopac/researchContent/19f3a1545a70000032bf.pdf"],["2026-07-06","https://www.spf.com.tw/upload/sinopac/researchContent/19f35046973000002ef7.pdf"],["2026-07-03","https://www.spf.com.tw/upload/sinopac/researchContent/19f25f025ee0000074e0.pdf"],["2026-07-03","https://www.spf.com.tw/upload/sinopac/researchContent/19f25892e74000000642.pdf"],["2026-07-02","https://www.spf.com.tw/upload/sinopac/researchContent/19f203d741b0000063cf.pdf"],["2026-07-01","https://www.spf.com.tw/upload/sinopac/researchContent/19f1b1f649c000008a04.pdf"],["2026-06-30","https://www.spf.com.tw/upload/sinopac/researchContent/19f160091dd00000513d.pdf"],["2026-06-29","https://www.spf.com.tw/upload/sinopac/researchContent/19f10da962100000355f.pdf"],["2026-06-26","https://www.spf.com.tw/upload/sinopac/researchContent/19f021632a9000001688.pdf"],["2026-06-25","https://www.spf.com.tw/upload/sinopac/researchContent/19efcfb9fc700000619d.pdf"],["2026-06-24","https://www.spf.com.tw/upload/sinopac/researchContent/19ef726c55f00000318e.pdf"],["2026-06-23","https://www.spf.com.tw/upload/sinopac/researchContent/19ef2067cfb0000075d4.pdf"],["2026-06-22","https://www.spf.com.tw/upload/sinopac/researchContent/19eecf2bf9200000ad6d.pdf"],["2026-06-18","https://www.spf.com.tw/upload/sinopac/researchContent/19ed85b108b00000b9c0.pdf"],["2026-06-17","https://www.spf.com.tw/upload/sinopac/researchContent/19ed31acd8f000009de5.pdf"],["2026-06-16","https://www.spf.com.tw/upload/sinopac/researchContent/19ecdf8a9a900000a42e.pdf"],["2026-06-15","https://www.spf.com.tw/upload/sinopac/researchContent/19ec8c7ce0f000000aa5.pdf"],["2026-06-12","https://www.spf.com.tw/upload/sinopac/researchContent/19eb9611b55000003c61.pdf"],["2026-06-11","https://www.spf.com.tw/upload/sinopac/researchContent/19eb431936d00000a851.pdf"],["2026-06-10","https://www.spf.com.tw/upload/sinopac/researchContent/19eaf1db236000005810.pdf"],["2026-06-09","https://www.spf.com.tw/upload/sinopac/researchContent/19ea9e6cd20000004800.pdf"],["2026-06-08","https://www.spf.com.tw/upload/sinopac/researchContent/19ea529441f000001a2d.pdf"],["2026-06-05","https://www.spf.com.tw/upload/sinopac/researchContent/19e9550227e00000c1ec.pdf"],["2026-06-04","https://www.spf.com.tw/upload/sinopac/researchContent/19e903a76be0000071f3.pdf"],["2026-06-03","https://www.spf.com.tw/upload/sinopac/researchContent/19e8af3e4a7000009196.pdf"],["2026-06-02","https://www.spf.com.tw/upload/sinopac/researchContent/19e85d6be9a000009cc6.pdf"],["2026-06-01","https://www.spf.com.tw/upload/sinopac/researchContent/19e80aa5fce000008909.pdf"],["2026-05-29","https://www.spf.com.tw/upload/sinopac/researchContent/19e71397c10000006566.pdf"],["2026-05-28","https://www.spf.com.tw/upload/sinopac/researchContent/19e6c34eedf00000b9f5.pdf"],["2026-05-27","https://www.spf.com.tw/upload/sinopac/researchContent/19e66fff686000004039.pdf"],["2026-05-26","https://www.spf.com.tw/upload/sinopac/researchContent/19e61b817e500000c253.pdf"],["2026-05-25","https://www.spf.com.tw/upload/sinopac/researchContent/19e5c9f40b800000036f.pdf"],["2026-05-22","https://www.spf.com.tw/upload/sinopac/researchContent/19e4d51e74800000558c.pdf"],["2026-05-21","https://www.spf.com.tw/upload/sinopac/researchContent/19e481f93f9000008d25.pdf"],["2026-05-20","https://www.spf.com.tw/upload/sinopac/researchContent/19e431becb5000002e9c.pdf"],["2026-05-19","https://www.spf.com.tw/upload/sinopac/researchContent/19e3df7c04200000aa1d.pdf"],["2026-05-18","https://www.spf.com.tw/upload/sinopac/researchContent/19e389bf969000001e22.pdf"],["2026-05-15","https://www.spf.com.tw/upload/sinopac/researchContent/19e292248e80000011c5.pdf"],["2026-05-14","https://www.spf.com.tw/upload/sinopac/researchContent/19e24068e30000007ba8.pdf"],["2026-05-13","https://www.spf.com.tw/upload/sinopac/researchContent/19e1edfb41400000658d.pdf"],["2026-05-12","https://www.spf.com.tw/upload/sinopac/researchContent/19e19bb6d69000008bc4.pdf"],["2026-05-11","https://www.spf.com.tw/upload/sinopac/researchContent/19e148860fc000005825.pdf"],["2026-05-08","https://www.spf.com.tw/upload/sinopac/researchContent/19e051f950f000007972.pdf"],["2026-05-07","https://www.spf.com.tw/upload/sinopac/researchContent/19e0011352c00000259b.pdf"],["2026-05-06","https://www.spf.com.tw/upload/sinopac/researchContent/19dfaf8649200000a424.pdf"],["2026-05-05","https://www.spf.com.tw/upload/sinopac/researchContent/19df5ae0e35000001b79.pdf"],["2026-05-04","https://www.spf.com.tw/upload/sinopac/researchContent/19df1323557000007dbd.pdf"],["2026-04-30","https://www.spf.com.tw/upload/sinopac/researchContent/19ddbe59851000007d03.pdf"],["2026-04-29","https://www.spf.com.tw/upload/sinopac/researchContent/19dd6c12fbc000005b84.pdf"],["2026-04-28","https://www.spf.com.tw/upload/sinopac/researchContent/19dd18e7aef000002595.pdf"],["2026-04-27","https://www.spf.com.tw/upload/sinopac/researchContent/19dcd08e30d0000077fc.pdf"],["2026-04-24","https://www.spf.com.tw/upload/sinopac/researchContent/19dbd04223e000004911.pdf"],["2026-04-23","https://www.spf.com.tw/upload/sinopac/researchContent/19db7d485dc00000709a.pdf"],["2026-04-22","https://www.spf.com.tw/upload/sinopac/researchContent/19db2b0ce4a000009674.pdf"],["2026-04-21","https://www.spf.com.tw/upload/sinopac/researchContent/19dad870eb1000005547.pdf"],["2026-04-20","https://www.spf.com.tw/upload/sinopac/researchContent/19da862f709000000679.pdf"],["2026-04-17","https://www.spf.com.tw/upload/sinopac/researchContent/19d99047352000000fac.pdf"],["2026-04-16","https://www.spf.com.tw/upload/sinopac/researchContent/19d93c534730000054bb.pdf"],["2026-04-15","https://www.spf.com.tw/upload/sinopac/researchContent/19d8ea6d400000004aec.pdf"],["2026-04-14","https://www.spf.com.tw/upload/sinopac/researchContent/19d897f99320000002d4.pdf"],["2026-04-13","https://www.spf.com.tw/upload/sinopac/researchContent/19d8456bb5b000002b1f.pdf"],["2026-04-10","https://www.spf.com.tw/upload/sinopac/researchContent/19d74d4eb3b0000063ec.pdf"],["2026-04-09","https://www.spf.com.tw/upload/sinopac/researchContent/19d6fb55c7e0000058ae.pdf"],["2026-04-08","https://www.spf.com.tw/upload/sinopac/researchContent/19d6a974ff50000053fa.pdf"],["2026-04-07","https://www.spf.com.tw/upload/sinopac/researchContent/19d65778729000006a32.pdf"],["2026-04-02","https://www.spf.com.tw/upload/sinopac/researchContent/19d4bb09ccb000000655.pdf"],["2026-04-01","https://www.spf.com.tw/upload/sinopac/researchContent/19d468d6bc50000088eb.pdf"],["2026-03-31","https://www.spf.com.tw/upload/sinopac/researchContent/19d416c0552000002107.pdf"],["2026-03-30","https://www.spf.com.tw/upload/sinopac/researchContent/19d3c2ef8d8000001ba1.pdf"],["2026-03-27","https://www.spf.com.tw/upload/sinopac/researchContent/19d2cd1c9be000007622.pdf"],["2026-03-26","https://www.spf.com.tw/upload/sinopac/researchContent/19d279ebebe000001970.pdf"],["2026-03-25","https://www.spf.com.tw/upload/sinopac/researchContent/19d2274bb25000008a0b.pdf"],["2026-03-24","https://www.spf.com.tw/upload/sinopac/researchContent/19d1d5667b6000009c2a.pdf"],["2026-03-23","https://www.spf.com.tw/upload/sinopac/researchContent/19d184c98ea000004e38.pdf"],["2026-03-20","https://www.spf.com.tw/upload/sinopac/researchContent/19d08bbe03500000ae85.pdf"],["2026-03-19","https://www.spf.com.tw/upload/sinopac/researchContent/19d039ce6df000008916.pdf"],["2026-03-18","https://www.spf.com.tw/upload/sinopac/researchContent/19cfe7fa904000008e0a.pdf"],["2026-03-17","https://www.spf.com.tw/upload/sinopac/researchContent/19cf94a0fe000000a589.pdf"],["2026-03-16","https://www.spf.com.tw/upload/sinopac/researchContent/19cf41a02ec000001354.pdf"],["2026-03-13","https://www.spf.com.tw/upload/sinopac/researchContent/19ce4d36b83000001b52.pdf"],["2026-03-12","https://www.spf.com.tw/upload/sinopac/researchContent/19cdf8049f700000be78.pdf"],["2026-03-11","https://www.spf.com.tw/upload/sinopac/researchContent/19cda74ef18000005612.pdf"],["2026-03-10","https://www.spf.com.tw/upload/sinopac/researchContent/19cd53c1ab5000005935.pdf"],["2026-03-09","https://www.spf.com.tw/upload/sinopac/researchContent/19cd01df638000000f60.pdf"],["2026-03-06","https://www.spf.com.tw/upload/sinopac/researchContent/19cc096c58b000000ec6.pdf"],["2026-03-05","https://www.spf.com.tw/upload/sinopac/researchContent/19cbb7907cd000005294.pdf"],["2026-03-04","https://www.spf.com.tw/upload/sinopac/researchContent/19cb660a4fb000008135.pdf"],["2026-03-03","https://www.spf.com.tw/upload/sinopac/researchContent/19cb11fba2c000002b68.pdf"],["2026-03-02","https://www.spf.com.tw/upload/sinopac/researchContent/19cac42be3b000005b52.pdf"],["2026-02-26","https://www.spf.com.tw/upload/sinopac/researchContent/19c977d0ccb00000bb77.pdf"],["2026-02-25","https://www.spf.com.tw/upload/sinopac/researchContent/19c926e8727000008eec.pdf"],["2026-02-24","https://www.spf.com.tw/upload/sinopac/researchContent/19c8d3a861100000b257.pdf"],["2026-02-23","https://www.spf.com.tw/upload/sinopac/researchContent/19c87f252a60000067e4.pdf"],["2026-02-12","https://www.spf.com.tw/upload/sinopac/researchContent/19c4f82895e000001842.pdf"],["2026-02-11","https://www.spf.com.tw/upload/sinopac/researchContent/19c4a9cc8c30000023e1.pdf"],["2026-02-10","https://www.spf.com.tw/upload/sinopac/researchContent/19c44ffd4f500000072d.pdf"],["2026-02-09","https://www.spf.com.tw/upload/sinopac/researchContent/19c3fdc056200000684f.pdf"],["2026-02-06","https://www.spf.com.tw/upload/sinopac/researchContent/19c306bd252000004314.pdf"],["2026-02-05","https://www.spf.com.tw/upload/sinopac/researchContent/19c2b4a2b93000003800.pdf"],["2026-02-04","https://www.spf.com.tw/upload/sinopac/researchContent/19c2620adde00000b401.pdf"],["2026-02-03","https://www.spf.com.tw/upload/sinopac/researchContent/19c210780f70000003cc.pdf"],["2026-02-02","https://www.spf.com.tw/upload/sinopac/researchContent/19c1bc748a200000a75d.pdf"],["2026-01-30","https://www.spf.com.tw/upload/sinopac/researchContent/19c0c63dec7000009215.pdf"],["2026-01-29","https://www.spf.com.tw/upload/sinopac/researchContent/19c073e274d000001834.pdf"],["2026-01-28","https://www.spf.com.tw/upload/sinopac/researchContent/19c022a56e1000001ad8.pdf"],["2026-01-27","https://www.spf.com.tw/upload/sinopac/researchContent/19bfcfcfa4f000009f0d.pdf"],["2026-01-26","https://www.spf.com.tw/upload/sinopac/researchContent/19bf7c0bd560000044de.pdf"],["2026-01-23","https://www.spf.com.tw/upload/sinopac/researchContent/19be84c9493000001cc9.pdf"],["2026-01-22","https://www.spf.com.tw/upload/sinopac/researchContent/19be3365a950000038d9.pdf"],["2026-01-21","https://www.spf.com.tw/upload/sinopac/researchContent/19bde0789be000000856.pdf"],["2026-01-20","https://www.spf.com.tw/upload/sinopac/researchContent/19bd8dc795f000009b24.pdf"],["2026-01-19","https://www.spf.com.tw/upload/sinopac/researchContent/19bd3aa4d61000008cb9.pdf"],["2026-01-16","https://www.spf.com.tw/upload/sinopac/researchContent/19bc44f84e3000003618.pdf"],["2026-01-15","https://www.spf.com.tw/upload/sinopac/researchContent/19bbf2e2a46000004194.pdf"],["2026-01-14","https://www.spf.com.tw/upload/sinopac/researchContent/19bba15c955000001ad7.pdf"],["2026-01-13","https://www.spf.com.tw/upload/sinopac/researchContent/19bb4dbcf2400000c329.pdf"],["2026-01-12","https://www.spf.com.tw/upload/sinopac/researchContent/19bafab57c8000007c89.pdf"],["2026-01-09","https://www.spf.com.tw/upload/sinopac/researchContent/19ba06a8a24000005010.pdf"],["2026-01-08","https://www.spf.com.tw/upload/sinopac/researchContent/19b9b2973df000003b02.pdf"],["2026-01-07","https://www.spf.com.tw/upload/sinopac/researchContent/19b95f427ae00000be61.pdf"],["2026-01-06","https://www.spf.com.tw/upload/sinopac/researchContent/19b90c6eaa50000062e9.pdf"],["2026-01-05","https://www.spf.com.tw/upload/sinopac/researchContent/19b8bca783f000004166.pdf"],["2026-01-02","https://www.spf.com.tw/upload/sinopac/researchContent/19b7c56897100000afae.pdf"]];
+let selectedReport=0;
 function techIsCandle(key){return key==="taiexK"||key==="sp500K"}
 function techReadout(key,value){
  const series=TECH_CREDIT_SERIES[key];
@@ -849,7 +1092,7 @@ function readTechnicalStackSettings(){
     compareMode:x.compareMode==="indexed"?"indexed":"raw",
     top:TECH_SOURCE_KEYS.includes(x.top)?x.top:defaults.top,
     middle:TECH_SOURCE_KEYS.includes(x.middle)?x.middle:defaults.middle,
-    bottomSource:x.bottomSource==="follow"||TECH_PRICE_KEYS.includes(x.bottomSource)?x.bottomSource:defaults.bottomSource,
+    bottomSource:["follow","right","middle"].includes(x.bottomSource)?x.bottomSource:x.bottomSource===x.middle?"middle":defaults.bottomSource,
     oscillator:["MACD","RSI","KD"].includes(x.oscillator)?x.oscillator:defaults.oscillator,
     layout:["compact","standard"].includes(x.layout)?x.layout:defaults.layout,
     overlays:Object.fromEntries(Object.keys(defaults.overlays).map(k=>[k,x.overlays?.[k]===true]))
@@ -900,7 +1143,7 @@ document.addEventListener("keydown",event=>{
 });
 
 function updateTechnicalSetting(field,value){
- const valid=field==="right"?value==="off"||(TECH_SOURCE_KEYS.includes(value)&&value!=="turnoverWithDayTrade"):field==="compareMode"?["raw","indexed"].includes(value):field==="top"?TECH_SOURCE_KEYS.includes(value):field==="middle"?TECH_SOURCE_KEYS.includes(value):field==="bottomSource"?value==="follow"||TECH_PRICE_KEYS.includes(value):field==="oscillator"?["MACD","RSI","KD"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
+ const valid=field==="right"?value==="off"||(TECH_SOURCE_KEYS.includes(value)&&value!=="turnoverWithDayTrade"):field==="compareMode"?["raw","indexed"].includes(value):field==="top"?TECH_SOURCE_KEYS.includes(value):field==="middle"?TECH_SOURCE_KEYS.includes(value):field==="bottomSource"?["follow","right","middle"].includes(value):field==="oscillator"?["MACD","RSI","KD"].includes(value):field==="layout"?["compact","standard"].includes(value):false;
  if(!valid)return false;
  techSettings={...techSettings,[field]:value};
  try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
@@ -913,6 +1156,8 @@ function toggleTechnicalOverlay(key){
  showHistory();return true;
 }
 function techSeriesName(key){
+ if(CENTER_META[key])return CENTER_META[key][0]+(CENTER_META[key][1]==="日"?"":" · "+CENTER_META[key][1]+"頻");
+ if(key==="off")return "上層右軸已關閉";
  if(TECH_CREDIT_SERIES[key])return TECH_CREDIT_SERIES[key].label;
  if(key==="taiexK")return "台灣加權指數｜K 線（OHLC）";
  if(key==="sp500K")return "S&P 500 指數｜K 線（OHLC）";
@@ -946,6 +1191,8 @@ function techPriceObservations(raw,key){
  return published;
 }
 function techObservations(raw,key){
+ if(key==="off")return [];
+ if(CENTER_META[key])return centerRows[key]||[];
  if(!["marketTurnoverYiTwd","dayTradeTurnoverSharePct","turnoverWithDayTrade"].includes(key))return techPriceObservations(raw,key);
  const rows=key==="turnoverWithDayTrade"
   ? raw.filter(r=>Number.isFinite(r.marketTurnoverYiTwd)&&Number.isFinite(r.dayTradeTurnoverSharePct))
@@ -1044,10 +1291,13 @@ function techRsi(rows,n=14){
  return out;
 }
 function techFiltered(rows,start,end){
- return rows.filter(r=>{const t=marketChartDate(r.date);return t>=start&&t<=end&&marketIsWeekday(t)});
+ return rows.filter(r=>{const t=marketChartDate(r.date);return t>=start&&t<=end});
 }
 function techOptions(keys,selected){
- return keys.map(k=>'<option value="'+k+'"'+(k===selected?' selected':'')+'>'+esc(techSeriesName(k))+'</option>').join("");
+ return Object.entries(TECH_GROUPS).map(([name,list])=>{
+  const options=list.split(" ").filter(key=>keys.includes(key)).map(key=>'<option value="'+key+'"'+(key===selected?' selected':'')+'>'+esc(techSeriesName(key))+'</option>').join("");
+  return options?'<optgroup label="'+esc(name)+'">'+options+'</optgroup>':"";
+ }).join("");
 }
 function saveChartOrder(){
  try{localStorage.setItem(chartOrderKey,JSON.stringify(chartOrder))}catch(e){}
@@ -1244,6 +1494,7 @@ function longWindowStart(key,cutoff,raw){
     if(time<earliest)earliest=time;
    }
   }
+  for(const key of [techSettings.top,techSettings.middle,techSettings.right]){const first=centerRows[key]?.[0];if(first)earliest=Math.min(earliest,marketChartDate(first.date))}
   return earliest;
  }
  const day=new Date(cutoff);
@@ -1350,7 +1601,7 @@ function showHistory(){
  };
 
  const technicalStack=(()=>{
-  const c=techSettings,bottomKey=c.bottomSource==="follow"?c.top:c.bottomSource;
+  const c=techSettings,bottomKey=c.bottomSource==="middle"?c.middle:c.bottomSource==="right"?(c.top==="turnoverWithDayTrade"?"dayTradeTurnoverSharePct":c.right):c.top;
   const fullTop=techObservations(raw,c.top),fullBottom=bottomKey===c.top?fullTop:techObservations(raw,bottomKey);
   const paired=c.right!=="off"&&c.top!=="turnoverWithDayTrade";
   const rightRows=paired?techFiltered(techObservations(raw,c.right),start,end):[];
@@ -1386,7 +1637,7 @@ function showHistory(){
   };
   const leftValues=[...top.map(r=>r.value),...topCandles.flatMap(r=>[r.high,r.low]),...(c.overlays.bb?bb.flatMap(r=>[r.upper,r.lower]):[]),...ma.filter(m=>c.overlays["ma"+m.n]).flatMap(m=>m.rows.map(r=>r.value))];
   const [t0,t1]=bounds(indexed?[...leftValues.map(v=>v*leftScale),...right.map(r=>r.value*rightScale)]:leftValues);
-  const signedRight=["foreignNetYi","foreignCumulativeYi","marginDailyYi","us10y2ySpread"].includes(c.right);
+  const signedRight=["foreignTxOpenInterestNetContracts","sofrMinusIorbBp","acm10","foreignNetYi","foreignCumulativeYi","marginDailyYi","us10y2ySpread"].includes(c.right);
   const [r0,r1]=indexed?[t0,t1]:bounds(right.map(r=>r.value),signedRight);
   const rightY=v=>panel[0].end-(v*rightScale-r0)/(r1-r0)*(panel[0].end-panel[0].start);
   const dualTurnover=c.middle==="turnoverWithDayTrade";
@@ -1475,9 +1726,8 @@ function showHistory(){
    label("上層左軸","top",c.top,techOptions(TECH_SOURCE_KEYS,c.top))+
    (c.top==="turnoverWithDayTrade"?"":label("上層右軸（折線）","right",c.right,'<option value="off">關閉</option>'+techOptions(TECH_SOURCE_KEYS.filter(k=>k!=="turnoverWithDayTrade"),c.right)))+
    (paired?label("上層刻度","compareMode",c.compareMode,'<option value="raw">原始值</option><option value="indexed"'+(c.compareMode==="indexed"?' selected':'')+'>共同起點 100</option>'):"")+
-   '<button type="button" data-tech-risk-preset>加權日 K × 融資維持率</button>'+
    label("中層來源","middle",c.middle,techOptions(TECH_SOURCE_KEYS,c.middle))+
-   label("下層指標來源","bottomSource",c.bottomSource,'<option value="follow"'+(c.bottomSource==="follow"?' selected':'')+'>跟隨上層</option>'+techOptions(TECH_PRICE_KEYS,c.bottomSource))+
+   label("下層指標來源","bottomSource",c.bottomSource,[["follow","上層左軸"],["right","上層右軸"],["middle","中層"]].map(([k,name])=>'<option value="'+k+'"'+(k===c.bottomSource?' selected':'')+'>'+name+'</option>').join(""))+
    label("下層指標類型","oscillator",c.oscillator,["MACD","RSI","KD"].map(k=>'<option value="'+k+'"'+(c.oscillator===k?' selected':'')+'>'+k+'</option>').join(""))+'</div>';
   const overlayButtons='<div class="technical-stack-overlays" role="group" aria-label="均線和布林通道顯示開關">'+
    [["ma5","MA5","#e59c00"],["ma10","MA10","#dc4b6a"],["ma20","MA20","#2869cc"],["ma60","MA60","#26813e"],["ma240","MA240","#7741ca"],["bb","BBands","#9d4edd"]].map(([key,label,color])=>
@@ -1517,15 +1767,20 @@ function showHistory(){
       '（非正式收盤；報價可能延遲）</div>':"";
    const readouts='<div class="technical-stack-readouts"><div><strong>'+(compact?"上層":"上層：價格、均線與 BB")+'</strong><span data-tech-readout="top">—</span><small data-tech-extra="top">—</small></div><div><strong>'+(compact?"中層":"中層："+techSeriesName(c.middle)+"")+'</strong><span data-tech-readout="middle">—</span></div><div><strong>'+(compact?"下層 ":"下層：")+c.oscillator+'</strong><span data-tech-readout="bottom">—</span><small data-tech-extra="bottom">—</small></div></div>';
   const details='<div class="technical-stack-txt">加權與 S&amp;P 500 指數 K 線使用永久 OHLC 歷史檔；K 線與折線橫軸依市場真正交易日連續排列；週末、國定假日、颱風休市不留空格；紅漲與綠跌均為實心。上層可個別開關 MA5／10／20／60／240 與 BBands（預設關閉）。指數日K最右側會顯示交易當日暫定K，盤中更新同一根，不覆蓋正式歷史母檔。上層與中層可獨立切換全部資料，包括成交金額（億元）、當沖成交金額占比（%）或雙軸合併圖；雙軸左側為成交億元，右側為當沖占比，不使用成交股數。其他籌碼指標維持原定義。KD(9,3,3) 僅適用兩檔指數真實 OHLC；MACD(12,26,9)、RSI(14)、BB(20,2) 使用完整歷史暖機，不刪減母檔。</div>';
+  const reportMenu='<details><summary>美國｜貨幣政策報告</summary><label>FedWatch 報告日期<select data-fed-report>'+FED_REPORTS.map(([day],i)=>'<option value="'+i+'"'+(i===selectedReport?' selected':'')+'>'+esc(day)+'</option>').join("")+'</select></label> <a data-fed-link href="'+esc(FED_REPORTS[selectedReport][1])+'" target="_blank" rel="noopener">開啟報告 PDF</a></details>';
+  const centerNote=[...new Set([c.top,c.middle,paired?c.right:"off"])].filter(key=>CENTER_META[key]).map(key=>{
+   const rows=centerRows[key],meta=CENTER_META[key];
+   return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: centerError||"載入中")+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+'</small>';
+  }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
-  return {sessionScale,topCandles,rightByDate,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 長期時間軸 v2026.11.22.1</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+compareNote+overlayButtons+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
+  return {sessionScale,topCandles,rightByDate,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
- chartContext={start,end,series,dates:uniqueDays,x:X,timelineDays,technicalStack};
+ chartContext={start,end,series,dates:[...new Set([...uniqueDays,...technicalStack.sessionScale.days])].sort(),x:X,timelineDays,technicalStack};
  const counts=series.map(s=>s.label+":"+s.rows.length).join("｜");
  note.textContent="顯示範圍："+(longWindow?(chartDays==="max"?"Max 全部歷史":"最近 "+chartWindows[chartDays]):"最近 "+chartDays+" 個已收盤台股交易日")+"（"+(longWindow?new Date(start).toISOString().slice(0,10):windowSessions[0]||"—")+" 至 "+(longWindow?new Date(end).toISOString().slice(0,10):windowSessions.at(-1)||"—")+"）；盤中暫定 K 線可能另顯示當日。外資買賣超及外資累積買賣超均採用 market-history.json 的逐日資料。外資累積值以 2025/11/20 收盤為零，切換圖表區間時沿用同一基準。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
- if(uniqueDays.length)syncChartCursor(chartCursorDate||uniqueDays.at(-1));
+ if(chartContext.dates.length)syncChartCursor(chartCursorDate||chartContext.dates.at(-1));
  else{$("crossCursorDate").textContent="無可比較日期";$("crossCursorCoverage").textContent="等待歷史資料"}
 }
 async function fetchIndexOhlc(){
@@ -1627,6 +1882,8 @@ crossHost.addEventListener("drop",event=>{
 });
 crossHost.addEventListener("dragend",()=>{draggingChart=null;clearChartDropTarget()});
 crossHost.addEventListener("change",event=>{
+ const report=event.target.closest?.("[data-fed-report]");
+ if(report){selectedReport=Number(report.value);report.closest("details").querySelector("[data-fed-link]").href=FED_REPORTS[selectedReport][1];return}
  const target=event.target.closest?.("[data-tech-field]");
  if(target&&!updateTechnicalSetting(target.dataset.techField,target.value))target.value=techSettings[target.dataset.techField];
 });
@@ -1647,11 +1904,6 @@ crossHost.addEventListener("click",event=>{
  }
  const layoutBtn=event.target.closest?.("[data-tech-layout]");
  if(layoutBtn){updateTechnicalSetting("layout",layoutBtn.dataset.techLayout);event.preventDefault();return}
- if(event.target.closest?.("[data-tech-risk-preset]")){
-  techSettings={...techSettings,top:"taiexK",right:"marginMaintenanceExEtf",compareMode:"raw",middle:"creditCallAmountTwd"};
-  try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
-  showHistory();return;
- }
  const overlayBtn=event.target.closest?.("[data-tech-overlay]");
  if(overlayBtn){toggleTechnicalOverlay(overlayBtn.dataset.techOverlay);event.preventDefault();return}
  const maBtn=event.target.closest?.("[data-ma-key][data-ma-period]");
@@ -1876,7 +2128,7 @@ async function fetchIntradayMarket(){
  }catch(e){intradayMarketError=e.message}
  showHistory();
 }
-async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();await Promise.all([fetchMarketHistory(),fetchIndexOhlc(),fetchIntradayMarket()]);await refreshDirectMarket();loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
+async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();await Promise.all([fetchMarketHistory(),fetchIndexOhlc(),fetchIntradayMarket(),fetchCenterHistory()]);await refreshDirectMarket();loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
 $('reload').addEventListener('click',()=>sync(false));document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.tabscreen').forEach(s=>s.classList.toggle('visible',s.id===btn.dataset.tab))}));document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync(true)});sync(true);setInterval(()=>{if(!document.hidden)refreshDirectMarket().catch(e=>{directQuoteStatus="直連嘗試失敗："+String(e.message||e).slice(0,80);showHistory()})},LIVE_FETCH_POLL_MS);
 setInterval(()=>{if(!document.hidden)sync(true)},300000);
 </script></body></html>
