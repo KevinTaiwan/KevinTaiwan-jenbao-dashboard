@@ -68,9 +68,21 @@ jobs:
           if center_path.exists():
               series=json.loads(center_path.read_text(encoding='utf-8'))
               expected=set(["006208TW","2330TW","DRTSCILM","IXIC","PAYEMS","PCEC96","RSAFS","SOX","UMCSENT","acm10","cccOas","cccYield","cnnFearGreed","delinq","foreignTxOpenInterestNetContracts","forwardPe","gdp","goldFuturesUsd","goldSpot","inflation5y5y","iorb","marginBalanceYi","mortgage","move","nfci","orders","singleBOas","sofr","sofrMinusIorbBp","t10yie","t5yie","tgcr","twNet","twPb","twPe","us1y","us2y","us30y","us3y","us5y","willing","wtiFuturesUsd"])
-              if not isinstance(series, dict) or set(series) != expected:
+              archival={'twPeMonthly','twPeSource'}
+              if not isinstance(series, dict) or set(series) != expected | archival:
                   raise SystemExit('Unexpected market center series')
+              provenance=series['twPeSource']
+              if (not isinstance(provenance,dict)
+                  or provenance.get('observations') != 240
+                  or provenance.get('missing_sessions') != 0
+                  or provenance.get('official_twse_monthly') is not False
+                  or provenance.get('archived_monthly_series') != 'twPeMonthly'
+                  or len(series.get('twPe',[])) != 240):
+                  raise SystemExit('Invalid daily market PE provenance or count')
+              if len(series.get('twPeMonthly',[])) < 2:
+                  raise SystemExit('Old monthly market PE must be retained')
               for key, rows in series.items():
+                  if key=='twPeSource':continue
                   if not isinstance(rows, list) or not rows:
                       raise SystemExit(f'Missing market center observations: {key}')
                   previous = ''
