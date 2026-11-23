@@ -24,10 +24,10 @@
     "marginDailyYi": -14.1973,
     "marginMaintenance": 119.53,
     "foreignNetYi": -289.4788,
-    "futuresNetContracts": -103432.0,
+    "futuresNetContracts": -103432,
     "hyOas": 3.76,
     "singleBOas": 4.08,
-    "sofrMinusIorb": 2.0,
+    "sofrMinusIorb": 2,
     "t10yie": 2.13,
     "t5yie": 2.15,
     "oil": 80.25,
@@ -345,7 +345,8 @@
     "move 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "futuresNetContracts 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "oil 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
-    "goldPrice 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日"
+    "goldPrice 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日",
+    "WARN：上市扣除 ETF 融資維持率最新確認 2026-11-20 119.53%；2026-11-23 尚無可核實原始值，禁止以含 ETF 或全市場擔保維持率代填。"
   ],
   "marginMaintenanceCoverage": {
     "targetTradingDays": 240,
@@ -354,6 +355,11 @@
     "targetFirst": "2025-11-24",
     "targetLast": "2026-11-20",
     "status": "complete",
-    "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
+    "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
+    "latestExpectedTradingDay": "2026-11-23",
+    "latestObservationMissing": true,
+    "freshnessStatus": "WARN",
+    "freshnessReason": "11/23 上市扣除 ETF 融資維持率尚未取得可核實原始值；240筆完整度僅截至11/20",
+    "lastCheckedAt": "2026-11-23T23:45:36.163Z"
   }
 }
