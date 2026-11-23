@@ -1,40 +1,40 @@
 {
   "schemaVersion": 2,
   "audience": "public-market",
-  "asOf": "2026-11-20",
+  "asOf": "2026-11-23",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-21 15:26 Asia/Taipei｜11/20 台美正式收盤、信用最後觀測11/19",
-  "headline": "台美股同步重挫、VIX升至35.89；台股融資單日減491.41億、HY/Single-B利差擴大",
-  "summary": "11/20台股加權36,033.29(-6.23%)、S&P500 6,910.39(-3.70%)、Nasdaq 22,617.73(-5.28%)、VIX35.89。11/20上市融資4,352.27億，日減491.41億；追繳6,462戶/64.64億、處分632戶/14.95億（11/21新聞引述）。FRED截至11/19 HY OAS=352bp(+5bp)、Single-B=380bp(+7bp)、SOFR=3.91%、IORB=3.90%(+1bp)，信用風險升高而短端尚未同步失序。",
+  "updatedAt": "2026-11-23T22:49:27+00:00",
+  "headline": "台股最新正式收盤 2026-11-23：36,811.89 點；其他市場指標各按自身觀測日",
+  "summary": "taiex 36,811.890（觀測日 2026-11-23）｜vix 35.890（觀測日 2026-11-20）｜usdtwd 32.823（觀測日 2026-11-23）｜hyOas 3.760（觀測日 2026-11-20）｜foreignNetYi -289.479（觀測日 2026-11-23）",
   "market": {
-    "taiex": 36033.29,
-    "taiexChange": -6.23,
-    "ma5": 39157.46,
-    "ma10": 41118.5,
-    "ma20": 42719.57,
-    "ma60": 45710.92,
+    "taiex": 36811.89,
+    "taiexChange": 2.1608,
+    "ma5": 38311.818,
+    "ma10": 40633.523,
+    "ma20": 42258.0925,
+    "ma60": 45578.4128,
     "vix": 35.89,
-    "move": 96.04,
-    "usdtwd": 32.999,
-    "dxy": 103.85,
-    "us10y": 4.912,
+    "move": 106.311897,
+    "usdtwd": 32.823,
+    "dxy": 104.337,
+    "us10y": 4.92,
     "de10y": 3.3428,
-    "cnn": null,
-    "marginBalanceYi": 4352.27,
-    "marginDailyYi": -491.41,
-    "marginMaintenance": 128.31,
-    "foreignNetYi": -95.11,
-    "futuresNetContracts": -97863,
-    "hyOas": 3.52,
+    "cnn": 18.6761904761905,
+    "marginBalanceYi": 4352.27267,
+    "marginDailyYi": -14.1973,
+    "marginMaintenance": 119.53,
+    "foreignNetYi": -289.4788,
+    "futuresNetContracts": -97863.0,
+    "hyOas": 3.76,
     "singleBOas": 3.8,
-    "sofrMinusIorb": 1,
-    "t10yie": 2.16,
-    "t5yie": 2.22,
-    "oil": 81.6,
-    "goldPrice": 3581.77,
-    "ma120": 45281.24,
-    "ma240": 39408.23,
-    "marginMaintenanceAsOf": "2026-11-19",
+    "sofrMinusIorb": 1.0,
+    "t10yie": 2.15,
+    "t5yie": 2.18,
+    "oil": 83.620003,
+    "goldPrice": 3520.57,
+    "ma120": 45224.3705,
+    "ma240": 39451.1824,
+    "marginMaintenanceAsOf": "2026-11-20",
     "marginMaintenanceScope": "TWSE financing maintenance excluding ETF (Wantgoo; Nov20 not cross-verified)"
   },
   "ai": [
@@ -108,62 +108,128 @@
   "alerts": [],
   "sources": [
     {
-      "label": "FRED ICE BofA HY OAS 11/19 3.52%",
-      "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
-      "date": "2026-11-19"
+      "label": "taiex 觀測日 2026-11-23",
+      "date": "2026-11-23",
+      "url": "https://www.twse.com.tw/rwd/zh/TAIEX/MI_5MINS_HIST"
     },
     {
-      "label": "FRED ICE BofA Single-B OAS 11/19 3.80%",
-      "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB",
-      "date": "2026-11-19"
+      "label": "dxy 觀測日 2026-11-23",
+      "date": "2026-11-23",
+      "url": "https://finance.yahoo.com/quote/DX-Y.NYB/history/"
     },
     {
-      "label": "FRED SOFR 11/19 3.91%",
-      "url": "https://fred.stlouisfed.org/series/SOFR",
-      "date": "2026-11-19"
+      "label": "usdtwd 觀測日 2026-11-23",
+      "date": "2026-11-23",
+      "url": "https://finance.yahoo.com/quote/TWD=X/history/"
     },
     {
-      "label": "FRED IORB 11/20 3.90%",
-      "url": "https://fred.stlouisfed.org/series/IORB",
-      "date": "2026-11-20"
+      "label": "vix 觀測日 2026-11-20",
+      "date": "2026-11-20",
+      "url": "https://fred.stlouisfed.org/series/VIXCLS"
     },
     {
-      "label": "FRED TGCR 11/19 3.88%",
-      "url": "https://fred.stlouisfed.org/series/TGCRRATE",
-      "date": "2026-11-19"
+      "label": "hyOas 觀測日 2026-11-20",
+      "date": "2026-11-20",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2"
     },
     {
-      "label": "TWSE上市融資統計 11/20 4,352.27億",
-      "url": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN",
-      "date": "2026-11-20"
+      "label": "us10y 觀測日 2026-11-20",
+      "date": "2026-11-20",
+      "url": "https://fred.stlouisfed.org/series/DGS10"
     },
     {
-      "label": "CNA 11/20上市融資單日大減491億",
-      "url": "https://www.cna.com.tw/news/afe/202611200325.aspx",
-      "date": "2026-11-20"
+      "label": "marginDailyYi 觀測日 2026-11-23",
+      "date": "2026-11-23",
+      "url": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN"
     },
     {
-      "label": "Goodinfo 11/20三大法人盤後",
-      "url": "https://goodinfo.tw/tw/ShowBuySaleChart.asp",
-      "date": "2026-11-20"
+      "label": "foreignNetYi 觀測日 2026-11-23",
+      "date": "2026-11-23",
+      "url": "https://www.twse.com.tw/rwd/zh/fund/BFI82U"
     },
     {
-      "label": "玩股網扣ETF融資維持率來源",
-      "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
-      "date": "2026-11-19"
+      "label": "marginMaintenance 觀測日 2026-11-20",
+      "date": "2026-11-20",
+      "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
     },
     {
-      "label": "臺灣銀行黃金存摺本行買入牌價",
-      "url": "https://rate.bot.com.tw/gold/chart/half/TWD/1",
-      "date": "2026-11-20"
+      "label": "singleBOas 觀測日 2026-11-19",
+      "date": "2026-11-19",
+      "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB"
     },
     {
-      "label": "台灣加權正式收盤資料",
-      "url": "https://www.twse.com.tw/exchangeReport/MI_INDEX",
-      "date": "2026-11-20"
+      "label": "sofrMinusIorb 觀測日 2026-11-19",
+      "date": "2026-11-19",
+      "url": "https://fred.stlouisfed.org/series/SOFR"
+    },
+    {
+      "label": "t10yie 觀測日 2026-11-20",
+      "date": "2026-11-20",
+      "url": "https://fred.stlouisfed.org/series/T10YIE"
+    },
+    {
+      "label": "t5yie 觀測日 2026-11-20",
+      "date": "2026-11-20",
+      "url": "https://fred.stlouisfed.org/series/T5YIE"
     }
   ],
   "marketHistory": [
+    {
+      "date": "2026-10-08",
+      "taiex": 49313.44
+    },
+    {
+      "date": "2026-10-12",
+      "taiex": 49301.96
+    },
+    {
+      "date": "2026-10-13",
+      "taiex": 48341.31
+    },
+    {
+      "date": "2026-10-14",
+      "taiex": 48625.83
+    },
+    {
+      "date": "2026-10-15",
+      "taiex": 46969.87
+    },
+    {
+      "date": "2026-10-16",
+      "taiex": 47111.26
+    },
+    {
+      "date": "2026-10-19",
+      "taiex": 46822.08
+    },
+    {
+      "date": "2026-10-20",
+      "taiex": 46292.93
+    },
+    {
+      "date": "2026-10-21",
+      "taiex": 46887.77
+    },
+    {
+      "date": "2026-10-22",
+      "taiex": 46041.43
+    },
+    {
+      "date": "2026-10-27",
+      "taiex": 46096.23
+    },
+    {
+      "date": "2026-10-28",
+      "taiex": 47035.58
+    },
+    {
+      "date": "2026-10-29",
+      "taiex": 46368.33
+    },
+    {
+      "date": "2026-10-30",
+      "taiex": 45211.83
+    },
     {
       "date": "2026-11-02",
       "taiex": 44920.14
@@ -223,6 +289,10 @@
     {
       "date": "2026-11-20",
       "taiex": 36033.29
+    },
+    {
+      "date": "2026-11-23",
+      "taiex": 36811.89
     }
   ],
   "notes": [
@@ -235,7 +305,8 @@
     "扣ETF維持率最後原始/母檔同口徑已核實11/19=128.31%。11/20間接轉引有119.53%與120.19%衝突，原始Wantgoo頁面回傳過期快取，不視為已核實值。",
     "11/20法人現貨外資-95.11億、投信-73.47億、自營商-340.83億，以盤後修正版來源為準；其他來源曾見外資-94.13/投信-87.49為不同版本。",
     "11/20美國10年期殖利率4.912%為Investing.com日終報價，其他成交平台存在約4.91至4.94差異，屬報價口徑差；NFCI觀測至11/13=-0.478。",
-    "這個公開檔只包含可公開市場資料，嚴禁私人持股、資產淨值、Beta和D1交易內容。"
+    "這個公開檔只包含可公開市場資料，嚴禁私人持股、資產淨值、Beta和D1交易內容。",
+    "各指標保留自身原始觀測日，來源延遲不以最新交易日補值；市場敘事僅引用已核對資料。"
   ],
   "marginMaintenanceCoverage": {
     "targetTradingDays": 240,

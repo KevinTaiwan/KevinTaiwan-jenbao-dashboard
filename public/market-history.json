@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-23T22:42:00+00:00",
+  "generatedAt": "2026-11-23T22:49:26+00:00",
   "cutoff": "2026-11-23",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
