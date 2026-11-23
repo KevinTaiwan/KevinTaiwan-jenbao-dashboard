@@ -6,6 +6,7 @@ on:
       - 'public/market-history.json'
       - 'public/market-data.json'
       - 'public/index-ohlc-history.json'
+      - 'public/market-center-history.json'
       - '.github/workflows/library-transfer-artifact.yml'
   workflow_dispatch:
   schedule:
@@ -26,7 +27,7 @@ jobs:
           import hashlib, json, pathlib, shutil
           stage=pathlib.Path("library-transfer")
           stage.mkdir(exist_ok=True)
-          required=["market-history.json","market-data.json"]
+          required=["market-history.json","market-data.json","market-center-history.json"]
           if pathlib.Path("public/intraday-market.json").exists():
             required.append("intraday-market.json")
           extras=sorted(p.name for p in pathlib.Path("public").glob("*ohlc*.json"))
