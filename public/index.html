@@ -1845,8 +1845,8 @@ function showHistory(){
   }).join("");
   const hoverMarkup='<g data-tech-hover="1" visibility="hidden" pointer-events="none">'+
     [0,1,2].map(i=>'<g data-tech-hover-axis="'+i+'" visibility="hidden">'+
-     '<rect x="0" y="0" width="91" height="18" rx="3" fill="'+["#415f80","#467ba6","#7259a2"][i]+'"/>'+
-     '<text x="45.5" y="0" fill="#fff" text-anchor="middle" font-size="10" font-weight="700">—</text></g>'
+     '<rect x="-68" y="0" width="99" height="18" rx="3" fill="'+["#415f80","#467ba6","#7259a2"][i]+'"/>'+
+     '<text x="-18.5" y="0" fill="#fff" text-anchor="middle" font-size="10" font-weight="700">—</text></g>'
     ).join("")+
     '<g data-tech-hover-right="1" visibility="hidden">'+
      '<line x1="748" x2="760" y1="0" y2="0" stroke="#965119" stroke-width="1.8"/>'+
@@ -1858,7 +1858,7 @@ function showHistory(){
     '<g data-tech-hover-compact visibility="hidden"><rect x="582" y="1" width="174" height="22" rx="3" fill="#f3f8fc" stroke="#a1b2c1" stroke-width=".7"/>'+
     '<text data-tech-compact-text x="669" y="16" text-anchor="middle" font-size="11" fill="#23435f" font-weight="700">—</text></g>'+
     '</g>';
-   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 840 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="840" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+maintenanceHint+priceLines+rightPlot+topRatio+midLines+midRatioLine+midRightAxis+midLegend+missingMoney+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
+   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="-72 0 912 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="-72" y="0" width="912" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+maintenanceHint+priceLines+rightPlot+topRatio+midLines+midRatioLine+midRightAxis+midLegend+missingMoney+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
   const latestDaily=topCandles.at(-1);
    const directNote='<div class="technical-current-day" role="status">'+esc(directQuoteStatus)+
       '｜資料查核 '+esc(formatTaipeiMarketTime(directQuoteCheckedAt))+
@@ -1942,7 +1942,7 @@ function selectCursorAtPointer(evt,svg){
  if(!Number.isFinite(svgX)){
   const rect=svg.getBoundingClientRect();
   if(!rect?.width)return;
-  svgX=(evt.clientX-rect.left)/rect.width*(svg.viewBox?.baseVal?.width||780);
+  svgX=(svg.viewBox?.baseVal?.x||0)+(evt.clientX-rect.left)/rect.width*(svg.viewBox?.baseVal?.width||780);
  }
  svgX=Math.max(38,Math.min(758,svgX));
  const isTech=svg.dataset?.techSvg==="1";
