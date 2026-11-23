@@ -24,6 +24,10 @@ jobs:
             inds=[m.start() for m in re.finditer(re.escape(word),page)]
             print('WORD',word,'COUNT',len(inds),flush=True)
             for pos in inds[:7]:print('CONTEXT',repr(page[max(0,pos-120):pos+360]),flush=True)
+          for pattern in ['\\\\"pe\\\\"','\\\\"peRatio\\\\"','\\\\"pe_ratio\\\\"','\\\\"date\\\\"','\\\\"2026-11-20\\\\"','2026-11-20','17.1','\\\\"peData\\\\"','\\\\"peHistory\\\\"']:
+            indexes=[m.start() for m in re.finditer(re.escape(pattern),page)]
+            print('DATA PATTERN',repr(pattern),'COUNT',len(indexes),flush=True)
+            for pos in indexes[:3]:print('DATA SNIP',repr(page[max(0,pos-190):pos+350]),flush=True)
           scripts=re.findall(r'<script[^>]+src=["\x27]([^"\x27]+)',page)
           scripts=[x for x in scripts if '/_next/static/' in x]
           print('SCRIPT COUNT',len(scripts),flush=True)
