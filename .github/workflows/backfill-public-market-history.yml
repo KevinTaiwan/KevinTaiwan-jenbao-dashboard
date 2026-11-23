@@ -1,19 +1,14 @@
 name: Backfill verified public market history
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/backfill_public_market_history.py'
-      - 'scripts/backfill_twse_flows.py'
-      - 'scripts/backfill_twse_market_activity.py'
-      - '.github/workflows/backfill-public-market-history.yml'
+  # Full backfill is expensive; run on schedule or manually rather than every
+  # script update (which competes with the daily publication).
   workflow_dispatch:
   schedule:
     - cron: '35 1 * * 1-5'
 permissions:
   contents: write
 concurrency:
-  group: jenbao-history-backfill
+  group: jenbao-public-market-writer
   cancel-in-progress: false
 jobs:
   backfill:
@@ -36,4 +31,14 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add public/market-history.json
           git commit -m 'Update verified 240-day market history'
-          git push
+          for i in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort
+              echo "FAIL: new overlapping observations require explicit reconciliation"
+              exit 1
+            fi
+            if git push origin HEAD:main; then exit 0; fi
+          done
+          echo "FAIL: concurrent branch updates; old history retained"
+          exit 1

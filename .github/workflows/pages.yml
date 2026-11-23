@@ -29,9 +29,11 @@ permissions:
   contents: write
   pages: write
   id-token: write
+# Shared write mutex: deployment/summary and long history backfill cannot
+# publish competing revisions of public/market-history.json concurrently.
 concurrency:
-  group: jenbao-pages
-  cancel-in-progress: true
+  group: jenbao-public-market-writer
+  cancel-in-progress: false
 jobs:
   publish:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
