@@ -73,7 +73,7 @@ jobs:
                   raise SystemExit('Unexpected market center series')
               provenance=series['twPeSource']
               if (not isinstance(provenance,dict)
-                  or len(series.get('twPe',[])) < 240
+                  or len(series.get('twPe',[])) < 900
                   or provenance.get('observations') != len(series['twPe'])
                   or provenance.get('missing_sessions') != 0
                   or provenance.get('official_twse_monthly') is not False
