@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self' https://ws.api.cnyes.com/ws/api/v1/charting/history; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self' https://ws.api.cnyes.com/ws/api/v1/charting/history https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://www.twse.com.tw https://proxy.cors.dev; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="theme-color" content="#081222"><title>珍寶投顧 | Personal CIO Desk · 市場決策</title>
 <style>
 :root{color-scheme:dark;--bg:#081222;--surface:#111f33;--surface2:#16283f;--line:#28415d;--text:#e9f1fb;--muted:#91a9c5;--cyan:#6ad8e0;--blue:#73aaff;--amber:#e9c17a;--red:#ff8d99;--green:#77dfb5;--violet:#a4a0fa}
@@ -734,16 +734,19 @@ async function refreshDirectMarket(){
   if(!intradayMarketData||typeof intradayMarketData.markets!=="object")intradayMarketData={markets:{}};
   let got=0,summary=[];
   for(let i=0;i<keys.length;i++){
-   const entry=results[i];if(entry.status!=="fulfilled"){summary.push(keys[i]+" 未連線");continue}
+   const entry=results[i];if(entry.status!=="fulfilled"){
+    summary.push(marketQuoteStateLabel(keys[i],intradayMarketData.markets[keys[i]]));
+    continue;
+   }
    const incoming=entry.value,previous=intradayMarketData.markets[keys[i]];
    const ti=Date.parse(incoming.latest.lastCandleTime),tp=Date.parse(previous?.latest?.lastCandleTime||"");
    if(!previous||!Number.isFinite(tp)||ti>=tp){
     intradayMarketData.markets[keys[i]]=incoming;got++;
    }
-   summary.push((keys[i]==="taiex"?"台股":"美股")+" "+incoming.quoteAgeMinutes+"分延遲");
+   summary.push(marketQuoteStateLabel(keys[i],intradayMarketData.markets[keys[i]]));
   }
   directQuoteCheckedAt=new Date().toISOString();
-  directQuoteStatus=got?"瀏覽器行情："+summary.join("｜"):"直讀失敗，保留 GitHub 備援行情";
+  directQuoteStatus="市場狀態："+summary.join("｜")+(got?"":"（使用最近可核對快照）");
   if(Date.now()-lastTwseCheckAt>OFFICIAL_TWSE_CHECK_MS){
    lastTwseCheckAt=Date.now();
    // Day-trade share is a post-close report. Do not infer intraday day-trades.
@@ -757,6 +760,38 @@ async function refreshDirectMarket(){
  }finally{liveFetching=false}
 }
 
+// Separate trading-session status from the wall-clock age of a last trade.
+function marketSessionState(key,instant=Date.now()){
+ const zone=key==="sp500"?"America/New_York":"Asia/Taipei";
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:zone,
+  weekday:"short",hour:"2-digit",minute:"2-digit",hourCycle:"h23",hour12:false})
+  .formatToParts(new Date(instant));
+ const value=k=>parts.find(p=>p.type===k)?.value;
+ if(["Sat","Sun"].includes(value("weekday")))return "weekend";
+ const minute=Number(value("hour"))*60+Number(value("minute"));
+ if(!Number.isFinite(minute))return "unknown";
+ const opening=key==="sp500"?570:540,closing=key==="sp500"?960:810;
+ return minute<opening?"preopen":minute>=closing?"closed":"trading";
+}
+function marketQuoteStateLabel(key,quote){
+ const label=key==="taiex"?"台股":"美股",session=marketSessionState(key);
+ const t=Date.parse(quote?.latest?.lastCandleTime||"");
+ const quoteDate=Number.isFinite(t)?localMarketDateAt(t,key):null;
+ if(session==="weekend")return label+"週末休市";
+ if(session==="preopen")return label+"尚未開盤";
+ if(!Number.isFinite(t)||quoteDate!==marketLocalDay(key))
+  return label+(session==="closed"?"已收盤，收盤資料待核實":"當日行情尚未核實");
+ const zone=key==="sp500"?"America/New_York":"Asia/Taipei";
+ const clock=new Intl.DateTimeFormat("en-GB",{timeZone:zone,hour:"2-digit",
+  minute:"2-digit",hourCycle:"h23"}).format(new Date(t));
+ const minute=Number(clock.slice(0,2))*60+Number(clock.slice(3,5));
+ if(session==="closed")
+  return label+(minute>=(key==="sp500"?960:810)?
+   "已收盤，最後報價 "+clock+"（非延遲）":
+   "已收盤，最後行情 "+clock+"（收盤末段待核實）");
+ const age=Math.max(0,Math.round((Date.now()-t)/60000));
+ return label+"行情 "+clock+"｜"+(age>10?"資料延遲 ":"距最新報價 ")+age+" 分鐘";
+}
 function marketLocalDay(key){
  const zone=key==="sp500"?"America/New_York":"Asia/Taipei";
  const parts=new Intl.DateTimeFormat("en-US",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
@@ -1798,14 +1833,17 @@ function showHistory(){
    const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="0 0 840 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="0" y="0" width="840" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+maintenanceHint+priceLines+rightPlot+topRatio+midLines+midRatioLine+midRightAxis+midLegend+missingMoney+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
   const latestDaily=topCandles.at(-1);
    const directNote='<div class="technical-current-day" role="status">'+esc(directQuoteStatus)+
-      '｜K線查詢間隔 60 秒（供應商延遲可能較長）'+
+      '｜資料查核 '+esc(formatTaipeiMarketTime(directQuoteCheckedAt))+
+      '｜查詢間隔 60 秒（不保證供應商即時更新）'+
       (officialTodayMarket.date===marketLocalDay("taiex")&&Number.isFinite(officialTodayMarket.dayTradeSharePct)?
        '｜今日正式當沖比 '+historyFormat(officialTodayMarket.dayTradeSharePct,2)+'%':
        '｜今日正式當沖比 '+(new Date().toLocaleTimeString("en-GB",{timeZone:"Asia/Taipei",hour:"2-digit",hourCycle:"h23"}).slice(0,2)<"14"?"盤中未公布":"待公布或無法連線"))+
       '</div>';
    const currentDayNote=latestDaily?.provisional?
-    '<div class="technical-current-day" role="status">今日一根暫定日K｜'+esc(latestDaily.date)+
-      '　行情時間 '+esc(formatTaipeiMarketTime(latestDaily.quoteTime))+
+    '<div class="technical-current-day" role="status">'+
+      (marketSessionState(c.top==="sp500K"?"sp500":"taiex")==="closed"?
+      '今日收盤待核實日K｜':'今日一根暫定日K｜')+esc(latestDaily.date)+
+      '　最後行情時間 '+esc(formatTaipeiMarketTime(latestDaily.quoteTime))+
       '　開 '+historyFormat(latestDaily.open,2)+'　高 '+historyFormat(latestDaily.high,2)+
       '　低 '+historyFormat(latestDaily.low,2)+'　最新 '+historyFormat(latestDaily.close,2)+
       (c.top==="taiexK"?'　累積成交金額 '+(Number.isFinite(latestDaily.turnoverYiTwd)?
