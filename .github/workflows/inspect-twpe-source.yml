@@ -1,45 +1,28 @@
-name: Inspect actual daily TAIEX market P/E data source
+name: Inspect historical market P/E payload
 on:
   push:
     branches: [main]
     paths: ['.github/workflows/inspect-twpe-source.yml']
-  workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  inspect:
+  audit:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect embedded daily TAIEX P/E data and public API route (read-only)
+      - name: Read public HTML payload and identify actual daily historical series
         run: |
           python3 - <<'PY'
-          import urllib.request,urllib.parse,re,json,html
-          base='https://toalpha.tw'
-          def get(u):
-            req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/json,*/*'})
-            with urllib.request.urlopen(req,timeout=20) as h:return h.read(5000000).decode('utf-8','replace')
-          page=get(base+'/market')
-          print('PAGE BYTES',len(page),flush=True)
-          for word in ['大盤本益比','本益比','20 年位置','十年','歷史本益比','市值加權','PE\\"','本益比位置']:
-            inds=[m.start() for m in re.finditer(re.escape(word),page)]
-            print('WORD',word,'COUNT',len(inds),flush=True)
-            for pos in inds[:7]:print('CONTEXT',repr(page[max(0,pos-120):pos+360]),flush=True)
-          for pattern in ['\\\\"pe\\\\"','\\\\"peRatio\\\\"','\\\\"pe_ratio\\\\"','\\\\"date\\\\"','\\\\"2026-11-20\\\\"','2026-11-20','17.1','\\\\"peData\\\\"','\\\\"peHistory\\\\"']:
-            indexes=[m.start() for m in re.finditer(re.escape(pattern),page)]
-            print('DATA PATTERN',repr(pattern),'COUNT',len(indexes),flush=True)
-            for pos in indexes[:3]:print('DATA SNIP',repr(page[max(0,pos-190):pos+350]),flush=True)
-          scripts=re.findall(r'<script[^>]+src=["\x27]([^"\x27]+)',page)
-          scripts=[x for x in scripts if '/_next/static/' in x]
-          print('SCRIPT COUNT',len(scripts),flush=True)
-          for url in scripts:
-            try:
-              js=get(base+url)
-              markers=['/api/market','/api/valuation','market/pe','pe-history','market-pe','twse','weightedPe','marketPe','marketPER','peRatio','pe_ratio','/api/']
-              hits=[k for k in markers if k.lower() in js.lower()]
-              if hits:
-                print('SCRIPT HITS',url,'SIZE',len(js),'HITS',hits,flush=True)
-                for needle in ['api/market','api/valuation','market/pe','pe-history','market-pe','weightedPe','marketPe','marketPER','peRatio','pe_ratio','/api/']:
-                  p=js.lower().find(needle.lower())
-                  if p>=0:print('MATCH',needle,repr(js[max(0,p-220):p+400]),flush=True)
-            except Exception as e:print('JS ERROR',url,repr(e),flush=True)
+          import urllib.request,re,json,html,collections
+          with urllib.request.urlopen(urllib.request.Request('https://toalpha.tw/market',headers={'User-Agent':'Mozilla/5.0'}),timeout=25) as response:
+            txt=response.read(4000000).decode('utf-8','replace')
+          keys=['pe','per','marketPe','marketPE','peRatio','pe_ratio','peHistory','valuation','TWPE','上市大盤本益比','2026-11-19','2026-11-18','2026-10-15','2025-12-31','2026-11-20','2026-08-01']
+          print('HTML size',len(txt),'embedded payload count',txt.count('self.__next_f.push'),flush=True)
+          for key in keys:
+            for pattern in [key,chr(92)+chr(34)+key+chr(92)+chr(34)]:
+              hits=[x.start() for x in re.finditer(re.escape(pattern),txt,re.I)]
+              print('PATTERN',repr(pattern),'COUNT',len(hits),flush=True)
+              for p in hits[:2]:
+                print('SNIPPET',repr(txt[max(0,p-100):p+260]),flush=True)
+          print('REACT CHUNKS',len(re.findall(r'self\.__next_f\.push',txt)),flush=True)
+          print('TAGGED JSON-KEY PAIRS',collections.Counter(re.findall(r'\\\\"([a-zA-Z][a-zA-Z_0-9]{0,26})\\\\":',txt)).most_common(35),flush=True)
           PY
