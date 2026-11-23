@@ -12,6 +12,7 @@ on:
       - 'public/**'
       - 'scripts/validate_public.py'
       - 'scripts/refresh_market_history.py'
+      - 'scripts/sync_market_snapshot.py'
       - 'scripts/market_seed.json'
       - 'scripts/ex_etf_maintenance_seed.json'
       - 'scripts/validate_market_history.py'
@@ -43,22 +44,33 @@ jobs:
           # workflow_run points at the triggering run; deploy latest main.
           ref: main
       - name: Refresh public market-history from official and attributable sources
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]'))
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || contains(github.event.head_commit.message, '[refresh-all]') || contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]')
         env:
           JENBAO_YIELD_ONLY: ${{ contains(github.event.head_commit.message, '[refresh-yields]') && '1' || '0' }}
           JENBAO_ETF_ONLY: ${{ contains(github.event.head_commit.message, '[refresh-etfs]') && '1' || '0' }}
         run: |
           python3 scripts/refresh_market_history.py
           python3 scripts/validate_market_history.py public/market-history.json
+      - name: Sync published summary to individually dated observed data
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || contains(github.event.head_commit.message, '[refresh-all]') || contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]')
+        run: |
+          python3 scripts/sync_market_snapshot.py
+          python3 scripts/validate_public.py public/market-data.json
       - name: Commit validated public market-history snapshot
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]'))
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || contains(github.event.head_commit.message, '[refresh-all]') || contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]')
         run: |
           git config user.name "jenbao-market-bot"
           git config user.email "jenbao-market-bot@users.noreply.github.com"
-          git add public/market-history.json
+          git add public/market-history.json public/market-data.json
           if ! git diff --cached --quiet; then
-            git commit -m "Refresh public TAIEX DXY USD-TWD VIX HY-OAS history [skip ci]"
-            git push origin HEAD:main
+            git commit -m "Refresh validated public market history and summary [skip ci]"
+            for i in 1 2 3; do
+              if git push origin HEAD:main; then exit 0; fi
+              git fetch origin main
+              git rebase origin/main
+            done
+            echo "FAIL: main advanced during market summary update"
+            exit 1
           fi
       - name: Verify public-only directory and JSON
         run: |

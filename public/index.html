@@ -528,7 +528,7 @@ body.technical-fullscreen-active{overflow:hidden!important}
 <div class="card market-cross">
 <div class="cross-head"><div><div class="subhead">十四指標走勢＋三層技術分析｜同步時間軸</div><div class="small">原有 14 張指標圖維持原始 Y 軸及 MA5／20／60／240；另新增可獨立選上、中、下層資料來源的三層技術圖（價格折線＋MA／布林通道、市場指標或籌碼副圖、MACD／RSI）。所有圖可排序；三層技術圖滑鼠移入即顯示日期與價格十字線，其餘指標圖可按住時間線拖動。</div></div>
 <div class="cross-controls" aria-label="歷史圖切換"><button class="button" type="button" data-window="20">20日</button><button class="button" type="button" data-window="60">60日</button><button class="button active" type="button" data-window="120">120日</button><button class="button" type="button" data-window="240">240日</button><button class="button" type="button" data-window="3y">3年</button><button class="button" type="button" data-window="5y">5年</button><button class="button" type="button" data-window="10y">10年</button><button class="button" type="button" data-window="max">Max</button><button class="button" type="button" data-mode="raw">原始值</button><button class="button" type="button" data-mode="indexed">起點=100</button></div></div>
-<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">三層技術圖滑鼠移入即同步；其餘圖可按住時間線拖曳</span></div><div id="technicalFreshnessWarning" role="status" aria-live="polite" hidden></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="十五張圖同步時間游標；三層圖滑鼠移動即定位，其餘圖可拖曳時間線，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
+<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">三層技術圖滑鼠移入即同步；其餘圖可按住時間線拖曳</span></div><div id="technicalFreshnessWarning" role="status" aria-live="polite" hidden></div><div id="marketSeriesFreshness" class="small" style="padding:8px 2px;line-height:1.8" role="status"></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="十五張圖同步時間游標；三層圖滑鼠移動即定位，其餘圖可拖曳時間線，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
 <div id="historynote" class="small cross-note">歷史資料正在載入…</div></div>
 <div class="sectionhead"><h2>市場狀態與信用溫度｜最新觀測</h2><span class="small">保留個別指標原始單位</span></div><div class="grid two"><div class="card"><div id="coreSignals"></div></div><div class="card"><div class="subhead">跨市場解讀原則</div><p class="small" style="line-height:2">股市下跌若與 DXY、USD/TWD、VIX 同時走高，應留意跨境資金與避險需求；只有 HY OAS 也連續擴大，信用風險的證據才更完整。不同市場休市日、報價時段及利差發布延遲都會產生時間差。</p><div class="separator"></div><p class="small">原始值模式：各張圖獨立縱軸，便於觀察自身轉折。起點=100：五圖共用同一縱軸比例，適合比較相對變化幅度。</p></div></div>
 <div class="sectionhead"><h2>今日市場注意事項</h2></div><div class="card"><ul class="bullet-list" id="notes"></ul></div>
@@ -1257,16 +1257,26 @@ function techOhlcRecords(key){
  const day=provisionalDailyCandle(source);
  return day?[...official,day]:official;
 }
+// Keep the 15-chart TAIEX line and the 3-layer non-K line on the same
+// verified OHLC history as candles. Never persist indicative bars as official.
+function mergedTaiexSeries(rows){
+ const map=new Map(rows.filter(r=>r&&/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&Number.isFinite(r.taiex)).map(r=>[r.date,{...r}]));
+ for(const q of techOhlcRecords("taiex")){
+  if(!q||!Number.isFinite(q.close))continue;
+  map.set(q.date,{...(map.get(q.date)||{date:q.date}),taiex:q.close,
+    provisional:q.provisional===true,taiexSource:q.provisional?"indicative":"verified-OHLC"});
+ }
+ return [...map.values()].sort((a,b)=>a.date.localeCompare(b.date));
+}
 function techPriceObservations(raw,key){
  if(key==="taiexK"||key==="sp500K"){
   return techOhlcRecords(key).map(r=>({...r,value:r.close}));
  }
- const published=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date)).map(r=>({date:r.date,value:r[key]/(TECH_CREDIT_SERIES[key]?.divisor??1)}));
- if(key==="taiex"){
-  const day=provisionalDailyCandle("taiex");
-  if(day&&!published.some(r=>r.date>=day.date))published.push({date:day.date,value:day.close,provisional:true});
- }
- return published;
+ const listed=(key==="taiex"?mergedTaiexSeries(raw):raw);
+ return listed.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key]))
+  .sort((a,b)=>a.date.localeCompare(b.date))
+  .map(r=>({date:r.date,value:r[key]/(TECH_CREDIT_SERIES[key]?.divisor??1),
+    provisional:r.provisional===true}));
 }
 function techObservations(raw,key){
  if(key==="off")return [];
@@ -1633,6 +1643,10 @@ function updateTechnicalFreshness(){
      .map(r=>r.date).sort().at(-1);
    if(latest&&(!evidence||latest>evidence))evidence=latest;
   }
+  if(key==="taiex"&&Array.isArray(marketHistoryData?.rows)){
+   const last=marketHistoryData.rows.filter(r=>r&&Number.isFinite(r.taiex)).at(-1)?.date;
+   if(last&&archived>last)warnings.push("加權非K折線原檔落後至 "+last+"，現由正式OHLC "+archived+" 補足");
+  }
   if(evidence&&evidence>archived){
    warnings.push(label+"：已有 "+evidence+" 的市場行情，永久日K僅到 "+archived+
       "；"+(pending?"圖上保留待核實K線":"等待可信 OHLC，不補造 K 線"));
@@ -1641,15 +1655,30 @@ function updateTechnicalFreshness(){
  banner.hidden=warnings.length===0;
  banner.textContent=warnings.length?"WARN｜日線歷史更新落後｜"+warnings.join("｜"):"";
 }
+function drawMarketObservationDates(){
+ const node=$("marketSeriesFreshness");if(!node)return;
+ const stats=marketHistoryData?.stats||{};
+ node.textContent="每日來源最新觀測日（不以前值冒充當日）："+
+  seriesConfig.map(s=>{
+   const key=s[0];
+   const historyDay=stats[key]?.last;
+   const archiveDay=key==="taiex"?(techOhlcCache.taiex||[]).at(-1)?.date:null;
+   const day=archiveDay&&(!historyDay||archiveDay>historyDay)?archiveDay:historyDay;
+   return s[1]+"："+(day||"待查");
+  }).join("｜");
+}
 function showHistory(){
+ drawMarketObservationDates();
  updateTechnicalFreshness();
  const host=$("marketCrossCharts"),note=$("historynote");
  const raw=marketHistoryData&&Array.isArray(marketHistoryData.rows)?marketHistoryData.rows:[],
+       unifiedTaiex=mergedTaiexSeries(raw),
        reference=data&&data.asOf?marketChartDate(data.asOf):Date.now(),
        lastPublished=raw.length?Math.max(...raw.map(r=>marketChartDate(r.date))):reference,
        currentSessions=["taiex","sp500"].map(k=>provisionalDailyCandle(k)).filter(Boolean).map(r=>marketChartDate(r.date)),
-       cutoff=Math.min(Date.now(),Math.max(reference,lastPublished,...currentSessions)),
-       archivedSessions=[...new Set(raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r.taiex)).map(r=>r.date))]
+       latestIndexDate=unifiedTaiex.length?marketChartDate(unifiedTaiex.at(-1).date):reference,
+       cutoff=Math.min(Date.now(),Math.max(reference,lastPublished,latestIndexDate,...currentSessions)),
+       archivedSessions=[...new Set(unifiedTaiex.map(r=>r.date))]
           .filter(day=>marketChartDate(day)<=cutoff).sort(),
        longWindow=chartDays==="max"||chartDays.endsWith("y"),
        windowSessions=longWindow?[]:archivedSessions.slice(-Number(chartDays)),
@@ -1675,7 +1704,7 @@ function showHistory(){
  // Foreign daily flow and cumulative values both come from the verified 240-session history.
  // The cumulative baseline is fixed in market-history.json and never resets for a 20/60/120-day display window.
  const series=seriesConfig.map(([key,label,unit,color,digits,,kind])=>{
-  const all=raw.filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date));
+  const all=(key==="taiex"?unifiedTaiex:raw).filter(r=>r&&typeof r.date==="string"&&Number.isFinite(r[key])).sort((a,b)=>a.date.localeCompare(b.date));
   const rows=all.filter(r=>marketIsWeekday(r.date)&&marketChartDate(r.date)>=start&&marketChartDate(r.date)<=end);
   const s={key,label,unit,color,digits,kind:seriesConfig.find(x=>x[0]===key)?.[5]||"line",rows,first:rows[0]?.[key],ma:{}};
   for(const n of MA_PERIODS)s.ma[n]=rollingMean(all,key,n).filter(p=>marketIsWeekday(p.date)&&marketChartDate(p.date)>=start&&marketChartDate(p.date)<=end);
