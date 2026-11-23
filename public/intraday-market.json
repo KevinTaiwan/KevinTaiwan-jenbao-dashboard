@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-intraday",
-  "generatedAt": "2026-11-23T01:11:09.447Z",
-  "asOfTaipei": "2026-11-23T09:11:09+08:00",
+  "generatedAt": "2026-11-23T02:13:05+00:00",
+  "asOfTaipei": "2026-11-23T10:13:05+08:00",
   "refreshIntentMinutes": 5,
   "actualQuoteDelayVaries": true,
   "tradingSessions": "TAIEX 09:00-13:30 Asia/Taipei; SP500 09:30-16:00 America/New_York",
@@ -11,96 +11,108 @@
       "market": "taiex",
       "date": "2026-11-23",
       "status": "provisional",
-      "source": "鉅亨加權指數日 OHLC 與 1 分鐘行情（盤中快照）",
+      "source": "Yahoo Finance 5m index quote (delayed/indicative)",
+      "sourceDelayMinutes": 0,
       "latest": {
-        "open": 35899.48,
-        "high": 36655.48,
-        "low": 35442.41,
-        "close": 36075.19,
-        "lastCandleTime": "2026-11-23T09:10:00+08:00"
+        "open": 35899.4805,
+        "high": 36655.4805,
+        "low": 35442.4102,
+        "close": 36384.7383,
+        "lastCandleTime": "2026-11-23T09:53:00+08:00"
       },
       "candles": [
         {
           "time": "2026-11-23T09:00:00+08:00",
-          "open": 36033.29,
-          "high": 36033.29,
-          "low": 35601.45,
-          "close": 35601.45
-        },
-        {
-          "time": "2026-11-23T09:01:00+08:00",
-          "open": 35605.38,
-          "high": 35605.38,
-          "low": 35454.64,
-          "close": 35539.44
-        },
-        {
-          "time": "2026-11-23T09:02:00+08:00",
-          "open": 35659.62,
-          "high": 35730,
-          "low": 35659.62,
-          "close": 35730
-        },
-        {
-          "time": "2026-11-23T09:03:00+08:00",
-          "open": 35751.4,
-          "high": 36002.96,
-          "low": 35751.4,
-          "close": 36002.96
-        },
-        {
-          "time": "2026-11-23T09:04:00+08:00",
-          "open": 36167.01,
-          "high": 36242.5,
-          "low": 36167.01,
-          "close": 36242.5
+          "open": 35899.4805,
+          "high": 36244.3789,
+          "low": 35442.4102,
+          "close": 36244.3789
         },
         {
           "time": "2026-11-23T09:05:00+08:00",
-          "open": 36251.44,
-          "high": 36320.95,
-          "low": 36193.05,
-          "close": 36320.95
-        },
-        {
-          "time": "2026-11-23T09:06:00+08:00",
-          "open": 36428.72,
-          "high": 36645.11,
-          "low": 36428.72,
-          "close": 36645.11
-        },
-        {
-          "time": "2026-11-23T09:07:00+08:00",
-          "open": 36645.11,
-          "high": 36655.48,
-          "low": 36373.77,
-          "close": 36375.77
-        },
-        {
-          "time": "2026-11-23T09:08:00+08:00",
-          "open": 36354.88,
-          "high": 36354.88,
-          "low": 36108.14,
-          "close": 36133.82
-        },
-        {
-          "time": "2026-11-23T09:09:00+08:00",
-          "open": 36168.42,
-          "high": 36168.42,
-          "low": 36059.58,
-          "close": 36091.78
+          "open": 36243.8008,
+          "high": 36655.4805,
+          "low": 36059.0781,
+          "close": 36069.8398
         },
         {
           "time": "2026-11-23T09:10:00+08:00",
-          "open": 36069.84,
-          "high": 36075.19,
-          "low": 36069.84,
-          "close": 36075.19
+          "open": 36075.1914,
+          "high": 36075.1914,
+          "low": 35684.1484,
+          "close": 35846.2617
+        },
+        {
+          "time": "2026-11-23T09:15:00+08:00",
+          "open": 35858.9883,
+          "high": 36097.5312,
+          "low": 35648.4297,
+          "close": 35859.6484
+        },
+        {
+          "time": "2026-11-23T09:20:00+08:00",
+          "open": 35819.3008,
+          "high": 35979.0391,
+          "low": 35569.5508,
+          "close": 35754.1484
+        },
+        {
+          "time": "2026-11-23T09:25:00+08:00",
+          "open": 35796.1602,
+          "high": 35954.4883,
+          "low": 35647.7305,
+          "close": 35909.5703
+        },
+        {
+          "time": "2026-11-23T09:30:00+08:00",
+          "open": 35911.7109,
+          "high": 36249.0391,
+          "low": 35890.7812,
+          "close": 36006.8594
+        },
+        {
+          "time": "2026-11-23T09:35:00+08:00",
+          "open": 36049.3594,
+          "high": 36325.3984,
+          "low": 36006.1914,
+          "close": 36324.25
+        },
+        {
+          "time": "2026-11-23T09:40:00+08:00",
+          "open": 36321.9609,
+          "high": 36332.7695,
+          "low": 36042.3594,
+          "close": 36278.4219
+        },
+        {
+          "time": "2026-11-23T09:45:00+08:00",
+          "open": 36283.0195,
+          "high": 36562.3906,
+          "low": 36283.0195,
+          "close": 36365.4492
+        },
+        {
+          "time": "2026-11-23T09:50:00+08:00",
+          "open": 36403.2812,
+          "high": 36433.5703,
+          "low": 36355.7812,
+          "close": 36402.1289
+        },
+        {
+          "time": "2026-11-23T09:53:00+08:00",
+          "open": 36384.7383,
+          "high": 36384.7383,
+          "low": 36384.7383,
+          "close": 36384.7383
         }
       ],
       "turnoverYiTwd": null,
       "projectedTurnoverYiTwd": null,
-      "turnoverStatus": "unavailable_not_inferred_from_shares"
+      "projectionMethod": null,
+      "projectionIsEstimate": false,
+      "turnoverStatus": "unavailable_not_inferred_from_shares",
+      "note": "OHLC are 5-minute provisional candles, not official closing values. Volume is monetary turnover (億元), never index share count.",
+      "quoteAgeMinutes": 20.1
     },
     "sp500": {
       "market": "sp500",
