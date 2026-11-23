@@ -1387,6 +1387,19 @@ function marketIsWeekday(date){
  return day!==0&&day!==6;
 }
 function historyFormat(v,d){return Number.isFinite(v)?v.toLocaleString("zh-TW",{minimumFractionDigits:d,maximumFractionDigits:d}):"—"}
+// Quote timestamps are absolute ISO instants. Display in Taiwan local time;
+// never rewrite UTC source timestamps or exchange-session trading dates.
+function formatTaipeiMarketTime(iso){
+ const timestamp=Date.parse(iso||"");
+ if(!Number.isFinite(timestamp))return "—";
+ const parts=new Intl.DateTimeFormat("en-US",{
+  timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit",
+  hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23",hour12:false
+ }).formatToParts(new Date(timestamp));
+ const field=type=>parts.find(p=>p.type===type)?.value||"—";
+ return field("year")+"/"+field("month")+"/"+field("day")+" "+
+  field("hour")+":"+field("minute")+":"+field("second")+"（台北時間 UTC+8）";
+}
 function marketViewDate(v){return String(v).replace(/-/g,"/")}
 function nearestHistoryDate(ts,dates){
  if(!dates||!dates.length)return null;
@@ -1792,7 +1805,7 @@ function showHistory(){
       '</div>';
    const currentDayNote=latestDaily?.provisional?
     '<div class="technical-current-day" role="status">今日一根暫定日K｜'+esc(latestDaily.date)+
-      '　來源時間 '+esc(latestDaily.quoteTime||"—")+
+      '　行情時間 '+esc(formatTaipeiMarketTime(latestDaily.quoteTime))+
       '　開 '+historyFormat(latestDaily.open,2)+'　高 '+historyFormat(latestDaily.high,2)+
       '　低 '+historyFormat(latestDaily.low,2)+'　最新 '+historyFormat(latestDaily.close,2)+
       (c.top==="taiexK"?'　累積成交金額 '+(Number.isFinite(latestDaily.turnoverYiTwd)?
