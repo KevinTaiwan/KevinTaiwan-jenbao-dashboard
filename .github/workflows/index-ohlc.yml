@@ -1,4 +1,6 @@
 name: Permanent TAIEX and S&P 500 Daily OHLC Archive
+# pages.yml deploys on workflow_run successful completion, including GITHUB_TOKEN
+# archive commits that cannot trigger another push workflow by themselves.
 on:
   push:
     branches: [main]

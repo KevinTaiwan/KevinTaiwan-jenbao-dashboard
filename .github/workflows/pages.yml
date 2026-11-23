@@ -1,5 +1,11 @@
 name: Deploy Personal CIO Desk - Public Market Only
 on:
+  # Explicitly deploy after archival workflow completes. GITHUB_TOKEN commits
+  # alone do not trigger downstream push workflows.
+  workflow_run:
+    workflows: ["Permanent TAIEX and S&P 500 Daily OHLC Archive"]
+    types: [completed]
+    branches: [main]
   push:
     branches: [main]
     paths:
@@ -25,6 +31,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   publish:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -32,6 +39,9 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+        with:
+          # workflow_run points at the triggering run; deploy latest main.
+          ref: main
       - name: Refresh public market-history from official and attributable sources
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]'))
         env:
