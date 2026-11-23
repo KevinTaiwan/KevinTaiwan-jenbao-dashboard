@@ -659,7 +659,7 @@ async function directCnyesTaiwanQuote(){
  const url="https://ws.api.cnyes.com/ws/api/v1/charting/history?symbol=TWS%3ATSE01%3AINDEX";
  const now=Math.floor(Date.now()/1000);
  const responses=await Promise.all(["D","1"].map(async resolution=>{
-  const response=await fetch(url+"&resolution="+resolution+"&from="+now+"&to="+(resolution==="D"?start:Math.max(start,now-900)),
+  const response=await fetch(url+"&resolution="+resolution+"&from="+(resolution==="D"?start:Math.max(start,now-900))+"&to="+now,
    {cache:"no-store",signal:AbortSignal.timeout(6500)});
   if(!response.ok)throw Error("鉅亨 HTTP "+response.status);
   return (await response.json()).data;
