@@ -9,6 +9,7 @@ counting a matched round-trip twice. This is the traded-value metric.
 Never substitute '當沖成交股數占比' for this value ratio.
 """
 import datetime as dt
+import os
 import json
 import math
 import pathlib
@@ -128,6 +129,10 @@ def extract_daytrade(obj):
     return result
 
 def months():
+    if os.environ.get("JENBAO_TWSE_INCREMENTAL")=="1":
+        recent=(TODAY-dt.timedelta(days=40)).replace(day=1)
+        latest=TODAY.replace(day=1)
+        return sorted(set((recent,latest)))
     start=(TODAY-dt.timedelta(days=1570)).replace(day=1)
     out=[]
     while start<=TODAY:

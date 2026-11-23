@@ -79,13 +79,20 @@ def main():
       "dxy":"https://finance.yahoo.com/quote/DX-Y.NYB/history/",
       "t10yie":"https://fred.stlouisfed.org/series/T10YIE",
       "t5yie":"https://fred.stlouisfed.org/series/T5YIE",
-      "sofrMinusIorb":"https://fred.stlouisfed.org/series/SOFR"}
+      "sofrMinusIorb":"https://fred.stlouisfed.org/series/SOFR",
+      "marginBalanceYi":"https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN",
+      "move":"https://finance.yahoo.com/quote/%5EMOVE/",
+      "cnn":"https://edition.cnn.com/markets/fear-and-greed",
+      "futuresNetContracts":"https://www.taifex.com.tw/cht/3/futContractsDate",
+      "oil":"https://finance.yahoo.com/quote/CL%3DF/",
+      "goldPrice":"https://finance.yahoo.com/quote/GC%3DF/"}
     snapshot["sources"]=[{"label":k+" 觀測日 "+d,"date":d,"url":source_links[k]}
         for k,(d,_) in used.items() if k in source_links]
     note="各指標保留自身原始觀測日，來源延遲不以最新交易日補值；市場敘事僅引用已核對資料。"
-    previous=list(snapshot.get("notes",[]))
-    if note not in previous:previous.append(note)
-    snapshot["notes"]=previous[-20:]
+    snapshot["notes"]=[note]+[
+        f"{key} 實際觀測日 {value[0]}；不保證等於首頁加權指數收盤日"
+        for key,value in used.items()
+    ][:19]
     validate(snapshot)
     dest=PUBLIC/"market-data.json"
     tmp=PUBLIC/"market-data.json.tmp"

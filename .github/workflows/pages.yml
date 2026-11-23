@@ -13,6 +13,8 @@ on:
       - 'scripts/validate_public.py'
       - 'scripts/refresh_market_history.py'
       - 'scripts/sync_market_snapshot.py'
+      - 'scripts/refresh_market_center_history.py'
+      - 'scripts/backfill_twse_market_activity.py'
       - 'scripts/market_seed.json'
       - 'scripts/ex_etf_maintenance_seed.json'
       - 'scripts/validate_market_history.py'
@@ -51,6 +53,17 @@ jobs:
         run: |
           python3 scripts/refresh_market_history.py
           python3 scripts/validate_market_history.py public/market-history.json
+      - name: Increment market-center observations (FRED, Yahoo and official TWSE)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || contains(github.event.head_commit.message, '[refresh-all]')
+        run: |
+          python3 -u scripts/refresh_market_center_history.py
+      - name: Increment official TWSE turnover and day-trade value
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || contains(github.event.head_commit.message, '[refresh-all]')
+        env:
+          JENBAO_TWSE_INCREMENTAL: '1'
+        run: |
+          python3 -u scripts/backfill_twse_market_activity.py
+          python3 scripts/validate_market_history.py public/market-history.json
       - name: Sync published summary to individually dated observed data
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || contains(github.event.head_commit.message, '[refresh-all]') || contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]')
         run: |
@@ -61,7 +74,7 @@ jobs:
         run: |
           git config user.name "jenbao-market-bot"
           git config user.email "jenbao-market-bot@users.noreply.github.com"
-          git add public/market-history.json public/market-data.json
+          git add public/market-history.json public/market-data.json public/market-center-history.json
           if ! git diff --cached --quiet; then
             git commit -m "Refresh validated public market history and summary [skip ci]"
             for i in 1 2 3; do

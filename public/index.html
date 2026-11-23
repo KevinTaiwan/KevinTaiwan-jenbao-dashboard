@@ -528,7 +528,7 @@ body.technical-fullscreen-active{overflow:hidden!important}
 <div class="card market-cross">
 <div class="cross-head"><div><div class="subhead">十四指標走勢＋三層技術分析｜同步時間軸</div><div class="small">原有 14 張指標圖維持原始 Y 軸及 MA5／20／60／240；另新增可獨立選上、中、下層資料來源的三層技術圖（價格折線＋MA／布林通道、市場指標或籌碼副圖、MACD／RSI）。所有圖可排序；三層技術圖滑鼠移入即顯示日期與價格十字線，其餘指標圖可按住時間線拖動。</div></div>
 <div class="cross-controls" aria-label="歷史圖切換"><button class="button" type="button" data-window="20">20日</button><button class="button" type="button" data-window="60">60日</button><button class="button active" type="button" data-window="120">120日</button><button class="button" type="button" data-window="240">240日</button><button class="button" type="button" data-window="3y">3年</button><button class="button" type="button" data-window="5y">5年</button><button class="button" type="button" data-window="10y">10年</button><button class="button" type="button" data-window="max">Max</button><button class="button" type="button" data-mode="raw">原始值</button><button class="button" type="button" data-mode="indexed">起點=100</button></div></div>
-<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">三層技術圖滑鼠移入即同步；其餘圖可按住時間線拖曳</span></div><div id="technicalFreshnessWarning" role="status" aria-live="polite" hidden></div><div id="marketSeriesFreshness" class="small" style="padding:8px 2px;line-height:1.8" role="status"></div><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="十五張圖同步時間游標；三層圖滑鼠移動即定位，其餘圖可拖曳時間線，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
+<div class="cross-cursor-summary" role="status" aria-live="off"><span>同步游標日期：<strong id="crossCursorDate">讀取中</strong></span><span id="crossCursorCoverage">三層技術圖滑鼠移入即同步；其餘圖可按住時間線拖曳</span></div><div id="technicalFreshnessWarning" role="status" aria-live="polite" hidden></div><div id="marketSeriesFreshness" class="small" style="padding:8px 2px;line-height:1.8" role="status"></div><details class="small" style="margin:6px 0 14px"><summary>展開查看市場資料中心各指標最新實際觀測日期</summary><div id="marketCenterFreshness" style="padding:6px 0;line-height:2"></div></details><div id="marketCrossCharts" class="cross-charts" tabindex="0" role="group" aria-label="十五張圖同步時間游標；三層圖滑鼠移動即定位，其餘圖可拖曳時間線，鍵盤可左右移動" aria-describedby="crossCursorDate"></div>
 <div id="historynote" class="small cross-note">歷史資料正在載入…</div></div>
 <div class="sectionhead"><h2>市場狀態與信用溫度｜最新觀測</h2><span class="small">保留個別指標原始單位</span></div><div class="grid two"><div class="card"><div id="coreSignals"></div></div><div class="card"><div class="subhead">跨市場解讀原則</div><p class="small" style="line-height:2">股市下跌若與 DXY、USD/TWD、VIX 同時走高，應留意跨境資金與避險需求；只有 HY OAS 也連續擴大，信用風險的證據才更完整。不同市場休市日、報價時段及利差發布延遲都會產生時間差。</p><div class="separator"></div><p class="small">原始值模式：各張圖獨立縱軸，便於觀察自身轉折。起點=100：五圖共用同一縱軸比例，適合比較相對變化幅度。</p></div></div>
 <div class="sectionhead"><h2>今日市場注意事項</h2></div><div class="card"><ul class="bullet-list" id="notes"></ul></div>
@@ -1666,6 +1666,14 @@ function drawMarketObservationDates(){
    const day=archiveDay&&(!historyDay||archiveDay>historyDay)?archiveDay:historyDay;
    return s[1]+"："+(day||"待查");
   }).join("｜");
+ const centerNode=$("marketCenterFreshness");
+ if(centerNode){
+   centerNode.textContent=Object.entries(CENTER_META).map(([key,meta])=>{
+    const rows=centerRows[key]||[],last=rows.at(-1);
+    return meta[0]+"："+(last?.date||"無觀測日")+
+      (["月","季"].includes(meta[1])?"（發布頻率："+meta[1]+"）":"");
+   }).join("｜");
+ }
 }
 function showHistory(){
  drawMarketObservationDates();
