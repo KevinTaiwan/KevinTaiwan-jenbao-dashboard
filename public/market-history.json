@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-23T22:49:26+00:00",
+  "generatedAt": "2026-11-23T22:57:43+00:00",
   "cutoff": "2026-11-23",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -188,37 +188,37 @@
       }
     },
     "marketTurnoverYiTwd": {
-      "count": 1183,
+      "count": 1184,
       "status": "ready",
       "source": {
         "name": "TWSE whole-market成交金額 (億元)",
         "url": "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK"
       },
       "first": "2022-01-03",
-      "last": "2026-11-20",
-      "lastValue": 9323.206211
+      "last": "2026-11-23",
+      "lastValue": 11137.431932
     },
     "dayTradeTurnoverYiTwd": {
-      "count": 1183,
+      "count": 1184,
       "status": "ready",
       "source": {
         "name": "TWSE day-trading traded value, (buy+sell)/2, 億元",
         "url": "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U2"
       },
       "first": "2022-01-03",
-      "last": "2026-11-20",
-      "lastValue": 3226.410998
+      "last": "2026-11-23",
+      "lastValue": 4777.642282
     },
     "dayTradeTurnoverSharePct": {
-      "count": 1183,
+      "count": 1184,
       "status": "ready",
       "source": {
         "name": "TWSE day-trading成交金額占大盤成交金額, %",
         "url": "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U2"
       },
       "first": "2022-01-03",
-      "last": "2026-11-20",
-      "lastValue": 34.6062
+      "last": "2026-11-23",
+      "lastValue": 42.8972
     },
     "foreignCumulativeYi": {
       "count": 1001,
@@ -57923,20 +57923,23 @@
       "creditBelow130Accounts": 2677,
       "creditCallAmountTwd": 259951700,
       "creditDisposalAccounts": 224,
-      "creditDisposalAmountTwd": 362462910
+      "creditDisposalAmountTwd": 362462910,
+      "marketTurnoverYiTwd": 11137.431932,
+      "dayTradeTurnoverYiTwd": 4777.642282,
+      "dayTradeTurnoverSharePct": 42.8972
     }
   ],
   "twseTurnoverAudit": {
-    "generatedAt": "2026-11-23T02:36:49.162004+00:00",
+    "generatedAt": "2026-11-23T22:57:53.181019+00:00",
     "target": 1000,
     "counts": {
-      "marketTurnoverYiTwd": 1183,
-      "dayTradeTurnoverYiTwd": 1183,
-      "dayTradeTurnoverSharePct": 1183
+      "marketTurnoverYiTwd": 1184,
+      "dayTradeTurnoverYiTwd": 1184,
+      "dayTradeTurnoverSharePct": 1184
     },
-    "marketDatesDownloaded": 1045,
-    "dayTradeDatesDownloaded": 1045,
-    "dayTradeDatesReconciled": 1045,
+    "marketDatesDownloaded": 35,
+    "dayTradeDatesDownloaded": 35,
+    "dayTradeDatesReconciled": 35,
     "sourceIssues": [],
     "mismatchExamples": [],
     "mismatchCount": 0,
