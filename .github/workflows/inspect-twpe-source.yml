@@ -1,4 +1,4 @@
-name: Inspect historical market P/E payload
+name: Audit daily TAIEX P/E historical extraction
 on:
   push:
     branches: [main]
@@ -9,20 +9,26 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - name: Read public HTML payload and identify actual daily historical series
+      - name: Extract and inspect dated market P/E records without writing
         run: |
           python3 - <<'PY'
-          import urllib.request,re,json,html,collections
-          with urllib.request.urlopen(urllib.request.Request('https://toalpha.tw/market',headers={'User-Agent':'Mozilla/5.0'}),timeout=25) as response:
-            txt=response.read(4000000).decode('utf-8','replace')
-          keys=['pe','per','marketPe','marketPE','peRatio','pe_ratio','peHistory','valuation','TWPE','上市大盤本益比','2026-11-19','2026-11-18','2026-10-15','2025-12-31','2026-11-20','2026-08-01']
-          print('HTML size',len(txt),'embedded payload count',txt.count('self.__next_f.push'),flush=True)
-          for key in keys:
-            for pattern in [key,chr(92)+chr(34)+key+chr(92)+chr(34)]:
-              hits=[x.start() for x in re.finditer(re.escape(pattern),txt,re.I)]
-              print('PATTERN',repr(pattern),'COUNT',len(hits),flush=True)
-              for p in hits[:2]:
-                print('SNIPPET',repr(txt[max(0,p-100):p+260]),flush=True)
-          print('REACT CHUNKS',len(re.findall(r'self\.__next_f\.push',txt)),flush=True)
-          print('TAGGED JSON-KEY PAIRS',collections.Counter(re.findall(r'\\\\"([a-zA-Z][a-zA-Z_0-9]{0,26})\\\\":',txt)).most_common(35),flush=True)
+          import urllib.request,re,datetime,collections
+          request=urllib.request.Request('https://toalpha.tw/market',headers={'User-Agent':'Mozilla/5.0 (public-market-data-audit)'})
+          with urllib.request.urlopen(request,timeout=30) as response:body=response.read(5000000).decode('utf-8','replace')
+          regex=r'\{\\"time\\":\\"(\d{4}-\d{2}-\d{2})\\"[^{}]{0,550}?\\"pe\\":(-?\d+(?:\.\d+)?)'
+          matches=re.findall(regex,body)
+          series={}
+          duplicates=[]
+          for date,value in matches:
+            if date in series and series[date]!=float(value): duplicates.append((date,series[date],float(value)))
+            series[date]=float(value)
+          ordered=sorted(series.items())
+          print('EXTRACTED',len(matches),'UNIQUE',len(series),'CONFLICTS',len(duplicates))
+          print('FIRST',ordered[:8])
+          print('LAST',ordered[-12:])
+          print('RECENT_240',len(ordered[-240:]),'FROM',ordered[-240][0] if len(ordered)>=240 else None,'TO',ordered[-1][0] if ordered else None)
+          print('LATEST_VALUE',ordered[-1][1] if ordered else None)
+          print('DATA_GAPS',[(ordered[i][0],ordered[i+1][0]) for i in range(max(0,len(ordered)-40),len(ordered)-1) if (datetime.date.fromisoformat(ordered[i+1][0])-datetime.date.fromisoformat(ordered[i][0])).days>4])
+          assert len(ordered)>=240 and not duplicates
+          assert all(0<v<150 for _,v in ordered[-240:])
           PY
