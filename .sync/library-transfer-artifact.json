@@ -1,9 +1,9 @@
 {
-  "runId": 45096045016,
-  "artifactId": 14783770617,
+  "runId": 45105304186,
+  "artifactId": 14786334013,
   "repository": "KevinTaiwan/KevinTaiwan-jenbao-dashboard",
-  "sourceHeadSha": "902917e430430235d3358bc8afed12f9df36919e",
-  "createdAt": "2026-11-23T01:42:22.526036+00:00",
+  "sourceHeadSha": "81548f5c7f91421fba4bd70059fc162ad14c13d2",
+  "createdAt": "2026-11-23T03:19:41.963065+00:00",
   "artifactName": "jenbao-market-data-transfer",
   "compression": "zip"
 }
