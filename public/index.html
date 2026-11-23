@@ -638,7 +638,40 @@ function parseYahooDayQuote(doc,source){
   turnoverYiTwd:null,turnoverStatus:"unavailable_not_inferred_from_shares",
   quoteAgeMinutes:Math.max(0,Math.round((Date.now()-latestTime)/60000))};
 }
+function parseCnyesTaiwanQuote(daily,minute){
+ const day=marketLocalDay("taiex");
+ const index=daily?.t?.findIndex(t=>Number.isFinite(t)&&localMarketDateAt(t*1000,"taiex")===day);
+ if(!(index>=0))return null;
+ const candle={open:daily.o?.[index],high:daily.h?.[index],low:daily.l?.[index],close:daily.c?.[index]};
+ const session=Date.parse(day+"T09:00:00+08:00");
+ const times=(Array.isArray(minute?.t)?minute.t:[]).filter(t=>
+  Number.isFinite(t)&&t*1000>=session&&t*1000<=Math.min(Date.now(),session+16200000));
+ const stamp=Math.max(...times)*1000;
+ if(!Number.isFinite(stamp)||!Object.values(candle).every(v=>Number.isFinite(v)&&v>0)||
+    candle.high<Math.max(candle.open,candle.close)||candle.low>Math.min(candle.open,candle.close))return null;
+ return {market:"taiex",date:day,status:"provisional",source:"鉅亨加權指數（日 OHLC）",directBrowser:true,
+  latest:{...candle,lastCandleTime:new Date(stamp).toISOString()},
+  turnoverYiTwd:null,turnoverStatus:"unavailable_not_inferred_from_shares",
+  quoteAgeMinutes:Math.max(0,Math.round((Date.now()-stamp)/60000))};
+}
+async function directCnyesTaiwanQuote(){
+ const day=marketLocalDay("taiex"),start=Date.parse(day+"T00:00:00+08:00")/1000;
+ const url="https://ws.api.cnyes.com/ws/api/v1/charting/history?symbol=TWS%3ATSE01%3AINDEX";
+ const now=Math.floor(Date.now()/1000);
+ const responses=await Promise.all(["D","1"].map(async resolution=>{
+  const response=await fetch(url+"&resolution="+resolution+"&from="+now+"&to="+(resolution==="D"?start:Math.max(start,now-900)),
+   {cache:"no-store",signal:AbortSignal.timeout(6500)});
+  if(!response.ok)throw Error("鉅亨 HTTP "+response.status);
+  return (await response.json()).data;
+ }));
+ const quote=parseCnyesTaiwanQuote(...responses);
+ if(!quote)throw Error("鉅亨尚無本交易日有效報價");
+ return quote;
+}
 async function directIndexQuote(source){
+ if(source==="taiex"){
+  try{return await directCnyesTaiwanQuote()}catch(e){/* Yahoo fallback */}
+ }
  const code=source==="taiex"?"%5ETWII":"%5EGSPC";
  const url="https://query1.finance.yahoo.com/v8/finance/chart/"+code+
      "?interval=1m&range=1d&includePrePost=false";
@@ -2122,7 +2155,7 @@ async function fetchIntradayMarket(){
   for(const key of ["taiex","sp500"]){
    const prior=existing[key],up=markets[key];
    if(prior?.directBrowser&&Date.parse(prior.latest?.lastCandleTime||"")>
-     Date.parse(up?.latest?.lastCandleTime||""))markets[key]=prior;
+     (Date.parse(up?.latest?.lastCandleTime||"")||0))markets[key]=prior;
   }
   intradayMarketData={...d,markets};intradayMarketError="";
  }catch(e){intradayMarketError=e.message}
