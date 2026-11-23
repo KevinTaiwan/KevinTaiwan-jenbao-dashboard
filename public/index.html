@@ -1518,7 +1518,8 @@ function syncChartCursor(date,pointerX=null){
      techReadout(tech.c.middle,values[1])+(tech.c.middle==="dayTradeTurnoverSharePct"?"%":""),
      historyFormat(values[2],tech.c.oscillator==="MACD"?3:2)
     ];
-    // Use a dedicated right gutter: the value labels never cover candles or signal curves.
+    // Main (top, middle, bottom) hover readings belong to the LEFT Y axes.
+    // The separately selected upper-right series is rendered in its own right-axis badge.
     for(let i=0;i<3;i++){
      const group=hover.querySelector('[data-tech-hover-axis="'+i+'"]');
      const valid=Number.isFinite(values[i])&&Number.isFinite(ys[i]);
@@ -1528,6 +1529,28 @@ function syncChartCursor(date,pointerX=null){
      const rect=group.querySelector("rect"),txt=group.querySelector("text");
      if(rect)rect.setAttribute("y",(y-9).toFixed(2));
      if(txt){txt.setAttribute("y",(y+3.5).toFixed(2));txt.textContent=formatted[i]}
+    }
+    // Show the upper-right series at its OWN Y scale on the SAME selected trading day.
+    // Never copy the left close price or derive the right value from the left axis.
+    const rightBadge=hover.querySelector('[data-tech-hover-right]');
+    const rightValue=rightRow?.value;
+    const rightPosition=Number.isFinite(rightValue)&&tech.paired?tech.rightY(rightValue):null;
+    const rightValid=Number.isFinite(rightValue)&&Number.isFinite(rightPosition);
+    if(rightBadge){
+     rightBadge.setAttribute("visibility",rightValid?"visible":"hidden");
+     if(rightValid){
+      const ry=Math.max(tech.panel[0].start+10,Math.min(tech.panel[0].end-10,rightPosition));
+      const marker=rightBadge.querySelector("line"),point=rightBadge.querySelector("circle");
+      const rect=rightBadge.querySelector("rect"),txt=rightBadge.querySelector("text");
+      if(marker){marker.setAttribute("y1",ry.toFixed(2));marker.setAttribute("y2",ry.toFixed(2))}
+      if(point){point.setAttribute("cx",techX.toFixed(2));point.setAttribute("cy",ry.toFixed(2))}
+      if(rect)rect.setAttribute("y",(ry-9).toFixed(2));
+      if(txt){
+       txt.setAttribute("y",(ry+3.5).toFixed(2));
+       txt.textContent=tech.indexed?historyFormat(rightValue*tech.rightScale,2):
+        techReadout(tech.c.right,rightValue);
+      }
+     }
     }
     const dateBox=hover.querySelector("[data-tech-date-box]");
     const dateText=hover.querySelector("[data-tech-date-text]");
@@ -1822,9 +1845,14 @@ function showHistory(){
   }).join("");
   const hoverMarkup='<g data-tech-hover="1" visibility="hidden" pointer-events="none">'+
     [0,1,2].map(i=>'<g data-tech-hover-axis="'+i+'" visibility="hidden">'+
-     '<rect x="761" y="0" width="77" height="18" rx="3" fill="'+["#415f80","#467ba6","#7259a2"][i]+'"/>'+
-     '<text x="799.5" y="0" fill="#fff" text-anchor="middle" font-size="10" font-weight="700">—</text></g>'
+     '<rect x="0" y="0" width="91" height="18" rx="3" fill="'+["#415f80","#467ba6","#7259a2"][i]+'"/>'+
+     '<text x="45.5" y="0" fill="#fff" text-anchor="middle" font-size="10" font-weight="700">—</text></g>'
     ).join("")+
+    '<g data-tech-hover-right="1" visibility="hidden">'+
+     '<line x1="748" x2="760" y1="0" y2="0" stroke="#965119" stroke-width="1.8"/>'+
+     '<circle cx="38" cy="0" r="3" fill="#fff" stroke="#965119" stroke-width="1.5"/>'+
+     '<rect x="761" y="0" width="77" height="18" rx="3" fill="#965119"/>'+
+     '<text x="799.5" y="0" fill="#fff" text-anchor="middle" font-size="10" font-weight="700">—</text></g>'+
     '<g><rect data-tech-date-box x="38" y="'+(svgBottom-24)+'" width="100" height="21" rx="3" fill="#52677f"/>'+
     '<text data-tech-date-text x="88" y="'+(svgBottom-9)+'" fill="#fff" text-anchor="middle" font-size="10" font-weight="700">—</text></g>'+
     '<g data-tech-hover-compact visibility="hidden"><rect x="582" y="1" width="174" height="22" rx="3" fill="#f3f8fc" stroke="#a1b2c1" stroke-width=".7"/>'+
@@ -1857,7 +1885,7 @@ function showHistory(){
    return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: centerError||"載入中")+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+'</small>';
   }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
-  return {sessionScale,topCandles,rightByDate,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
+  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
