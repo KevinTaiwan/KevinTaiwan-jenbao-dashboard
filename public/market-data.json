@@ -24,7 +24,7 @@
     "marginDailyYi": -14.1973,
     "marginMaintenance": 119.53,
     "foreignNetYi": -289.4788,
-    "futuresNetContracts": -97863.0,
+    "futuresNetContracts": -103432.0,
     "hyOas": 3.76,
     "singleBOas": 4.08,
     "sofrMinusIorb": 2.0,
@@ -343,7 +343,7 @@
     "marginBalanceYi 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "cnn 實際觀測日 2026-11-19；不保證等於首頁加權指數收盤日",
     "move 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
-    "futuresNetContracts 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日",
+    "futuresNetContracts 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "oil 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "goldPrice 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日"
   ],
