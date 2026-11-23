@@ -73,11 +73,11 @@ jobs:
                   raise SystemExit('Unexpected market center series')
               provenance=series['twPeSource']
               if (not isinstance(provenance,dict)
-                  or provenance.get('observations') != 240
+                  or len(series.get('twPe',[])) < 240
+                  or provenance.get('observations') != len(series['twPe'])
                   or provenance.get('missing_sessions') != 0
                   or provenance.get('official_twse_monthly') is not False
-                  or provenance.get('archived_monthly_series') != 'twPeMonthly'
-                  or len(series.get('twPe',[])) != 240):
+                  or provenance.get('archived_monthly_series') != 'twPeMonthly'):
                   raise SystemExit('Invalid daily market PE provenance or count')
               if len(series.get('twPeMonthly',[])) < 2:
                   raise SystemExit('Old monthly market PE must be retained')
