@@ -1,0 +1,33 @@
+name: Backfill 240 verified daily Taiwan market P/E observations
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/backfill_twpe_daily.py'
+      - '.github/workflows/backfill-twpe-daily.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '30 15 * * 1-5' # 23:30 Taiwan, after the daily source's market close update
+permissions:
+  contents: write
+concurrency:
+  group: jenbao-daily-twpe-backfill
+  cancel-in-progress: false
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Backfill 240 actual daily market P/E records and verify against TAIEX sessions
+        run: python3 scripts/backfill_twpe_daily.py
+      - name: Commit only public market P/E data
+        run: |
+          if git diff --quiet -- public/market-center-history.json; then
+            echo "Market P/E file unchanged; 240-session validation still passed."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/market-center-history.json
+          git commit -m 'Backfill 240 verified market P/E trading dates [public-only]'
+          git push
