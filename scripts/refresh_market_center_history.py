@@ -83,6 +83,33 @@ def fetch_yahoo(symbol):
  if not found:raise ValueError("No completed daily quotes for "+symbol)
  return found
 
+def fetch_twse_stock(stock):
+ """Fallback: official TWSE STOCK_DAY actual close for a named listed security.
+ Only append independently dated completed sessions. Never estimate missing days.
+ """
+ month=CUTOFF.replace(day=1)
+ stamp=month.strftime("%Y%m%d")
+ args=urllib.parse.urlencode({"response":"json","date":stamp,"stockNo":stock})
+ url="https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?"+args
+ doc=json.loads(download(url,timeout=18))
+ if doc.get("stat")!="OK" or not isinstance(doc.get("data"),list):
+    raise ValueError("Official TWSE STOCK_DAY incomplete for "+stock)
+ fields=doc.get("fields") or []
+ col=next((i for i,n in enumerate(fields) if "收盤價" in str(n)),None)
+ if col is None:raise ValueError("STOCK_DAY no validated closing-price column")
+ vals={}
+ for row in doc["data"]:
+    if not isinstance(row,list) or len(row)<=col:continue
+    try:
+        year,month,day=(int(x) for x in str(row[0]).split("/"))
+        observed=valid_date(dt.date(year+1911,month,day).isoformat())
+    except (TypeError,ValueError):continue
+    price=valid_number(row[col])
+    if observed and price is not None and 1<=price<=5000:
+        vals[observed]=round(price,5)
+ if not vals:raise ValueError("STOCK_DAY no dated prices for "+stock)
+ return vals
+
 def fetch_margin():
  # TWSE MI_MARGN: quoted balances are in TWD thousand; /100000 => TWD 100m.
  # Reject mismatched dates, unlabelled rows or implausible balances.
@@ -123,6 +150,13 @@ def main():
     if key not in center:raise RuntimeError("Unknown center field: "+key)
     try:pending[key]=fetch_yahoo(code)
     except Exception as error:problems.append(key+": "+str(error)[:100])
+ # Official listed-security closes fill dates that Yahoo currently omits.
+ # The preexisting center archive always wins on overlapping observations.
+ for stock,key in (("006208","006208TW"),("2330","2330TW")):
+    try:
+        verified=fetch_twse_stock(stock)
+        pending.setdefault(key,{}).update(verified)
+    except Exception as error:problems.append("TWSE "+stock+": "+str(error)[:100])
  try:pending["marginBalanceYi"]=fetch_margin()
  except Exception as error:problems.append("marginBalanceYi: "+str(error)[:120])
  if "sofr" in pending and "iorb" in pending:

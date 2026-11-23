@@ -342,8 +342,11 @@ def full_refresh():
     if attempt("USD_TWD_Yahoo",lambda:fetch_yahoo("TWD=X","usdtwd")):
         seed=json.loads(SEED.read_text(encoding="utf-8"))
         for row in seed["rows"]:add("usdtwd",row.get("date"),row.get("usdtwd"))
-    if not attempt("VIX_Cboe",fetch_cboe):
-        attempt("VIX_FRED",lambda:fetch_fred("vix","VIXCLS"))
+    # Check both vendors every run: Cboe's bulk CSV may lag a newer dated
+    # official Cboe VIX observation already published through FRED VIXCLS.
+    # Existing verified history retains precedence in finalize_history.
+    attempt("VIX_Cboe",fetch_cboe)
+    attempt("VIX_FRED",lambda:fetch_fred("vix","VIXCLS"))
     attempt("HY_OAS_FRED",lambda:fetch_fred("hyOas","BAMLH0A0HYM2"))
     attempt("US10Y_FRED",lambda:fetch_fred("us10yYield","DGS10"))
     attempt("US10Y_MINUS_US2Y_FRED",lambda:fetch_fred("us10y2ySpread","T10Y2Y"))
