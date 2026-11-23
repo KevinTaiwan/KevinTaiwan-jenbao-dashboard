@@ -1,4 +1,4 @@
-"""Backfill 240 verified trading-session TAIEX market valuation readings.
+"""Backfill the complete verifiable history of daily TAIEX market valuations.
 
 Market-cap-weighted P/E among profitable TWSE-listed ordinary shares as
 published in ToAlpha's public market history, derived from TWSE daily
@@ -46,10 +46,24 @@ def main():
         raise RuntimeError("Incomplete/duplicated 240-session index date key")
     missing = [day for day in target_dates if day not in actual]
     if missing:
-        raise RuntimeError(f"P/E source missing {len(missing)} actual sessions: {missing[:15]}")
-    values = [[day, round(actual[day], 4)] for day in target_dates]
-    if not math.isclose(values[-1][1], 17.1, abs_tol=0.15) and values[-1][0] == "2026-11-20":
-        raise RuntimeError("Latest 2026-11-20 market P/E does not match displayed 17.1x")
+        raise RuntimeError(f"P/E source missing {len(missing)} actual recent sessions: {missing[:15]}")
+    # Store ALL independently observed daily dates, not just the last 240.
+    # Never synthesize records for holidays or dates absent from the source.
+    dated = sorted((day, value) for day, value in actual.items()
+                   if day <= target_dates[-1])
+    if len(dated) < 900:
+        raise RuntimeError(f"Historical source shrank unexpectedly: {len(dated)} dated records")
+    if any(dated[i][0] >= dated[i+1][0] for i in range(len(dated)-1)):
+        raise RuntimeError("Duplicate or unordered P/E dates")
+    values = [[day, round(value, 4)] for day, value in dated]
+    if values[-1][0] != target_dates[-1]:
+        raise RuntimeError("Latest historical P/E observation must match latest confirmed TAIEX date")
+    if target_dates[-1] == "2026-11-20" and not math.isclose(values[-1][1],17.1,abs_tol=0.15):
+        raise RuntimeError("2026-11-20 P/E is inconsistent with published latest 17.1x")
+    last240 = {day: value for day, value in values if day in target_dates}
+    if len(last240) != 240:
+        raise RuntimeError(f"Only {len(last240)}/240 recent trading days after processing")
+
 
     with CENTER.open(encoding="utf-8") as handle:
         market = json.load(handle)
@@ -61,6 +75,13 @@ def main():
         ):
             raise RuntimeError("Cannot safely archive the existing monthly twPe observations")
         market["twPeMonthly"] = old
+    # Refuse silent changes to previously verified daily history.
+    prior_daily = market.get("twPe", [])
+    if len(prior_daily) >= 240:
+        changed = [(d, v, dict(values).get(d)) for d, v in prior_daily
+                   if d in dict(values) and not math.isclose(v,dict(values)[d],abs_tol=0.00011)]
+        if changed:
+            raise RuntimeError(f"Previously verified P/E readings changed; review revisions first: {changed[:8]}")
     # Do not mix the official monthly/old MacroMicro series with daily derived P/E.
     market["twPe"] = values
     market["twPeSource"] = {
@@ -73,6 +94,7 @@ def main():
         "last_observed_date": target_dates[-1],
         "first_observed_date": target_dates[0],
         "observations": len(values),
+        "last_240_sessions_verified": 240,
         "missing_sessions": 0
     }
     rendered = json.dumps(market, ensure_ascii=False, separators=(",", ":")) + "\n"
@@ -82,11 +104,14 @@ def main():
     with CENTER.open(encoding="utf-8") as handle:
         verified = json.load(handle)
     assert verified["twPe"] == values
-    assert len(verified["twPe"]) == 240
+    assert len(verified["twPe"]) >= 900
+    assert len({d for d, _ in verified["twPe"]}) == len(verified["twPe"])
+    assert all(d in dict(verified["twPe"]) for d in target_dates)
     assert len(verified["twPeMonthly"]) >= 2
     assert verified["twPeSource"]["missing_sessions"] == 0
-    print(f"PASS: {len(values)}/240 actual daily P/E readings")
-    print(f"DATE_RANGE: {target_dates[0]} to {target_dates[-1]}")
+    print(f"PASS: {len(values)} historical daily P/E readings; 240/240 latest TAIEX sessions")
+    print(f"DATE_RANGE: {values[0][0]} to {values[-1][0]}")
+    print(f"RECENT_240: {target_dates[0]} to {target_dates[-1]}")
     print(f"LATEST_PE: {values[-1][1]}x; previous: {values[-2][1]}x")
     print(f"ORIGINAL_MONTHLY_ARCHIVED: {len(verified['twPeMonthly'])}")
     print(f"SOURCE_MATCHES: {len(matches)}, UNIQUE: {len(actual)}")
