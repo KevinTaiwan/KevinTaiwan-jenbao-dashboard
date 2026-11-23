@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-23T22:57:43+00:00",
+  "generatedAt": "2026-11-23T23:02:39+00:00",
   "cutoff": "2026-11-23",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -57930,7 +57930,7 @@
     }
   ],
   "twseTurnoverAudit": {
-    "generatedAt": "2026-11-23T22:57:53.181019+00:00",
+    "generatedAt": "2026-11-23T23:02:49.947638+00:00",
     "target": 1000,
     "counts": {
       "marketTurnoverYiTwd": 1184,
