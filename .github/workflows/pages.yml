@@ -103,6 +103,8 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./public
+      - name: Allow uploaded Pages artifact metadata to become visible
+        run: sleep 30
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
