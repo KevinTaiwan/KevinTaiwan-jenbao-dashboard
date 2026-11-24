@@ -2391,57 +2391,69 @@ $('reload').addEventListener('click',()=>sync(false));document.querySelectorAll(
 setInterval(()=>{if(!document.hidden)fetchIntradayMarket()},90000);
 setInterval(()=>{if(!document.hidden)sync(true)},300000);
 
-/* visitor-counter-v1 — Public visitor counting only. Never transmit portfolio information. */
-const JENBAO_VISITOR_ENDPOINT="https://counterapi.com/api/kevintaiwan-jenbao-dashboard-20261124/view/";
-const JENBAO_VISITOR_DAY_STORAGE="jb-visitor-reported-day-v1";
-// Daily unique and cumulative unique are anonymous service estimates; the aggregate "any" key is read-only.
-let jenbaoVisitorLastRecordedDay="";
-let jenbaoVisitorBusy=false;
-function jenbaoVisitorTaipeiDate(){
+</script>
+<script>
+/* visitor-counter-v2 — same public service/namespace; isolated from market chart script. */
+(()=>{
+"use strict";
+const ENDPOINT="https://counterapi.com/api/kevintaiwan-jenbao-dashboard-20261124/view/";
+const DAY_STORAGE="jb-visitor-reported-day-v2";
+let lastRecordedDay="",busy=false;
+let lastGoodToday=null,lastGoodTotal=null,displayDay="";
+const fmt=new Intl.NumberFormat("zh-TW");
+const el=id=>document.getElementById(id);
+function taipeiDate(){
  const parts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
  const v=Object.fromEntries(parts.filter(x=>x.type!=="literal").map(x=>[x.type,x.value]));
  return v.year+v.month+v.day;
 }
-async function jenbaoVisitorRequest(key,readOnly){
+function validCount(value){
+ return (typeof value==="number"||(typeof value==="string"&&/^\d+$/.test(value)))&&Number.isSafeInteger(Number(value))&&Number(value)>=0;
+}
+async function request(key,readOnly){
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),8500);
  try{
-  const endpoint=JENBAO_VISITOR_ENDPOINT+encodeURIComponent(key)+"?unique=true&readOnly="+(readOnly?"true":"false");
-  const res=await fetch(endpoint,{method:"GET",mode:"cors",cache:"no-store",credentials:"omit",referrerPolicy:"no-referrer",signal:ctrl.signal});
+  // Writes use the documented default: omit readOnly instead of sending a false string.
+  const url=ENDPOINT+encodeURIComponent(key)+"?unique=true"+(readOnly?"&readOnly=true":"");
+  const res=await fetch(url,{method:"GET",mode:"cors",cache:"no-store",credentials:"omit",referrerPolicy:"no-referrer",signal:ctrl.signal});
   if(!res.ok)throw Error("HTTP "+res.status);
-  const body=await res.json(),n=Number(body?.value);
-  if(!Number.isSafeInteger(n)||n<0)throw Error("counter response invalid");
-  return n;
+  const body=await res.json();
+  if(!validCount(body?.value))throw Error("API 回傳格式異常");
+  return Number(body.value);
  }finally{clearTimeout(timer)}
 }
-async function jenbaoVisitorUpdate(){
- if(jenbaoVisitorBusy)return;
- jenbaoVisitorBusy=true;
- const day=jenbaoVisitorTaipeiDate();
- const todayElement=document.getElementById("visitorToday");
- const totalElement=document.getElementById("visitorTotal");
- const statusElement=document.getElementById("visitorStatus");
- let counted=jenbaoVisitorLastRecordedDay===day;
- try{counted=counted||localStorage.getItem(JENBAO_VISITOR_DAY_STORAGE)===day}catch(e){}
- let todayValid=false,totalValid=false;
- try{
-  const today=await jenbaoVisitorRequest("dashboard-"+day,counted);
-  todayElement.textContent=new Intl.NumberFormat("zh-TW").format(today);
-  todayValid=true;
-  if(!counted){
-   jenbaoVisitorLastRecordedDay=day;
-   try{localStorage.setItem(JENBAO_VISITOR_DAY_STORAGE,day)}catch(e){}
-  }
- }catch(e){todayElement.textContent="—"}
- try{
-  const total=await jenbaoVisitorRequest("any",true);
-  totalElement.textContent=new Intl.NumberFormat("zh-TW").format(total);
-  totalValid=true;
- }catch(e){totalElement.textContent="—"}
- statusElement.textContent=(todayValid&&totalValid?
-  "台灣時間 · 2026/11/24 起計 · 匿名訪客估計值":
-  "訪客統計服務暫不可用 · 不顯示未驗證數字");
- jenbaoVisitorBusy=false;
+function reason(e){
+ return e?.name==="AbortError"?"請求逾時":(e instanceof TypeError?"網路／CORS 請求失敗":String(e?.message||"未知錯誤").slice(0,80));
 }
-jenbaoVisitorUpdate();
-setInterval(()=>{if(!document.hidden)jenbaoVisitorUpdate()},120000);
+async function update(){
+ if(busy||document.hidden)return;
+ busy=true;
+ try{
+  const day=taipeiDate(),today=el("visitorToday"),total=el("visitorTotal"),status=el("visitorStatus");
+  if(displayDay!==day){displayDay=day;lastGoodToday=null;today.textContent="—"}
+  let counted=lastRecordedDay===day;
+  try{counted=counted||localStorage.getItem(DAY_STORAGE)===day}catch(e){}
+  const errors=[];
+  try{
+   const n=await request("dashboard-"+day,counted);
+   // A zero on a write is not confirmation; never suppress later retries.
+   if(n===0)throw Error(counted?"日統計回傳 0，待核實":"計數未確認（API 回傳 0）");
+   lastGoodToday=n;today.textContent=fmt.format(n);
+   if(!counted){
+    lastRecordedDay=day;
+    try{localStorage.setItem(DAY_STORAGE,day)}catch(e){}
+   }
+  }catch(e){today.textContent=lastGoodToday===null?"—":fmt.format(lastGoodToday);errors.push("今日："+reason(e))}
+  try{
+   const n=await request("any",true);
+   if(n===0||(lastGoodToday!==null&&n<lastGoodToday))throw Error("累計數待核實（0 或低於今日值）");
+   lastGoodTotal=n;total.textContent=fmt.format(n);
+  }catch(e){total.textContent=lastGoodTotal===null?"—":fmt.format(lastGoodTotal);errors.push("累計："+reason(e))}
+  status.textContent=errors.length?"訪客統計 WARN · "+errors.join("；")+" · 每30秒重試（保留上次有效值）":"台灣時間 · 2026/11/24 起計 · 匿名訪客估計值";
+ }finally{busy=false}
+}
+update();
+setInterval(update,30000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)update()});
+})();
 </script></body></html>
