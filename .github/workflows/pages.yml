@@ -146,14 +146,87 @@ jobs:
           Path('/tmp/jenbao-inline.js').write_text(js,encoding='utf-8')
           PY
           node --check /tmp/jenbao-inline.js
+      - name: Check public deployment fingerprint
+        id: pages_gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          root=pathlib.Path("public")
+          files=sorted(p for p in root.rglob("*") if p.is_file())
+          h=hashlib.sha256()
+          sha={}
+          for p in files:
+              name=p.relative_to(root).as_posix()
+              raw=p.read_bytes()
+              h.update(name.encode("utf-8"))
+              h.update(bytes([0]))
+              h.update(len(raw).to_bytes(8,"big"))
+              h.update(raw)
+              sha[name]=hashlib.sha256(raw).hexdigest()
+          fingerprint=h.hexdigest()
+          marker=pathlib.Path(".sync/pages-deployment.json")
+          previous={}
+          if marker.exists():
+              try:
+                  previous=json.loads(marker.read_text(encoding="utf-8"))
+              except (ValueError,OSError):
+                  print("WARN: existing deployment marker unreadable; deploy fail-open")
+          equal=previous.get("publicFingerprint")==fingerprint
+          # A manual run is an explicit deployment request even if public bytes match.
+          deploy=(os.environ.get("EVENT_NAME")=="workflow_dispatch") or not equal
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as out:
+              out.write("deploy="+("true" if deploy else "false")+"\n")
+              out.write("fingerprint="+fingerprint+"\n")
+          pathlib.Path("/tmp/jenbao-pages-deploy-manifest.json").write_text(
+              json.dumps({"schemaVersion":1,"publicFingerprint":fingerprint,
+                          "publicFileSha256":sha},sort_keys=True,indent=2)+"\n",
+              encoding="utf-8")
+          print(json.dumps({"status":"DEPLOY" if deploy else "SKIP_NO_PUBLIC_CHANGE",
+                            "event":os.environ.get("EVENT_NAME"),"public_files":len(files),
+                            "fingerprint":fingerprint,"matched_last_success":equal}))
+          PY
       - name: Configure GitHub Pages
+        if: steps.pages_gate.outputs.deploy == 'true'
         uses: actions/configure-pages@v5
       - name: Upload only public files
+        if: steps.pages_gate.outputs.deploy == 'true'
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./public
       - name: Allow uploaded Pages artifact metadata to become visible
+        if: steps.pages_gate.outputs.deploy == 'true'
         run: sleep 30
       - name: Deploy to GitHub Pages
+        if: steps.pages_gate.outputs.deploy == 'true'
         id: deploy
         uses: actions/deploy-pages@v4
+      - name: Record last successful public deployment fingerprint
+        if: steps.pages_gate.outputs.deploy == 'true' && steps.deploy.outcome == 'success'
+        env:
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import datetime, json, os, pathlib, subprocess
+          item=json.loads(pathlib.Path("/tmp/jenbao-pages-deploy-manifest.json").read_text(encoding="utf-8"))
+          item["workflowRunId"]=int(os.environ["RUN_ID"])
+          item["sourceCommit"]=subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()
+          item["deployedAt"]=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          p=pathlib.Path(".sync/pages-deployment.json")
+          p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text(json.dumps(item,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .sync/pages-deployment.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record successful public Pages fingerprint [skip ci]'
+            for i in 1 2 3; do
+              if git push origin HEAD:main; then exit 0; fi
+              git fetch origin main
+              git rebase origin/main
+            done
+            echo 'FAIL: deployment succeeded but its SHA marker could not be saved'
+            exit 1
+          fi
