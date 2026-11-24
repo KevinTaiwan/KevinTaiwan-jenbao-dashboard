@@ -150,7 +150,7 @@ jobs:
         id: research
         run: |
           python3 scripts/collect_long_history.py
-          git add -- research-data/fred/DGS10.csv research-data/fred/DGS10.json
+          git add -f -- research-data/fred/DGS10.csv research-data/fred/DGS10.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "SKIP_NO_RESEARCH_CHANGE"
@@ -223,7 +223,7 @@ jobs:
           python3 scripts/collect_treasury_archive.py --real || failed=1
           for name in par-yield-curve-rates-1990-2023 par-real-yield-curve-rates-2003-2023; do
             if [[ -f "research-data/treasury/$name.csv" && -f "research-data/treasury/$name.json" ]]; then
-              git add -- "research-data/treasury/$name.csv" "research-data/treasury/$name.json"
+              git add -f -- "research-data/treasury/$name.csv" "research-data/treasury/$name.json"
             fi
           done
           echo "failed=$failed" >> "$GITHUB_OUTPUT"
