@@ -191,3 +191,89 @@ jobs:
           git commit -m 'V15: update public-domain DGS10 research history [skip ci]'
           git pull --rebase origin main
           git push
+
+  treasury_history:
+    needs: package
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Test and gate official Treasury archives
+        id: gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          python3 scripts/collect_treasury_archive.py --self-test
+          hour=$(date -u +%H)
+          if [[ "$EVENT_NAME" == workflow_dispatch ]] || [[ "$EVENT_NAME" == schedule && "$hour" == 09 ]] || [[ "$EVENT_NAME" == push && "$COMMIT_MESSAGE" == *"[treasury-bootstrap]"* ]]; then
+            echo "collect=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "collect=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Collect nominal and real archives independently
+        if: steps.gate.outputs.collect == 'true'
+        id: archive
+        run: |
+          failed=0
+          python3 scripts/collect_treasury_archive.py || failed=1
+          python3 scripts/collect_treasury_archive.py --real || failed=1
+          for name in par-yield-curve-rates-1990-2023 par-real-yield-curve-rates-2003-2023; do
+            if [[ -f "research-data/treasury/$name.csv" && -f "research-data/treasury/$name.json" ]]; then
+              git add -- "research-data/treasury/$name.csv" "research-data/treasury/$name.json"
+            fi
+          done
+          echo "failed=$failed" >> "$GITHUB_OUTPUT"
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Verify staged archive SHA
+        if: steps.archive.outputs.changed == 'true'
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,pathlib
+          root=pathlib.Path("research-data/treasury")
+          for p in root.glob("*.csv"):
+              m=json.loads(p.with_suffix(".json").read_text())
+              if hashlib.sha256(p.read_bytes()).hexdigest()!=m["sha256"]:
+                  raise SystemExit("Treasury archive SHA mismatch")
+          PY
+      - name: Upload official archives separately
+        if: steps.archive.outputs.changed == 'true'
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: jenbao-treasury-long-history
+          path: research-data/treasury/
+          retention-days: 10
+          if-no-files-found: error
+      - name: Save Treasury archive and transfer reference
+        if: steps.archive.outputs.changed == 'true'
+        env:
+          RUN_ID: ${{ github.run_id }}
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+        run: |
+          python3 - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path("research-data/treasury")
+          manifests=[json.loads(p.read_text()) for p in sorted(root.glob("*.json"))]
+          ref={"runId":int(os.environ["RUN_ID"]),"artifactId":int(os.environ["ARTIFACT_ID"]),
+               "artifactName":"jenbao-treasury-long-history","manifests":manifests,
+               "persistentPath":str(root),"quality":"official_source_candidate"}
+          pathlib.Path(".sync").mkdir(exist_ok=True)
+          pathlib.Path(".sync/treasury-history-artifact.json").write_text(json.dumps(ref,indent=2)+"\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- .sync/treasury-history-artifact.json
+          git commit -m 'V15: persist official nominal and real Treasury archives [skip ci]'
+          git pull --rebase origin main
+          git push
+      - name: Report partial or failed source access
+        if: steps.archive.outputs.failed == '1'
+        run: exit 1
