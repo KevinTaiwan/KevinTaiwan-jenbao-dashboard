@@ -21,7 +21,47 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Decide whether a new artifact is needed
+        id: gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python3 - <<'PY'
+          import datetime, hashlib, json, os, pathlib
+          folder=pathlib.Path("public")
+          required=["market-history.json","market-data.json","market-center-history.json"]
+          if (folder/"intraday-market.json").exists():
+            required.append("intraday-market.json")
+          extra=sorted(p.name for p in folder.glob("*ohlc*.json"))
+          names=list(dict.fromkeys(required+extra))
+          current={}
+          for name in names:
+            raw=(folder/name).read_bytes()
+            current[name]=hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
+          index=pathlib.Path(".sync/library-transfer-artifact.json")
+          prior={}
+          if index.exists():
+            try: prior=json.loads(index.read_text(encoding="utf-8"))
+            except (ValueError, OSError): pass
+          same=prior.get("sourceBlobFingerprints")==current
+          created=prior.get("createdAt")
+          fresh=False
+          if created and prior.get("runId") and prior.get("artifactId"):
+            try:
+              stamp=datetime.datetime.fromisoformat(created.replace("Z","+00:00"))
+              age=datetime.datetime.now(datetime.timezone.utc)-stamp.astimezone(datetime.timezone.utc)
+              fresh=datetime.timedelta(0)<=age<datetime.timedelta(days=7)
+            except (TypeError, ValueError): pass
+          # Always rebuild after public-data pushes or explicit manual dispatch.
+          rebuild=os.environ["EVENT_NAME"]!="schedule" or not (same and fresh)
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as out:
+            out.write("package="+str(rebuild).lower()+"\n")
+          print(json.dumps({"decision":"PACKAGE" if rebuild else "SKIP_NO_CHANGE",
+                            "event":os.environ["EVENT_NAME"],"source_blob_match":same,
+                            "artifact_under_7_days":fresh,"file_count":len(names)}))
+          PY
       - name: Validate JSON and create byte-exact source manifest
+        if: steps.gate.outputs.package == 'true'
         run: |
           python3 - <<'PY'
           import hashlib, json, pathlib, shutil
@@ -46,6 +86,7 @@ jobs:
           print(json.dumps(files,ensure_ascii=False))
           PY
       - name: Upload JSON transfer artifact
+        if: steps.gate.outputs.package == 'true'
         id: upload
         uses: actions/upload-artifact@v4
         with:
@@ -55,6 +96,7 @@ jobs:
           if-no-files-found: error
           compression-level: 6
       - name: Save downloadable artifact reference
+        if: steps.gate.outputs.package == 'true'
         env:
           RUN_ID: ${{ github.run_id }}
           ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
@@ -63,10 +105,13 @@ jobs:
           mkdir -p .sync
           python3 - <<'PY'
           import os,json,datetime,pathlib
+          manifest=json.loads(pathlib.Path("library-transfer/transfer-checksums.json").read_text(encoding="utf-8"))
+          source_blobs={entry["file"]:entry["git_blob_sha1"] for entry in manifest["files"]}
           obj={"runId":int(os.environ["RUN_ID"]),"artifactId":int(os.environ["ARTIFACT_ID"]),
                "repository":"KevinTaiwan/KevinTaiwan-jenbao-dashboard",
                "sourceHeadSha":os.environ["HEAD_SHA"],"createdAt":datetime.datetime.now(datetime.timezone.utc).isoformat(),
-               "artifactName":"jenbao-market-data-transfer","compression":"zip"}
+               "artifactName":"jenbao-market-data-transfer","compression":"zip",
+               "sourceBlobFingerprints":source_blobs}
           pathlib.Path(".sync/library-transfer-artifact.json").write_text(json.dumps(obj,indent=2)+"\n")
           PY
           git config user.name 'github-actions[bot]'
