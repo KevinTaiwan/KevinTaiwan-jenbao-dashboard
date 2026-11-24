@@ -529,7 +529,7 @@ body.technical-fullscreen-active{overflow:hidden!important}
 <div class="visitor-counter" role="group" aria-label="Dashboard 匿名瀏覽統計">
 <span class="vc-item">今日訪客 <strong id="visitorToday" aria-live="polite">—</strong></span>
 <span class="vc-item">累積訪客 <strong id="visitorTotal" aria-live="polite">—</strong></span>
-<span class="vc-status" id="visitorStatus">台灣時間 · 2026/11/24 起計 · 匿名訪客估計值</span>
+<span class="vc-status" id="visitorStatus">台灣時間 · 永久計數 V2.1 起計 · 匿名訪客估計值</span>
 </div>
 <div class="warning" id="stale" role="status"></div>
 <div class="tabscreen visible" id="overview">
@@ -2393,11 +2393,14 @@ setInterval(()=>{if(!document.hidden)sync(true)},300000);
 
 </script>
 <script>
-/* visitor-counter-v2 — same public service/namespace; isolated from market chart script. */
+/* visitor-counter-v2.1 — independent daily and lifetime unique counters; public only. */
 (()=>{
 "use strict";
 const ENDPOINT="https://counterapi.com/api/kevintaiwan-jenbao-dashboard-20261124/view/";
 const DAY_STORAGE="jb-visitor-reported-day-v2";
+const TOTAL_STORAGE="jb-visitor-reported-total-v21";
+const TOTAL_KEY="dashboard-total-v21";
+let lifetimeRecorded=false;
 let lastRecordedDay="",busy=false;
 let lastGoodToday=null,lastGoodTotal=null,displayDay="";
 const fmt=new Intl.NumberFormat("zh-TW");
@@ -2445,11 +2448,15 @@ async function update(){
    }
   }catch(e){today.textContent=lastGoodToday===null?"—":fmt.format(lastGoodToday);errors.push("今日："+reason(e))}
   try{
-   const n=await request("any",true);
-   if(n===0||(lastGoodToday!==null&&n<lastGoodToday))throw Error("累計數待核實（0 或低於今日值）");
+   let lifetimeCounted=lifetimeRecorded;
+   try{lifetimeCounted=lifetimeCounted||localStorage.getItem(TOTAL_STORAGE)==="1"}catch(e){}
+   const n=await request(TOTAL_KEY,lifetimeCounted);
+   if(n===0)throw Error("永久計數未確認（API 回傳 0）");
+   if(!lifetimeCounted){lifetimeRecorded=true;try{localStorage.setItem(TOTAL_STORAGE,"1")}catch(e){}}
    lastGoodTotal=n;total.textContent=fmt.format(n);
+   if(lastGoodToday!==null&&n<lastGoodToday)errors.push("永久計數低於今日值：舊訪客尚未全部納入或來源異常");
   }catch(e){total.textContent=lastGoodTotal===null?"—":fmt.format(lastGoodTotal);errors.push("累計："+reason(e))}
-  status.textContent=errors.length?"訪客統計 WARN · "+errors.join("；")+" · 每30秒重試（保留上次有效值）":"台灣時間 · 2026/11/24 起計 · 匿名訪客估計值";
+  status.textContent=errors.length?"訪客統計 WARN · "+errors.join("；")+" · 每30秒重試（保留上次有效值）":"台灣時間 · 永久計數 V2.1 起計 · 匿名訪客估計值";
  }finally{busy=false}
 }
 update();
