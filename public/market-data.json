@@ -354,11 +354,6 @@
     "targetFirst": "2025-11-25",
     "targetLast": "2026-11-23",
     "status": "complete",
-    "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
-    "latestExpectedTradingDay": "2026-11-23",
-    "latestObservationMissing": false,
-    "freshnessStatus": "PASS",
-    "freshnessReason": "Wantgoo 2026-11-23 chart cursor screenshot directly displays excluding-ETF maintenance 126.92%; latest 240-session history to be reconciled.",
-    "lastCheckedAt": "2026-11-24T00:34:35.208Z"
+    "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
   }
 }
