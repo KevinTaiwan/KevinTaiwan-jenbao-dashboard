@@ -929,7 +929,7 @@ const TECH_GROUPS={
  "美國｜股票、ETF 與估值": "sp500K IXIC SOX voo qqq forwardPe",
  "美國｜市場情緒與波動": "vix move cnnFearGreed",
  "美國｜企業信用": "hyOas singleBOas cccOas cccYield",
- "美國｜政策利率與短期資金": "fedFundsEffective sofr iorb sofrMinusIorbBp tgcr",
+ "美國｜政策利率與短期資金": "fedFundsEffective sofr iorb sofrMinusIorbBp tgcr fedWatchHikePct fedWatchHoldPct fedWatchCutPct",
  "美國｜公債曲線與期限溢酬": "us1y us2y us3y us5y us10yYield us30y us10y2ySpread acm10",
  "美國｜通膨預期": "t5yie t10yie inflation5y5y",
  "美國｜經濟、就業與消費": "gdp PAYEMS PCEC96 RSAFS UMCSENT",
@@ -938,7 +938,11 @@ const TECH_GROUPS={
  "全球｜貴金屬與能源": "goldSpot goldFuturesUsd wtiFuturesUsd"
 };
 const TECH_SOURCE_KEYS=Object.values(TECH_GROUPS).flatMap(keys=>keys.split(" "));
+const FEDWATCH_KEYS=["fedWatchHikePct","fedWatchHoldPct","fedWatchCutPct"];
 const CENTER_META={
+ fedWatchHikePct:["FedWatch 下次會議升息機率（%）","日","FedWatch 歷史觀測"],
+ fedWatchHoldPct:["FedWatch 下次會議維持機率（%）","日","FedWatch 歷史觀測"],
+ fedWatchCutPct:["FedWatch 下次會議降息機率（%）","日","FedWatch 歷史觀測"],
  "2330TW": [
   "台積電 2330（元）",
   "日",
@@ -1157,10 +1161,20 @@ function fetchCenterHistory(){
   if(!response.ok)throw Error("HTTP "+response.status);
   const input=await response.json(),next={};
   for(const key of Object.keys(CENTER_META)){
+   if(FEDWATCH_KEYS.includes(key))continue;
    if(!Array.isArray(input[key])||!input[key].length)throw Error("缺少 "+key);
    next[key]=input[key].map(([date,value])=>({date,value}));
   }
   centerRows=next;centerError="";
+  try {
+   const response=await fetch("./fedwatch-history.json",{cache:"no-cache"});
+   if(!response.ok)throw Error("HTTP "+response.status);
+   const data=await response.json();
+   for(const key of FEDWATCH_KEYS){
+    const field={fedWatchHikePct:"hikePct",fedWatchHoldPct:"holdPct",fedWatchCutPct:"cutPct"}[key];
+    centerRows[key]=(data.records||[]).filter(r=>r.quality==="verified"&&typeof r.date==="string"&&Number.isFinite(r[field])&&r[field]>=0&&r[field]<=100).map(r=>({date:r.date,value:r[field]})).sort((a,b)=>a.date.localeCompare(b.date));
+   }
+  }catch(e){for(const key of FEDWATCH_KEYS)centerRows[key]=[];}
  }).catch(e=>{centerError="資料中心歷史檔載入失敗："+e.message;centerLoading=null}).finally(showHistory);
  return centerLoading;
 }
@@ -1969,7 +1983,7 @@ function showHistory(){
   const reportMenu='<details><summary>美國｜貨幣政策報告</summary><label>FedWatch 報告日期<select data-fed-report>'+FED_REPORTS.map(([day],i)=>'<option value="'+i+'"'+(i===selectedReport?' selected':'')+'>'+esc(day)+'</option>').join("")+'</select></label> <a data-fed-link href="'+esc(FED_REPORTS[selectedReport][1])+'" target="_blank" rel="noopener">開啟報告 PDF</a></details>';
   const centerNote=[...new Set([c.top,c.middle,paired?c.right:"off"])].filter(key=>CENTER_META[key]).map(key=>{
    const rows=centerRows[key],meta=CENTER_META[key];
-   return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: centerError||"載入中")+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+'</small>';
+   return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+'</small>';
   }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
   return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
