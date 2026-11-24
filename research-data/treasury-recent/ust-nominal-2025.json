@@ -1,0 +1,25 @@
+{
+  "bytes": 12747,
+  "dates": 249,
+  "definition": "Daily Treasury par yield curve, percent",
+  "first": "2025-01-02",
+  "full_year_boundary_check": true,
+  "last": "2025-12-31",
+  "limitations": "No estimated fills, no FRED splice, no complete calendar or publication-time certification.",
+  "provider": "US Department of the Treasury",
+  "quality": "official_source_candidate",
+  "series_id": "UST_PAR_NOMINAL_2025",
+  "sha256": "1738f5ac3f1de5dd12ab3ab26f00cc6ae9eb60367c5054dad466537dda9525eb",
+  "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2025/all?_format=csv&field_tdr_date_value=2025&page=&type=daily_treasury_yield_curve",
+  "source_raw_sha256": "cf2fa3da7f160384b63d2ead698532b1d76cd9f789ce4911e2304db85b14e6d5",
+  "valid_by_maturity": {
+    "1 yr": 249,
+    "10 yr": 249,
+    "2 yr": 249,
+    "20 yr": 249,
+    "3 yr": 249,
+    "30 yr": 249,
+    "5 yr": 249,
+    "7 yr": 249
+  }
+}
