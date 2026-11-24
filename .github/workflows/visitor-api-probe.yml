@@ -11,20 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
-      - name: Test independent Abacus hit and read (not production counts)
+      - name: Test independent MilesHilliard Count API hit and read (not production counts)
         shell: bash
         run: |
           set -euo pipefail
-          base=https://abacus.jasoncameron.dev
+          base=https://countapi.mileshilliard.com/api/v1
           ns="jenbao-visitor-api-probe-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           for key in daily lifetime; do
             for expected in 1 2; do
-              body=$(curl --fail-with-body --silent --show-error --max-time 15 -H 'Origin: https://kevintaiwan.github.io' -D /tmp/visitor-probe-headers "$base/hit/$ns/$key")
+              body=$(curl --fail-with-body --silent --show-error --max-time 15 -H 'Origin: https://kevintaiwan.github.io' -D /tmp/visitor-probe-headers "$base/hit/$ns-$key")
               echo "$key hit $expected: $body"
               grep -i '^access-control-allow-origin:' /tmp/visitor-probe-headers | grep -E '(\*|https://kevintaiwan.github.io)'
-              jq -e --argjson n "$expected" '.value == $n' <<< "$body"
-              read=$(curl --fail-with-body --silent --show-error --max-time 15 "$base/get/$ns/$key")
+              jq -e --argjson n "$expected" '(.value | tonumber) == $n' <<< "$body"
+              read=$(curl --fail-with-body --silent --show-error --max-time 15 "$base/get/$ns-$key")
               echo "$key read $expected: $read"
-              jq -e --argjson n "$expected" '.value == $n' <<< "$read"
+              jq -e --argjson n "$expected" '(.value | tonumber) == $n' <<< "$read"
             done
           done
