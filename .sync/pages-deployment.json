@@ -2,15 +2,15 @@
   "publicFileSha256": {
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "index-ohlc-history.json": "58dec8c49a058ec2493737706dc9d54fdc663541be4557acd98e472aa33cca6f",
-    "index.html": "ec9e72c76d51977c917740f3666d67bb74f126f3aa0e488304a2fe1546a566b8",
+    "index.html": "70e192af3794a665ccdc68eaa637a325e067f4fda98d065548d6de671df9603d",
     "intraday-market.json": "07a2d405fac15b0a30fdeb88563c5702b1a0932bf0030335bcae54a933119787",
     "market-center-history.json": "fe1ee7e50550c964fd94abe9af4310cb3dc0a08bf3b0aad24ea901ea5ce9751a",
     "market-data.json": "31745c6f76d5313b2331dbb71e9795ba321c85ff6c55d506000b3f2b562c2961",
     "market-history.json": "8623611054d1fb2a7d12a85d38234892beed56e9253d8d09be615d49f7c3dde3"
   },
-  "publicFingerprint": "1cca2209affd9391e6e6402d0d4f37e5c40468c36f55569e018b171459358d23",
+  "publicFingerprint": "916d3c0f7afae8301f249f32b1dd68535ee9866bd2d61a0b8a4077d76ee7bf85",
   "schemaVersion": 1,
-  "workflowRunId": 45328240687,
-  "sourceCommit": "e645819d6d8a142fe5f417b2df47a1f56a92ae46",
-  "deployedAt": "2026-11-24T04:43:19.110311+00:00"
+  "workflowRunId": 45331392316,
+  "sourceCommit": "98a4ba28d4014dfcd13524c1825a178a607827ff",
+  "deployedAt": "2026-11-24T05:11:09.749461+00:00"
 }
