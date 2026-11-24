@@ -57932,16 +57932,16 @@
     }
   ],
   "twseTurnoverAudit": {
-    "generatedAt": "2026-11-24T02:36:51.020098+00:00",
+    "generatedAt": "2026-11-24T14:35:25.972793+00:00",
     "target": 1000,
     "counts": {
       "marketTurnoverYiTwd": 1184,
       "dayTradeTurnoverYiTwd": 1184,
       "dayTradeTurnoverSharePct": 1184
     },
-    "marketDatesDownloaded": 1046,
-    "dayTradeDatesDownloaded": 1046,
-    "dayTradeDatesReconciled": 1046,
+    "marketDatesDownloaded": 36,
+    "dayTradeDatesDownloaded": 36,
+    "dayTradeDatesReconciled": 35,
     "sourceIssues": [],
     "mismatchExamples": [],
     "mismatchCount": 0,
