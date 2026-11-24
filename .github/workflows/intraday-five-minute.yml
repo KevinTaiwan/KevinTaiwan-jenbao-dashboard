@@ -21,6 +21,8 @@ jobs:
     timeout-minutes: 4
     steps:
       - uses: actions/checkout@v4
+      - name: Test completed five-minute candle filter (offline)
+        run: python3 -m unittest discover -s scripts/tests -p 'test_intraday_candle_completeness.py'
       - name: Verify market-only five-minute intraday data
         env:
           JENBAO_VERIFIED_TWD_TURNOVER_URL: ${{ vars.JENBAO_VERIFIED_TWD_TURNOVER_URL }}
