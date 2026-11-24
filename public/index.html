@@ -529,7 +529,7 @@ body.technical-fullscreen-active{overflow:hidden!important}
 <div class="visitor-counter" role="group" aria-label="Dashboard 匿名瀏覽統計">
 <span class="vc-item">今日訪客 <strong id="visitorToday" aria-live="polite">—</strong></span>
 <span class="vc-item">累積訪客 <strong id="visitorTotal" aria-live="polite">—</strong></span>
-<span class="vc-status" id="visitorStatus">台灣時間 · 2026/11/24 起計 · 匿名去重估計值</span>
+<span class="vc-status" id="visitorStatus">台灣時間 · 2026/11/24 起計 · 匿名訪客估計值</span>
 </div>
 <div class="warning" id="stale" role="status"></div>
 <div class="tabscreen visible" id="overview">
@@ -2334,6 +2334,7 @@ setInterval(()=>{if(!document.hidden)sync(true)},300000);
 /* visitor-counter-v1 — Public visitor counting only. Never transmit portfolio information. */
 const JENBAO_VISITOR_ENDPOINT="https://counterapi.com/api/kevintaiwan-jenbao-dashboard-20261124/view/";
 const JENBAO_VISITOR_DAY_STORAGE="jb-visitor-reported-day-v1";
+// Daily unique and cumulative unique are anonymous service estimates; the aggregate "any" key is read-only.
 let jenbaoVisitorLastRecordedDay="";
 let jenbaoVisitorBusy=false;
 function jenbaoVisitorTaipeiDate(){
@@ -2377,7 +2378,7 @@ async function jenbaoVisitorUpdate(){
   totalValid=true;
  }catch(e){totalElement.textContent="—"}
  statusElement.textContent=(todayValid&&totalValid?
-  "台灣時間 · 2026/11/24 起計 · 匿名去重估計值":
+  "台灣時間 · 2026/11/24 起計 · 匿名訪客估計值":
   "訪客統計服務暫不可用 · 不顯示未驗證數字");
  jenbaoVisitorBusy=false;
 }
