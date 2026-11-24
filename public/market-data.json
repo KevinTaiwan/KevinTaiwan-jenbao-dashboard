@@ -3,7 +3,7 @@
   "audience": "public-market",
   "asOf": "2026-11-23",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-23T23:02:50+00:00",
+  "updatedAt": "2026-11-24T00:34:35.208Z",
   "headline": "台股最新正式收盤 2026-11-23：36,811.89 點；其他市場指標各按自身觀測日",
   "summary": "taiex 36,811.890（觀測日 2026-11-23）｜vix 35.890（觀測日 2026-11-20）｜usdtwd 32.823（觀測日 2026-11-23）｜hyOas 3.760（觀測日 2026-11-20）｜foreignNetYi -289.479（觀測日 2026-11-23）",
   "market": {
@@ -22,7 +22,7 @@
     "cnn": 18.6761904761905,
     "marginBalanceYi": 4338.07523,
     "marginDailyYi": -14.1973,
-    "marginMaintenance": 119.53,
+    "marginMaintenance": 126.92,
     "foreignNetYi": -289.4788,
     "futuresNetContracts": -103432,
     "hyOas": 3.76,
@@ -34,7 +34,7 @@
     "goldPrice": 3520.57,
     "ma120": 45224.3705,
     "ma240": 39451.1824,
-    "marginMaintenanceAsOf": "2026-11-20",
+    "marginMaintenanceAsOf": "2026-11-23",
     "marginMaintenanceScope": "TWSE financing maintenance excluding ETF (Wantgoo; Nov20 not cross-verified)"
   },
   "ai": [
@@ -148,8 +148,8 @@
       "url": "https://www.twse.com.tw/rwd/zh/fund/BFI82U"
     },
     {
-      "label": "marginMaintenance 觀測日 2026-11-20",
-      "date": "2026-11-20",
+      "label": "marginMaintenance 觀測日 2026-11-23",
+      "date": "2026-11-23",
       "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
     },
     {
@@ -335,7 +335,7 @@
     "us10y 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日",
     "marginDailyYi 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "foreignNetYi 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
-    "marginMaintenance 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日",
+    "marginMaintenance 實際觀測日 2026-11-23；玩股網圖表日期游標 126.92%（使用者提供原始畫面）",
     "singleBOas 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日",
     "sofrMinusIorb 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日",
     "t10yie 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
@@ -345,21 +345,20 @@
     "move 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "futuresNetContracts 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "oil 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
-    "goldPrice 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日",
-    "WARN：上市扣除 ETF 融資維持率最新確認 2026-11-20 119.53%；2026-11-23 尚無可核實原始值，禁止以含 ETF 或全市場擔保維持率代填。"
+    "goldPrice 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日"
   ],
   "marginMaintenanceCoverage": {
     "targetTradingDays": 240,
     "observedTradingDays": 240,
     "missingTradingDays": 0,
-    "targetFirst": "2025-11-24",
-    "targetLast": "2026-11-20",
+    "targetFirst": "2025-11-25",
+    "targetLast": "2026-11-23",
     "status": "complete",
     "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
     "latestExpectedTradingDay": "2026-11-23",
-    "latestObservationMissing": true,
-    "freshnessStatus": "WARN",
-    "freshnessReason": "11/23 上市扣除 ETF 融資維持率尚未取得可核實原始值；240筆完整度僅截至11/20",
-    "lastCheckedAt": "2026-11-23T23:45:36.163Z"
+    "latestObservationMissing": false,
+    "freshnessStatus": "PASS",
+    "freshnessReason": "Wantgoo 2026-11-23 chart cursor screenshot directly displays excluding-ETF maintenance 126.92%; latest 240-session history to be reconciled.",
+    "lastCheckedAt": "2026-11-24T00:34:35.208Z"
   }
 }
