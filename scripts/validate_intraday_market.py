@@ -21,6 +21,9 @@ for key,m in d["markets"].items():
     assert all(b.get("time","").startswith(m["date"]) for b in candles)
     assert [b["time"] for b in candles]==sorted(set(b["time"] for b in candles))
     for b in candles:
+        stamp=dt.datetime.fromisoformat(b["time"])
+        assert stamp.utcoffset() is not None, "intraday candle missing timezone"
+        assert stamp.minute%5==0 and stamp.second==0 and stamp.microsecond==0, "off-grid partial 5m candle"
         assert set(b) <= {"time","open","high","low","close","turnoverYiTwd"}
         vals=[b[k] for k in ("open","high","low","close")]
         assert all(type(x) in (float,int) and math.isfinite(x) and 100<=x<=200000 for x in vals)
