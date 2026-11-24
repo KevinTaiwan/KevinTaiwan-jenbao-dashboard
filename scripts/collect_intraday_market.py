@@ -201,8 +201,14 @@ def main():
                     delay=0
             except Exception as e:
                 print("Verified TWD turnover provider unavailable; shares never used as money:",str(e)[:180])
+        if rows:
+            # Source timestamps are bar START times; do not publish a still-forming
+            # candle even when its timestamp falls precisely on a 5-minute grid.
+            rows=[bar for bar in rows
+                  if dt.datetime.fromisoformat(bar["time"]).astimezone(UTC)
+                     +dt.timedelta(minutes=5)<=now]
         if not rows:
-            print(name,"no actual same-session bars; preserved old data")
+            print(name,"no completed same-session bars; preserved previous valid data")
             continue
         # If provider is delayed or a holiday, never treat stale rows as "live".
         last=dt.datetime.fromisoformat(rows[-1]["time"]).astimezone(UTC)
@@ -212,7 +218,7 @@ def main():
             continue
         fresh[name]=summarise(rows,now,name,mode,delay)
         fresh[name]["quoteAgeMinutes"]=round(age,1)
-        updated.append(name)
+        if name not in updated:updated.append(name)
     if not updated:
         print("No verified active market updates; no file change")
         return
