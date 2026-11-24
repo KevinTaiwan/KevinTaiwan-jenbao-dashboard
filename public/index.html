@@ -508,12 +508,6 @@ body.technical-fullscreen-active{overflow:hidden!important}
 #technicalFreshnessWarning{margin:10px 0 12px;padding:10px 14px;border:1px solid #dfb25c;border-radius:9px;background:#fff4dc;color:#7d4700;font-weight:700;line-height:1.7}
 #technicalFreshnessWarning[hidden]{display:none}
 
-/* visitor-counter-v1: public-only anonymous visitor aggregates */
-.visitor-counter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin:-14px 0 16px;min-height:39px}
-.visitor-counter .vc-item{display:inline-flex;align-items:baseline;gap:8px;border:1px solid var(--line);border-radius:10px;padding:6px 12px;background:var(--surface);color:var(--muted);font-size:12px}
-.visitor-counter .vc-item strong{color:var(--cyan);font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:.015em}
-.visitor-counter .vc-status{color:var(--muted);font-size:11px;line-height:1.5}
-@media(max-width:650px){.visitor-counter{margin:-9px 0 14px;justify-content:flex-start;gap:7px}.visitor-counter .vc-item{padding:5px 9px}.visitor-counter .vc-status{flex-basis:100%}}
 </style></head>
 <body>
 <header><div class="topbar">
@@ -526,11 +520,6 @@ body.technical-fullscreen-active{overflow:hidden!important}
 </nav><div class="sync"><span class="tag">PUBLIC MARKET ONLY</span><button class="button" id="reload" type="button">↻ 同步資料</button></div>
 </div></header>
 <main>
-<div class="visitor-counter" role="group" aria-label="Dashboard 匿名瀏覽統計">
-<span class="vc-item">今日訪客 <strong id="visitorToday" aria-live="polite">—</strong></span>
-<span class="vc-item">累積訪客 <strong id="visitorTotal" aria-live="polite">—</strong></span>
-<span class="vc-status" id="visitorStatus">GitHub Pages 不提供網站訪客統計 · 已停用第三方計數服務</span>
-</div>
 <div class="warning" id="stale" role="status"></div>
 <div class="tabscreen visible" id="overview">
 <section class="hero page-hero" aria-label="市場總覽資料解讀"><div class="hero-copy"><div class="eyebrow">Daily Investment Intelligence / 公開市場資訊 · 本頁數據解讀</div><h1 id="headline">市場觀察數據待核對</h1><p id="summary">依目前可取得的本頁指標解讀；未取得的數據不作推論。</p><ul class="interpret-points" id="overviewInsights" aria-label="本頁解讀重點"></ul></div><div class="heroaside"><span>市場資料基準日</span><strong id="asof">—</strong><span id="syncstate">等待同步</span></div></section>
