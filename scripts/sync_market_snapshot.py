@@ -4,6 +4,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 import json
 from validate_public import validate
+from market_material_write import write_public_if_materially_changed
 
 PUBLIC=Path(__file__).resolve().parents[1]/"public"
 read=lambda name:json.loads((PUBLIC/name).read_text(encoding="utf-8"))
@@ -95,8 +96,6 @@ def main():
     ][:19]
     validate(snapshot)
     dest=PUBLIC/"market-data.json"
-    tmp=PUBLIC/"market-data.json.tmp"
-    tmp.write_text(json.dumps(snapshot,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    tmp.replace(dest)
-    print("SUMMARY REBUILT",day,{k:d for k,(d,_) in used.items()})
+    changed=write_public_if_materially_changed(dest,snapshot,kind="market-data")
+    print("SUMMARY UPDATED" if changed else "SUMMARY UNCHANGED",day,{k:d for k,(d,_) in used.items()})
 if __name__=="__main__":main()
