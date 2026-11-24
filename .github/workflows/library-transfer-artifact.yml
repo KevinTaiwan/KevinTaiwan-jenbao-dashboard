@@ -118,3 +118,76 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .sync/library-transfer-artifact.json
           git diff --cached --quiet || (git commit -m 'Record library JSON transfer artifact [skip ci]' && git push)
+
+  research_history:
+    # Independent result: never blocks the existing market transfer job.
+    needs: package
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Test collector and decide research slot
+        id: research_gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          python3 scripts/collect_long_history.py --self-test
+          # First pilot: DGS10 only, daily 17:25 Asia/Taipei (09 UTC).
+          # Manual dispatch or explicit bootstrap may also collect.
+          hour=$(date -u +%H)
+          if [[ "$EVENT_NAME" == workflow_dispatch ]] || [[ "$EVENT_NAME" == schedule && "$hour" == 09 ]] || [[ "$EVENT_NAME" == push && "$COMMIT_MESSAGE" == *"[research-bootstrap]"* ]]; then
+            echo "collect=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "collect=false" >> "$GITHUB_OUTPUT"
+            echo "SKIP_RESEARCH_SLOT"
+          fi
+      - name: Collect public-domain FRED pilot
+        if: steps.research_gate.outputs.collect == 'true'
+        id: research
+        run: |
+          python3 scripts/collect_long_history.py
+          git add -- research-data/fred/DGS10.csv research-data/fred/DGS10.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "SKIP_NO_RESEARCH_CHANGE"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Upload separate research artifact
+        if: steps.research.outputs.changed == 'true'
+        id: research_upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: jenbao-long-history-dgs10
+          path: |
+            research-data/fred/DGS10.csv
+            research-data/fred/DGS10.json
+          retention-days: 10
+          if-no-files-found: error
+      - name: Persist verified public-domain pilot and artifact reference
+        if: steps.research.outputs.changed == 'true'
+        env:
+          RUN_ID: ${{ github.run_id }}
+          ARTIFACT_ID: ${{ steps.research_upload.outputs.artifact-id }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib
+          p=pathlib.Path("research-data/fred/DGS10.csv")
+          m=json.loads(p.with_suffix(".json").read_text())
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==m["sha256"]
+          ref={"runId":int(os.environ["RUN_ID"]),"artifactId":int(os.environ["ARTIFACT_ID"]),
+               "artifactName":"jenbao-long-history-dgs10","series":"DGS10","manifest":m,
+               "persistentPath":str(p),"quality":"source_csv_candidate"}
+          pathlib.Path(".sync").mkdir(exist_ok=True)
+          pathlib.Path(".sync/research-history-artifact.json").write_text(json.dumps(ref,indent=2)+"\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- .sync/research-history-artifact.json
+          git commit -m 'V15: update public-domain DGS10 research history [skip ci]'
+          git pull --rebase origin main
+          git push
