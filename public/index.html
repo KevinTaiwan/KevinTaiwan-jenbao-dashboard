@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self' https://ws.api.cnyes.com/ws/api/v1/charting/history https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://www.twse.com.tw https://proxy.cors.dev https://counterapi.com; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self' https://ws.api.cnyes.com/ws/api/v1/charting/history https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://www.twse.com.tw https://proxy.cors.dev https://counterapi.com https://raw.githubusercontent.com; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="theme-color" content="#081222"><title>珍寶投顧 | Personal CIO Desk · 市場決策</title>
 <style>
 :root{color-scheme:dark;--bg:#081222;--surface:#111f33;--surface2:#16283f;--line:#28415d;--text:#e9f1fb;--muted:#91a9c5;--cyan:#6ad8e0;--blue:#73aaff;--amber:#e9c17a;--red:#ff8d99;--green:#77dfb5;--violet:#a4a0fa}
@@ -2308,27 +2308,73 @@ $('sources').innerHTML=(d.sources||[]).filter(s=>s&&typeof s.url==='string'&&/^h
 showPageInterpretations();
 }
 
-async function fetchIntradayMarket(){
- try{
-  const r=await fetch("./intraday-market.json?c="+Date.now(),{cache:"no-store"});
-  if(!r.ok)throw Error("HTTP "+r.status);
-  const d=await r.json();
-  if(d?.schemaVersion!==1||d?.audience!=="public-market-intraday"||
-    !d.markets||typeof d.markets!=="object")throw Error("盤中資料格式不符");
-  // Preserve any newer directly acquired quote against delayed GitHub snapshots.
-  const existing=intradayMarketData?.markets||{};
-  const markets={...(d.markets||{})};
-  for(const key of ["taiex","sp500"]){
-   const prior=existing[key],up=markets[key];
-   if(prior?.directBrowser&&Date.parse(prior.latest?.lastCandleTime||"")>
-     (Date.parse(up?.latest?.lastCandleTime||"")||0))markets[key]=prior;
+// Lightweight V9 channel: public GitHub main changes are visible without a
+// full GitHub Pages rebuild. Always fall back to the validated deployed snapshot.
+const INTRADAY_GITHUB_RAW="https://raw.githubusercontent.com/KevinTaiwan/KevinTaiwan-jenbao-dashboard/main/public/intraday-market.json";
+let intradayDataSource="尚未讀取",intradayFetching=false;
+function validIntradaySnapshot(d){
+ if(d?.schemaVersion!==1||d?.audience!=="public-market-intraday"||
+    !d.markets||typeof d.markets!=="object")return false;
+ for(const [key,m] of Object.entries(d.markets)){
+  if(!["taiex","sp500"].includes(key)||!Array.isArray(m?.candles)||!m.candles.length||
+     m.market!==key||m.status!=="provisional")return false;
+  let last=-Infinity;
+  for(const bar of m.candles){
+   const t=Date.parse(bar.time),date=new Date(t);
+   if(!Number.isFinite(t)||t<=last||!Number.isFinite(date.getTime())||
+      date.getUTCMinutes()%5!==0||date.getUTCSeconds()!==0||
+      date.getUTCMilliseconds()!==0)return false;
+   if(![bar.open,bar.high,bar.low,bar.close].every(Number.isFinite)||
+      bar.high<Math.max(bar.open,bar.low,bar.close)||
+      bar.low>Math.min(bar.open,bar.high,bar.close))return false;
+   last=t;
   }
-  intradayMarketData={...d,markets};intradayMarketError="";
- }catch(e){intradayMarketError=e.message}
- showHistory();
+  if(m.latest?.lastCandleTime!==m.candles.at(-1).time)return false;
+ }
+ return true;
+}
+async function fetchIntradayMarket(){
+ if(intradayFetching)return;
+ intradayFetching=true;
+ const failures=[];
+ const urls=[
+  {name:"GitHub main 5分鐘 K 線",url:INTRADAY_GITHUB_RAW+"?v="+Math.floor(Date.now()/60000)},
+  {name:"網站備援快照",url:"./intraday-market.json?c="+Date.now()}
+ ];
+ try{
+  for(const route of urls){
+   const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),6500);
+   try{
+    const r=await fetch(route.url,{cache:"no-store",signal:ctrl.signal,credentials:"omit"});
+    if(!r.ok)throw Error("HTTP "+r.status);
+    const d=await r.json();
+    if(!validIntradaySnapshot(d))throw Error("資料格式／未完成 K 棒");
+    // Never regress to older Github CDN or older deployed data; nor override
+    // a newer browser-confirmed quote with an older archived snapshot.
+    const existing=intradayMarketData?.markets||{},markets={...d.markets};
+    for(const key of ["taiex","sp500"]){
+     const prior=existing[key],incoming=markets[key];
+     const prevTs=Date.parse(prior?.latest?.lastCandleTime||"");
+     const newTs=Date.parse(incoming?.latest?.lastCandleTime||"");
+     if(prior&&Number.isFinite(prevTs)&&(!Number.isFinite(newTs)||prevTs>newTs))
+      markets[key]=prior;
+    }
+    intradayMarketData={...d,markets};
+    intradayDataSource=route.name;
+    intradayMarketError="";
+    showHistory();
+    return;
+   }catch(e){failures.push(route.name+"："+String(e.message||e).slice(0,85))}
+   finally{clearTimeout(timeout)}
+  }
+  intradayMarketError="雙來源無法取得有效 K 線；保留既有資料。"+failures.join("｜");
+  intradayDataSource="資料來源待恢復";
+  showHistory();
+ }finally{intradayFetching=false}
 }
 async function sync(silent=false){try{const r=await fetch('./market-data.json?cache='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const d=validate(await r.json());const changed=JSON.stringify(d)!==JSON.stringify(data);data=d;render();await Promise.all([fetchMarketHistory(),fetchIndexOhlc(),fetchIntradayMarket(),fetchCenterHistory()]);await refreshDirectMarket();loadedAt=new Date();if(!silent||changed)toast((changed?'已更新':'已核對')+'市場資料 · '+d.asOf)}catch(e){$('syncstate').textContent='資料同步失敗';if(!data){$('headline').textContent='無法載入市場資料';$('summary').textContent='請將網站部署到支援 HTTPS 的網頁主機；本機檔案請使用 HTTP 伺服器預覽。'}if(!silent)toast('同步失敗：'+e.message)}}
 $('reload').addEventListener('click',()=>sync(false));document.querySelectorAll('[data-tab]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.tabscreen').forEach(s=>s.classList.toggle('visible',s.id===btn.dataset.tab))}));document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync(true)});sync(true);setInterval(()=>{if(!document.hidden)refreshDirectMarket().catch(e=>{directQuoteStatus="直連嘗試失敗："+String(e.message||e).slice(0,80);showHistory()})},LIVE_FETCH_POLL_MS);
+setInterval(()=>{if(!document.hidden)fetchIntradayMarket()},90000);
 setInterval(()=>{if(!document.hidden)sync(true)},300000);
 
 /* visitor-counter-v1 — Public visitor counting only. Never transmit portfolio information. */
