@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self' https://ws.api.cnyes.com/ws/api/v1/charting/history https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://www.twse.com.tw https://proxy.cors.dev https://counterapi.com https://raw.githubusercontent.com; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src 'self' https://ws.api.cnyes.com/ws/api/v1/charting/history https://query1.finance.yahoo.com https://query2.finance.yahoo.com https://www.twse.com.tw https://proxy.cors.dev https://raw.githubusercontent.com; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="theme-color" content="#081222"><title>珍寶投顧 | Personal CIO Desk · 市場決策</title>
 <style>
 :root{color-scheme:dark;--bg:#081222;--surface:#111f33;--surface2:#16283f;--line:#28415d;--text:#e9f1fb;--muted:#91a9c5;--cyan:#6ad8e0;--blue:#73aaff;--amber:#e9c17a;--red:#ff8d99;--green:#77dfb5;--violet:#a4a0fa}
@@ -529,7 +529,7 @@ body.technical-fullscreen-active{overflow:hidden!important}
 <div class="visitor-counter" role="group" aria-label="Dashboard 匿名瀏覽統計">
 <span class="vc-item">今日訪客 <strong id="visitorToday" aria-live="polite">—</strong></span>
 <span class="vc-item">累積訪客 <strong id="visitorTotal" aria-live="polite">—</strong></span>
-<span class="vc-status" id="visitorStatus">台灣時間 · V3 起計 · 匿名瀏覽器估計值</span>
+<span class="vc-status" id="visitorStatus">GitHub Pages 不提供網站訪客統計 · 已停用第三方計數服務</span>
 </div>
 <div class="warning" id="stale" role="status"></div>
 <div class="tabscreen visible" id="overview">
@@ -2392,82 +2392,4 @@ setInterval(()=>{if(!document.hidden)fetchIntradayMarket()},90000);
 setInterval(()=>{if(!document.hidden)sync(true)},300000);
 
 </script>
-<script>
-/* visitor-counter-v3 — browser-local deduplication, global event totals; public only. */
-(()=>{
-"use strict";
-const ENDPOINT="https://counterapi.com/api/kevintaiwan-jenbao-dashboard-20261124/view/";
-const DAY_STORAGE="jb-visitor-reported-day-v3";
-const TOTAL_STORAGE="jb-visitor-reported-total-v3";
-const TOTAL_KEY="dashboard-browser-total-v3";
-let lifetimeRecorded=false;
-let lastRecordedDay="",busy=false;
-let lastGoodToday=null,lastGoodTotal=null,displayDay="";
-const fmt=new Intl.NumberFormat("zh-TW");
-const el=id=>document.getElementById(id);
-function taipeiDate(){
- const parts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
- const v=Object.fromEntries(parts.filter(x=>x.type!=="literal").map(x=>[x.type,x.value]));
- return v.year+v.month+v.day;
-}
-function validCount(value){
- return (typeof value==="number"||(typeof value==="string"&&/^\d+$/.test(value)))&&Number.isSafeInteger(Number(value))&&Number(value)>=0;
-}
-async function request(key,readOnly){
- const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),8500);
- try{
-  // Writes use the documented default: omit readOnly instead of sending a false string.
-  const url=ENDPOINT+encodeURIComponent(key)+(readOnly?"?readOnly=true":"");
-  const res=await fetch(url,{method:"GET",mode:"cors",cache:"no-store",credentials:"omit",referrerPolicy:"no-referrer",signal:ctrl.signal});
-  if(!res.ok)throw Error("HTTP "+res.status);
-  const body=await res.json();
-  if(!validCount(body?.value))throw Error("API 回傳格式異常");
-  return Number(body.value);
- }finally{clearTimeout(timer)}
-}
-function reason(e){
- return e?.name==="AbortError"?"請求逾時":(e instanceof TypeError?"網路／CORS 請求失敗":String(e?.message||"未知錯誤").slice(0,80));
-}
-async function update(){
- if(busy||document.hidden)return;
- busy=true;
- try{
-  const day=taipeiDate(),today=el("visitorToday"),total=el("visitorTotal"),status=el("visitorStatus");
-  if(displayDay!==day){displayDay=day;lastGoodToday=null;today.textContent="—"}
-  let counted=lastRecordedDay===day;
-  try{counted=counted||localStorage.getItem(DAY_STORAGE)===day}catch(e){}
-  const errors=[];
-  try{
-   const n=await request("dashboard-browser-day-v3-"+day,counted);
-   // A zero on a write is not confirmation; never suppress later retries.
-   if(n===0)throw Error(counted?"日統計回傳 0，待核實":"計數未確認（API 回傳 0）");
-   lastGoodToday=n;today.textContent=fmt.format(n);
-   if(!counted){
-    lastRecordedDay=day;
-    try{localStorage.setItem(DAY_STORAGE,day)}catch(e){}
-   }
-  }catch(e){today.textContent=lastGoodToday===null?"—":fmt.format(lastGoodToday);errors.push("今日："+reason(e))}
-  try{
-   let lifetimeCounted=lifetimeRecorded;
-   try{lifetimeCounted=lifetimeCounted||localStorage.getItem(TOTAL_STORAGE)==="1"}catch(e){}
-   const n=await request(TOTAL_KEY,lifetimeCounted);
-   if(n===0)throw Error("永久計數未確認（API 回傳 0）");
-   if(!lifetimeCounted){lifetimeRecorded=true;try{localStorage.setItem(TOTAL_STORAGE,"1")}catch(e){}}
-   lastGoodTotal=n;total.textContent=fmt.format(n);
-   if(lastGoodToday!==null&&n<lastGoodToday)errors.push("永久計數低於今日值，待核實");
-  }catch(e){total.textContent=lastGoodTotal===null?"—":fmt.format(lastGoodTotal);errors.push("累計："+reason(e))}
-  status.textContent=errors.length?"訪客統計 WARN · "+errors.join("；")+" · 每30秒重試（保留上次有效值）":"台灣時間 · V3 起計 · 匿名瀏覽器估計值";
- }finally{busy=false}
-}
-// Serialize updates across tabs where Web Locks are supported, then recheck localStorage inside update.
-function scheduleUpdate(){
- if(busy||document.hidden)return;
- if(navigator.locks&&typeof navigator.locks.request==="function"){
-  navigator.locks.request("jb-visitor-v3",{ifAvailable:true},async lock=>{if(lock)await update()}).catch(()=>update());
- }else update();
-}
-scheduleUpdate();
-setInterval(scheduleUpdate,30000);
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)scheduleUpdate()});
-})();
-</script></body></html>
+</body></html>
