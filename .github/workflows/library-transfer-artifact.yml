@@ -277,3 +277,83 @@ jobs:
       - name: Report partial or failed source access
         if: steps.archive.outputs.failed == '1'
         run: exit 1
+
+  treasury_recent:
+    needs: treasury_history
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Test and gate recent Treasury collection
+        id: gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          python3 scripts/collect_treasury_recent.py --self-test
+          hour=$(date -u +%H)
+          if [[ "$EVENT_NAME" == workflow_dispatch ]] || [[ "$EVENT_NAME" == schedule && "$hour" == 09 ]] || [[ "$EVENT_NAME" == push && "$COMMIT_MESSAGE" == *"[treasury-recent-bootstrap]"* ]]; then
+            echo "collect=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "collect=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Collect and validate annual official curves
+        if: steps.gate.outputs.collect == 'true'
+        id: recent
+        run: |
+          failed=0
+          python3 scripts/collect_treasury_recent.py || failed=1
+          python3 - <<'PY'
+          import hashlib,json,pathlib,re,subprocess
+          root=pathlib.Path("research-data/treasury-recent")
+          for p in sorted(root.glob("*.csv")):
+              if not re.fullmatch(r"ust-(nominal|real)-20[0-9]{2}\.csv",p.name):
+                  raise SystemExit("Unexpected research path")
+              m=json.loads(p.with_suffix(".json").read_text())
+              if hashlib.sha256(p.read_bytes()).hexdigest()!=m["sha256"]:
+                  raise SystemExit("Treasury recent SHA mismatch")
+              subprocess.run(["git","add","-f","--",str(p),str(p.with_suffix(".json"))],check=True)
+          PY
+          echo "failed=$failed" >> "$GITHUB_OUTPUT"
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Upload annual Treasury research data
+        if: steps.recent.outputs.changed == 'true'
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: jenbao-treasury-recent-history
+          path: research-data/treasury-recent/
+          retention-days: 10
+          if-no-files-found: error
+      - name: Persist annual Treasury data and pointer
+        if: steps.recent.outputs.changed == 'true'
+        env:
+          RUN_ID: ${{ github.run_id }}
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+        run: |
+          python3 - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path("research-data/treasury-recent")
+          manifests=[json.loads(p.read_text()) for p in sorted(root.glob("*.json"))]
+          ref={"runId":int(os.environ["RUN_ID"]),"artifactId":int(os.environ["ARTIFACT_ID"]),
+               "artifactName":"jenbao-treasury-recent-history","manifests":manifests,
+               "persistentPath":str(root),"quality":"official_source_candidate"}
+          pathlib.Path(".sync").mkdir(exist_ok=True)
+          pathlib.Path(".sync/treasury-recent-artifact.json").write_text(json.dumps(ref,indent=2)+"\n")
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- .sync/treasury-recent-artifact.json
+          git commit -m 'V15: persist recent official Treasury curves [skip ci]'
+          git pull --rebase origin main
+          git push
+      - name: Report partial source access
+        if: steps.recent.outputs.failed == '1'
+        run: exit 1
