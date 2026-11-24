@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS visitors (id_hash TEXT PRIMARY KEY);
+CREATE TABLE IF NOT EXISTS daily_visitors (day TEXT NOT NULL, id_hash TEXT NOT NULL, PRIMARY KEY(day,id_hash));
