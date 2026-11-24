@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-24T00:14:05.959Z",
+  "generatedAt": "2026-11-24T00:34:49.328Z",
   "cutoff": "2026-11-23",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -130,7 +130,7 @@
       "targetFirst": "2025-11-25",
       "targetLast": "2026-11-23",
       "dataScope": "TWSE listed-stock financing maintenance excluding ETFs; vendor-provided, distinct from all-market margin ratio and official whole-account collateral ratio",
-      "note": "Latest 240 trading sessions complete; 2026-11-23 value 126.92% from user-supplied screenshot of Wantgoo exclude-ETF chart with dated cursor, not interpolated."
+      "note": "The audit tracks the latest 240 Taiwan sessions. Cursor backfill on 2026-11-21 extended verified history to 2024-11-13. See sourceSnapshots for prior collections."
     },
     "us10yYield": {
       "count": 1221,
@@ -58000,7 +58000,7 @@
         "validObservations": 1,
         "observationFirst": "2026-11-23",
         "observationLast": "2026-11-23",
-        "extraction": "User screenshot of Wantgoo dated cursor on 2026/11/23 with 大盤融資維持率 126.92%.",
+        "extraction": "Wantgoo listed excluding ETF margin chart dated crosshair screenshot provided by user: 126.92%, direct observation.",
         "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
       }
     ]
