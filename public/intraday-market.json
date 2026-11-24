@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-intraday",
-  "generatedAt": "2026-11-24T03:10:40+00:00",
-  "asOfTaipei": "2026-11-24T11:10:40+08:00",
+  "generatedAt": "2026-11-24T03:39:10+00:00",
+  "asOfTaipei": "2026-11-24T11:39:10+08:00",
   "refreshIntentMinutes": 5,
   "actualQuoteDelayVaries": true,
   "tradingSessions": "TAIEX 09:00-13:30 Asia/Taipei; SP500 09:30-16:00 America/New_York",
@@ -17,8 +17,8 @@
         "open": 39148.9102,
         "high": 40180.3789,
         "low": 39148.9102,
-        "close": 40128.4492,
-        "lastCandleTime": "2026-11-24T10:50:40+08:00"
+        "close": 40141.3281,
+        "lastCandleTime": "2026-11-24T11:15:00+08:00"
       },
       "candles": [
         {
@@ -176,11 +176,46 @@
           "close": 40132.7109
         },
         {
-          "time": "2026-11-24T10:50:40+08:00",
-          "open": 40128.4492,
-          "high": 40128.4492,
-          "low": 40128.4492,
-          "close": 40128.4492
+          "time": "2026-11-24T10:50:00+08:00",
+          "open": 40130.6914,
+          "high": 40132.1016,
+          "low": 40118.1602,
+          "close": 40118.1602
+        },
+        {
+          "time": "2026-11-24T10:55:00+08:00",
+          "open": 40117.9883,
+          "high": 40120.6992,
+          "low": 40113.9688,
+          "close": 40116.5586
+        },
+        {
+          "time": "2026-11-24T11:00:00+08:00",
+          "open": 40116.3008,
+          "high": 40125.6094,
+          "low": 40110.1289,
+          "close": 40125.5508
+        },
+        {
+          "time": "2026-11-24T11:05:00+08:00",
+          "open": 40125.7891,
+          "high": 40133.5195,
+          "low": 40121.2188,
+          "close": 40133.5195
+        },
+        {
+          "time": "2026-11-24T11:10:00+08:00",
+          "open": 40132.4414,
+          "high": 40139.4883,
+          "low": 40130.2383,
+          "close": 40137.9805
+        },
+        {
+          "time": "2026-11-24T11:15:00+08:00",
+          "open": 40135.7305,
+          "high": 40141.4805,
+          "low": 40134.9883,
+          "close": 40141.3281
         }
       ],
       "turnoverYiTwd": null,
@@ -189,7 +224,7 @@
       "projectionIsEstimate": false,
       "turnoverStatus": "unavailable_not_inferred_from_shares",
       "note": "OHLC are 5-minute provisional candles, not official closing values. Volume is monetary turnover (億元), never index share count.",
-      "quoteAgeMinutes": 20.0
+      "quoteAgeMinutes": 24.2
     },
     "sp500": {
       "market": "sp500",
@@ -201,8 +236,8 @@
         "open": 7227.4102,
         "high": 7295.6001,
         "low": 7152.6602,
-        "close": 7257.25,
-        "lastCandleTime": "2026-11-23T15:33:22-05:00"
+        "close": 7256.7598,
+        "lastCandleTime": "2026-11-23T15:30:00-05:00"
       },
       "candles": [
         {
@@ -715,13 +750,6 @@
           "high": 7264.1201,
           "low": 7255.6299,
           "close": 7256.7598
-        },
-        {
-          "time": "2026-11-23T15:33:22-05:00",
-          "open": 7257.25,
-          "high": 7257.25,
-          "low": 7257.25,
-          "close": 7257.25
         }
       ],
       "turnoverYiTwd": null,
@@ -730,11 +758,12 @@
       "projectionIsEstimate": false,
       "turnoverStatus": "unavailable_not_inferred_from_shares",
       "note": "OHLC are 5-minute provisional candles, not official closing values. Volume is monetary turnover (億元), never index share count.",
-      "quoteAgeMinutes": 0.0
+      "quoteAgeMinutes": 429.2
     }
   },
   "updatedMarkets": [
-    "taiex"
+    "taiex",
+    "sp500"
   ],
   "safetyNotes": [
     "Quote prices can be delayed; GitHub schedule and GitHub Pages deployment have additional latency.",
