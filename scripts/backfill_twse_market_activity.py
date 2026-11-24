@@ -18,6 +18,7 @@ import time
 import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
+from market_material_write import write_public_if_materially_changed
 
 FILE=pathlib.Path("public/market-history.json")
 TODAY=dt.datetime.now(ZoneInfo("Asia/Taipei")).date()
@@ -208,10 +209,7 @@ def main():
                  "當沖成交金額=(買進成交金額+賣出成交金額)/2",
                  "股數當沖比重不得取代成交金額當沖比重",
                  "僅記錄證交所官方同日交易日資料，無插補、無補零"]}
-    text=json.dumps(doc,ensure_ascii=False,indent=2)+"\n"
-    tmp=FILE.with_suffix(".json.tmp")
-    tmp.write_text(text,encoding="utf-8")
-    tmp.replace(FILE)
+    write_public_if_materially_changed(FILE,doc,kind="market-history")
     print(json.dumps(doc["twseTurnoverAudit"],ensure_ascii=False),flush=True)
 
 if __name__=="__main__":
