@@ -1984,7 +1984,7 @@ function showHistory(){
 }
 async function fetchIndexOhlc(){
  try{
-  const r=await fetch("./index-ohlc-history.json?c="+Date.now(),{cache:"no-store"});
+  const r=await fetch("./index-ohlc-history.json",{cache:"no-cache"});
   if(!r.ok)throw Error("HTTP "+r.status);
   const d=await r.json();
   if(d?.audience!=="public-index-ohlc"||d?.schemaVersion!==1||!d?.series
@@ -2003,17 +2003,17 @@ async function fetchIndexOhlc(){
   indexOhlcHistory={asOf:d.cutoff,stats:Object.fromEntries(["taiex","sp500"].map(k=>[k,{count:clean[k].length,last:clean[k].at(-1)?.date}]))};
   techOhlcCache=clean;
   indexOhlcError="";
- }catch(e){indexOhlcError="K 線資料未取得："+e.message;indexOhlcHistory=null;techOhlcCache={taiex:[],sp500:[]};}
+ }catch(e){indexOhlcError="K 線資料未取得："+e.message;/* retain last validated OHLC on transient fetch failure */}
  showHistory();
 }
 async function fetchMarketHistory(){
  try{
-  const resp=await fetch("./market-history.json?c="+Date.now(),{cache:"no-store"});
+  const resp=await fetch("./market-history.json",{cache:"no-cache"});
   if(!resp.ok)throw Error("HTTP "+resp.status);
   const obj=await resp.json();
   if(obj?.audience!=="public-market-history"||!Array.isArray(obj.rows))throw Error("歷史資料格式不符");
   marketHistoryData=obj;marketHistoryError="";
- }catch(e){marketHistoryError="無法取得獨立歷史資料："+e.message;marketHistoryData={rows:(data?.marketHistory||[]),stats:{}}}
+ }catch(e){marketHistoryError="無法取得獨立歷史資料："+e.message;if(!marketHistoryData)marketHistoryData={rows:(data?.marketHistory||[]),stats:{}}}
  showHistory();
 }
 function selectCursorAtPointer(evt,svg){
