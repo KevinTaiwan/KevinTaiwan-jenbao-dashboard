@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "audience": "public-market",
+  "status": "awaiting_verified_observations",
+  "sourceUrls": [
+    "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html",
+    "https://www.spf.com.tw/sinopacSPF/research/list.do?id=18d5d32463100000a0821ca2135dcd5d"
+  ],
+  "definition": "Next scheduled FOMC meeting probability of target range above current range, equal, or below; percentage 0–100; one verified end-of-day snapshot per US trading date, with meeting date retained. No interpolation or estimated values.",
+  "records": [],
+  "coverage": {
+    "targetTradingDays": 240,
+    "observedTradingDays": 0,
+    "status": "pending"
+  },
+  "notes": [
+    "Only publish observations from sources permitting public redistribution; otherwise use authorized independently derived values with distinct methodology or leave blank.",
+    "Do not compare same-meeting changes across meeting rollovers without labeling the change. Preserve observation date, source, and publication timestamp."
+  ]
+}
