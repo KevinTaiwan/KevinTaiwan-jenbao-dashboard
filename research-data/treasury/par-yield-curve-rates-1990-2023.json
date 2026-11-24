@@ -1,0 +1,32 @@
+{
+  "bytes": 556629,
+  "coverage": {
+    "dates": 8507,
+    "first": "1990-01-02",
+    "last": "2023-12-29",
+    "valid_by_maturity": {
+      "1 yr": 8506,
+      "10 yr": 8506,
+      "2 yr": 8506,
+      "3 yr": 8506,
+      "30 yr": 7512,
+      "5 yr": 8506
+    }
+  },
+  "definition": "Daily Treasury Par Yield Curve Rates; percent",
+  "fred_reference_series": [
+    "DGS1",
+    "DGS2",
+    "DGS3",
+    "DGS5",
+    "DGS10",
+    "DGS30"
+  ],
+  "limitations": "Source nulls retained; no calendar completeness certification or FRED splicing.",
+  "not_fred_dgs10": true,
+  "provider": "US Department of the Treasury",
+  "quality": "official_source_candidate",
+  "series_id": "UST_PAR_CURVE_1990_2023",
+  "sha256": "004461bcf87ec7b34daf035f05fc191d7cf2cd84986533df3e39d5dcdb0d62a4",
+  "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rate-archives/par-yield-curve-rates-1990-2023.csv"
+}

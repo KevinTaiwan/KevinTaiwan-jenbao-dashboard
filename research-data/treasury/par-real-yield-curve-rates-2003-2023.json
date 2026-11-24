@@ -1,0 +1,30 @@
+{
+  "bytes": 183085,
+  "coverage": {
+    "dates": 5254,
+    "first": "2003-01-02",
+    "last": "2023-12-29",
+    "valid_by_maturity": {
+      "10 yr": 5254,
+      "20 yr": 4863,
+      "30 yr": 3469,
+      "5 yr": 5254,
+      "7 yr": 5254
+    }
+  },
+  "definition": "Daily Treasury Par Real Yield Curve Rates; percent",
+  "fred_reference_series": [
+    "DFII5",
+    "DFII7",
+    "DFII10",
+    "DFII20",
+    "DFII30"
+  ],
+  "limitations": "Source nulls retained; no calendar completeness certification or FRED splicing.",
+  "not_fred_dgs10": true,
+  "provider": "US Department of the Treasury",
+  "quality": "official_source_candidate",
+  "series_id": "UST_PAR_REAL_CURVE_2003_2023",
+  "sha256": "68def62bf3c32a32e874ca33d6ffa60bc29c6a5a52c7cf8595e102f0d2cd6e0e",
+  "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rate-archives/par-real-yield-curve-rates-2003-2023.csv"
+}
