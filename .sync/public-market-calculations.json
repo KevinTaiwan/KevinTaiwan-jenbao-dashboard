@@ -1,0 +1,186 @@
+{
+  "audience": "public-market-calculations",
+  "indices": {
+    "sp500": {
+      "asOf": "2026-11-20",
+      "close": 6910.3901,
+      "movingAverages": {
+        "10": 7401.129,
+        "120": 7586.283,
+        "20": 7499.2315,
+        "240": 7273.2278,
+        "5": 7233.394,
+        "60": 7633.061
+      },
+      "previousClose": 7175.8301,
+      "previousDate": "2026-11-19",
+      "windows": {
+        "20": {
+          "annualizedVolatilityPct": 26.244041,
+          "availableReturns": 20,
+          "endDate": "2026-11-20",
+          "maxDrawdownPct": -10.76436,
+          "requiredReturns": 20,
+          "startDate": "2026-10-23",
+          "status": "computed_from_archive"
+        },
+        "252": {
+          "annualizedVolatilityPct": 14.366256,
+          "availableReturns": 252,
+          "endDate": "2026-11-20",
+          "maxDrawdownPct": -11.619747,
+          "requiredReturns": 252,
+          "startDate": "2025-11-19",
+          "status": "computed_from_archive"
+        },
+        "60": {
+          "annualizedVolatilityPct": 17.394409,
+          "availableReturns": 60,
+          "endDate": "2026-11-20",
+          "maxDrawdownPct": -11.619747,
+          "requiredReturns": 60,
+          "startDate": "2026-08-27",
+          "status": "computed_from_archive"
+        }
+      }
+    },
+    "taiex": {
+      "asOf": "2026-11-23",
+      "close": 36811.89,
+      "movingAverages": {
+        "10": 40633.523,
+        "120": 45224.3705,
+        "20": 42258.0925,
+        "240": 39451.1824,
+        "5": 38311.818,
+        "60": 45578.4128
+      },
+      "previousClose": 36033.29,
+      "previousDate": "2026-11-20",
+      "windows": {
+        "20": {
+          "annualizedVolatilityPct": 50.39471,
+          "availableReturns": 20,
+          "endDate": "2026-11-23",
+          "maxDrawdownPct": -23.39142,
+          "requiredReturns": 20,
+          "startDate": "2026-10-22",
+          "status": "computed_from_archive"
+        },
+        "252": {
+          "annualizedVolatilityPct": 30.688169,
+          "availableReturns": 252,
+          "endDate": "2026-11-23",
+          "maxDrawdownPct": -27.676745,
+          "requiredReturns": 252,
+          "startDate": "2025-11-06",
+          "status": "computed_from_archive"
+        },
+        "60": {
+          "annualizedVolatilityPct": 33.775835,
+          "availableReturns": 60,
+          "endDate": "2026-11-23",
+          "maxDrawdownPct": -27.676745,
+          "requiredReturns": 60,
+          "startDate": "2026-08-24",
+          "status": "computed_from_archive"
+        }
+      }
+    }
+  },
+  "inputs": {
+    "index-ohlc-history.json": {
+      "gitBlobSha": "70748d52ee2a9bee07874b969d85c00b0e7a0978",
+      "sha256": "58dec8c49a058ec2493737706dc9d54fdc663541be4557acd98e472aa33cca6f"
+    },
+    "market-center-history.json": {
+      "gitBlobSha": "35f7b46ea3552414ab3e719c474eda0958571414",
+      "sha256": "fe1ee7e50550c964fd94abe9af4310cb3dc0a08bf3b0aad24ea901ea5ce9751a"
+    },
+    "market-history.json": {
+      "gitBlobSha": "9e651e812ffb34ea8322f0c06483a74bff34d72b",
+      "sha256": "8623611054d1fb2a7d12a85d38234892beed56e9253d8d09be615d49f7c3dde3"
+    }
+  },
+  "method": {
+    "coverage": "available archive observations only; does not certify complete exchange sessions or fresh original source checks",
+    "drawdown": "minimum close/running peak minus one within n+1 closes, percent",
+    "ratio20": "latest divided by mean of preceding 20 available observations, excluding latest; null if mean nonpositive or latest negative",
+    "returns": "local currency close-to-close simple price returns, not total returns",
+    "volatility": "sample standard deviation times sqrt(252), percent"
+  },
+  "methodVersion": "V13.2",
+  "ratios": {
+    "hyOas": {
+      "asOf": "2026-11-20",
+      "baselineCount": 20,
+      "baselineEnd": "2026-11-19",
+      "baselineMean": 3.344,
+      "baselineStart": "2026-10-23",
+      "latest": 3.76,
+      "latestMinusPrior20Mean": 0.416,
+      "latestOverPrior20Mean": 1.12440191,
+      "previousDate": "2026-11-19",
+      "previousValue": 3.52,
+      "status": "computed_from_archive",
+      "unit": "percentage_points"
+    },
+    "move": {
+      "asOf": "2026-11-23",
+      "baselineCount": 20,
+      "baselineEnd": "2026-11-20",
+      "baselineMean": 97.7925949,
+      "baselineStart": "2026-10-23",
+      "latest": 100.9136963,
+      "latestMinusPrior20Mean": 3.1211014,
+      "latestOverPrior20Mean": 1.03191552,
+      "previousDate": "2026-11-20",
+      "previousValue": 106.311897,
+      "status": "computed_from_archive",
+      "unit": "index_points"
+    },
+    "singleBOas": {
+      "asOf": "2026-11-20",
+      "baselineCount": 20,
+      "baselineEnd": "2026-11-19",
+      "baselineMean": 3.51,
+      "baselineStart": "2026-10-23",
+      "latest": 4.08,
+      "latestMinusPrior20Mean": 0.57,
+      "latestOverPrior20Mean": 1.16239316,
+      "previousDate": "2026-11-19",
+      "previousValue": 3.8,
+      "status": "computed_from_archive",
+      "unit": "percentage_points"
+    },
+    "sofrMinusIorbBp": {
+      "asOf": "2026-11-20",
+      "baselineCount": 20,
+      "baselineEnd": "2026-11-19",
+      "baselineMean": 2.15,
+      "baselineStart": "2026-10-22",
+      "latest": 2.0,
+      "latestMinusPrior20Mean": -0.15,
+      "latestOverPrior20Mean": 0.93023256,
+      "previousDate": "2026-11-19",
+      "previousValue": 1.0,
+      "status": "computed_from_archive",
+      "unit": "basis_points"
+    },
+    "vix": {
+      "asOf": "2026-11-23",
+      "baselineCount": 20,
+      "baselineEnd": "2026-11-20",
+      "baselineMean": 21.699,
+      "baselineStart": "2026-10-26",
+      "latest": 26.62,
+      "latestMinusPrior20Mean": 4.921,
+      "latestOverPrior20Mean": 1.22678464,
+      "previousDate": "2026-11-20",
+      "previousValue": 35.89,
+      "status": "computed_from_archive",
+      "unit": "index_points"
+    }
+  },
+  "schemaVersion": 1
+}
