@@ -45,12 +45,22 @@ def session(m,now):
             m["open"] <= local.time().replace(tzinfo=None) <=
             (dt.datetime.combine(local.date(),m["close"])+dt.timedelta(minutes=12)).time()),local
 
+
+def completed_bar_boundary(raw):
+    """Allow only source timestamps on explicit five-minute OHLC boundaries."""
+    try:
+        when=dt.datetime.fromisoformat(str(raw))
+        return (when.utcoffset() is not None and when.minute%5==0
+                and when.second==0 and when.microsecond==0)
+    except (TypeError,ValueError,OverflowError):
+        return False
+
 def normalize(raw,day,tz,opens,closes):
     bytime={}
     for b in raw:
         try:
             when=dt.datetime.fromisoformat(str(b["time"]))
-            if when.tzinfo is None:continue
+            if not completed_bar_boundary(b["time"]):continue
             when=when.astimezone(tz)
             if when.date().isoformat()!=day:continue
             clock=when.time().replace(tzinfo=None)
@@ -135,6 +145,36 @@ def summarise(rows,now,market,mode,delayed):
             "turnoverStatus":"verified_index_turnover_TWD" if monetary else "unavailable_not_inferred_from_shares",
             "note":"OHLC are 5-minute provisional candles, not official closing values. Volume is monetary turnover (億元), never index share count."}
 
+
+def sanitize_saved_candles(markets,now):
+    """Remove legacy in-progress off-grid bars while retaining completed bars.
+
+    Do not round a partial quote timestamp into a supposedly verified candle.
+    """
+    fresh=dict(markets)
+    fixed=[]
+    for name,old in markets.items():
+        if name not in MARKETS or not isinstance(old,dict):
+            continue
+        bars=old.get("candles")
+        if not isinstance(bars,list) or not bars:
+            continue
+        verified=[b for b in bars if completed_bar_boundary(b.get("time"))]
+        if len(verified)==len(bars):
+            continue
+        if verified:
+            fixed_market=summarise(verified,now,name,old.get("source","previous verified source"),old.get("sourceDelayMinutes"))
+            last=dt.datetime.fromisoformat(verified[-1]["time"]).astimezone(UTC)
+            fixed_market["quoteAgeMinutes"]=round((now-last).total_seconds()/60,1)
+            fresh[name]=fixed_market
+        else:
+            # With no completed bars, don't republish a misleading candle.
+            del fresh[name]
+        fixed.append(name)
+        print("REMOVED INCOMPLETE FIVE-MINUTE CANDLE",name,
+              "removed",len(bars)-len(verified),"retained",len(verified),flush=True)
+    return fresh,fixed
+
 def main():
     now=dt.datetime.now(UTC)
     existing={}
@@ -142,8 +182,7 @@ def main():
         try:existing=json.loads(PATH.read_text(encoding="utf-8"))
         except ValueError:pass
     latest=existing.get("markets",{}) if isinstance(existing.get("markets"),dict) else {}
-    fresh=dict(latest)
-    updated=[]
+    fresh,updated=sanitize_saved_candles(latest,now)
     for name,m in MARKETS.items():
         active,local=session(m,now)
         if not active:continue
