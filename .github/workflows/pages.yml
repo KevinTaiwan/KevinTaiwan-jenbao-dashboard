@@ -102,9 +102,20 @@ jobs:
           import json
           import math
           from datetime import date
-          allowed={'market-center-history.json','index.html','market-data.json','market-history.json','index-ohlc-history.json','intraday-market.json','.nojekyll'}
+          allowed={'market-center-history.json','index.html','market-data.json','market-history.json','index-ohlc-history.json','intraday-market.json','fedwatch-history.json','.nojekyll'}
           files={p.name for p in Path('public').rglob('*') if p.is_file()}
           if files-allowed:raise SystemExit('Unsafe unexpected public files: '+repr(files-allowed))
+          # Only the exact reviewed empty placeholder is approved for publication.
+          fedwatch=Path('public/fedwatch-history.json')
+          if fedwatch.exists():
+              import hashlib
+              raw=fedwatch.read_bytes()
+              blob=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
+              if blob!='f88cd588596e502d05300c0fd0a1598dc484f4dc':
+                  raise SystemExit('FedWatch changed: require public schema and rights review')
+              fw=json.loads(raw)
+              if fw.get('audience')!='public-market' or fw.get('records')!=[] or fw.get('coverage',{}).get('observedTradingDays')!=0:
+                  raise SystemExit('Invalid FedWatch placeholder')
           center_path=Path('public/market-center-history.json')
           if center_path.exists():
               series=json.loads(center_path.read_text(encoding='utf-8'))
