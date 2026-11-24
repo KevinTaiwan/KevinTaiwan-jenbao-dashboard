@@ -11,6 +11,7 @@ from twse_credit_calls import merge_credit
 import csv
 import io
 import json
+from market_material_write import write_public_if_materially_changed
 import math
 import os
 import pathlib
@@ -417,9 +418,7 @@ def finalize_history(include_credit=False):
     if stats["taiex"]["count"]<20:raise SystemExit("FAIL: insufficient TAIEX source history")
     if include_credit:
         attempt("TWSE_CREDIT_CALLS", lambda: merge_credit(out))
-    temp = DEST.with_suffix(".json.tmp")
-    temp.write_text(json.dumps(out,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    temp.replace(DEST)
+    write_public_if_materially_changed(DEST,out,kind="market-history")
     print("FINAL COUNTS",json.dumps({k:(v["count"],v["last"]) for k,v in stats.items()},ensure_ascii=False),flush=True)
 
 if __name__=="__main__":main()
