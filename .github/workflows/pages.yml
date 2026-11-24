@@ -13,6 +13,8 @@ on:
       - 'scripts/validate_public.py'
       - 'scripts/refresh_market_history.py'
       - 'scripts/sync_market_snapshot.py'
+      - 'scripts/public_market_calculations.py'
+      - 'scripts/tests/test_public_market_calculations.py'
       - 'scripts/refresh_market_center_history.py'
       - 'scripts/backfill_twse_market_activity.py'
       - 'scripts/market_seed.json'
@@ -231,4 +233,17 @@ jobs:
             done
             echo 'FAIL: deployment succeeded but its SHA marker could not be saved'
             exit 1
+          fi
+
+      - name: Compute public market statistics after validated deployment
+        run: |
+          python3 -m unittest discover -s scripts/tests -p 'test_public_market_calculations.py'
+          python3 scripts/public_market_calculations.py
+          git config user.name "jenbao-market-bot"
+          git config user.email "jenbao-market-bot@users.noreply.github.com"
+          git add .sync/public-market-calculations.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update public market calculation cache [skip ci]"
+            # Never rebase a derived cache onto different input data.
+            git push origin HEAD:main
           fi
