@@ -356,6 +356,21 @@ def main():
         fetch_stooq_spx()
     if len(ARCHIVE["sp500"])<1000:
         fetch_public_sp500_duckdb()
+    # Dated manual backfill, independently cross-checked against the published
+    # Yahoo ^GSPC, Investing SPX and FT INX historical daily tables on 2026-11-25.
+    # Never override a row supplied by the live collection above.
+    # https://finance.yahoo.com/quote/%5EGSPC/history/
+    # https://www.investing.com/indices/us-spx-500-historical-data
+    # https://markets.ft.com/data/indices/tearsheet/historical?s=INX:IOM
+    verified_backfill = [
+        ("2026-11-23", 7227.41, 7295.60, 7152.66, 7237.17),
+        ("2026-11-24", 7172.33, 7223.95, 7138.93, 7201.09),
+    ]
+    for date, op, hi, lo, cl in verified_backfill:
+        if date not in ARCHIVE["sp500"] and date_of(date) is not None:
+            if not save_record("sp500", date, op, hi, lo, cl, "YAHOO_GSPC"):
+                raise ValueError("Verified SP500 backfill rejected: " + date)
+            print("SP500 cross-checked historical backfill", date, op, hi, lo, cl, flush=True)
     gaps=recent_sp500_weekday_gaps()
     if gaps:
         print("WARN SP500 weekday refresh candidates (may include exchange holidays; never inferred):",
