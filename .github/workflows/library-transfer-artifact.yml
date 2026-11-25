@@ -359,17 +359,17 @@ jobs:
         run: exit 1
 
   gold_spot_probe:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[gold-probe]'))
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[gold-probe]'))
     runs-on: ubuntu-latest
     timeout-minutes: 4
     permissions:
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Discover licensed daily metal CSV and compare without modifying history
         run: |
           python3 - <<'PY'
-          import csv,datetime as dt,io,json,math,re,urllib.request,urllib.parse
+          import pathlib,hashlib,csv,datetime as dt,io,json,math,re,urllib.request,urllib.parse
           from html.parser import HTMLParser
           base="https://worldspotrate.com/data/"
           def get(url):
@@ -385,7 +385,7 @@ jobs:
                       href=dict(attrs).get("href","")
                       url=urllib.parse.urljoin(base,href)
                       if urllib.parse.urlsplit(url).netloc=="worldspotrate.com" and ("csv" in href.lower() or "download" in href.lower()): self.urls.append(url)
-          parser=Links();parser.feed(get(base))
+          parser=Links();parser.urls=['https://worldspotrate.com/api/data/metals-daily.csv']
           print("Candidate links",parser.urls)
           found={}
           for url in dict.fromkeys(parser.urls):
@@ -406,4 +406,24 @@ jobs:
           old=dict(json.load(open("public/market-center-history.json"))["goldSpot"])
           overlap=[{"date":d,"legacy":old[d],"candidate":found[d],"difference_pct":round(100*(found[d]/old[d]-1),5)} for d in sorted(old.keys()&found.keys())]
           print(json.dumps({"source":base,"license":"CC BY 4.0","candidate_dates":len(found),"latest":max(found),"overlap":overlap,"new_candidates":[[d,found[d]] for d in sorted(found.keys()-old.keys())]},ensure_ascii=False))
+          root=pathlib.Path("research-data/gold")
+          root.mkdir(parents=True,exist_ok=True)
+          dest=root/"worldspotrate-candidate.json"
+          prior=json.loads(dest.read_text()) if dest.exists() else {}
+          merged=dict(prior.get("observations",[]))
+          for d,v in found.items():
+              if d in merged and merged[d]!=v:raise ValueError("Source revision requires review: "+d)
+              merged[d]=v
+          doc={"source":"https://worldspotrate.com/api/data/metals-daily.csv","attribution":"WorldSpotRate","license":"CC BY 4.0","license_url":"https://creativecommons.org/licenses/by/4.0/","quality":"candidate; UTC daily observations including weekends; not MetalCharts close","observations":sorted(merged.items())}
+          dest.write_text(json.dumps(doc,indent=2)+"\n")
           PY
+      - name: Save independent public source candidate
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- research-data/gold/worldspotrate-candidate.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Persist independent WorldSpotRate gold candidate [skip ci]'
+            git pull --rebase origin main
+            git push
+          fi
