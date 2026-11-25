@@ -924,7 +924,7 @@ const TECH_GROUPS={
  "美國｜經濟、就業與消費": "gdp PAYEMS PCEC96 RSAFS UMCSENT",
  "美國｜金融狀況、銀行與房貸": "nfci delinq willing DRTSCILM mortgage",
  "跨市場｜外匯": "usdtwd dxy",
- "全球｜貴金屬與能源": "goldSpot goldFuturesUsd wtiFuturesUsd"
+ "全球｜貴金屬與能源": "goldSpot goldSpotBackup goldFuturesUsd wtiFuturesUsd"
 };
 const TECH_SOURCE_KEYS=Object.values(TECH_GROUPS).flatMap(keys=>keys.split(" "));
 const FEDWATCH_KEYS=["fedWatchHikePct","fedWatchHoldPct","fedWatchCutPct"];
@@ -1012,6 +1012,7 @@ const CENTER_META={
   "日",
   "daily.csv"
  ],
+ "goldSpotBackup": ["黃金現貨備援（美元／盎司）","日","WorldSpotRate UTC 日觀測 · CC BY 4.0"],
  "goldSpot": [
   "黃金現貨（美元／盎司）",
   "日",
@@ -1151,7 +1152,7 @@ function fetchCenterHistory(){
   if(!response.ok)throw Error("HTTP "+response.status);
   const input=await response.json(),next={};
   for(const key of Object.keys(CENTER_META)){
-   if(FEDWATCH_KEYS.includes(key))continue;
+   if(FEDWATCH_KEYS.includes(key)||key==="goldSpotBackup")continue;
    if(!Array.isArray(input[key])||!input[key].length)throw Error("缺少 "+key);
    next[key]=input[key].map(([date,value])=>({date,value}));
   }
@@ -1163,7 +1164,8 @@ function fetchCenterHistory(){
    if(doc.attribution!=="WorldSpotRate"||doc.license!=="CC BY 4.0")throw Error("source mismatch");
    const rows=doc.observations.filter(r=>Array.isArray(r)&&/^\d{4}-\d{2}-\d{2}$/.test(r[0])&&Number.isFinite(r[1])&&r[1]>0&&r[0]<new Date().toISOString().slice(0,10)).sort((a,b)=>a[0].localeCompare(b[0]));
    goldBackupLatest=rows.at(-1)||null;
-  }catch(e){goldBackupLatest=null;}
+   centerRows.goldSpotBackup=rows.filter(r=>{const d=new Date(r[0]+"T00:00:00Z").getUTCDay();return d!==0&&d!==6}).map(([date,value])=>({date,value}));
+  }catch(e){goldBackupLatest=null;centerRows.goldSpotBackup=[];}
 
   try {
    const response=await fetch("./fedwatch-history.json",{cache:"no-cache"});
