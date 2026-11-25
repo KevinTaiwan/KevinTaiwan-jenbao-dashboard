@@ -924,7 +924,7 @@ const TECH_GROUPS={
  "美國｜經濟、就業與消費": "gdp PAYEMS PCEC96 RSAFS UMCSENT",
  "美國｜金融狀況、銀行與房貸": "nfci delinq willing DRTSCILM mortgage",
  "跨市場｜外匯": "usdtwd dxy",
- "全球｜貴金屬與能源": "goldSpot goldSpotBackup goldFuturesUsd wtiFuturesUsd"
+ "全球｜貴金屬與能源": "goldSpot goldFuturesUsd wtiFuturesUsd"
 };
 const TECH_SOURCE_KEYS=Object.values(TECH_GROUPS).flatMap(keys=>keys.split(" "));
 const FEDWATCH_KEYS=["fedWatchHikePct","fedWatchHoldPct","fedWatchCutPct"];
@@ -1012,7 +1012,6 @@ const CENTER_META={
   "日",
   "daily.csv"
  ],
- "goldSpotBackup": ["黃金現貨備援（美元／盎司）","日","WorldSpotRate UTC 日觀測 · CC BY 4.0"],
  "goldSpot": [
   "黃金現貨（美元／盎司）",
   "日",
@@ -1145,27 +1144,18 @@ const CENTER_META={
  ]
 };
 let centerRows={},centerError="",centerLoading=null;
-let goldBackupLatest=null;
 function fetchCenterHistory(){
  if(centerLoading)return centerLoading;
  centerLoading=fetch("./market-center-history.json",{cache:"no-cache"}).then(async response=>{
   if(!response.ok)throw Error("HTTP "+response.status);
   const input=await response.json(),next={};
   for(const key of Object.keys(CENTER_META)){
-   if(FEDWATCH_KEYS.includes(key)||key==="goldSpotBackup")continue;
+   if(FEDWATCH_KEYS.includes(key))continue;
    if(!Array.isArray(input[key])||!input[key].length)throw Error("缺少 "+key);
    next[key]=input[key].map(([date,value])=>({date,value}));
   }
   centerRows=next;centerError="";
-  try {
-   const response=await fetch("https://raw.githubusercontent.com/KevinTaiwan/KevinTaiwan-jenbao-dashboard/main/research-data/gold/worldspotrate-candidate.json",{cache:"no-cache"});
-   if(!response.ok)throw Error("HTTP "+response.status);
-   const doc=await response.json();
-   if(doc.attribution!=="WorldSpotRate"||doc.license!=="CC BY 4.0")throw Error("source mismatch");
-   const rows=doc.observations.filter(r=>Array.isArray(r)&&/^\d{4}-\d{2}-\d{2}$/.test(r[0])&&Number.isFinite(r[1])&&r[1]>0&&r[0]<new Date().toISOString().slice(0,10)).sort((a,b)=>a[0].localeCompare(b[0]));
-   goldBackupLatest=rows.at(-1)||null;
-   centerRows.goldSpotBackup=rows.filter(r=>{const d=new Date(r[0]+"T00:00:00Z").getUTCDay();return d!==0&&d!==6}).map(([date,value])=>({date,value}));
-  }catch(e){goldBackupLatest=null;centerRows.goldSpotBackup=[];}
+
 
   try {
    const response=await fetch("./fedwatch-history.json",{cache:"no-cache"});
@@ -1998,10 +1988,9 @@ function showHistory(){
   const centerNote=[...new Set([c.top,c.middle,paired?c.right:"off"])].filter(key=>CENTER_META[key]).map(key=>{
    const rows=centerRows[key],meta=CENTER_META[key];
    const lag=centerDailyLag(key);
-   const backup=key==="goldSpot"?'<strong style="display:block;color:#245c70">'+esc(goldBackupLatest?"WorldSpotRate 獨立備援｜"+goldBackupLatest[0]+"｜"+goldBackupLatest[1].toFixed(2)+" USD/oz（UTC 日觀測，不納入原均線及 RSI）":"WorldSpotRate 備援暫無可驗證資料")+'</strong>':"";
 
-   const source=key==="goldSpot"?' · <a href="https://metalcharts.org/xauusd-historical-data" target="_blank" rel="noopener">MetalCharts 原始觀測</a> · <a href="https://github.com/KevinTaiwan/KevinTaiwan-jenbao-dashboard/blob/main/research-data/gold/worldspotrate-candidate.json" target="_blank" rel="noopener">WorldSpotRate 最新備援價格（獨立序列）</a>':"";
-   return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+source+(lag?' <strong style="color:#8a4b00">'+esc(lag)+'</strong>':"")+'</small>'+backup;
+   const source=key==="goldSpot"?' · <a href="https://metalcharts.org/xauusd-historical-data" target="_blank" rel="noopener">MetalCharts 原始觀測</a>':"";
+   return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+source+(lag?' <strong style="color:#8a4b00">'+esc(lag)+'</strong>':"")+'</small>';
   }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
   return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
