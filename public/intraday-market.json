@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-intraday",
-  "generatedAt": "2026-11-25T18:21:39+00:00",
-  "asOfTaipei": "2026-11-26T02:21:39+08:00",
+  "generatedAt": "2026-11-25T19:26:27+00:00",
+  "asOfTaipei": "2026-11-26T03:26:27+08:00",
   "refreshIntentMinutes": 5,
   "actualQuoteDelayVaries": true,
   "tradingSessions": "TAIEX 09:00-13:30 Asia/Taipei; SP500 09:30-16:00 America/New_York",
@@ -409,10 +409,10 @@
       "sourceDelayMinutes": 0,
       "latest": {
         "open": 7060.3301,
-        "high": 7160.9702,
+        "high": 7196.7798,
         "low": 6970.1099,
-        "close": 7155.2798,
-        "lastCandleTime": "2026-11-25T13:15:00-05:00"
+        "close": 7184.3501,
+        "lastCandleTime": "2026-11-25T14:20:00-05:00"
       },
       "candles": [
         {
@@ -736,6 +736,97 @@
           "high": 7160.9702,
           "low": 7127.9199,
           "close": 7155.2798
+        },
+        {
+          "time": "2026-11-25T13:20:00-05:00",
+          "open": 7155.4302,
+          "high": 7164.54,
+          "low": 7148.3101,
+          "close": 7161.8198
+        },
+        {
+          "time": "2026-11-25T13:25:00-05:00",
+          "open": 7161.8398,
+          "high": 7167.04,
+          "low": 7157.7998,
+          "close": 7164.5098
+        },
+        {
+          "time": "2026-11-25T13:30:00-05:00",
+          "open": 7164.8799,
+          "high": 7165.5098,
+          "low": 7143.29,
+          "close": 7152.6299
+        },
+        {
+          "time": "2026-11-25T13:35:00-05:00",
+          "open": 7152.8999,
+          "high": 7168.46,
+          "low": 7151.4502,
+          "close": 7159.7002
+        },
+        {
+          "time": "2026-11-25T13:40:00-05:00",
+          "open": 7159.5601,
+          "high": 7175.8398,
+          "low": 7156.6802,
+          "close": 7174.25
+        },
+        {
+          "time": "2026-11-25T13:45:00-05:00",
+          "open": 7174.3198,
+          "high": 7194.3301,
+          "low": 7174.3198,
+          "close": 7193.2598
+        },
+        {
+          "time": "2026-11-25T13:50:00-05:00",
+          "open": 7193.5801,
+          "high": 7196.3599,
+          "low": 7182.9302,
+          "close": 7188.1899
+        },
+        {
+          "time": "2026-11-25T13:55:00-05:00",
+          "open": 7188.4502,
+          "high": 7189.27,
+          "low": 7171.2202,
+          "close": 7171.2202
+        },
+        {
+          "time": "2026-11-25T14:00:00-05:00",
+          "open": 7170.8501,
+          "high": 7188.9502,
+          "low": 7168.3799,
+          "close": 7188.8701
+        },
+        {
+          "time": "2026-11-25T14:05:00-05:00",
+          "open": 7188.8198,
+          "high": 7196.7798,
+          "low": 7184.6099,
+          "close": 7192.77
+        },
+        {
+          "time": "2026-11-25T14:10:00-05:00",
+          "open": 7192.7402,
+          "high": 7194.5601,
+          "low": 7176.0801,
+          "close": 7181.8599
+        },
+        {
+          "time": "2026-11-25T14:15:00-05:00",
+          "open": 7181.79,
+          "high": 7190.5898,
+          "low": 7176.0898,
+          "close": 7176.6201
+        },
+        {
+          "time": "2026-11-25T14:20:00-05:00",
+          "open": 7176.7002,
+          "high": 7195.7598,
+          "low": 7175.8701,
+          "close": 7184.3501
         }
       ],
       "turnoverYiTwd": null,
@@ -744,7 +835,7 @@
       "projectionIsEstimate": false,
       "turnoverStatus": "unavailable_not_inferred_from_shares",
       "note": "OHLC are 5-minute provisional candles, not official closing values. Volume is monetary turnover (億元), never index share count.",
-      "quoteAgeMinutes": 6.7
+      "quoteAgeMinutes": 6.5
     }
   },
   "updatedMarkets": [
