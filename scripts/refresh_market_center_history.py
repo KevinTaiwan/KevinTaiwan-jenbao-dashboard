@@ -137,6 +137,48 @@ def fetch_margin():
         continue
  raise ValueError("TWSE MI_MARGN dated summary unavailable; previous retained")
 
+def fetch_cnn_mirror():
+    # Same CNN-specific mirror used by the existing extended-history collector.
+    url="https://raw.githubusercontent.com/whit3rabbit/fear-greed-data/main/datasets/cnn_fear_greed.csv"
+    grouped={}
+    for row in csv.DictReader(io.StringIO(download(url))):
+        day=valid_date(row.get("Date"))
+        val=valid_number(row.get("Fear Greed"))
+        if day and val is not None and 0<=val<=100:
+            grouped.setdefault(day,set()).add(val)
+    found={d:next(iter(v)) for d,v in grouped.items() if len(v)==1}
+    if not found:raise ValueError("No unambiguous dated CNN mirror values")
+    return found
+
+def fetch_taifex_positions():
+    # Official contract-specific CSV, POST; no mini/micro or all-contract aggregate.
+    params=urllib.parse.urlencode({"queryStartDate":(CUTOFF-dt.timedelta(days=14)).strftime("%Y/%m/%d"),
+        "queryEndDate":CUTOFF.strftime("%Y/%m/%d"),"commodityId":"TXF"})
+    url="https://www.taifex.com.tw/cht/3/futContractsDateDown"
+    req=urllib.request.Request(url,data=params.encode(),headers={"User-Agent":"Mozilla/5.0","Accept":"text/csv,*/*",
+         "Content-Type":"application/x-www-form-urlencoded","Referer":"https://www.taifex.com.tw/cht/3/futContractsDateView"})
+    with urllib.request.urlopen(req,timeout=20) as response:
+        raw=response.read(2_000_001)
+    if len(raw)>2_000_000:raise ValueError("TAIFEX response limit")
+    try: body=raw.decode("utf-8-sig")
+    except UnicodeDecodeError:body=raw.decode("cp950")
+    reader=csv.DictReader(io.StringIO(body))
+    reader.fieldnames=[x.strip() for x in (reader.fieldnames or [])]
+    required={"日期","商品名稱","身份別","多方未平倉口數","空方未平倉口數","多空未平倉口數淨額"}
+    if not required.issubset(reader.fieldnames):raise ValueError("Unexpected TAIFEX CSV schema")
+    found={}
+    for row in reader:
+        if row["商品名稱"].strip() not in ("臺股期貨","台股期貨") or row["身份別"].strip()!="外資及陸資":continue
+        stamp=dt.datetime.strptime(row["日期"].strip(),"%Y/%m/%d").date().isoformat()
+        day=valid_date(stamp)
+        if not day:continue
+        long,short,net=(int(row[k].replace(",","").strip()) for k in ("多方未平倉口數","空方未平倉口數","多空未平倉口數淨額"))
+        if long<0 or short<0 or long-short!=net:raise ValueError("TAIFEX net-position arithmetic mismatch")
+        if day in found and found[day]!=net:raise ValueError("TAIFEX conflicting duplicate")
+        found[day]=net
+    if not found:raise ValueError("No official foreign TXF observations")
+    return found
+
 def main():
  center=json.loads(PATH.read_text(encoding="utf-8"))
  if not isinstance(center,dict):raise RuntimeError("Invalid center archive")
@@ -159,6 +201,9 @@ def main():
     except Exception as error:problems.append("TWSE "+stock+": "+str(error)[:100])
  try:pending["marginBalanceYi"]=fetch_margin()
  except Exception as error:problems.append("marginBalanceYi: "+str(error)[:120])
+ for key,fn in (("cnnFearGreed",fetch_cnn_mirror),("foreignTxOpenInterestNetContracts",fetch_taifex_positions)):
+    try:pending[key]=fn()
+    except Exception as error:problems.append(key+": "+str(error)[:150])
  if "sofr" in pending and "iorb" in pending:
     common=pending["sofr"].keys() & pending["iorb"].keys()
     pending["sofrMinusIorbBp"]={day:round((pending["sofr"][day]-pending["iorb"][day])*100,5)
