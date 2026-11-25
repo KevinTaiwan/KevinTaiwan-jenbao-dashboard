@@ -90,8 +90,8 @@
   },
   "inputs": {
     "index-ohlc-history.json": {
-      "gitBlobSha": "4d6834ab431815e2e618a5a7ffa74ab95ea0cd90",
-      "sha256": "d3653c632846a70b7b501c824349726039f15af8747c0834e3c96687645ca057"
+      "gitBlobSha": "48e0cf851373a50a2f3f23a155bb2bff168ed5a0",
+      "sha256": "b13f20726973dc22ddb1d8b7ad5b9d2848af7d8f636932745ee3db8999ef8131"
     },
     "market-center-history.json": {
       "gitBlobSha": "a3ee61570e5edf77f269de9b2d75fa3009f3efe3",
