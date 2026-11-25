@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-25T22:44:48+00:00",
+  "generatedAt": "2026-11-25T22:48:39+00:00",
   "cutoff": "2026-11-25",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -51,10 +51,10 @@
       }
     },
     "usdtwd": {
-      "count": 1437,
+      "count": 1438,
       "first": "2021-11-22",
-      "last": "2026-11-24",
-      "lastValue": 32.961,
+      "last": "2026-11-25",
+      "lastValue": 33.215,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance TWD=X daily indicative FX quote; Library values override on overlapping dates",
@@ -57980,7 +57980,8 @@
       "creditDisposalAmountTwd": 2112700,
       "marketTurnoverYiTwd": 12297.619689,
       "dayTradeTurnoverYiTwd": 5667.030327,
-      "dayTradeTurnoverSharePct": 46.0823
+      "dayTradeTurnoverSharePct": 46.0823,
+      "usdtwd": 33.215
     }
   ],
   "twseTurnoverAudit": {
