@@ -86,7 +86,7 @@ def main():
       "cnn":"https://edition.cnn.com/markets/fear-and-greed",
       "futuresNetContracts":"https://www.taifex.com.tw/cht/3/futContractsDate",
       "oil":"https://finance.yahoo.com/quote/CL%3DF/",
-      "goldPrice":"https://finance.yahoo.com/quote/GC%3DF/"}
+      "goldPrice":"https://metalcharts.org/xauusd-historical-data"}
     snapshot["sources"]=[{"label":k+" 觀測日 "+d,"date":d,"url":source_links[k]}
         for k,(d,_) in used.items() if k in source_links]
     note="各指標保留自身原始觀測日，來源延遲不以最新交易日補值；市場敘事僅引用已核對資料。"
