@@ -45,44 +45,44 @@
       }
     },
     "taiex": {
-      "asOf": "2026-11-24",
-      "close": 40122.35,
+      "asOf": "2026-11-25",
+      "close": 38195.43,
       "movingAverages": {
-        "10": 40374.566,
-        "120": 45185.9489,
-        "20": 41959.3985,
-        "240": 39506.2248,
-        "5": 38317.866,
-        "60": 45494.2943
+        "10": 39768.394,
+        "120": 45126.4282,
+        "20": 41517.391,
+        "240": 39551.166,
+        "5": 37917.97,
+        "60": 45367.0078
       },
-      "previousClose": 36811.89,
-      "previousDate": "2026-11-23",
+      "previousClose": 40122.35,
+      "previousDate": "2026-11-24",
       "windows": {
         "20": {
-          "annualizedVolatilityPct": 61.727754,
+          "annualizedVolatilityPct": 62.59038,
           "availableReturns": 20,
-          "endDate": "2026-11-24",
+          "endDate": "2026-11-25",
           "maxDrawdownPct": -23.39142,
           "requiredReturns": 20,
-          "startDate": "2026-10-27",
+          "startDate": "2026-10-28",
           "status": "computed_from_archive"
         },
         "252": {
-          "annualizedVolatilityPct": 31.925249,
+          "annualizedVolatilityPct": 32.30348,
           "availableReturns": 252,
-          "endDate": "2026-11-24",
+          "endDate": "2026-11-25",
           "maxDrawdownPct": -27.676745,
           "requiredReturns": 252,
-          "startDate": "2025-11-07",
+          "startDate": "2025-11-10",
           "status": "computed_from_archive"
         },
         "60": {
-          "annualizedVolatilityPct": 38.716345,
+          "annualizedVolatilityPct": 39.704643,
           "availableReturns": 60,
-          "endDate": "2026-11-24",
+          "endDate": "2026-11-25",
           "maxDrawdownPct": -27.676745,
           "requiredReturns": 60,
-          "startDate": "2026-08-25",
+          "startDate": "2026-08-26",
           "status": "computed_from_archive"
         }
       }
@@ -90,16 +90,16 @@
   },
   "inputs": {
     "index-ohlc-history.json": {
-      "gitBlobSha": "2cfa2dec9638d74a6934a62bb748afb42bbeeb21",
-      "sha256": "30894ba219c850f790f2d85ca8bf99d4f2aaf882047946e8c7f28ccc3d319f24"
+      "gitBlobSha": "4741318db125753a638f0e7c7f60038d7e57bc5f",
+      "sha256": "451bb2c4ef7f2d0add02f8cd5397691bb029936fa63df7310735123cbfb075fd"
     },
     "market-center-history.json": {
-      "gitBlobSha": "a3ee61570e5edf77f269de9b2d75fa3009f3efe3",
-      "sha256": "0dde8f28bcdde2e515a851a4a4b660ef6e2cbdd03174a5c28b8de5920979a689"
+      "gitBlobSha": "6652bd71b0dc12421cbd3ee8659f9069d584a930",
+      "sha256": "9538ce02b6fc223146d3531e164cead8059d328e82ce781e4adeada27ed499e9"
     },
     "market-history.json": {
-      "gitBlobSha": "43c6f6bf8c59250496bf3d4cf7208162660904e1",
-      "sha256": "cd9e0824b8c80c7dcf7550c9c9668c39a8113eafb186e5783b659035e1144ab5"
+      "gitBlobSha": "108fac21f37d14e66f085bd9a31156b2d0928020",
+      "sha256": "499a354d8c2556844844d3dfecbc72c724eaed5ed18810a34f7de17a26fc5dfd"
     }
   },
   "method": {
@@ -112,44 +112,44 @@
   "methodVersion": "V13.2",
   "ratios": {
     "hyOas": {
-      "asOf": "2026-11-23",
+      "asOf": "2026-11-24",
       "baselineCount": 20,
-      "baselineEnd": "2026-11-20",
-      "baselineMean": 3.363,
-      "baselineStart": "2026-10-26",
-      "latest": 3.63,
-      "latestMinusPrior20Mean": 0.267,
-      "latestOverPrior20Mean": 1.0793934,
-      "previousDate": "2026-11-20",
-      "previousValue": 3.76,
+      "baselineEnd": "2026-11-23",
+      "baselineMean": 3.3795,
+      "baselineStart": "2026-10-27",
+      "latest": 3.72,
+      "latestMinusPrior20Mean": 0.3405,
+      "latestOverPrior20Mean": 1.10075455,
+      "previousDate": "2026-11-23",
+      "previousValue": 3.63,
       "status": "computed_from_archive",
       "unit": "percentage_points"
     },
     "move": {
-      "asOf": "2026-11-24",
+      "asOf": "2026-11-25",
       "baselineCount": 20,
-      "baselineEnd": "2026-11-23",
-      "baselineMean": 97.67277981,
-      "baselineStart": "2026-10-26",
-      "latest": 98.8377991,
-      "latestMinusPrior20Mean": 1.16501928,
-      "latestOverPrior20Mean": 1.01192778,
-      "previousDate": "2026-11-23",
-      "previousValue": 100.9136963,
+      "baselineEnd": "2026-11-24",
+      "baselineMean": 97.50516967,
+      "baselineStart": "2026-10-27",
+      "latest": 97.5371017,
+      "latestMinusPrior20Mean": 0.03193203,
+      "latestOverPrior20Mean": 1.00032749,
+      "previousDate": "2026-11-24",
+      "previousValue": 98.8377991,
       "status": "computed_from_archive",
       "unit": "index_points"
     },
     "singleBOas": {
-      "asOf": "2026-11-23",
+      "asOf": "2026-11-24",
       "baselineCount": 20,
-      "baselineEnd": "2026-11-20",
-      "baselineMean": 3.5425,
-      "baselineStart": "2026-10-26",
-      "latest": 3.93,
-      "latestMinusPrior20Mean": 0.3875,
-      "latestOverPrior20Mean": 1.10938603,
-      "previousDate": "2026-11-20",
-      "previousValue": 4.08,
+      "baselineEnd": "2026-11-23",
+      "baselineMean": 3.571,
+      "baselineStart": "2026-10-27",
+      "latest": 4.05,
+      "latestMinusPrior20Mean": 0.479,
+      "latestOverPrior20Mean": 1.1341361,
+      "previousDate": "2026-11-23",
+      "previousValue": 3.93,
       "status": "computed_from_archive",
       "unit": "percentage_points"
     },
