@@ -94,12 +94,12 @@
       "sha256": "d3653c632846a70b7b501c824349726039f15af8747c0834e3c96687645ca057"
     },
     "market-center-history.json": {
-      "gitBlobSha": "be70a389a85c39527285e579cacc64e0d9a06e18",
-      "sha256": "d6559ba567e6dff23d994d7ac4ab3036d619f4f481d7e737d0aaa7eeee2bc6cf"
+      "gitBlobSha": "a3ee61570e5edf77f269de9b2d75fa3009f3efe3",
+      "sha256": "0dde8f28bcdde2e515a851a4a4b660ef6e2cbdd03174a5c28b8de5920979a689"
     },
     "market-history.json": {
-      "gitBlobSha": "e156d3cc6d764c7866987e1c77f476ef7376b6bd",
-      "sha256": "863f59bb7e678d391baaba12c87b92dbe98a61a7a929f8471668288e1f1b33b0"
+      "gitBlobSha": "43c6f6bf8c59250496bf3d4cf7208162660904e1",
+      "sha256": "cd9e0824b8c80c7dcf7550c9c9668c39a8113eafb186e5783b659035e1144ab5"
     }
   },
   "method": {
@@ -154,15 +154,15 @@
       "unit": "percentage_points"
     },
     "sofrMinusIorbBp": {
-      "asOf": "2026-11-23",
+      "asOf": "2026-11-24",
       "baselineCount": 20,
-      "baselineEnd": "2026-11-20",
+      "baselineEnd": "2026-11-23",
       "baselineMean": 2.25,
-      "baselineStart": "2026-10-23",
-      "latest": 2.0,
-      "latestMinusPrior20Mean": -0.25,
-      "latestOverPrior20Mean": 0.88888889,
-      "previousDate": "2026-11-20",
+      "baselineStart": "2026-10-26",
+      "latest": 4.0,
+      "latestMinusPrior20Mean": 1.75,
+      "latestOverPrior20Mean": 1.77777778,
+      "previousDate": "2026-11-23",
       "previousValue": 2.0,
       "status": "computed_from_archive",
       "unit": "basis_points"
