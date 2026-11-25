@@ -3,7 +3,7 @@
   "audience": "public-market",
   "asOf": "2026-11-24",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-25T02:46:12+00:00",
+  "updatedAt": "2026-11-25T14:40:28+00:00",
   "headline": "台股最新正式收盤 2026-11-24：40,122.35 點；其他市場指標各按自身觀測日",
   "summary": "taiex 40,122.350（觀測日 2026-11-24）｜vix 26.360（觀測日 2026-11-24）｜usdtwd 32.961（觀測日 2026-11-24）｜hyOas 3.630（觀測日 2026-11-23）｜foreignNetYi -503.899（觀測日 2026-11-24）",
   "market": {
@@ -27,7 +27,7 @@
     "futuresNetContracts": -103182,
     "hyOas": 3.63,
     "singleBOas": 3.93,
-    "sofrMinusIorb": 2.0,
+    "sofrMinusIorb": 4.0,
     "t10yie": 2.12,
     "t5yie": 2.11,
     "oil": 81.6900024,
@@ -158,8 +158,8 @@
       "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB"
     },
     {
-      "label": "sofrMinusIorb 觀測日 2026-11-23",
-      "date": "2026-11-23",
+      "label": "sofrMinusIorb 觀測日 2026-11-24",
+      "date": "2026-11-24",
       "url": "https://fred.stlouisfed.org/series/SOFR"
     },
     {
@@ -200,7 +200,7 @@
     {
       "label": "goldPrice 觀測日 2026-11-20",
       "date": "2026-11-20",
-      "url": "https://finance.yahoo.com/quote/GC%3DF/"
+      "url": "https://metalcharts.org/xauusd-historical-data"
     }
   ],
   "marketHistory": [
@@ -337,7 +337,7 @@
     "foreignNetYi 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "marginMaintenance 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "singleBOas 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
-    "sofrMinusIorb 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
+    "sofrMinusIorb 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "t10yie 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "t5yie 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "marginBalanceYi 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
