@@ -5,13 +5,13 @@
     "index-ohlc-history.json": "d3653c632846a70b7b501c824349726039f15af8747c0834e3c96687645ca057",
     "index.html": "4724281bb68c847047203ab228370b02970fce80e87ea5e3e0e517d3b8463829",
     "intraday-market.json": "64cc8fbab0a17282ed4535cf69f95c79cb0dba8ef313c011efa4675a4ab1bd19",
-    "market-center-history.json": "d6559ba567e6dff23d994d7ac4ab3036d619f4f481d7e737d0aaa7eeee2bc6cf",
-    "market-data.json": "61d337928c7ccbc4e41aab20c59545151894b534c68ef33bdbda20a6d67de3f6",
-    "market-history.json": "863f59bb7e678d391baaba12c87b92dbe98a61a7a929f8471668288e1f1b33b0"
+    "market-center-history.json": "0dde8f28bcdde2e515a851a4a4b660ef6e2cbdd03174a5c28b8de5920979a689",
+    "market-data.json": "8be3ae77a0c93134ae3905d9a8d52d792572a6808d284c6241983f32197cf36b",
+    "market-history.json": "cd9e0824b8c80c7dcf7550c9c9668c39a8113eafb186e5783b659035e1144ab5"
   },
-  "publicFingerprint": "27204cd249be64f9b6e215908aae7b4ad86a40ccc32ab3b3dcc2785274a61a82",
+  "publicFingerprint": "a3f424f898dd5e31d10c71a001b794bf45ecf94373be7b231ae600f5c58173d5",
   "schemaVersion": 1,
-  "workflowRunId": 45564509550,
-  "sourceCommit": "6d33ee3c0f99a0fc5e4f479296b315bee91d8e0d",
-  "deployedAt": "2026-11-25T06:58:52.445930+00:00"
+  "workflowRunId": 45635976510,
+  "sourceCommit": "22de9aa499eb6824d055b30657ba01d261e293c7",
+  "deployedAt": "2026-11-25T14:41:12.014737+00:00"
 }
