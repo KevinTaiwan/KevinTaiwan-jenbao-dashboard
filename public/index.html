@@ -1641,6 +1641,16 @@ function longWindowStart(key,cutoff,raw){
  return day.getTime();
 }
 // A newer dated observation is evidence of a session, not verified OHLC.
+// Compare only dated evidence from a related completed market series.
+function centerDailyLag(key){
+ const rows=centerRows[key]||[],last=rows.at(-1)?.date;
+ const refs={goldSpot:centerRows.goldFuturesUsd?.at(-1)?.date,
+  cnnFearGreed:techOhlcCache.sp500?.at(-1)?.date,
+  foreignTxOpenInterestNetContracts:techOhlcCache.taiex?.at(-1)?.date,
+  twPe:techOhlcCache.taiex?.at(-1)?.date};
+ const ref=refs[key];
+ return last&&ref&&last<ref?"WARN｜最新 "+last+"，相關市場已有 "+ref+"；來源待核對，未補值":"";
+}
 function updateTechnicalFreshness(){
  const banner=$("technicalFreshnessWarning");
  if(!banner)return;
@@ -1666,6 +1676,9 @@ function updateTechnicalFreshness(){
    warnings.push(label+"：已有 "+evidence+" 的市場行情，永久日K僅到 "+archived+
       "；"+(pending?"圖上保留待核實K線":"等待可信 OHLC，不補造 K 線"));
   }
+ }
+ for(const key of ["goldSpot","cnnFearGreed","foreignTxOpenInterestNetContracts","twPe"]){
+  const lag=centerDailyLag(key);if(lag)warnings.push(CENTER_META[key][0]+"："+lag);
  }
  banner.hidden=warnings.length===0;
  banner.textContent=warnings.length?"WARN｜日線歷史更新落後｜"+warnings.join("｜"):"";
@@ -1972,7 +1985,9 @@ function showHistory(){
   const reportMenu='<details><summary>美國｜貨幣政策報告</summary><label>FedWatch 報告日期<select data-fed-report>'+FED_REPORTS.map(([day],i)=>'<option value="'+i+'"'+(i===selectedReport?' selected':'')+'>'+esc(day)+'</option>').join("")+'</select></label> <a data-fed-link href="'+esc(FED_REPORTS[selectedReport][1])+'" target="_blank" rel="noopener">開啟報告 PDF</a></details>';
   const centerNote=[...new Set([c.top,c.middle,paired?c.right:"off"])].filter(key=>CENTER_META[key]).map(key=>{
    const rows=centerRows[key],meta=CENTER_META[key];
-   return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+'</small>';
+   const lag=centerDailyLag(key);
+   const source=key==="goldSpot"?' · <a href="https://metalcharts.org/xauusd-historical-data" target="_blank" rel="noopener">MetalCharts 原始觀測</a>':"";
+   return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+source+(lag?' <strong style="color:#8a4b00">'+esc(lag)+'</strong>':"")+'</small>';
   }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
   return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,ys,panel};
