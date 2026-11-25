@@ -171,14 +171,30 @@ def fetch_twse():
     FETCHED["TWSE"]=total
     return total
 
+def recent_sp500_weekday_gaps():
+    """Source refresh candidates only; weekdays can include US exchange holidays.
+    Never create records from this calendar or infer a missing price."""
+    first=CUTOFF-dt.timedelta(days=9)
+    return [(first+dt.timedelta(days=i)).isoformat() for i in range(10)
+            if (first+dt.timedelta(days=i)).weekday()<5
+            and (first+dt.timedelta(days=i)).isoformat() not in ARCHIVE["sp500"]]
+
 def fetch_yahoo(symbol,key,source):
     # Fetch five years for the 1,000-session collection target.
     # Every future refresh merges new and revised rows without trimming old dates.
     backfill=(not DEST.exists()) or len(ARCHIVE[key])<1000
     query="range=5y" if backfill else "range=3mo"
     last_error=None
-    for host in ("query1.finance.yahoo.com","query2.finance.yahoo.com"):
-        url=f"https://{host}/v8/finance/chart/{urllib.parse.quote(symbol,safe='')}?interval=1d&{query}"
+    best_count=0
+    hosts=("query1.finance.yahoo.com","query2.finance.yahoo.com")
+    requests=[(host,query) for host in hosts]
+    if key=="sp500" and recent_sp500_weekday_gaps():
+        ny=ZoneInfo("America/New_York")
+        p1=int(dt.datetime.combine(CUTOFF-dt.timedelta(days=21),dt.time.min,tzinfo=ny).timestamp())
+        p2=int(dt.datetime.combine(CUTOFF+dt.timedelta(days=1),dt.time.min,tzinfo=ny).timestamp())
+        requests.extend((host,f"period1={p1}&period2={p2}") for host in hosts)
+    for host,request_query in requests:
+        url=f"https://{host}/v8/finance/chart/{urllib.parse.quote(symbol,safe='')}?interval=1d&{request_query}"
         try:
             root=get_json(url)
             chart=root["chart"]
@@ -196,17 +212,24 @@ def fetch_yahoo(symbol,key,source):
                         count+=1
                 except (ValueError,IndexError,TypeError,KeyError):
                     continue
+            best_count=max(best_count,count)
             if count>=2:
-                FETCHED[source]=count
-                print("YAHOO",symbol,count,"valid",flush=True)
-                return count
-            last_error=ValueError(f"Yahoo {symbol} only {count} valid OHLC")
+                FETCHED[source]=best_count
+                gaps=recent_sp500_weekday_gaps() if key=="sp500" else []
+                print("YAHOO",symbol,count,"valid",host,request_query,
+                      "last",max(ARCHIVE[key],default="none"),
+                      "weekday candidates",gaps,flush=True)
+                if not gaps:
+                    return best_count
+                last_error=ValueError(f"Yahoo {symbol} still has recent weekday candidates (may include holidays): {gaps}")
+            else:
+                last_error=ValueError(f"Yahoo {symbol} only {count} valid OHLC")
         except Exception as exc:
             last_error=exc
     ERRORS.append(f"{symbol}: "+str(last_error)[:220])
     print("WARN",symbol,str(last_error)[:220],flush=True)
-    FETCHED[source]=0
-    return 0
+    FETCHED[source]=best_count
+    return best_count
 
 def fetch_stooq_spx():
     """Best-effort backup for true cash S&P 500, never ETFs."""
@@ -329,10 +352,14 @@ def main():
     fetch_cboe_spx()
     # Unavailable Cboe observations can be augmented from Yahoo; official bars win.
     fetch_yahoo("^GSPC","sp500","YAHOO_GSPC")
-    if len(ARCHIVE["sp500"])<1000:
+    if len(ARCHIVE["sp500"])<1000 or recent_sp500_weekday_gaps():
         fetch_stooq_spx()
     if len(ARCHIVE["sp500"])<1000:
         fetch_public_sp500_duckdb()
+    gaps=recent_sp500_weekday_gaps()
+    if gaps:
+        print("WARN SP500 weekday refresh candidates (may include exchange holidays; never inferred):",
+              json.dumps(gaps),flush=True)
     finish()
 
 if __name__=="__main__":
