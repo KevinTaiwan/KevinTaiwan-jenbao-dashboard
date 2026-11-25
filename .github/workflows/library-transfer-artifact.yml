@@ -357,3 +357,27 @@ jobs:
       - name: Report partial source access
         if: steps.recent.outputs.failed == '1'
         run: exit 1
+ 
+  real_yield_build:
+    needs: treasury_recent
+    if: success()
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Build and verify official real yield series
+        run: |
+          python3 scripts/build_real_yield_public.py
+          python3 scripts/build_real_yield_public.py --check
+      - name: Upload verified derived series for acceptance
+        uses: actions/upload-artifact@v4
+        with:
+          name: jenbao-real-yield-derived
+          path: |
+            public/real-yield-history.json
+            .sync/real-yield-calculations.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 10
