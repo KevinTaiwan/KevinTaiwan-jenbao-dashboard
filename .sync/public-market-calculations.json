@@ -98,8 +98,8 @@
       "sha256": "9538ce02b6fc223146d3531e164cead8059d328e82ce781e4adeada27ed499e9"
     },
     "market-history.json": {
-      "gitBlobSha": "108fac21f37d14e66f085bd9a31156b2d0928020",
-      "sha256": "499a354d8c2556844844d3dfecbc72c724eaed5ed18810a34f7de17a26fc5dfd"
+      "gitBlobSha": "ddc797d5ca2cc0b0d36f2abcd784309720b5a773",
+      "sha256": "66e5f5d2e76e26c9e0dac21041f725243415b999899f708e9955c32f93db5547"
     }
   },
   "method": {
