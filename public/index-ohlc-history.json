@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-index-ohlc",
-  "generatedAt": "2026-11-25T15:00:31.974357+00:00",
+  "generatedAt": "2026-11-25T15:04:14.481328+00:00",
   "cutoff": "2026-11-24",
   "retention": "permanent-no-date-limit",
   "minimumTradingSessions": 240,
@@ -9758,9 +9758,9 @@
       "label": "S&P 500 Index",
       "symbol": "^GSPC",
       "unit": "index points",
-      "count": 11807,
+      "count": 11809,
       "first": "1978-08-02",
-      "last": "2026-11-20",
+      "last": "2026-11-24",
       "rows": [
         {
           "date": "1978-08-02",
@@ -104216,6 +104216,22 @@
           "high": 7198.6699,
           "low": 6882.6602,
           "close": 6910.3901,
+          "source": "YAHOO_GSPC"
+        },
+        {
+          "date": "2026-11-23",
+          "open": 7227.41,
+          "high": 7295.6,
+          "low": 7152.66,
+          "close": 7237.17,
+          "source": "YAHOO_GSPC"
+        },
+        {
+          "date": "2026-11-24",
+          "open": 7172.33,
+          "high": 7223.95,
+          "low": 7138.93,
+          "close": 7201.09,
           "source": "YAHOO_GSPC"
         }
       ]
