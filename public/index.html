@@ -1668,6 +1668,11 @@ function centerDailyLag(key){
   cnnFearGreed:techOhlcCache.sp500?.at(-1)?.date,
   foreignTxOpenInterestNetContracts:techOhlcCache.taiex?.at(-1)?.date,
   twPe:techOhlcCache.taiex?.at(-1)?.date};
+ if(/^usReal(5|7|10|20|30)y$/.test(key)){
+  const nominal=centerRows.us5y?.at(-1)?.date;
+  if(!last)return "WARN｜實質殖利率尚無已核實觀測";
+  if(nominal&&last<nominal)return "WARN｜最新 "+last+"，名目公債已有 "+nominal+"；官方實質曲線待核對";
+ }
  const ref=refs[key];
  return last&&ref&&last<ref?"WARN｜最新 "+last+"，相關市場已有 "+ref+"；來源待核對，未補值":"";
 }
@@ -1697,7 +1702,7 @@ function updateTechnicalFreshness(){
       "；"+(pending?"圖上保留待核實K線":"等待可信 OHLC，不補造 K 線"));
   }
  }
- for(const key of ["goldSpot","cnnFearGreed","foreignTxOpenInterestNetContracts","twPe"]){
+ for(const key of ["goldSpot","cnnFearGreed","foreignTxOpenInterestNetContracts","twPe","usReal5y","usReal7y","usReal10y","usReal20y","usReal30y"]){
   const lag=centerDailyLag(key);if(lag)warnings.push(CENTER_META[key][0]+"："+lag);
  }
  banner.hidden=warnings.length===0;
