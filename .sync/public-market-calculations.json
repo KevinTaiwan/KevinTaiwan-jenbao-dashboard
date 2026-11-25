@@ -2,44 +2,44 @@
   "audience": "public-market-calculations",
   "indices": {
     "sp500": {
-      "asOf": "2026-11-20",
-      "close": 6910.3901,
+      "asOf": "2026-11-24",
+      "close": 7201.09,
       "movingAverages": {
-        "10": 7401.129,
-        "120": 7586.283,
-        "20": 7499.2315,
-        "240": 7273.2278,
-        "5": 7233.394,
-        "60": 7633.061
+        "10": 7337.868,
+        "120": 7580.4519,
+        "20": 7451.176,
+        "240": 7276.1906,
+        "5": 7169.622,
+        "60": 7617.067
       },
-      "previousClose": 7175.8301,
-      "previousDate": "2026-11-19",
+      "previousClose": 7237.17,
+      "previousDate": "2026-11-23",
       "windows": {
         "20": {
-          "annualizedVolatilityPct": 26.244041,
+          "annualizedVolatilityPct": 31.763193,
           "availableReturns": 20,
-          "endDate": "2026-11-20",
+          "endDate": "2026-11-24",
           "maxDrawdownPct": -10.76436,
           "requiredReturns": 20,
-          "startDate": "2026-10-23",
+          "startDate": "2026-10-27",
           "status": "computed_from_archive"
         },
         "252": {
-          "annualizedVolatilityPct": 14.366256,
+          "annualizedVolatilityPct": 15.013488,
           "availableReturns": 252,
-          "endDate": "2026-11-20",
+          "endDate": "2026-11-24",
           "maxDrawdownPct": -11.619747,
           "requiredReturns": 252,
-          "startDate": "2025-11-19",
+          "startDate": "2025-11-21",
           "status": "computed_from_archive"
         },
         "60": {
-          "annualizedVolatilityPct": 17.394409,
+          "annualizedVolatilityPct": 20.104439,
           "availableReturns": 60,
-          "endDate": "2026-11-20",
+          "endDate": "2026-11-24",
           "maxDrawdownPct": -11.619747,
           "requiredReturns": 60,
-          "startDate": "2026-08-27",
+          "startDate": "2026-08-31",
           "status": "computed_from_archive"
         }
       }
@@ -90,8 +90,8 @@
   },
   "inputs": {
     "index-ohlc-history.json": {
-      "gitBlobSha": "48e0cf851373a50a2f3f23a155bb2bff168ed5a0",
-      "sha256": "b13f20726973dc22ddb1d8b7ad5b9d2848af7d8f636932745ee3db8999ef8131"
+      "gitBlobSha": "2cfa2dec9638d74a6934a62bb748afb42bbeeb21",
+      "sha256": "30894ba219c850f790f2d85ca8bf99d4f2aaf882047946e8c7f28ccc3d319f24"
     },
     "market-center-history.json": {
       "gitBlobSha": "a3ee61570e5edf77f269de9b2d75fa3009f3efe3",
