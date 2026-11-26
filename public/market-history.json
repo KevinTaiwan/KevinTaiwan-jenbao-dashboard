@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-25T22:48:39+00:00",
+  "generatedAt": "2026-11-26T14:35:02+00:00",
   "cutoff": "2026-11-25",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -62,10 +62,10 @@
       }
     },
     "vix": {
-      "count": 9323,
+      "count": 9324,
       "first": "1990-01-02",
-      "last": "2026-11-24",
-      "lastValue": 26.36,
+      "last": "2026-11-25",
+      "lastValue": 28.29,
       "status": "ready",
       "source": {
         "name": "Cboe VIX Index official daily close",
@@ -57981,20 +57981,21 @@
       "marketTurnoverYiTwd": 12297.619689,
       "dayTradeTurnoverYiTwd": 5667.030327,
       "dayTradeTurnoverSharePct": 46.0823,
-      "usdtwd": 33.215
+      "usdtwd": 33.215,
+      "vix": 28.29
     }
   ],
   "twseTurnoverAudit": {
-    "generatedAt": "2026-11-26T02:38:35.570711+00:00",
+    "generatedAt": "2026-11-26T14:35:11.522667+00:00",
     "target": 1000,
     "counts": {
       "marketTurnoverYiTwd": 1186,
       "dayTradeTurnoverYiTwd": 1186,
       "dayTradeTurnoverSharePct": 1186
     },
-    "marketDatesDownloaded": 1048,
-    "dayTradeDatesDownloaded": 1048,
-    "dayTradeDatesReconciled": 1048,
+    "marketDatesDownloaded": 38,
+    "dayTradeDatesDownloaded": 38,
+    "dayTradeDatesReconciled": 37,
     "sourceIssues": [],
     "mismatchExamples": [],
     "mismatchCount": 0,
