@@ -1,6 +1,6 @@
 {
-  "runId": 45587518344,
-  "artifactId": 15009102077,
+  "runId": 45793378265,
+  "artifactId": 15103048925,
   "artifactName": "jenbao-treasury-recent-history",
   "manifests": [
     {
@@ -54,28 +54,28 @@
       }
     },
     {
-      "bytes": 11523,
-      "dates": 225,
+      "bytes": 11574,
+      "dates": 226,
       "definition": "Daily Treasury par yield curve, percent",
       "first": "2026-01-02",
       "full_year_boundary_check": false,
-      "last": "2026-11-24",
+      "last": "2026-11-25",
       "limitations": "No estimated fills, no FRED splice, no complete calendar or publication-time certification.",
       "provider": "US Department of the Treasury",
       "quality": "official_source_candidate",
       "series_id": "UST_PAR_NOMINAL_2026",
-      "sha256": "a4d3a03d5545d55afda3e22ae501a849258f8900e7bf2dbdad28ca143946942c",
+      "sha256": "9a2e095036ea645996b68c54efd447071011d08e155b2beb3c8bb2ec2a6be3df",
       "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?_format=csv&field_tdr_date_value=2026&page=&type=daily_treasury_yield_curve",
-      "source_raw_sha256": "1182c534985ede7d731416df2e48b33a0905ba645370f0ea8413a8be86e82c4a",
+      "source_raw_sha256": "7d6dcae74563a23ba35e68aa4477e532f13b70b84fd498445243db0238691b15",
       "valid_by_maturity": {
-        "1 yr": 225,
-        "10 yr": 225,
-        "2 yr": 225,
-        "20 yr": 225,
-        "3 yr": 225,
-        "30 yr": 225,
-        "5 yr": 225,
-        "7 yr": 225
+        "1 yr": 226,
+        "10 yr": 226,
+        "2 yr": 226,
+        "20 yr": 226,
+        "3 yr": 226,
+        "30 yr": 226,
+        "5 yr": 226,
+        "7 yr": 226
       }
     },
     {
@@ -123,25 +123,25 @@
       }
     },
     {
-      "bytes": 8133,
-      "dates": 225,
+      "bytes": 8169,
+      "dates": 226,
       "definition": "Daily Treasury par real yield curve, percent",
       "first": "2026-01-02",
       "full_year_boundary_check": false,
-      "last": "2026-11-24",
+      "last": "2026-11-25",
       "limitations": "No estimated fills, no FRED splice, no complete calendar or publication-time certification.",
       "provider": "US Department of the Treasury",
       "quality": "official_source_candidate",
       "series_id": "UST_PAR_REAL_2026",
-      "sha256": "4208562794622ce80a8d263da8f340f917b8e4c4aa2041ecad63bc7ee06f5fdc",
+      "sha256": "5ca427c9eac12d60c2c65d01f58a5bd209ea78fb6a7e006e32a6d5736aa1abea",
       "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?_format=csv&field_tdr_date_value=2026&page=&type=daily_treasury_real_yield_curve",
-      "source_raw_sha256": "dfa5c9f71a03291e3a2f756e6cbd9945a5e7931b0cfa5ce02640a5110e8008b6",
+      "source_raw_sha256": "d2364714a93e328908b52a8f4f8292b547fd44316d373264c7b938f6099c1e6b",
       "valid_by_maturity": {
-        "10 yr": 225,
-        "20 yr": 225,
-        "30 yr": 225,
-        "5 yr": 225,
-        "7 yr": 225
+        "10 yr": 226,
+        "20 yr": 226,
+        "30 yr": 226,
+        "5 yr": 226,
+        "7 yr": 226
       }
     }
   ],
