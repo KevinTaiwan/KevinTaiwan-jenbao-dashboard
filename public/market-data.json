@@ -1,39 +1,39 @@
 {
   "schemaVersion": 2,
   "audience": "public-market",
-  "asOf": "2026-11-25",
+  "asOf": "2026-11-26",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-26T14:35:11+00:00",
-  "headline": "台股最新正式收盤 2026-11-25：38,195.43 點；其他市場指標各按自身觀測日",
-  "summary": "taiex 38,195.430（觀測日 2026-11-25）｜vix 28.290（觀測日 2026-11-25）｜usdtwd 33.215（觀測日 2026-11-25）｜hyOas 3.720（觀測日 2026-11-24）｜foreignNetYi -1,236.548（觀測日 2026-11-25）",
+  "updatedAt": "2026-11-26T22:45:38+00:00",
+  "headline": "台股最新正式收盤 2026-11-26：39,151.81 點；其他市場指標各按自身觀測日",
+  "summary": "taiex 39,151.810（觀測日 2026-11-26）｜vix 28.290（觀測日 2026-11-25）｜usdtwd 32.918（觀測日 2026-11-26）｜hyOas 3.720（觀測日 2026-11-24）｜foreignNetYi -491.811（觀測日 2026-11-26）",
   "market": {
-    "taiex": 38195.43,
-    "taiexChange": -4.8026,
-    "ma5": 37917.97,
-    "ma10": 39768.394,
-    "ma20": 41517.391,
-    "ma60": 45367.0078,
+    "taiex": 39151.81,
+    "taiexChange": 2.5039,
+    "ma5": 38062.954,
+    "ma10": 39374.388,
+    "ma20": 41156.565,
+    "ma60": 45253.2843,
     "vix": 28.29,
     "move": 97.5371017,
-    "usdtwd": 33.215,
-    "dxy": 103.69,
+    "usdtwd": 32.918,
+    "dxy": 103.788,
     "us10y": 4.91,
     "de10y": 3.3428,
     "cnn": 15.2253164556962,
-    "marginBalanceYi": 4341.37987,
-    "marginDailyYi": -193.6703,
+    "marginBalanceYi": 4344.84476,
+    "marginDailyYi": 3.4649,
     "marginMaintenance": 126.92,
-    "foreignNetYi": -1236.548,
-    "futuresNetContracts": -105709,
+    "foreignNetYi": -491.8113,
+    "futuresNetContracts": -106275,
     "hyOas": 3.72,
     "singleBOas": 4.05,
     "sofrMinusIorb": 4.0,
     "t10yie": 2.12,
     "t5yie": 2.13,
-    "oil": 84.1500015,
+    "oil": 84.9100037,
     "goldPrice": 3520.57,
-    "ma120": 45126.4282,
-    "ma240": 39551.166,
+    "ma120": 45073.0491,
+    "ma240": 39599.488,
     "marginMaintenanceAsOf": "2026-11-23",
     "marginMaintenanceScope": "TWSE financing maintenance excluding ETF (Wantgoo; Nov20 not cross-verified)"
   },
@@ -108,18 +108,18 @@
   "alerts": [],
   "sources": [
     {
-      "label": "taiex 觀測日 2026-11-25",
-      "date": "2026-11-25",
+      "label": "taiex 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://www.twse.com.tw/rwd/zh/TAIEX/MI_5MINS_HIST"
     },
     {
-      "label": "dxy 觀測日 2026-11-25",
-      "date": "2026-11-25",
+      "label": "dxy 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://finance.yahoo.com/quote/DX-Y.NYB/history/"
     },
     {
-      "label": "usdtwd 觀測日 2026-11-25",
-      "date": "2026-11-25",
+      "label": "usdtwd 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://finance.yahoo.com/quote/TWD=X/history/"
     },
     {
@@ -138,13 +138,13 @@
       "url": "https://fred.stlouisfed.org/series/DGS10"
     },
     {
-      "label": "marginDailyYi 觀測日 2026-11-25",
-      "date": "2026-11-25",
+      "label": "marginDailyYi 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN"
     },
     {
-      "label": "foreignNetYi 觀測日 2026-11-25",
-      "date": "2026-11-25",
+      "label": "foreignNetYi 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://www.twse.com.tw/rwd/zh/fund/BFI82U"
     },
     {
@@ -173,8 +173,8 @@
       "url": "https://fred.stlouisfed.org/series/T5YIE"
     },
     {
-      "label": "marginBalanceYi 觀測日 2026-11-25",
-      "date": "2026-11-25",
+      "label": "marginBalanceYi 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN"
     },
     {
@@ -188,13 +188,13 @@
       "url": "https://finance.yahoo.com/quote/%5EMOVE/"
     },
     {
-      "label": "futuresNetContracts 觀測日 2026-11-25",
-      "date": "2026-11-25",
+      "label": "futuresNetContracts 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://www.taifex.com.tw/cht/3/futContractsDate"
     },
     {
-      "label": "oil 觀測日 2026-11-25",
-      "date": "2026-11-25",
+      "label": "oil 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://finance.yahoo.com/quote/CL%3DF/"
     },
     {
@@ -204,10 +204,6 @@
     }
   ],
   "marketHistory": [
-    {
-      "date": "2026-10-13",
-      "taiex": 48341.31
-    },
     {
       "date": "2026-10-14",
       "taiex": 48625.83
@@ -323,28 +319,32 @@
     {
       "date": "2026-11-25",
       "taiex": 38195.43
+    },
+    {
+      "date": "2026-11-26",
+      "taiex": 39151.81
     }
   ],
   "notes": [
     "各指標保留自身原始觀測日，來源延遲不以最新交易日補值；市場敘事僅引用已核對資料。",
-    "taiex 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
-    "dxy 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
-    "usdtwd 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
+    "taiex 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
+    "dxy 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
+    "usdtwd 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "vix 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
     "hyOas 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "us10y 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
-    "marginDailyYi 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
-    "foreignNetYi 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
+    "marginDailyYi 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
+    "foreignNetYi 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "marginMaintenance 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
     "singleBOas 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "sofrMinusIorb 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "t10yie 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
     "t5yie 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
-    "marginBalanceYi 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
+    "marginBalanceYi 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "cnn 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
     "move 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
-    "futuresNetContracts 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
-    "oil 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
+    "futuresNetContracts 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
+    "oil 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "goldPrice 實際觀測日 2026-11-20；不保證等於首頁加權指數收盤日"
   ],
   "marginMaintenanceCoverage": {

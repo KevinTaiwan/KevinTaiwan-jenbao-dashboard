@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-26T14:35:02+00:00",
-  "cutoff": "2026-11-25",
+  "generatedAt": "2026-11-26T22:45:21+00:00",
+  "cutoff": "2026-11-26",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
     "taiex": "index pts",
@@ -29,10 +29,10 @@
   },
   "stats": {
     "taiex": {
-      "count": 1215,
+      "count": 1216,
       "first": "2021-11-22",
-      "last": "2026-11-25",
-      "lastValue": 38195.43,
+      "last": "2026-11-26",
+      "lastValue": 39151.81,
       "status": "ready",
       "source": {
         "name": "TWSE FMTQIK and retained market seed; missing closes from verified TAIEX OHLC archive",
@@ -40,10 +40,10 @@
       }
     },
     "dxy": {
-      "count": 1260,
+      "count": 1261,
       "first": "2021-11-22",
-      "last": "2026-11-25",
-      "lastValue": 103.69,
+      "last": "2026-11-26",
+      "lastValue": 103.788,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance DX-Y.NYB daily market close (not ICE licensed feed)",
@@ -51,10 +51,10 @@
       }
     },
     "usdtwd": {
-      "count": 1438,
+      "count": 1439,
       "first": "2021-11-22",
-      "last": "2026-11-25",
-      "lastValue": 33.215,
+      "last": "2026-11-26",
+      "lastValue": 32.918,
       "status": "ready",
       "source": {
         "name": "Yahoo Finance TWD=X daily indicative FX quote; Library values override on overlapping dates",
@@ -84,10 +84,10 @@
       }
     },
     "marginDailyYi": {
-      "count": 1003,
+      "count": 1004,
       "first": "2022-10-04",
-      "last": "2026-11-25",
-      "lastValue": -193.6703,
+      "last": "2026-11-26",
+      "lastValue": 3.4649,
       "status": "ready",
       "source": {
         "name": "TWSE MI_MARGN finance outstanding daily change, includes ETFs, TWD 100m",
@@ -99,10 +99,10 @@
       }
     },
     "foreignNetYi": {
-      "count": 1003,
+      "count": 1004,
       "first": "2022-10-04",
-      "last": "2026-11-25",
-      "lastValue": -1236.548,
+      "last": "2026-11-26",
+      "lastValue": -491.8113,
       "status": "ready",
       "source": {
         "name": "TWSE BFI82U foreign cash investment net amount, TWD 100m",
@@ -124,11 +124,11 @@
         "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
       },
       "targetTradingDays": 240,
-      "observedInTarget": 238,
-      "missingInTarget": 2,
-      "coveragePct": 99.17,
-      "targetFirst": "2025-11-27",
-      "targetLast": "2026-11-25",
+      "observedInTarget": 237,
+      "missingInTarget": 3,
+      "coveragePct": 98.75,
+      "targetFirst": "2025-11-28",
+      "targetLast": "2026-11-26",
       "dataScope": "TWSE listed-stock financing maintenance excluding ETFs; vendor-provided, distinct from all-market margin ratio and official whole-account collateral ratio",
       "note": "The audit tracks the latest 240 Taiwan sessions. Cursor backfill on 2026-11-21 extended verified history to 2024-11-13. See sourceSnapshots for prior collections."
     },
@@ -188,43 +188,43 @@
       }
     },
     "marketTurnoverYiTwd": {
-      "count": 1186,
+      "count": 1187,
       "status": "ready",
       "source": {
         "name": "TWSE whole-market成交金額 (億元)",
         "url": "https://www.twse.com.tw/rwd/zh/afterTrading/FMTQIK"
       },
       "first": "2022-01-03",
-      "last": "2026-11-25",
-      "lastValue": 12297.619689
+      "last": "2026-11-26",
+      "lastValue": 8453.366327
     },
     "dayTradeTurnoverYiTwd": {
-      "count": 1186,
+      "count": 1187,
       "status": "ready",
       "source": {
         "name": "TWSE day-trading traded value, (buy+sell)/2, 億元",
         "url": "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U2"
       },
       "first": "2022-01-03",
-      "last": "2026-11-25",
-      "lastValue": 5667.030327
+      "last": "2026-11-26",
+      "lastValue": 3987.893286
     },
     "dayTradeTurnoverSharePct": {
-      "count": 1186,
+      "count": 1187,
       "status": "ready",
       "source": {
         "name": "TWSE day-trading成交金額占大盤成交金額, %",
         "url": "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U2"
       },
       "first": "2022-01-03",
-      "last": "2026-11-25",
-      "lastValue": 46.0823
+      "last": "2026-11-26",
+      "lastValue": 47.1752
     },
     "foreignCumulativeYi": {
-      "count": 1003,
+      "count": 1004,
       "first": "2022-10-04",
-      "last": "2026-11-25",
-      "lastValue": -35810.9456,
+      "last": "2026-11-26",
+      "lastValue": -36302.7569,
       "status": "ready",
       "source": {
         "name": "Running sum of stored foreignNetYi in TWD 100m. Fixed zero at the 2025-11-20 close. Earlier levels are extended backwards from that anchor."
@@ -57983,19 +57983,31 @@
       "dayTradeTurnoverSharePct": 46.0823,
       "usdtwd": 33.215,
       "vix": 28.29
+    },
+    {
+      "date": "2026-11-26",
+      "taiex": 39151.81,
+      "dxy": 103.788,
+      "usdtwd": 32.918,
+      "marginDailyYi": 3.4649,
+      "foreignNetYi": -491.8113,
+      "foreignCumulativeYi": -36302.7569,
+      "marketTurnoverYiTwd": 8453.366327,
+      "dayTradeTurnoverYiTwd": 3987.893286,
+      "dayTradeTurnoverSharePct": 47.1752
     }
   ],
   "twseTurnoverAudit": {
-    "generatedAt": "2026-11-26T14:35:11.522667+00:00",
+    "generatedAt": "2026-11-26T22:45:38.743982+00:00",
     "target": 1000,
     "counts": {
-      "marketTurnoverYiTwd": 1186,
-      "dayTradeTurnoverYiTwd": 1186,
-      "dayTradeTurnoverSharePct": 1186
+      "marketTurnoverYiTwd": 1187,
+      "dayTradeTurnoverYiTwd": 1187,
+      "dayTradeTurnoverSharePct": 1187
     },
     "marketDatesDownloaded": 38,
     "dayTradeDatesDownloaded": 38,
-    "dayTradeDatesReconciled": 37,
+    "dayTradeDatesReconciled": 38,
     "sourceIssues": [],
     "mismatchExamples": [],
     "mismatchCount": 0,
@@ -58008,15 +58020,16 @@
   },
   "marginMaintenance240dAudit": {
     "target": 240,
-    "targetFirst": "2025-11-27",
-    "targetLast": "2026-11-25",
-    "observed": 238,
-    "missing": 2,
+    "targetFirst": "2025-11-28",
+    "targetLast": "2026-11-26",
+    "observed": 237,
+    "missing": 3,
     "status": "partial",
     "source": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex",
     "missingDates": [
       "2026-11-24",
-      "2026-11-25"
+      "2026-11-25",
+      "2026-11-26"
     ],
     "historyPreserved": true,
     "caveat": "Latest 240 TAIEX sessions. WantGoo excludes ETFs. Earlier chart rows without a displayed percentage are left missing.",
