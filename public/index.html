@@ -507,14 +507,29 @@ body.technical-fullscreen-active{overflow:hidden!important}
 
 #technicalFreshnessWarning{margin:10px 0 12px;padding:10px 14px;border:1px solid #dfb25c;border-radius:9px;background:#fff4dc;color:#7d4700;font-weight:700;line-height:1.7}
 #technicalFreshnessWarning[hidden]{display:none}
-.tech-osc-controls{display:grid;gap:6px;border:1px solid #d5dfe8;border-radius:7px;padding:8px;margin:7px 0;color:#26394b;background:#f8fafc}
-.tech-osc-buttons,.tech-osc-inputs{display:flex;gap:5px;flex-wrap:wrap}
-.tech-osc-inputs label{flex:1 1 56px;min-width:0;font-size:11px}
-.tech-osc-inputs input{box-sizing:border-box;width:100%;min-width:0;border:1px solid #b8c7d5;border-radius:4px;padding:5px;color:#26394b;background:white}
-.tech-osc-controls button{font:inherit;font-size:11px;padding:5px 7px;border:1px solid #bac9d6;border-radius:5px;color:#26394b;background:white;cursor:pointer}
-.tech-osc-preset.active{background:#d9ebf8;border-color:#1178a1;font-weight:700}
-.tech-osc-controls small,.tech-osc-legend{font-size:10px;line-height:1.45}
-[data-tech-osc-error]{color:#a23b19}
+/* Compact oscillator controls belong to the third-panel heading, not the upper toolbar. */
+.technical-stack-plot.tech-osc-plot{position:relative;align-self:start}
+.tech-osc-controls{position:absolute;top:var(--osc-anchor);right:9.2%;transform:translateY(-50%);z-index:4;display:flex;align-items:center;gap:3px;max-width:54%;color:#26394b;font-size:10px;line-height:1.1;white-space:nowrap}
+.tech-osc-buttons{display:flex;align-items:center;gap:3px;flex-wrap:nowrap}
+.tech-osc-controls button,.tech-osc-controls summary{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:2px;min-width:0;min-height:19px;height:19px;margin:0;padding:1px 5px;border:1px solid #cbd6df;border-radius:3px;color:#26394b;background:#fff;font:inherit;line-height:1.05;cursor:pointer;white-space:nowrap;box-shadow:none}
+.tech-osc-controls summary{list-style:none}
+.tech-osc-controls summary::-webkit-details-marker{display:none}
+.tech-osc-controls .tech-osc-preset.active,.tech-osc-controls summary.active{background:#d9ebf8;border-color:#1178a1;font-weight:700}
+.tech-osc-edit{position:relative;margin:0;padding:0;border:0;background:transparent}
+.tech-osc-popover{position:absolute;right:0;bottom:calc(100% + 5px);width:220px;max-width:calc(100vw - 36px);box-sizing:border-box;display:grid;gap:5px;padding:6px;border:1px solid #b8c7d5;border-radius:5px;background:#fff;box-shadow:0 3px 12px #20384b24;white-space:normal;z-index:5}
+.tech-osc-inputs{display:flex;gap:4px;flex-wrap:wrap}
+.tech-osc-inputs label{display:flex;flex-direction:column;gap:2px;flex:1 1 47px;min-width:0;font-size:10px}
+.tech-osc-inputs input{box-sizing:border-box;width:100%;min-width:0;height:23px;padding:2px 3px;border:1px solid #b8c7d5;border-radius:3px;color:#26394b;background:white;font-size:12px}
+.tech-osc-controls small,.tech-osc-legend{font-size:10px;line-height:1.25}
+.tech-osc-popover [data-tech-osc-error]{color:#a23b19;white-space:normal}
+.tech-osc-popover [data-tech-osc-error]:empty{display:none}
+.technical-stack-fullscreen .tech-osc-plot{align-self:stretch!important}
+.technical-stack-controls-hidden .tech-osc-controls{display:none!important}
+@media(max-width:1000px){
+ .tech-osc-plot{display:flex;flex-direction:column}
+ .tech-osc-controls{position:relative;top:auto;right:auto;transform:none;align-self:flex-end;max-width:100%;margin:1px 5px 4px;font-size:10px}
+ .technical-stack-fullscreen .tech-osc-plot>.technical-stack-svg{flex:1 1 0%;height:auto!important;min-height:0!important}
+}
 .technical-stack-sidebar [data-ust-date]{width:100%;max-width:100%;min-width:0;box-sizing:border-box;color:#26394b;background:#fff;border:1px solid #b8c7d5;border-radius:4px;padding:5px;font-size:12px}
 .technical-stack-sidebar [data-ust-reset]{font-size:11px;padding:5px 7px;border:1px solid #bac9d6;border-radius:5px;color:#26394b;background:#fff}
 [data-ust-svg]{touch-action:pan-y}
@@ -1304,11 +1319,11 @@ function techOscSet(mode,params=null,levels=null){
  try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}
  showHistory();return true;
 }
-function techOscControls(k,setting){
+function techOscControls(k,setting,anchor){
  const spec=TECH_OSC[k],p=setting.params;
- const button=(mode,name)=>'<button type="button" data-tech-osc-preset="'+mode+'" aria-pressed="'+(setting.mode===mode)+'" class="tech-osc-preset'+(setting.mode===mode?' active':'')+'">'+name+'</button>';
+ const button=(mode,name)=>'<button type="button" data-tech-osc-preset="'+mode+'" aria-pressed="'+(setting.mode===mode)+'" class="tech-osc-preset'+(setting.mode===mode?' active':'')+'">'+name+' '+spec[mode].join(',')+'</button>';
  const number=(name,i,value,level=false)=>'<label>'+esc(name)+'<input type="number" '+(level?'data-tech-osc-level':'data-tech-osc-param')+'="'+i+'" min="'+(level?0:1)+'" max="'+(level?100:240)+'" step="'+(level?'any':1)+'" value="'+value+'"></label>';
- return '<section class="tech-osc-controls" aria-label="技術指標參數"><div class="tech-osc-buttons">'+button("short","短期")+button("medium","中期")+button("custom","自訂")+'</div><small>短期 '+spec.short.join(",")+' ｜ 中期 '+spec.medium.join(",")+'</small><div class="tech-osc-inputs">'+spec.fields.map((name,i)=>number(name,i,p[i])).join("")+'</div>'+(k==="RSI"?'<div class="tech-osc-inputs">'+["低","中","高"].map((name,i)=>number(name,i,setting.levels[i],true)).join("")+'</div>':'')+'<button type="button" data-tech-osc-apply>套用自訂參數</button><button type="button" data-tech-osc-preset="short">恢復短期預設</button><small data-tech-osc-error role="status"></small></section>';
+ return '<section class="tech-osc-controls" style="--osc-anchor:'+anchor+'%" aria-label="第三層技術指標參數"><div class="tech-osc-buttons">'+button("short","短")+button("medium","中")+'<details class="tech-osc-edit"><summary class="'+(setting.mode==="custom"?'active':'')+'" aria-label="自訂技術指標參數">自訂 ▾</summary><div class="tech-osc-popover"><small>'+esc(techOscLabel(k))+' 參數｜目前 '+p.join(',')+'</small><div class="tech-osc-inputs">'+spec.fields.map((name,i)=>number(name,i,p[i])).join("")+'</div>'+(k==="RSI"?'<div class="tech-osc-inputs">'+["低","中","高"].map((name,i)=>number(name,i,setting.levels[i],true)).join("")+'</div>':'')+'<div class="tech-osc-buttons"><button type="button" data-tech-osc-apply>套用</button><button type="button" data-tech-osc-preset="short">恢復短期</button></div><small data-tech-osc-error role="status"></small></div></details></div></section>';
 }
 
 function readTechnicalStackSettings(){
@@ -2119,7 +2134,7 @@ function showHistory(){
    (paired?label("上層刻度","compareMode",c.compareMode,'<option value="raw">原始值</option><option value="indexed"'+(c.compareMode==="indexed"?' selected':'')+'>共同起點 100</option>'):"")+
    label("中層來源","middle",c.middle,techOptions(TECH_SOURCE_KEYS,c.middle))+
    label("下層指標來源","bottomSource",c.bottomSource,[["follow","上層左軸"],["right","上層右軸"],["middle","中層"]].map(([k,name])=>'<option value="'+k+'"'+(k===c.bottomSource?' selected':'')+'>'+name+'</option>').join(""))+
-   label("下層指標類型","oscillator",c.oscillator,Object.keys(TECH_OSC).map(k=>'<option value="'+k+'"'+(c.oscillator===k?' selected':'')+'>'+techOscLabel(k)+'</option>').join(""))+'</div>'+techOscControls(c.oscillator,oscSetting);
+   label("下層指標類型","oscillator",c.oscillator,Object.keys(TECH_OSC).map(k=>'<option value="'+k+'"'+(c.oscillator===k?' selected':'')+'>'+techOscLabel(k)+'</option>').join(""))+'</div>';
   const overlayButtons='<div class="technical-stack-overlays" role="group" aria-label="均線和布林通道顯示開關">'+
    [["ma5","MA5","#e59c00"],["ma10","MA10","#dc4b6a"],["ma20","MA20","#2869cc"],["ma60","MA60","#26813e"],["ma120","MA120","#946326"],["ma240","MA240","#7741ca"],["bb","BBands","#9d4edd"]].map(([key,label,color])=>
     '<button type="button" class="technical-stack-overlay-btn'+(c.overlays[key]?' enabled':'')+'" data-tech-overlay="'+key+'" aria-pressed="'+(c.overlays[key]?'true':'false')+'" style="--tech-overlay-color:'+color+'"><span class="technical-stack-overlay-check" aria-hidden="true">'+(c.overlays[key]?'☑':'□')+'</span><i></i>'+label+(key==="bb"?'':'<span class="technical-stack-overlay-value" data-tech-ma-value="'+key.slice(2)+'"></span>')+'</button>'
@@ -2129,7 +2144,7 @@ function showHistory(){
   const middleLeftName=techSeriesName(dualTurnover?"marketTurnoverYiTwd":c.middle);
   const middleRightName=dualTurnover?techSeriesName("dayTradeTurnoverSharePct"):"";
   const bottomName=techOscLabel(c.oscillator)+"("+oscParams.join(",")+")｜"+techSeriesName(bottomKey).replace(/｜K 線（OHLC）$/,"");
-   const oscSpec=TECH_OSC[c.oscillator],oscSuggestion="短期："+oscSpec.short.join(",")+"　中期："+oscSpec.medium.join(",");
+   // Short and medium recommendations now appear in the third-panel control strip.
    const oscLegend=c.oscillator==="MACD"?"DIF 藍／訊號 橘／OSC 紅正綠負":c.oscillator==="KD"?"K 藍／D 橘":c.oscillator==="DMI"?"+DI 紅／-DI 綠／ADX 藍":"";
   // Axis headings correspond to actual series, never to moving-average overlays.
   const axisTitle=(name,y,right=false,maxWidth=280)=>{
@@ -2138,7 +2153,7 @@ function showHistory(){
    const fit=estimate>maxWidth?' textLength="'+maxWidth+'" lengthAdjust="spacingAndGlyphs"':"";
    return '<text class="technical-axis-title" x="'+(right?756:40)+'" y="'+y+'" text-anchor="'+(right?"end":"start")+'" fill="'+(right?rightColor:"#26394b")+'" font-size="12"'+fit+'>'+esc(name)+'</text>';
   };
-  const labels=axisTitle(topLeftName,compact?17:20,false,265)+axisTitle(topRightName,compact?17:20,true,265)+axisTitle(middleLeftName,compact?203:297)+axisTitle(middleRightName,compact?203:297,true)+axisTitle(bottomName,compact?290:422,false,330)+'<text x="756" y="'+(compact?290:422)+'" fill="#526475" font-size="11" text-anchor="end">'+esc(oscSuggestion)+'</text>';
+  const labels=axisTitle(topLeftName,compact?17:20,false,265)+axisTitle(topRightName,compact?17:20,true,265)+axisTitle(middleLeftName,compact?203:297)+axisTitle(middleRightName,compact?203:297,true)+axisTitle(bottomName,compact?290:422,false,330);
   const xticks=[0,.25,.5,.75,1].map(k=>{
    const days=sessionDates.length?sessionDates:timelineDays;
    const day=days[Math.round((days.length-1)*k)]||new Date(start).toISOString().slice(0,10);
@@ -2191,7 +2206,7 @@ function showHistory(){
    return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+source+(lag?' <strong style="color:#8a4b00">'+esc(lag)+'</strong>':"")+'</small>';
   }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
-  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot">'+svg+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel};
+  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot tech-osc-plot">'+svg+techOscControls(c.oscillator,oscSetting,100*((panel[1].end+panel[2].start)/2)/svgBottom)+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
