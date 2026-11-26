@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-26T22:45:21+00:00",
+  "generatedAt": "2026-11-26T22:48:57+00:00",
   "cutoff": "2026-11-26",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -231,10 +231,10 @@
       }
     },
     "creditBelow130Accounts": {
-      "count": 78,
+      "count": 79,
       "first": "2026-08-03",
-      "last": "2026-11-25",
-      "lastValue": 201,
+      "last": "2026-11-26",
+      "lastValue": 149,
       "status": "partial",
       "source": {
         "name": "TWSE BFIJ3U_TREND belowAccNum",
@@ -242,10 +242,10 @@
       }
     },
     "creditCallAmountTwd": {
-      "count": 78,
+      "count": 79,
       "first": "2026-08-03",
-      "last": "2026-11-25",
-      "lastValue": 44046000,
+      "last": "2026-11-26",
+      "lastValue": 775000,
       "status": "partial",
       "source": {
         "name": "TWSE BFIJ3U_TREND callAmt",
@@ -253,10 +253,10 @@
       }
     },
     "creditDisposalAccounts": {
-      "count": 78,
+      "count": 79,
       "first": "2026-08-03",
-      "last": "2026-11-25",
-      "lastValue": 7,
+      "last": "2026-11-26",
+      "lastValue": 17,
       "status": "partial",
       "source": {
         "name": "TWSE BFIJ3U_TREND exeAccNum",
@@ -264,10 +264,10 @@
       }
     },
     "creditDisposalAmountTwd": {
-      "count": 78,
+      "count": 79,
       "first": "2026-08-03",
-      "last": "2026-11-25",
-      "lastValue": 2112700,
+      "last": "2026-11-26",
+      "lastValue": 15213900,
       "status": "partial",
       "source": {
         "name": "TWSE BFIJ3U_TREND exeAmt",
@@ -57994,7 +57994,11 @@
       "foreignCumulativeYi": -36302.7569,
       "marketTurnoverYiTwd": 8453.366327,
       "dayTradeTurnoverYiTwd": 3987.893286,
-      "dayTradeTurnoverSharePct": 47.1752
+      "dayTradeTurnoverSharePct": 47.1752,
+      "creditBelow130Accounts": 149,
+      "creditCallAmountTwd": 775000,
+      "creditDisposalAccounts": 17,
+      "creditDisposalAmountTwd": 15213900
     }
   ],
   "twseTurnoverAudit": {
