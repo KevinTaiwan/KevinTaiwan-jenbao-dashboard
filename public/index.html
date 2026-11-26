@@ -1289,7 +1289,7 @@ const TECH_OSC={
  KD:{short:[9,3,3],medium:[14,3,3],fields:["週期","K 平滑","D 平滑"]},
  RSI:{short:[6],medium:[14],fields:["週期"]},
  MTM:{short:[10],medium:[12],fields:["週期"]},
- MACD:{short:[6,13,5],medium:[12,26,9],fields:["快線","慢線","訊號線"]},
+ MACD:{short:[6,13,5],medium:[12,26,9],long:[24,52,18],fields:["快線","慢線","訊號線"]},
  DMI:{short:[10],medium:[14],fields:["週期"]}
 };
 function techOscLabel(k){return k==="DMI"?"DMI / ADX":k}
@@ -1301,16 +1301,16 @@ function techOscLevels(p){return p[0]<=6?[20,50,80]:[30,50,70]}
 function techOscValidLevels(v){return Array.isArray(v)&&v.length===3&&v.every(n=>Number.isFinite(n)&&n>=0&&n<=100)&&v[0]<v[1]&&v[1]<v[2]}
 function techOscRestore(saved){
  return Object.fromEntries(Object.entries(TECH_OSC).map(([k,spec])=>{
-  const v=saved?.[k], mode=["short","medium","custom"].includes(v?.mode)?v.mode:"short";
+  const v=saved?.[k], modes=spec.long?["short","medium","long","custom"]:["short","medium","custom"],mode=modes.includes(v?.mode)?v.mode:"short";
   const useCustom=mode==="custom"&&techOscValid(k,v?.params);
-  const active=useCustom?"custom":mode==="medium"?"medium":"short";
+  const active=useCustom?"custom":mode==="medium"||mode==="long"?mode:"short";
   const params=useCustom?[...v.params]:[...spec[active]];
   return [k,{mode:active,params,levels:k==="RSI"&&useCustom&&techOscValidLevels(v.levels)?[...v.levels]:k==="RSI"?techOscLevels(params):[]}];
  }));
 }
 function techOscSet(mode,params=null,levels=null){
  const k=techSettings.oscillator,spec=TECH_OSC[k];
- if(!spec||!["short","medium","custom"].includes(mode))return false;
+ if(!spec||!(spec.long?["short","medium","long","custom"]:["short","medium","custom"]).includes(mode))return false;
  const p=mode==="custom"?(params||techSettings.oscSettings[k].params):spec[mode];
  if(!techOscValid(k,p))return false;
  const refs=k==="RSI"?(mode==="custom"?(levels||techOscLevels(p)):techOscLevels(p)):[];
@@ -1323,7 +1323,7 @@ function techOscControls(k,setting,anchor){
  const spec=TECH_OSC[k],p=setting.params;
  const button=(mode,name)=>'<button type="button" data-tech-osc-preset="'+mode+'" aria-pressed="'+(setting.mode===mode)+'" class="tech-osc-preset'+(setting.mode===mode?' active':'')+'">'+name+' '+spec[mode].join(',')+'</button>';
  const number=(name,i,value,level=false)=>'<label>'+esc(name)+'<input type="number" '+(level?'data-tech-osc-level':'data-tech-osc-param')+'="'+i+'" min="'+(level?0:1)+'" max="'+(level?100:240)+'" step="'+(level?'any':1)+'" value="'+value+'"></label>';
- return '<section class="tech-osc-controls" style="--osc-anchor:'+anchor+'%" aria-label="第三層技術指標參數"><div class="tech-osc-buttons">'+button("short","短")+button("medium","中")+'<details class="tech-osc-edit"><summary class="'+(setting.mode==="custom"?'active':'')+'" aria-label="自訂技術指標參數">自訂 ▾</summary><div class="tech-osc-popover"><small>'+esc(techOscLabel(k))+' 參數｜目前 '+p.join(',')+'</small><div class="tech-osc-inputs">'+spec.fields.map((name,i)=>number(name,i,p[i])).join("")+'</div>'+(k==="RSI"?'<div class="tech-osc-inputs">'+["低","中","高"].map((name,i)=>number(name,i,setting.levels[i],true)).join("")+'</div>':'')+'<div class="tech-osc-buttons"><button type="button" data-tech-osc-apply>套用</button><button type="button" data-tech-osc-preset="short">恢復短期</button></div><small data-tech-osc-error role="status"></small></div></details></div></section>';
+ return '<section class="tech-osc-controls" style="--osc-anchor:'+anchor+'%" aria-label="第三層技術指標參數"><div class="tech-osc-buttons">'+button("short","短")+button("medium","中")+(spec.long?button("long","長"):"")+'<details class="tech-osc-edit"><summary class="'+(setting.mode==="custom"?'active':'')+'" aria-label="自訂技術指標參數">自訂 ▾</summary><div class="tech-osc-popover"><small>'+esc(techOscLabel(k))+' 參數｜目前 '+p.join(',')+'</small><div class="tech-osc-inputs">'+spec.fields.map((name,i)=>number(name,i,p[i])).join("")+'</div>'+(k==="RSI"?'<div class="tech-osc-inputs">'+["低","中","高"].map((name,i)=>number(name,i,setting.levels[i],true)).join("")+'</div>':'')+'<div class="tech-osc-buttons"><button type="button" data-tech-osc-apply>套用</button><button type="button" data-tech-osc-preset="short">恢復短期</button></div><small data-tech-osc-error role="status"></small></div></details></div></section>';
 }
 
 function readTechnicalStackSettings(){
