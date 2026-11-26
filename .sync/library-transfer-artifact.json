@@ -1,16 +1,16 @@
 {
-  "runId": 45748154056,
-  "artifactId": 15083079981,
+  "runId": 45755404702,
+  "artifactId": 15087845228,
   "repository": "KevinTaiwan/KevinTaiwan-jenbao-dashboard",
-  "sourceHeadSha": "d8bc8bdcaf2b3c050ee21935da07750d0058b6a0",
-  "createdAt": "2026-11-26T03:19:26.640318+00:00",
+  "sourceHeadSha": "6e1121f0fd3d643b3b2bad5ec830dd421f77d433",
+  "createdAt": "2026-11-26T04:28:25.935828+00:00",
   "artifactName": "jenbao-market-data-transfer",
   "compression": "zip",
   "sourceBlobFingerprints": {
     "market-history.json": "39724aaa227870b099be385f1aead0e5640af687",
     "market-data.json": "f738c38373b359ca19a1f6cf84fb53d77328a8e6",
     "market-center-history.json": "6652bd71b0dc12421cbd3ee8659f9069d584a930",
-    "intraday-market.json": "f68c0dd48e865ad0858a529dcd1c20d5f34d8622",
+    "intraday-market.json": "5ddc1c5e547f13e874247d383ca0a45c20bb737d",
     "index-ohlc-history.json": "4741318db125753a638f0e7c7f60038d7e57bc5f"
   }
 }
