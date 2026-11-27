@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-27T12:43:07+00:00",
+  "generatedAt": "2026-11-27T14:20:06+00:00",
   "cutoff": "2026-11-27",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -84,10 +84,10 @@
       }
     },
     "marginDailyYi": {
-      "count": 1004,
+      "count": 1005,
       "first": "2022-10-04",
-      "last": "2026-11-26",
-      "lastValue": 3.4649,
+      "last": "2026-11-27",
+      "lastValue": -43.125,
       "status": "ready",
       "source": {
         "name": "TWSE MI_MARGN finance outstanding daily change, includes ETFs, TWD 100m",
@@ -58015,7 +58015,8 @@
       "creditDisposalAmountTwd": 4608600,
       "marketTurnoverYiTwd": 6946.607905,
       "dayTradeTurnoverYiTwd": 3187.166922,
-      "dayTradeTurnoverSharePct": 45.8809
+      "dayTradeTurnoverSharePct": 45.8809,
+      "marginDailyYi": -43.125
     }
   ],
   "twseTurnoverAudit": {
