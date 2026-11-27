@@ -45,44 +45,44 @@
       }
     },
     "taiex": {
-      "asOf": "2026-11-26",
-      "close": 39151.81,
+      "asOf": "2026-11-27",
+      "close": 39308.08,
       "movingAverages": {
-        "10": 39374.388,
-        "120": 45073.0491,
-        "20": 41156.565,
-        "240": 39599.488,
-        "5": 38062.954,
-        "60": 45253.2843
+        "10": 38937.684,
+        "120": 45013.4567,
+        "20": 40861.3775,
+        "240": 39648.1613,
+        "5": 38717.912,
+        "60": 45136.2282
       },
-      "previousClose": 38195.43,
-      "previousDate": "2026-11-25",
+      "previousClose": 39151.81,
+      "previousDate": "2026-11-26",
       "windows": {
         "20": {
-          "annualizedVolatilityPct": 63.74914,
+          "annualizedVolatilityPct": 63.53595,
           "availableReturns": 20,
-          "endDate": "2026-11-26",
-          "maxDrawdownPct": -22.289006,
+          "endDate": "2026-11-27",
+          "maxDrawdownPct": -20.301191,
           "requiredReturns": 20,
-          "startDate": "2026-10-29",
+          "startDate": "2026-10-30",
           "status": "computed_from_archive"
         },
         "252": {
-          "annualizedVolatilityPct": 32.386169,
+          "annualizedVolatilityPct": 32.384255,
           "availableReturns": 252,
-          "endDate": "2026-11-26",
+          "endDate": "2026-11-27",
           "maxDrawdownPct": -27.676745,
           "requiredReturns": 252,
-          "startDate": "2025-11-11",
+          "startDate": "2025-11-12",
           "status": "computed_from_archive"
         },
         "60": {
-          "annualizedVolatilityPct": 40.094743,
+          "annualizedVolatilityPct": 40.061664,
           "availableReturns": 60,
-          "endDate": "2026-11-26",
+          "endDate": "2026-11-27",
           "maxDrawdownPct": -27.676745,
           "requiredReturns": 60,
-          "startDate": "2026-08-27",
+          "startDate": "2026-08-28",
           "status": "computed_from_archive"
         }
       }
@@ -90,16 +90,16 @@
   },
   "inputs": {
     "index-ohlc-history.json": {
-      "gitBlobSha": "c26cf83de95fb38769c02d3544329971187ea6f2",
-      "sha256": "3602e3cb17c7516675741a96c7ba4d8424877cf104e05d02dd1da2088a684d17"
+      "gitBlobSha": "83e071b870098894098aa87aa2f6c4a9ec013aad",
+      "sha256": "f3cdfd9cf8a1c92450f713b37f3c530ee3fc9de65051e53d38f2742a907d9fe1"
     },
     "market-center-history.json": {
-      "gitBlobSha": "7a570cc69e0940b241ef359ca942ed21d21f538a",
-      "sha256": "c7a5d5dcd06af53943caef2b72380c7a3eb5ae34bbf7c9dc276485d80fdd1cde"
+      "gitBlobSha": "60667a6386ec53825b6a2f593a5f31135a65d352",
+      "sha256": "85bf36a7483e56236d0f752c4551c8007fcf013ad8ae01bfb968270b7ff0add4"
     },
     "market-history.json": {
-      "gitBlobSha": "49776872a98f91ee6b3d73b5821e474500b0b690",
-      "sha256": "d8082aebde8c75e17e93cc3d124a52fa7885ac814c3e89937d0d9fd5191a0453"
+      "gitBlobSha": "c5115cfa86770852a292fc06300b2db18189bf6a",
+      "sha256": "8fb2efaa8e6bb9c1c912826704e1107fbb3cd0f63783d144ce110f0d7e494771"
     }
   },
   "method": {
