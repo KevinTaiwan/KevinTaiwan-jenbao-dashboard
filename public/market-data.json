@@ -3,7 +3,7 @@
   "audience": "public-market",
   "asOf": "2026-11-26",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-26T22:45:38+00:00",
+  "updatedAt": "2026-11-27T11:26:33.678Z",
   "headline": "台股最新正式收盤 2026-11-26：39,151.81 點；其他市場指標各按自身觀測日",
   "summary": "taiex 39,151.810（觀測日 2026-11-26）｜vix 28.290（觀測日 2026-11-25）｜usdtwd 32.918（觀測日 2026-11-26）｜hyOas 3.720（觀測日 2026-11-24）｜foreignNetYi -491.811（觀測日 2026-11-26）",
   "market": {
@@ -22,20 +22,20 @@
     "cnn": 15.2253164556962,
     "marginBalanceYi": 4344.84476,
     "marginDailyYi": 3.4649,
-    "marginMaintenance": 126.92,
+    "marginMaintenance": 139.67,
     "foreignNetYi": -491.8113,
     "futuresNetContracts": -106275,
     "hyOas": 3.72,
     "singleBOas": 4.05,
-    "sofrMinusIorb": 4.0,
+    "sofrMinusIorb": 4,
     "t10yie": 2.12,
     "t5yie": 2.13,
     "oil": 84.9100037,
     "goldPrice": 3520.57,
     "ma120": 45073.0491,
     "ma240": 39599.488,
-    "marginMaintenanceAsOf": "2026-11-23",
-    "marginMaintenanceScope": "TWSE financing maintenance excluding ETF (Wantgoo; Nov20 not cross-verified)"
+    "marginMaintenanceAsOf": "2026-11-26",
+    "marginMaintenanceScope": "TWSE financing maintenance excluding ETF (Wantgoo; observed date, no forward-fill)"
   },
   "ai": [
     {
@@ -148,8 +148,8 @@
       "url": "https://www.twse.com.tw/rwd/zh/fund/BFI82U"
     },
     {
-      "label": "marginMaintenance 觀測日 2026-11-23",
-      "date": "2026-11-23",
+      "label": "marginMaintenance 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
     },
     {
@@ -335,7 +335,7 @@
     "us10y 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "marginDailyYi 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "foreignNetYi 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
-    "marginMaintenance 實際觀測日 2026-11-23；不保證等於首頁加權指數收盤日",
+    "marginMaintenance 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "singleBOas 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "sofrMinusIorb 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "t10yie 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
@@ -351,8 +351,8 @@
     "targetTradingDays": 240,
     "observedTradingDays": 240,
     "missingTradingDays": 0,
-    "targetFirst": "2025-11-25",
-    "targetLast": "2026-11-23",
+    "targetFirst": "2025-11-28",
+    "targetLast": "2026-11-26",
     "status": "complete",
     "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
   }
