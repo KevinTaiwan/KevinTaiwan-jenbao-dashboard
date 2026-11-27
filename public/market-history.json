@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-27T21:55:00+00:00",
+  "generatedAt": "2026-11-27T22:46:52+00:00",
   "cutoff": "2026-11-27",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -144,10 +144,10 @@
       }
     },
     "us10y2ySpread": {
-      "count": 1224,
+      "count": 1225,
       "first": "2022-01-03",
-      "last": "2026-11-25",
-      "lastValue": 0.24,
+      "last": "2026-11-27",
+      "lastValue": 0.25,
       "status": "ready",
       "source": {
         "name": "FRED T10Y2Y daily observations",
@@ -58025,7 +58025,8 @@
       "dxy": 103.985,
       "usdtwd": 32.956,
       "voo": 667.1239,
-      "qqq": 645.49
+      "qqq": 645.49,
+      "us10y2ySpread": 0.25
     }
   ],
   "twseTurnoverAudit": {
