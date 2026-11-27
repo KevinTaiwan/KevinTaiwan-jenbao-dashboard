@@ -94,12 +94,12 @@
       "sha256": "3602e3cb17c7516675741a96c7ba4d8424877cf104e05d02dd1da2088a684d17"
     },
     "market-center-history.json": {
-      "gitBlobSha": "41ac4af09b1d5e194967f5b2db870db1a8bf693a",
-      "sha256": "ba695a725b06670c40020444a946a8c9ae5e5e2a9a7e48fc71da6bd33e88bdc5"
+      "gitBlobSha": "7a570cc69e0940b241ef359ca942ed21d21f538a",
+      "sha256": "c7a5d5dcd06af53943caef2b72380c7a3eb5ae34bbf7c9dc276485d80fdd1cde"
     },
     "market-history.json": {
-      "gitBlobSha": "e91fcec2b36bdeefc56687b75540fd96e126ecb4",
-      "sha256": "d9bfaf3038494bbde2fda96d5f65a4200d929859a7298fccd2bb84a6c5931af9"
+      "gitBlobSha": "49776872a98f91ee6b3d73b5821e474500b0b690",
+      "sha256": "d8082aebde8c75e17e93cc3d124a52fa7885ac814c3e89937d0d9fd5191a0453"
     }
   },
   "method": {
