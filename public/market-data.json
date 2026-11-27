@@ -3,9 +3,9 @@
   "audience": "public-market",
   "asOf": "2026-11-26",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-27T11:26:33.678Z",
+  "updatedAt": "2026-11-27T12:43:23+00:00",
   "headline": "台股最新正式收盤 2026-11-26：39,151.81 點；其他市場指標各按自身觀測日",
-  "summary": "taiex 39,151.810（觀測日 2026-11-26）｜vix 28.290（觀測日 2026-11-25）｜usdtwd 32.918（觀測日 2026-11-26）｜hyOas 3.720（觀測日 2026-11-24）｜foreignNetYi -491.811（觀測日 2026-11-26）",
+  "summary": "taiex 39,151.810（觀測日 2026-11-26）｜vix 26.800（觀測日 2026-11-26）｜usdtwd 32.918（觀測日 2026-11-26）｜hyOas 3.720（觀測日 2026-11-24）｜foreignNetYi -296.281（觀測日 2026-11-27）",
   "market": {
     "taiex": 39151.81,
     "taiexChange": 2.5039,
@@ -13,7 +13,7 @@
     "ma10": 39374.388,
     "ma20": 41156.565,
     "ma60": 45253.2843,
-    "vix": 28.29,
+    "vix": 26.8,
     "move": 97.5371017,
     "usdtwd": 32.918,
     "dxy": 103.788,
@@ -23,11 +23,11 @@
     "marginBalanceYi": 4344.84476,
     "marginDailyYi": 3.4649,
     "marginMaintenance": 139.67,
-    "foreignNetYi": -491.8113,
+    "foreignNetYi": -296.2807,
     "futuresNetContracts": -106275,
     "hyOas": 3.72,
     "singleBOas": 4.05,
-    "sofrMinusIorb": 4,
+    "sofrMinusIorb": 4.0,
     "t10yie": 2.12,
     "t5yie": 2.13,
     "oil": 84.9100037,
@@ -105,7 +105,13 @@
       "status": "unknown"
     }
   ],
-  "alerts": [],
+  "alerts": [
+    {
+      "label": "扣 ETF 融資維持率時效",
+      "status": "WARN",
+      "detail": "WARN：觀測日 2026-11-26，落後已歸檔台股交易日 1 日；不得視為最新值"
+    }
+  ],
   "sources": [
     {
       "label": "taiex 觀測日 2026-11-26",
@@ -123,8 +129,8 @@
       "url": "https://finance.yahoo.com/quote/TWD=X/history/"
     },
     {
-      "label": "vix 觀測日 2026-11-25",
-      "date": "2026-11-25",
+      "label": "vix 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://fred.stlouisfed.org/series/VIXCLS"
     },
     {
@@ -143,8 +149,8 @@
       "url": "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN"
     },
     {
-      "label": "foreignNetYi 觀測日 2026-11-26",
-      "date": "2026-11-26",
+      "label": "foreignNetYi 觀測日 2026-11-27",
+      "date": "2026-11-27",
       "url": "https://www.twse.com.tw/rwd/zh/fund/BFI82U"
     },
     {
@@ -330,11 +336,11 @@
     "taiex 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "dxy 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "usdtwd 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
-    "vix 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
+    "vix 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "hyOas 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "us10y 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "marginDailyYi 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
-    "foreignNetYi 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
+    "foreignNetYi 實際觀測日 2026-11-27；不保證等於首頁加權指數收盤日",
     "marginMaintenance 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "singleBOas 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "sofrMinusIorb 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
@@ -349,11 +355,11 @@
   ],
   "marginMaintenanceCoverage": {
     "targetTradingDays": 240,
-    "observedTradingDays": 240,
-    "missingTradingDays": 0,
-    "targetFirst": "2025-11-28",
-    "targetLast": "2026-11-26",
-    "status": "complete",
+    "observedTradingDays": 239,
+    "missingTradingDays": 1,
+    "targetFirst": "2025-12-01",
+    "targetLast": "2026-11-27",
+    "status": "partial",
     "sourceUrl": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
   }
 }
