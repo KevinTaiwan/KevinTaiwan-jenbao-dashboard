@@ -3,9 +3,9 @@
   "audience": "public-market",
   "asOf": "2026-11-26",
   "dataStatus": "partial",
-  "updatedAt": "2026-11-27T17:06:27+00:00",
+  "updatedAt": "2026-11-27T18:54:59+00:00",
   "headline": "台股最新正式收盤 2026-11-26：39,151.81 點；其他市場指標各按自身觀測日",
-  "summary": "taiex 39,151.810（觀測日 2026-11-26）｜vix 26.800（觀測日 2026-11-26）｜usdtwd 32.956（觀測日 2026-11-27）｜hyOas 3.720（觀測日 2026-11-24）｜foreignNetYi -296.281（觀測日 2026-11-27）",
+  "summary": "taiex 39,151.810（觀測日 2026-11-26）｜vix 26.800（觀測日 2026-11-26）｜usdtwd 32.956（觀測日 2026-11-27）｜hyOas 3.770（觀測日 2026-11-26）｜foreignNetYi -296.281（觀測日 2026-11-27）",
   "market": {
     "taiex": 39151.81,
     "taiexChange": 2.5039,
@@ -25,8 +25,8 @@
     "marginMaintenance": 139.67,
     "foreignNetYi": -296.2807,
     "futuresNetContracts": -107503,
-    "hyOas": 3.72,
-    "singleBOas": 4.05,
+    "hyOas": 3.77,
+    "singleBOas": 4.13,
     "sofrMinusIorb": 5.0,
     "t10yie": 2.12,
     "t5yie": 2.13,
@@ -134,8 +134,8 @@
       "url": "https://fred.stlouisfed.org/series/VIXCLS"
     },
     {
-      "label": "hyOas 觀測日 2026-11-24",
-      "date": "2026-11-24",
+      "label": "hyOas 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2"
     },
     {
@@ -159,8 +159,8 @@
       "url": "https://www.wantgoo.com/stock/margin-trading/exclude-etf/taiex"
     },
     {
-      "label": "singleBOas 觀測日 2026-11-24",
-      "date": "2026-11-24",
+      "label": "singleBOas 觀測日 2026-11-26",
+      "date": "2026-11-26",
       "url": "https://fred.stlouisfed.org/series/BAMLH0A2HYB"
     },
     {
@@ -337,12 +337,12 @@
     "dxy 實際觀測日 2026-11-27；不保證等於首頁加權指數收盤日",
     "usdtwd 實際觀測日 2026-11-27；不保證等於首頁加權指數收盤日",
     "vix 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
-    "hyOas 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
+    "hyOas 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "us10y 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
     "marginDailyYi 實際觀測日 2026-11-27；不保證等於首頁加權指數收盤日",
     "foreignNetYi 實際觀測日 2026-11-27；不保證等於首頁加權指數收盤日",
     "marginMaintenance 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
-    "singleBOas 實際觀測日 2026-11-24；不保證等於首頁加權指數收盤日",
+    "singleBOas 實際觀測日 2026-11-26；不保證等於首頁加權指數收盤日",
     "sofrMinusIorb 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
     "t10yie 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",
     "t5yie 實際觀測日 2026-11-25；不保證等於首頁加權指數收盤日",

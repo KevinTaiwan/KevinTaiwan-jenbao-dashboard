@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "audience": "public-market-history",
-  "generatedAt": "2026-11-27T17:06:16+00:00",
+  "generatedAt": "2026-11-27T18:54:43+00:00",
   "cutoff": "2026-11-27",
   "calendar": "source observation dates; never forward-fill; latest intraday excluded",
   "units": {
@@ -73,10 +73,10 @@
       }
     },
     "hyOas": {
-      "count": 789,
+      "count": 791,
       "first": "2023-11-21",
-      "last": "2026-11-24",
-      "lastValue": 3.72,
+      "last": "2026-11-26",
+      "lastValue": 3.77,
       "status": "ready",
       "source": {
         "name": "FRED BAMLH0A0HYM2 daily observations (ICE BofA HY OAS, percent)",
@@ -57984,7 +57984,8 @@
       "dayTradeTurnoverSharePct": 46.0823,
       "usdtwd": 33.215,
       "vix": 28.29,
-      "marginMaintenanceExEtf": 131.35
+      "marginMaintenanceExEtf": 131.35,
+      "hyOas": 3.77
     },
     {
       "date": "2026-11-26",
@@ -58002,7 +58003,8 @@
       "creditDisposalAccounts": 17,
       "creditDisposalAmountTwd": 15213900,
       "marginMaintenanceExEtf": 139.67,
-      "vix": 26.8
+      "vix": 26.8,
+      "hyOas": 3.77
     },
     {
       "date": "2026-11-27",
