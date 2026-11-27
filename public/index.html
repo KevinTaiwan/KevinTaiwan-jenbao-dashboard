@@ -568,6 +568,22 @@ body.technical-fullscreen-active{overflow:hidden!important}
 }
 .technical-stack-fullscreen{box-sizing:border-box!important}
 .technical-ui-revision{display:inline-block;font-size:9px;font-weight:600;color:#51697a;white-space:nowrap;margin-left:5px}
+/* MA and period buttons share dimensions, not semantics. */
+.technical-stack-row .technical-stack-head .technical-stack-overlay-btn,
+.technical-stack-row .technical-stack-head .technical-stack-fullscreen-windows button{
+ box-sizing:border-box;height:24px;min-height:24px;min-width:34px;padding:4px 6px;
+ font-size:10px;line-height:1.35;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap
+}
+.technical-stack-head-with-ma>.technical-stack-overlays{padding:2px 4px!important;border:1px solid #d6e1d9;border-radius:6px;background:#f4f9f5}
+.technical-stack-group-label{font-size:10px;font-weight:600;white-space:nowrap;color:#536b5c}
+.technical-stack-fullscreen-windows .technical-stack-group-label{color:#365a77}
+.technical-stack-row .technical-stack-head .technical-stack-overlay-btn.enabled{background:#fff;border-color:var(--tech-overlay-color);color:var(--tech-overlay-color)}
+.technical-stack-native-btn{background:#f4f8fc;border-color:#96acbd;color:#254255;font-weight:600}
+.technical-stack-native-btn[aria-pressed="true"]{background:#d0eefa;border-color:#5ba8c4;color:#12465e}
+@media(max-width:760px){
+ .technical-stack-row .technical-stack-head .technical-stack-overlay-btn,
+ .technical-stack-row .technical-stack-head .technical-stack-fullscreen-windows button{height:23px;min-height:23px;min-width:30px;padding:3px 4px;font-size:10px}
+}
 /* Date-only control: no additional technical chart. */
 .technical-range-nav{display:flex;flex-direction:column;gap:2px;margin:2px 9% 3px 12%;min-width:0;color:#43556a;user-select:none}
 .technical-range-top{display:flex;justify-content:space-between;gap:6px;font-size:10px;line-height:1.2}
@@ -1052,7 +1068,7 @@ function ustCurveStack(c){
  const dates="最新 "+(q.latest?.date||"—")+"｜前一觀測 "+(q.day?.date||"—")+"｜月比較 "+(q.month?.date||"—")+"（目標 "+(q.monthTarget||"—")+"）｜年比較 "+(q.year?.date||"—")+"（目標 "+(q.yearTarget||"—")+"）";
  const dateInput=(key,title)=>'<label>'+title+'<input type="date" data-ust-date="'+key+'" value="'+esc(c.curveDates?.[key]||"")+'" max="'+esc(q.latest?.date||new Date().toISOString().slice(0,10))+'"></label>';
  const controls='<div class="technical-stack-selectors"><label>資料來源<select data-tech-field="top"><option value="'+UST_MODE+'" selected>美國公債殖利率曲線</option>'+techOptions(TECH_SOURCE_KEYS,c.top).replace(/ selected/g,"")+'</select></label>'+dateInput("month","月比較自訂日期")+dateInput("year","年比較自訂日期")+'<button type="button" data-ust-reset>還原 1 個月／1 年</button><label>游標天期<select data-ust-tenor>'+UST_TENORS.map(([t],i)=>'<option value="'+i+'"'+(i===ustCursor?' selected':'')+'>'+t+'</option>').join("")+'</select></label></div><small>自訂日期取不晚於指定日的最近實際觀測（最多回溯 7 日）；無資料留白。MA、BB、下層技術指標及日期區間暫停，切回恢復。</small>';
- const head='<div class="technical-stack-head"><div><strong>三層技術分析圖｜美國公債殖利率曲線</strong><span class="technical-theme-version">V17 正式觀測 · 年限比例軸</span></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1">'+(techFullscreen?"⤢ 退出放大":"⛶ 放大（保留分頁）")+'</button></div></div>';
+ const head='<div class="technical-stack-head"><div><strong>三層技術分析圖｜美國公債殖利率曲線</strong><span class="technical-theme-version">V17 正式觀測 · 年限比例軸</span></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1">'+(techFullscreen?"⤢ 退出放大":"⛶ 放大（保留分頁）")+'</button>'+nativeFullscreenButton()+'</div></div>';
  return {curveMode:true,compare:q,sessionScale:{days:[]},markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack">'+head+'<div class="technical-current-day" role="status">'+esc(status+"｜最新覆蓋 "+q.values.filter(r=>Number.isFinite(r.latest)).length+"/14｜"+dates)+'</div><div class="technical-stack-body"><div class="technical-stack-plot">'+ustCurveGraphic(q,compact)+'</div><aside class="technical-stack-sidebar">'+controls+'</aside></div><div class="technical-stack-readouts"><div><strong>殖利率（%）</strong><span data-ust-readout="yield">—</span></div><div><strong>日變動（bp）</strong><span data-ust-readout="day">—</span></div><div><strong>月／年變動（bp）</strong><span data-ust-readout="change">—</span></div></div><div class="technical-stack-txt">到期年限線性排列；短天期標籤用引線標示真實位置。各曲線使用同一實際觀測日；變動為兩端殖利率差 ×100 bp；日變動比較前一實際觀測日。缺值斷線，不混接 FRED。</div></div>'};
 }
 
@@ -1419,13 +1435,32 @@ function refreshTechnicalFullscreenChrome(){
  card.classList.toggle("technical-stack-controls-hidden",techFullscreen&&techControlsHidden);
  const full=card.querySelector("[data-tech-fullscreen]");
  if(full){full.textContent=techFullscreen?"⤢ 退出放大":"⛶ 放大（保留分頁）";full.setAttribute("aria-pressed",String(techFullscreen))}
+ const native=card.querySelector("[data-tech-native-fullscreen]");
+ if(native){native.textContent=document.fullscreenElement?"⤢ 退出全螢幕":"⛶ 全螢幕";native.setAttribute("aria-pressed",String(Boolean(document.fullscreenElement)))}
  const opt=card.querySelector("[data-tech-controls-toggle]");
  if(opt){opt.textContent=techControlsHidden?"顯示選單":"隱藏選單";opt.setAttribute("aria-pressed",String(!techControlsHidden))}
 }
 function leaveTechnicalFullscreen(){
  if(!techFullscreen)return;
  techFullscreen=false;refreshTechnicalFullscreenChrome();
+ if(document.fullscreenElement&&typeof document.exitFullscreen==="function"){
+  try{const p=document.exitFullscreen();if(p?.catch)p.catch(()=>{})}catch(e){}
+ }
 }
+function nativeFullscreenButton(){
+ const active=Boolean(document.fullscreenElement);
+ return '<button type="button" class="technical-stack-fullscreen-btn technical-stack-native-btn" data-tech-native-fullscreen="1" aria-pressed="'+active+'" title="真正全螢幕：隱藏瀏覽器分頁及網址列">'+(active?"⤢ 退出全螢幕":"⛶ 全螢幕")+'</button>';
+}
+function toggleNativeTechnicalFullscreen(){
+ if(document.fullscreenElement){
+  try{const p=document.exitFullscreen();if(p?.catch)p.catch(()=>{})}catch(e){}
+  return;
+ }
+ if(typeof document.documentElement?.requestFullscreen!=="function")return;
+ techFullscreen=true;techControlsHidden=false;refreshTechnicalFullscreenChrome();
+ try{const p=document.documentElement.requestFullscreen();if(p?.catch)p.catch(()=>refreshTechnicalFullscreenChrome())}catch(e){refreshTechnicalFullscreenChrome()}
+}
+document.addEventListener("fullscreenchange",refreshTechnicalFullscreenChrome);
 function toggleTechnicalFullscreen(){
  if(techFullscreen){leaveTechnicalFullscreen();return}
  // Maximize within the browser's content viewport, not the physical screen.
@@ -1443,7 +1478,7 @@ function toggleTechnicalControls(){
  techControlsHidden=!techControlsHidden;refreshTechnicalFullscreenChrome();
 }
 document.addEventListener("keydown",event=>{
- if(event.key==="Escape"&&techFullscreen&&!event.defaultPrevented)leaveTechnicalFullscreen();
+ if(event.key==="Escape"&&techFullscreen&&!document.fullscreenElement&&!event.defaultPrevented)leaveTechnicalFullscreen();
 });
 
 function updateTechnicalSetting(field,value){
@@ -2299,7 +2334,7 @@ function showHistory(){
    label("中層來源","middle",c.middle,techOptions(TECH_SOURCE_KEYS,c.middle))+
    label("下層指標來源","bottomSource",c.bottomSource,[["follow","上層左軸"],["right","上層右軸"],["middle","中層"]].map(([k,name])=>'<option value="'+k+'"'+(k===c.bottomSource?' selected':'')+'>'+name+'</option>').join(""))+
    label("下層指標類型","oscillator",c.oscillator,Object.keys(TECH_OSC).map(k=>'<option value="'+k+'"'+(c.oscillator===k?' selected':'')+'>'+techOscLabel(k)+'</option>').join(""))+'</div>';
-  const overlayButtons='<div class="technical-stack-overlays" role="group" aria-label="均線和布林通道顯示開關">'+
+  const overlayButtons='<div class="technical-stack-overlays" role="group" aria-label="均線和布林通道顯示開關"><span class="technical-stack-group-label">均線</span>'+
    [["ma5","MA5","#e59c00"],["ma10","MA10","#dc4b6a"],["ma20","MA20","#2869cc"],["ma60","MA60","#26813e"],["ma120","MA120","#946326"],["ma240","MA240","#7741ca"],["bb","BBands","#9d4edd"]].map(([key,label,color])=>
     '<button type="button" class="technical-stack-overlay-btn'+(c.overlays[key]?' enabled':'')+'" data-tech-overlay="'+key+'" aria-pressed="'+(c.overlays[key]?'true':'false')+'" style="--tech-overlay-color:'+color+'"><span class="technical-stack-overlay-check" aria-hidden="true">'+(c.overlays[key]?'☑':'□')+'</span><i></i>'+label+(key==="bb"?'':'<span class="technical-stack-overlay-value" data-tech-ma-value="'+key.slice(2)+'"></span>')+'</button>'
    ).join("")+'</div>';
@@ -2370,7 +2405,7 @@ function showHistory(){
    return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+source+(lag?' <strong style="color:#8a4b00">'+esc(lag)+'</strong>':"")+'</small>';
   }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
-  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head technical-stack-head-with-ma"><div class="technical-stack-heading"><strong>三層技術分析圖｜上・中・下</strong><span class="technical-ui-revision">介面 1127-R2</span><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div>'+overlayButtons+'<div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(!rangeCustom&&chartDays===n?"active":"")+'" aria-pressed="'+(!rangeCustom&&chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出放大":"⛶ 放大（保留分頁）") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot tech-osc-plot">'+svg+techOscControls(c.oscillator,oscSetting,100*((panel[1].end+panel[2].start)/2)/svgBottom)+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+reportMenu+centerNote+'</aside></div>'+rangeNavigator(navDays,start,end)+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel};
+  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head technical-stack-head-with-ma"><div class="technical-stack-heading"><strong>三層技術分析圖｜上・中・下</strong><span class="technical-ui-revision">介面 1127-R3</span><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div>'+overlayButtons+'<div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍"><span class="technical-stack-group-label">期間</span>'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(!rangeCustom&&chartDays===n?"active":"")+'" aria-pressed="'+(!rangeCustom&&chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出放大":"⛶ 放大（保留分頁）") +'</button>'+nativeFullscreenButton()+'</div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot tech-osc-plot">'+svg+techOscControls(c.oscillator,oscSetting,100*((panel[1].end+panel[2].start)/2)/svgBottom)+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+reportMenu+centerNote+'</aside></div>'+rangeNavigator(navDays,start,end)+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
@@ -2503,6 +2538,8 @@ crossHost.addEventListener("click",event=>{
   if(!techOscSet("custom",p,levels))box.querySelector("[data-tech-osc-error]").textContent="參數須為 1–240 整數；MACD 快線小於慢線；RSI 參考線須遞增且在 0–100。";
   return;
  }
+ const nativeBtn=event.target.closest?.("[data-tech-native-fullscreen]");
+ if(nativeBtn){event.preventDefault();toggleNativeTechnicalFullscreen();return}
  const fullscreenBtn=event.target.closest?.("[data-tech-fullscreen]");
  if(fullscreenBtn){event.preventDefault();toggleTechnicalFullscreen();return}
  const controlBtn=event.target.closest?.("[data-tech-controls-toggle]");
