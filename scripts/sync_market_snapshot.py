@@ -56,6 +56,23 @@ def main():
     for key,field in history_keys.items():write(key,last(history["rows"],field))
     for key,field in center_keys.items():write(key,center_latest(center,field))
     if "marginMaintenance" in used:m["marginMaintenanceAsOf"]=used["marginMaintenance"][0]
+    # Derive coverage and freshness from the exact history revision consumed.
+    audit=history.get("marginMaintenance240dAudit")
+    label="扣 ETF 融資維持率時效"
+    snapshot["alerts"]=[x for x in snapshot.get("alerts",[]) if x.get("label")!=label]
+    if audit:
+        snapshot["marginMaintenanceCoverage"]={
+            "targetTradingDays":audit["target"], "observedTradingDays":audit["observed"],
+            "missingTradingDays":audit["missing"], "targetFirst":audit["targetFirst"],
+            "targetLast":audit["targetLast"], "status":audit["status"], "sourceUrl":audit["source"]}
+        latest=m.get("marginMaintenanceAsOf","")
+        lag=sum(d>latest for d in audit["missingDates"])
+        if lag:
+            status="FAIL" if lag>=2 else "WARN"
+            detail=f"{status}：觀測日 {latest}，落後已歸檔台股交易日 {lag} 日；不得視為最新值"
+            snapshot["alerts"].append({"label":label,"status":status,"detail":detail})
+            print("::warning::"+detail,flush=True)
+        m["marginMaintenanceScope"]="TWSE financing maintenance excluding ETF (Wantgoo; observed date, no forward-fill)"
     snapshot["asOf"]=day
     snapshot["updatedAt"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
     snapshot["dataStatus"]="partial"

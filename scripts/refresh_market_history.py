@@ -27,10 +27,15 @@ from zoneinfo import ZoneInfo
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DEST = ROOT / "public" / "market-history.json"
 SEED = ROOT / "scripts" / "market_seed.json"
-TODAY = dt.datetime.now(ZoneInfo("Asia/Taipei")).date()
-CUTOFF = TODAY - dt.timedelta(days=1)  # no intraday price in daily-close chart
+NOW_TW = dt.datetime.now(ZoneInfo("Asia/Taipei"))
+TODAY = NOW_TW.date()
+CUTOFF = TODAY - dt.timedelta(days=1)  # overseas daily series remain conservative
+TW_CUTOFF = TODAY if NOW_TW.hour>=15 else CUTOFF  # require dated official closing data
+TW_DAILY_KEYS = {"taiex","foreignNetYi","marginDailyYi","marginMaintenanceExEtf"}
+TWSE_CLOSES = set()
 EARLIEST = dt.date(1900,1,1)  # archive floor: retained historical observations do not expire
-FETCH_START = TODAY - dt.timedelta(days=300)  # incremental source fetch horizon only
+HOURLY = os.environ.get("JENBAO_HOURLY") == "1"
+FETCH_START = TODAY - dt.timedelta(days=48 if HOURLY else 300)  # retain all prior observations
 FIELDS = ("taiex", "dxy", "usdtwd", "vix", "hyOas", "marginDailyYi", "foreignNetYi", "marginMaintenanceExEtf", "us10yYield", "us10y2ySpread", "voo", "qqq", "fedFundsEffective")
 SOURCE = {}
 OBS = {key: {} for key in FIELDS}
@@ -68,15 +73,15 @@ def get(url, timeout=22):
             raw=z.read(name)
     return raw.decode("utf-8-sig")
 
-def valid_day(value):
+def valid_day(value, cutoff=None):
     try:
         date=dt.date.fromisoformat(str(value))
-        return date if EARLIEST<=date<=CUTOFF else None
+        return date if EARLIEST<=date<=(CUTOFF if cutoff is None else cutoff) else None
     except (TypeError,ValueError):
         return None
 
 def add(key, day, value):
-    day=valid_day(day)
+    day=valid_day(day,TW_CUTOFF if key in TW_DAILY_KEYS else CUTOFF)
     if day is None or (day.weekday()>=5 and key!="fedFundsEffective") or value in (None,"",".","NA","N/A"):return
     try:
         v=float(str(value).replace(",","").replace("%","").strip())
@@ -132,7 +137,7 @@ def load_seed():
 
 def fetch_twse():
     found=0
-    for offset in range(8):
+    for offset in range(2 if HOURLY else 8):
         y,m=TODAY.year,TODAY.month-offset
         while m<=0:y-=1;m+=12
         date=f"{y}{m:02d}01"
@@ -140,19 +145,31 @@ def fetch_twse():
         try:
             d=json.loads(get(url,timeout=16))
             fields=d.get("fields") or []
-            p=next((i for i,k in enumerate(fields) if "發行量加權股價指數" in k),4)
+            p=next((i for i,k in enumerate(fields) if "發行量加權股價指數" in k),None)
+            if d.get("stat")!="OK" or p is None:continue
             for row in d.get("data",[]):
                 year,mon,day=map(int,row[0].split("/"))
-                add("taiex",f"{year+1911:04d}-{mon:02d}-{day:02d}",row[p])
-                found+=1
+                observed=f"{year+1911:04d}-{mon:02d}-{day:02d}"
+                if not valid_day(observed,TW_CUTOFF):continue
+                previous=OBS["taiex"].get(observed)
+                try: official=_number(row[p])
+                except (ValueError,TypeError):continue
+                if previous is not None and abs(previous-official)>0.02:
+                    print("::warning::TAIEX archived close conflict "+observed,flush=True)
+                    continue
+                if not math.isfinite(official) or not 1000<=official<=100000:continue
+                add("taiex",observed,official)
+                if observed in OBS["taiex"]:
+                    TWSE_CLOSES.add(observed)
+                    found+=1
         except Exception as exc:print("WARN TWSE month",date,str(exc)[:75],flush=True)
         time.sleep(0.35)
-    if found<20:raise ValueError("TWSE not enough rows")
+    if found<(1 if HOURLY else 20):raise ValueError("TWSE not enough rows")
     SOURCE["taiex"]={"name":"TWSE FMTQIK daily index level; Library market-only seed","url":URLS["taiex"]}
     return found
 
 def fetch_yahoo(symbol, key):
-    url=f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(symbol,safe='')}?interval=1d&range=1y"
+    url=f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(symbol,safe='')}?interval=1d&range={'1mo' if HOURLY else '1y'}"
     d=json.loads(get(url))
     item=d["chart"]["result"][0]
     if item["meta"]["symbol"] != symbol: raise ValueError("Unexpected market symbol")
@@ -165,7 +182,7 @@ def fetch_yahoo(symbol, key):
         day=dt.datetime.fromtimestamp(int(ts),tz=timezone).date().isoformat()
         add(key,day,close)
         count+=1
-    if count<50:raise ValueError(f"Yahoo {symbol} returned only {count} rows")
+    if count<(1 if HOURLY else 50):raise ValueError(f"Yahoo {symbol} returned only {count} rows")
     name=(f"Yahoo Finance {symbol} daily ETF Close, USD, unadjusted; excludes distributions" if key in ("voo","qqq")
           else f"Yahoo Finance {symbol} daily market close (not ICE licensed feed)" if key=="dxy"
           else "Yahoo Finance TWD=X daily indicative FX quote; Library values override on overlapping dates")
@@ -206,7 +223,7 @@ def fetch_fred(key,series):
         value=row.get(series)
         if valid_day(day) and value not in (None,"","."):
             add(key,day,value);count+=1
-    if count<20:raise ValueError(f"FRED {series} only {count} rows")
+    if count<(1 if HOURLY else 20):raise ValueError(f"FRED {series} only {count} rows")
     SOURCE[key]={"name":f"FRED {series} daily observations"+(" (ICE BofA HY OAS, percent)" if key=="hyOas" else ""),"url":f"https://fred.stlouisfed.org/series/{series}"}
     return count
 
@@ -226,8 +243,9 @@ def _number(v):
 def fetch_foreign_daily():
     found=0
     # Backfill only within current 120 calendar days, then daily incremental maintenance.
-    for delta in range(121):
-        date=CUTOFF-dt.timedelta(days=delta)
+    for delta in range(8 if HOURLY else 121):
+        date=TW_CUTOFF-dt.timedelta(days=delta)
+        if date==TODAY and date.isoformat() not in TWSE_CLOSES:continue
         if date.weekday()>=5:continue
         stamp=date.strftime("%Y%m%d")
         try:
@@ -255,8 +273,9 @@ def fetch_foreign_daily():
 
 def fetch_margin_daily():
     found=0
-    for delta in range(121):
-        date=CUTOFF-dt.timedelta(days=delta)
+    for delta in range(8 if HOURLY else 121):
+        date=TW_CUTOFF-dt.timedelta(days=delta)
+        if date==TODAY and date.isoformat() not in TWSE_CLOSES:continue
         if date.weekday()>=5:continue
         stamp=date.strftime("%Y%m%d")
         try:
@@ -298,28 +317,54 @@ class _WantgooRows(HTMLParser):
             if self.cells:self.rows.append(self.cells)
             self.inside_tr=False
 
+def parse_wantgoo_ex_etf(html, cutoff, taiex):
+    # The exact source is the ETF-excluded page; never infer a ratio from other tables.
+    if "扣除ETF資券進出行情" not in html and "扣除 ETF 資券進出行情" not in html:
+        raise ValueError("Wantgoo ETF-excluded page identity unavailable")
+    parser=_WantgooRows();parser.feed(html)
+    found={}
+    for row in parser.rows:
+        if len(row)!=10:continue
+        raw_date=row[0].strip()
+        try:
+            if re.fullmatch(r"\d{4}[-/]\d{1,2}[-/]\d{1,2}",raw_date):
+                y,month,day=map(int,re.split(r"[-/]",raw_date))
+            else:
+                mmdd=re.fullmatch(r"(\d{1,2})/(\d{1,2})",raw_date)
+                if not mmdd:continue
+                month,day=map(int,mmdd.groups())
+                y=cutoff.year-(1 if (month,day)>(cutoff.month,cutoff.day) else 0)
+            date=dt.date(y,month,day)
+            # A same-calendar-day unfinished row must not be interpreted as last year.
+            if (cutoff-date).days>45 or date>cutoff or date.weekday()>=5:continue
+            if not re.fullmatch(r"\s*\d+(?:\.\d+)?\s*[%％]\s*",row[3]):continue
+            value=_number(row[3].replace("%","").replace("％",""))
+            close=_number(row[7])
+            expected=taiex.get(date.isoformat())
+            if expected is None or abs(close-expected)>0.02:continue
+            if not 80<=value<=500:continue
+            if date.isoformat() in found and found[date.isoformat()]!=value:
+                raise RuntimeError("Conflicting Wantgoo duplicate "+date.isoformat())
+            found[date.isoformat()]=value
+        except (ValueError,TypeError):continue
+    return found
+
 def fetch_wantgoo_ex_etf():
     html=get(URLS["marginMaintenanceExEtf"],timeout=25)
-    parser=_WantgooRows();parser.feed(html)
-    found=0
-    for row in parser.rows:
-        if len(row)<4:continue
-        mmdd=re.fullmatch(r"(\d{1,2})/(\d{1,2})",row[0].strip())
-        if not mmdd:continue
-        # The row columns explicitly describe financing balance, change, maintenance rate.
-        try:
-            month,day=map(int,mmdd.groups())
-            year=CUTOFF.year-(1 if month>CUTOFF.month+2 else 0)
-            date=dt.date(year,month,day).isoformat()
-            maint=row[3].replace("%","").strip()
-            value=_number(maint)
-            if not 80<=value<=500:continue
-            add("marginMaintenanceExEtf",date,value)
-            found+=1
-        except (ValueError,TypeError):continue
+    closes={d:v for d,v in OBS["taiex"].items() if d<TODAY.isoformat() or d in TWSE_CLOSES}
+    found=parse_wantgoo_ex_etf(html,TW_CUTOFF,closes)
+    if not found:raise ValueError("Wantgoo HTML has no verified dated ETF-excluded maintenance rows matched to TAIEX closes")
+    for date,value in found.items():
+        previous=OBS["marginMaintenanceExEtf"].get(date)
+        if previous is not None and abs(previous-value)>0.0001:
+            print("::warning::Wantgoo archived observation conflict "+date+"; retained prior value",flush=True)
+            continue
+        add("marginMaintenanceExEtf",date,value)
     SOURCE["marginMaintenanceExEtf"]={"name":"Wantgoo TAIEX margin trading excludes ETFs, financing maintenance (%)","url":URLS["marginMaintenanceExEtf"]}
-    if found<1:raise ValueError("Wantgoo HTML has no verifiable dated ETF-excluded maintenance rows")
-    return found
+    latest_session=max((d for d in OBS["taiex"] if d<=TW_CUTOFF.isoformat()),default="")
+    if latest_session and max(found)<latest_session:
+        print("::warning::Wantgoo source observation lag: "+max(found)+" vs latest archived TAIEX "+latest_session,flush=True)
+    return len(found)
 
 def main():
     load_seed()
@@ -385,7 +430,7 @@ def finalize_history(include_credit=False):
       "schemaVersion":1,
       "audience":"public-market-history",
       "generatedAt":dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-      "cutoff":CUTOFF.isoformat(),
+      "cutoff":max(CUTOFF.isoformat(),max(TWSE_CLOSES,default="")),
       "calendar":"source observation dates; never forward-fill; latest intraday excluded",
       "units":{"taiex":"index pts","dxy":"ICE US Dollar Index points","usdtwd":"TWD per USD","vix":"index pts","hyOas":"percent","marginDailyYi":"TWD 100 million daily finance balance change, including ETF","foreignNetYi":"TWD 100 million, TWSE foreign institution cash net","marginMaintenanceExEtf":"percent, Wantgoo margin maintenance excludes ETF","us10yYield":"percent, 10-year Treasury constant maturity yield (FRED DGS10)","us10y2ySpread":"percentage points, 10-year minus 2-year Treasury constant maturity spread (FRED T10Y2Y)","voo":"USD per VOO share, Yahoo Finance daily unadjusted Close; distributions excluded","qqq":"USD per QQQ share, Yahoo Finance daily unadjusted Close; distributions excluded","fedFundsEffective":"percent, effective federal funds overnight rate, FRED DFF (not FOMC target range)"},
       "stats":stats,
@@ -412,6 +457,8 @@ def finalize_history(include_credit=False):
         status = "partial" if missing else "complete"
         audit.update(targetFirst=window[0]["date"], targetLast=window[-1]["date"],
                      observed=observed, missing=len(missing), missingDates=missing, status=status)
+        if missing:
+            print("::warning::ETF-excluded margin maintenance missing "+str(len(missing))+" of latest "+str(len(window))+" sessions; "+",".join(missing),flush=True)
         stats["marginMaintenanceExEtf"].update(targetFirst=audit["targetFirst"],
             targetLast=audit["targetLast"], observedInTarget=observed, missingInTarget=len(missing),
             coveragePct=round(100 * observed / len(window), 2), status="partial" if missing else "ready")

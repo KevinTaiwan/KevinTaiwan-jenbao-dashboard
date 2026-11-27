@@ -15,6 +15,7 @@ on:
       - 'scripts/sync_market_snapshot.py'
       - 'scripts/public_market_calculations.py'
       - 'scripts/tests/test_public_market_calculations.py'
+      - 'scripts/tests/test_v18_hourly.py'
       - 'scripts/refresh_market_center_history.py'
       - 'scripts/backfill_twse_market_activity.py'
       - 'scripts/market_seed.json'
@@ -25,8 +26,7 @@ on:
       - '.github/workflows/pages.yml'
   workflow_dispatch:
   schedule:
-    - cron: '0 22 * * *' # 06:00 Asia/Taipei, refresh before the 06:10 daily report
-    - cron: '25 1,13 * * 1-5' # additional intraday update
+    - cron: '0 * * * *' # V18 hourly; 06:00 Taipei retains the daily deep refresh
 permissions:
   contents: write
   pages: write
@@ -51,12 +51,20 @@ jobs:
           ref: main
       - name: Test material-change write gate (no network)
         run: python3 -m unittest discover -s scripts/tests -p 'test_market_material_write.py'
+      - name: V18 offline regression gate
+        run: |
+          python3 -m py_compile scripts/refresh_market_history.py scripts/sync_market_snapshot.py
+          python3 -m unittest discover -s scripts/tests -p 'test_v18_hourly.py'
       - name: Refresh public market-history from official and attributable sources
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || contains(github.event.head_commit.message, '[refresh-all]') || contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]')
         env:
           JENBAO_YIELD_ONLY: ${{ contains(github.event.head_commit.message, '[refresh-yields]') && '1' || '0' }}
+          JENBAO_HOURLY: ${{ github.event_name == 'schedule' && '1' || '0' }}
           JENBAO_ETF_ONLY: ${{ contains(github.event.head_commit.message, '[refresh-etfs]') && '1' || '0' }}
         run: |
+          # Preserve the daily extended backfill and manual full-refresh path.
+          # The separate daily OHLC workflow completion also triggers a full refresh.
+          if [ "$(TZ=Asia/Taipei date +%H)" = 06 ]; then export JENBAO_HOURLY=0; fi
           python3 scripts/refresh_market_history.py
           python3 scripts/validate_market_history.py public/market-history.json
       - name: Increment market-center observations (FRED, Yahoo and official TWSE)
