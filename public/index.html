@@ -1865,18 +1865,28 @@ function rangeShift(a,b,d,n,mode){
  d=rangeClamp(d,-a,n-1-b);return [a+d,b+d];
 }
 function rangeDates(raw,cutoff){
- const keys=[techSettings.top,techSettings.middle,techSettings.right].filter(k=>k!=="off");
- return [...new Set([...raw,...techOhlcRecords("taiexK"),...techOhlcRecords("sp500K"),...keys.flatMap(k=>techObservations(raw,k))].map(r=>r?.date).filter(d=>typeof d==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&marketChartDate(d)<=cutoff))].sort();
+ // The left-axis primary series determines the available date range.
+ // Never extend a short series using an unrelated index's longer history.
+ return [...new Set(techObservations(raw,techSettings.top).filter(r=>Number.isFinite(r.value)).map(r=>r.date).filter(d=>typeof d==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&marketChartDate(d)<=cutoff))].sort();
+}
+function rangeResolve(days,presetStart,presetEnd,custom){
+ if(!days.length)return {start:presetStart,end:presetEnd,custom:false};
+ const first=days[0],last=days.at(-1);
+ const overlap=custom&&custom.start<=last&&custom.end>=first;
+ const a=overlap?custom.start:new Date(presetStart).toISOString().slice(0,10);
+ const b=overlap?custom.end:new Date(presetEnd).toISOString().slice(0,10);
+ const [i,j]=rangeIndices(days,a,b);
+ return {start:marketChartDate(days[i]),end:marketChartDate(days[j]),custom:Boolean(overlap)};
 }
 const rangePct=(i,n)=>n<=1?0:100*i/(n-1);
 const rangeCaption=(days,a,b)=>marketViewDate(days[a])+" — "+marketViewDate(days[b]);
 function rangeNavigator(days,start,end){
- if(days.length<2){rangeModel=null;return ""}
+ if(days.length<2){rangeModel=null;return '<div class="technical-range-nav"><div class="technical-range-top"><span>可視區間｜'+esc(techSeriesName(techSettings.top))+'</span><span>'+ (days.length?esc(days[0])+"（僅一筆觀測）":"尚無有效歷史資料")+'</span></div></div>'}
  const [a,b]=rangeIndices(days,new Date(start).toISOString().slice(0,10),new Date(end).toISOString().slice(0,10));
  rangeModel={days,a,b};const pct=i=>rangePct(i,days.length),lo=pct(a),hi=pct(b);
  const marks=[0,.2,.4,.6,.8,1].map(k=>{const i=Math.round(k*(days.length-1));return '<span style="left:'+pct(i)+'%">'+esc(days[i].slice(0,7).replace("-","/"))+'</span>'}).join("");
  const grip=(mode,i)=>'<button type="button" data-range-grip="'+mode+'" role="slider" aria-label="'+(mode==="left"?"可視起始日期":"可視結束日期")+'" aria-valuemin="0" aria-valuemax="'+(days.length-1)+'" aria-valuenow="'+i+'" aria-valuetext="'+days[i]+'" style="left:'+pct(i)+'%" title="'+days[i]+'">Ⅱ</button>';
- return '<div class="technical-range-nav" aria-label="日期區間導航"><div class="technical-range-top"><span>'+(rangeCustom?"自訂區間":"可視區間")+'</span><span data-range-caption>'+rangeCaption(days,a,b)+'</span></div><div class="technical-range-track" data-range-track><div data-range-selected role="slider" tabindex="0" aria-label="平移可視區間" aria-valuemin="0" aria-valuemax="'+(days.length-1)+'" aria-valuenow="'+a+'" aria-valuetext="'+rangeCaption(days,a,b)+'" style="left:'+lo+'%;width:'+(hi-lo)+'%"></div>'+grip("left",a)+grip("right",b)+'</div><div class="technical-range-ticks">'+marks+'</div></div>';
+ return '<div class="technical-range-nav" aria-label="日期區間導航"><div class="technical-range-top"><span>'+(rangeCustom?"自訂區間":"可視區間")+'｜'+esc(techSeriesName(techSettings.top))+'</span><span data-range-caption>'+rangeCaption(days,a,b)+'</span></div><div class="technical-range-track" data-range-track><div data-range-selected role="slider" tabindex="0" aria-label="平移可視區間" aria-valuemin="0" aria-valuemax="'+(days.length-1)+'" aria-valuenow="'+a+'" aria-valuetext="'+rangeCaption(days,a,b)+'" style="left:'+lo+'%;width:'+(hi-lo)+'%"></div>'+grip("left",a)+grip("right",b)+'</div><div class="technical-range-ticks">'+marks+'</div></div>';
 }
 function rangePreview(a,b,days){
  const host=$("marketCrossCharts"),track=host.querySelector("[data-range-track]");if(!track)return;
@@ -2033,11 +2043,17 @@ function showHistory(){
        archivedSessions=[...new Set(unifiedTaiex.map(r=>r.date))]
           .filter(day=>marketChartDate(day)<=cutoff).sort(),
        navDays=rangeDates(raw,cutoff),
-       customIndices=rangeCustom&&navDays.length>=2?rangeIndices(navDays,rangeCustom.start,rangeCustom.end):null,
-       longWindow=Boolean(customIndices)||chartDays==="max"||chartDays.endsWith("y"),
-       windowSessions=longWindow?[]:archivedSessions.slice(-Number(chartDays)),
-       start=customIndices?marketChartDate(navDays[customIndices[0]]):longWindow?longWindowStart(chartDays,cutoff,raw):windowSessions.length?marketChartDate(windowSessions[0]):cutoff-(chartDays-1)*86400000,
-       end=customIndices?marketChartDate(navDays[customIndices[1]]):cutoff;
+       primaryEnd=!techSettings.curveMode&&navDays.length?marketChartDate(navDays.at(-1)):cutoff,
+       presetLong=chartDays==="max"||chartDays.endsWith("y"),
+       // Daily shortcuts retain calendar/trading-day meaning for low-frequency series.
+       windowSessions=presetLong?[]:archivedSessions.filter(d=>marketChartDate(d)<=primaryEnd).slice(-Number(chartDays)),
+       presetStart=chartDays==="max"&&navDays.length?marketChartDate(navDays[0]):presetLong?longWindowStart(chartDays,primaryEnd,raw):windowSessions.length?marketChartDate(windowSessions[0]):primaryEnd-(Number(chartDays)-1)*86400000,
+       resolved=rangeResolve(navDays,presetStart,primaryEnd,rangeCustom),
+       customIndices=resolved.custom&&!techSettings.curveMode,
+       longWindow=customIndices||presetLong,
+       start=techSettings.curveMode?presetStart:resolved.start,
+       end=techSettings.curveMode?primaryEnd:resolved.end;
+ if(rangeCustom&&!techSettings.curveMode&&navDays.length&&!resolved.custom){rangeCustom=null;document.querySelectorAll("[data-window]").forEach(b=>b.classList.toggle("active",b.dataset.window===chartDays))}
  const TOP=35,BOTTOM=151,LEFT=38,RIGHT=758;
  // Each Monday immediately follows the preceding Friday: draw on weekday slots.
  // This affects presentation only; all original source observations remain stored.
@@ -2330,7 +2346,7 @@ function showHistory(){
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
  chartContext={start,end,series,dates:[...new Set([...uniqueDays,...technicalStack.sessionScale.days])].sort(),x:X,timelineDays,technicalStack};
  const counts=series.map(s=>s.label+":"+s.rows.length).join("｜");
- note.textContent="顯示範圍："+(customIndices?"自訂區間":longWindow?(chartDays==="max"?"Max 全部歷史":"最近 "+chartWindows[chartDays]):"最近 "+chartDays+" 個已收盤台股交易日")+"（"+(longWindow?new Date(start).toISOString().slice(0,10):windowSessions[0]||"—")+" 至 "+(longWindow?new Date(end).toISOString().slice(0,10):windowSessions.at(-1)||"—")+"）；盤中暫定 K 線可能另顯示當日。外資買賣超及外資累積買賣超均採用 market-history.json 的逐日資料。外資累積值以 2025/11/20 收盤為零，切換圖表區間時沿用同一基準。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
+ note.textContent="顯示範圍："+(customIndices?"自訂區間":longWindow?(chartDays==="max"?"Max 全部歷史":"最近 "+chartWindows[chartDays]):"最近 "+chartDays+" 個已收盤台股交易日")+"（"+new Date(start).toISOString().slice(0,10)+" 至 "+new Date(end).toISOString().slice(0,10)+"）；盤中暫定 K 線可能另顯示當日。外資買賣超及外資累積買賣超均採用 market-history.json 的逐日資料。外資累積值以 2025/11/20 收盤為零，切換圖表區間時沿用同一基準。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
  if(technicalStack.curveMode)ustCurveSelect(ustCursor,host);
  if(chartContext.dates.length)syncChartCursor(chartCursorDate||chartContext.dates.at(-1));
  else{$("crossCursorDate").textContent="無可比較日期";$("crossCursorCoverage").textContent="等待歷史資料"}
