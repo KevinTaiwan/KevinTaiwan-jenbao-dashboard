@@ -3,15 +3,15 @@
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "fedwatch-history.json": "751af2131a196f62abdf323a94e85803a9d930a6adbdf85cbc331447f54272c2",
     "index-ohlc-history.json": "3602e3cb17c7516675741a96c7ba4d8424877cf104e05d02dd1da2088a684d17",
-    "index.html": "2b45c78ba041164aacfc0ee0e89c8d542a205e1c236552a4ebd6c9ef6c1c45b9",
+    "index.html": "6ebde0f12a8867669244ae650b5b3af65c02aab0c3570520b520e0ec2ad85ce7",
     "intraday-market.json": "91ce9cc85034e4e294ca96a6dfb476471c1bc3dfb732ccc33a44e060a4c1d312",
     "market-center-history.json": "951926668bf73ef5cd64b0be7d69cc22f119877bb5662cd64d609ba7a171a287",
     "market-data.json": "0c36ae47b8b94f2f45cf487db4128a27c6a1714c1f057aa0d5f57f9cdb6ebd29",
     "market-history.json": "3e40e39990f3886fcee145c246107ddec250c6e511bc7c4eda8e4dd4c72f51bc"
   },
-  "publicFingerprint": "b5607629455f1dec3008618d8996296f3f7f33dc325968d1ca7e83c366df8e77",
+  "publicFingerprint": "cfa2ff009c1e6ab68ce75dcc458a30e06b03ee449b96230c5baf8c65ffed396a",
   "schemaVersion": 1,
-  "workflowRunId": 45921841069,
-  "sourceCommit": "8dde28fafc780d7b0e71ffcd2cf0b68960d4ef98",
-  "deployedAt": "2026-11-27T01:19:31.398161+00:00"
+  "workflowRunId": 45923978544,
+  "sourceCommit": "221cfb85a44341b5c0f6eb46696a5707db3ea6e0",
+  "deployedAt": "2026-11-27T01:42:05.043783+00:00"
 }
