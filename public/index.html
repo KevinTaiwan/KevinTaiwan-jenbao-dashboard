@@ -697,18 +697,27 @@ async function directCnyesTaiwanQuote(){
  if(!quote)throw Error("鉅亨尚無本交易日有效報價");
  return quote;
 }
+const liveSourceErrors={taiex:"",sp500:""};
 async function directIndexQuote(source){
+ const failures=[],candidates=[];
+ const accept=q=>{if(!q)throw Error("無當日有效行情");candidates.push(q);return q.quoteAgeMinutes<=10||marketSessionState(source)!=="trading"};
+ try{
  if(source==="taiex"){
-  try{return await directCnyesTaiwanQuote()}catch(e){/* Yahoo fallback */}
+  try{const q=await directCnyesTaiwanQuote();if(accept(q))return q}catch(e){failures.push("鉅亨："+String(e.message||e).slice(0,90))}
  }
  const code=source==="taiex"?"%5ETWII":"%5EGSPC";
- const url="https://query1.finance.yahoo.com/v8/finance/chart/"+code+
-     "?interval=1m&range=1d&includePrePost=false";
- const result=await fetchPublicMarketUrl(url);
- const market=parseYahooDayQuote(result.json,source);
- if(!market)throw Error("報價服務未提供本交易日有效資料");
- market.source+="（"+result.source+"）";
- return market;
+ for(const host of ["query1.finance.yahoo.com","query2.finance.yahoo.com"]){
+  try{
+   const result=await fetchPublicMarketUrl("https://"+host+"/v8/finance/chart/"+code+"?interval=1m&range=1d&includePrePost=false");
+   const market=parseYahooDayQuote(result.json,source);
+   if(!market)throw Error("未提供本交易日有效資料");
+   market.source+="（"+host+"；"+result.source+"）";
+   if(accept(market))return market;
+  }catch(e){failures.push(host+"："+String(e.message||e).slice(0,90))}
+ }
+ if(candidates.length)return candidates.sort((a,b)=>Date.parse(b.latest.lastCandleTime)-Date.parse(a.latest.lastCandleTime))[0];
+ throw Error(failures.join("｜")||"尚無當日行情");
+ }finally{liveSourceErrors[source]=failures.join("｜")}
 }
 function rocReportDate(v){
  const m=String(v||"").match(/^(\d{2,3})\/(\d{1,2})\/(\d{1,2})$/);
@@ -1861,6 +1870,9 @@ function updateTechnicalFreshness(){
   const archived=(techOhlcCache[key]||[]).at(-1)?.date;
   if(!archived)continue;
   const pending=provisionalDailyCandle(key);
+  const currentDay=marketLocalDay(key);
+  if(marketSessionState(key)==="trading"&&archived!==currentDay&&pending?.date!==currentDay)
+   warnings.push(label+"：交易時段尚無當日 "+currentDay+" 有效 K 線；最後行情 "+(intradayMarketData?.markets?.[key]?.latest?.lastCandleTime||"無")+"；"+(liveSourceErrors[key]||"等待行情來源"));
   let evidence=pending?.date||null;
   if(key==="taiex"&&Array.isArray(marketHistoryData?.rows)){
    const latest=marketHistoryData.rows.filter(r=>r&&/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&
