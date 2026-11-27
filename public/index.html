@@ -534,6 +534,24 @@ body.technical-fullscreen-active{overflow:hidden!important}
 .technical-stack-sidebar [data-ust-reset]{font-size:11px;padding:5px 7px;border:1px solid #bac9d6;border-radius:5px;color:#26394b;background:#fff}
 [data-ust-svg]{touch-action:pan-y}
 
+
+/* Date-only control: no additional technical chart. */
+.technical-range-nav{display:flex;flex-direction:column;gap:2px;margin:2px 9% 3px 12%;min-width:0;color:#43556a;user-select:none}
+.technical-range-top{display:flex;justify-content:space-between;gap:6px;font-size:10px;line-height:1.2}
+[data-range-caption]{font-variant-numeric:tabular-nums;font-weight:600}
+.technical-range-track{position:relative;height:23px;margin:0 14px;background:#e9edf0;border:1px solid #cbd4dc;border-radius:3px;touch-action:none;cursor:pointer}
+[data-range-selected]{position:absolute;top:0;bottom:0;background:white;border-top:1px solid #8da9be;border-bottom:1px solid #8da9be;box-sizing:border-box;cursor:grab;touch-action:none}
+.technical-range-track [data-range-grip]{position:absolute;top:-1px;bottom:-1px;z-index:2;width:14px;min-width:0;padding:0;border:1px solid #98a9b9;background:#f9fbfc;color:#74879a;border-radius:3px;font:11px/1 sans-serif;cursor:ew-resize;touch-action:none;display:flex;align-items:center;justify-content:center}
+[data-range-grip="left"]{transform:translateX(-100%)}
+[data-range-grip="right"]{transform:none}
+[data-range-grip]:focus-visible,[data-range-selected]:focus-visible{outline:2px solid #1178a1;outline-offset:1px}
+.technical-range-ticks{position:relative;height:12px;margin:0 14px;font-size:9px;color:#637588;white-space:nowrap}
+.technical-range-ticks span{position:absolute;transform:translateX(-50%)}
+.technical-range-ticks span:first-child{transform:none}
+.technical-range-ticks span:last-child{transform:translateX(-100%)}
+.technical-stack-fullscreen .technical-range-nav{order:1;flex:0 0 auto!important;margin-top:0;margin-bottom:0}
+@media(max-width:640px){.technical-range-nav{margin-left:10%;margin-right:8%}.technical-range-track{height:29px;margin:0 20px}.technical-range-track [data-range-grip]{width:20px}.technical-range-ticks{margin:0 20px;font-size:8px}.technical-range-ticks span:nth-child(even):not(:last-child){display:none}}
+
 </style></head>
 <body>
 <header><div class="topbar">
@@ -1828,6 +1846,92 @@ function syncChartCursor(date,pointerX=null){
 
 }
 const chartWindows={"20":"20日","60":"60日","120":"120日","240":"240日","3y":"3年","5y":"5年","10y":"10年",max:"Max"};
+
+let rangeCustom=null,rangeModel=null,rangeDrag=null;
+const rangeClamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function rangeFind(days,date,upper=false){
+ let l=0,h=days.length;while(l<h){const m=(l+h)>>>1;if(days[m]<date||(upper&&days[m]===date))l=m+1;else h=m}
+ return rangeClamp(upper?l-1:l,0,Math.max(0,days.length-1));
+}
+function rangeIndices(days,start,end){
+ if(!days.length)return [0,0];
+ let a=rangeFind(days,start),b=rangeFind(days,end,true);
+ if(b<a)b=a;if(days.length>1&&a===b){if(b<days.length-1)b++;else a--}return [a,b];
+}
+function rangeShift(a,b,d,n,mode){
+ if(n<=1)return [0,0];
+ if(mode==="left")return [rangeClamp(a+d,0,b-1),b];
+ if(mode==="right")return [a,rangeClamp(b+d,a+1,n-1)];
+ d=rangeClamp(d,-a,n-1-b);return [a+d,b+d];
+}
+function rangeDates(raw,cutoff){
+ const keys=[techSettings.top,techSettings.middle,techSettings.right].filter(k=>k!=="off");
+ return [...new Set([...raw,...techOhlcRecords("taiexK"),...techOhlcRecords("sp500K"),...keys.flatMap(k=>techObservations(raw,k))].map(r=>r?.date).filter(d=>typeof d==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&marketChartDate(d)<=cutoff))].sort();
+}
+const rangePct=(i,n)=>n<=1?0:100*i/(n-1);
+const rangeCaption=(days,a,b)=>marketViewDate(days[a])+" — "+marketViewDate(days[b]);
+function rangeNavigator(days,start,end){
+ if(days.length<2){rangeModel=null;return ""}
+ const [a,b]=rangeIndices(days,new Date(start).toISOString().slice(0,10),new Date(end).toISOString().slice(0,10));
+ rangeModel={days,a,b};const pct=i=>rangePct(i,days.length),lo=pct(a),hi=pct(b);
+ const marks=[0,.2,.4,.6,.8,1].map(k=>{const i=Math.round(k*(days.length-1));return '<span style="left:'+pct(i)+'%">'+esc(days[i].slice(0,7).replace("-","/"))+'</span>'}).join("");
+ const grip=(mode,i)=>'<button type="button" data-range-grip="'+mode+'" role="slider" aria-label="'+(mode==="left"?"可視起始日期":"可視結束日期")+'" aria-valuemin="0" aria-valuemax="'+(days.length-1)+'" aria-valuenow="'+i+'" aria-valuetext="'+days[i]+'" style="left:'+pct(i)+'%" title="'+days[i]+'">Ⅱ</button>';
+ return '<div class="technical-range-nav" aria-label="日期區間導航"><div class="technical-range-top"><span>'+(rangeCustom?"自訂區間":"可視區間")+'</span><span data-range-caption>'+rangeCaption(days,a,b)+'</span></div><div class="technical-range-track" data-range-track><div data-range-selected role="slider" tabindex="0" aria-label="平移可視區間" aria-valuemin="0" aria-valuemax="'+(days.length-1)+'" aria-valuenow="'+a+'" aria-valuetext="'+rangeCaption(days,a,b)+'" style="left:'+lo+'%;width:'+(hi-lo)+'%"></div>'+grip("left",a)+grip("right",b)+'</div><div class="technical-range-ticks">'+marks+'</div></div>';
+}
+function rangePreview(a,b,days){
+ const host=$("marketCrossCharts"),track=host.querySelector("[data-range-track]");if(!track)return;
+ const left=track.querySelector('[data-range-grip="left"]'),right=track.querySelector('[data-range-grip="right"]'),sel=track.querySelector("[data-range-selected]"),p=i=>rangePct(i,days.length);
+ for(const [el,i] of [[left,a],[right,b]])if(el){el.style.left=p(i)+"%";el.title=days[i];el.setAttribute("aria-valuenow",i);el.setAttribute("aria-valuetext",days[i])}
+ if(sel){sel.style.left=p(a)+"%";sel.style.width=(p(b)-p(a))+"%";sel.setAttribute("aria-valuenow",a);sel.setAttribute("aria-valuetext",rangeCaption(days,a,b))}
+ const cap=host.querySelector("[data-range-caption]");if(cap)cap.textContent=rangeCaption(days,a,b);
+}
+function rangeCommit(days,a,b){
+ if(!days[a]||!days[b])return;
+ rangeCustom={start:days[a],end:days[b]};
+ document.querySelectorAll("[data-window]").forEach(x=>x.classList.remove("active"));showHistory();
+}
+function rangePreset(n){
+ if(!Object.hasOwn(chartWindows,n))return;
+ rangeCustom=null;chartDays=n;
+ document.querySelectorAll("[data-window]").forEach(b=>b.classList.toggle("active",b.dataset.window===n));showHistory();
+}
+function rangePointerIndex(x,rect,n){return rangeClamp(Math.round((x-rect.left)/Math.max(1,rect.width)*(n-1)),0,n-1)}
+function installRangeEvents(host){
+ host.addEventListener("pointerdown",e=>{
+  const track=e.target.closest?.("[data-range-track]"),m=rangeModel;
+  if(!track||!m||techSettings.curveMode||e.pointerType==="mouse"&&e.button!==0)return;
+  const rect=track.getBoundingClientRect(),n=m.days.length,at=rangePointerIndex(e.clientX,rect,n),grip=e.target.closest?.("[data-range-grip]"),inside=e.target.closest?.("[data-range-selected]");
+  let mode=grip?.dataset.rangeGrip||"move",a=m.a,b=m.b;
+  if(!grip&&!inside)[a,b]=rangeShift(a,b,at-Math.round((a+b)/2),n,"move");
+  rangeDrag={id:e.pointerId,rect,days:m.days,a,b,at,mode,next:[a,b],original:[m.a,m.b]};
+  try{host.setPointerCapture(e.pointerId)}catch(err){}
+  rangePreview(a,b,m.days);e.preventDefault();e.stopImmediatePropagation();
+ });
+ host.addEventListener("pointermove",e=>{
+  const d=rangeDrag;if(!d||d.id!==e.pointerId)return;
+  d.next=rangeShift(d.a,d.b,rangePointerIndex(e.clientX,d.rect,d.days.length)-d.at,d.days.length,d.mode);
+  rangePreview(...d.next,d.days);e.preventDefault();e.stopImmediatePropagation();
+ });
+ const finish=(e,cancel=false)=>{
+  const d=rangeDrag;if(!d||d.id!==e.pointerId)return;
+  rangeDrag=null;try{host.releasePointerCapture(e.pointerId)}catch(err){}
+  if(!cancel&&(d.next[0]!==d.original[0]||d.next[1]!==d.original[1]))rangeCommit(d.days,...d.next);
+  else rangePreview(...d.original,d.days);
+  e.preventDefault();e.stopImmediatePropagation();
+ };
+ host.addEventListener("pointerup",e=>finish(e));host.addEventListener("pointercancel",e=>finish(e,true));
+ host.addEventListener("lostpointercapture",e=>{if(rangeDrag?.id===e.pointerId)finish(e,true)});
+ host.addEventListener("keydown",e=>{
+  const grip=e.target.closest?.("[data-range-grip]"),sel=e.target.closest?.("[data-range-selected]"),m=rangeModel;
+  if(!m||(!grip&&!sel)||!["ArrowLeft","ArrowRight","Home","End","PageUp","PageDown"].includes(e.key))return;
+  const mode=grip?.dataset.rangeGrip||"move",step=e.shiftKey?20:1;
+  const d=e.key==="Home"?-m.days.length:e.key==="End"?m.days.length:e.key==="PageUp"?-20:e.key==="PageDown"?20:e.key==="ArrowLeft"?-step:step;
+  const next=rangeShift(m.a,m.b,d,m.days.length,mode);
+  e.preventDefault();e.stopImmediatePropagation();rangeCommit(m.days,...next);
+  host.querySelector(grip?'[data-range-grip="'+mode+'"]':"[data-range-selected]")?.focus({preventScroll:true});
+ });
+}
+
 function longWindowStart(key,cutoff,raw){
  if(key==="max"){
   let earliest=cutoff;
@@ -1928,10 +2032,12 @@ function showHistory(){
        cutoff=Math.min(Date.now(),Math.max(reference,lastPublished,latestIndexDate,...currentSessions)),
        archivedSessions=[...new Set(unifiedTaiex.map(r=>r.date))]
           .filter(day=>marketChartDate(day)<=cutoff).sort(),
-       longWindow=chartDays==="max"||chartDays.endsWith("y"),
+       navDays=rangeDates(raw,cutoff),
+       customIndices=rangeCustom&&navDays.length>=2?rangeIndices(navDays,rangeCustom.start,rangeCustom.end):null,
+       longWindow=Boolean(customIndices)||chartDays==="max"||chartDays.endsWith("y"),
        windowSessions=longWindow?[]:archivedSessions.slice(-Number(chartDays)),
-       // Count completed TAIEX trading sessions, not calendar days. Provisional K-lines may extend the right edge.
-       start=longWindow?longWindowStart(chartDays,cutoff,raw):windowSessions.length?marketChartDate(windowSessions[0]):cutoff-(chartDays-1)*86400000,end=cutoff;
+       start=customIndices?marketChartDate(navDays[customIndices[0]]):longWindow?longWindowStart(chartDays,cutoff,raw):windowSessions.length?marketChartDate(windowSessions[0]):cutoff-(chartDays-1)*86400000,
+       end=customIndices?marketChartDate(navDays[customIndices[1]]):cutoff;
  const TOP=35,BOTTOM=151,LEFT=38,RIGHT=758;
  // Each Monday immediately follows the preceding Friday: draw on weekday slots.
  // This affects presentation only; all original source observations remain stored.
@@ -2019,7 +2125,7 @@ function showHistory(){
  };
 
  const technicalStack=(()=>{
-   if(techSettings.curveMode)return ustCurveStack(techSettings);
+   if(techSettings.curveMode){rangeModel=null;return ustCurveStack(techSettings)}
   const c=techSettings,bottomKey=c.bottomSource==="middle"?c.middle:c.bottomSource==="right"?(c.top==="turnoverWithDayTrade"?"dayTradeTurnoverSharePct":c.right):c.top;
   const fullTop=techObservations(raw,c.top),fullBottom=bottomKey===c.top?fullTop:techObservations(raw,bottomKey);
   const paired=c.right!=="off"&&c.top!=="turnoverWithDayTrade";
@@ -2218,13 +2324,13 @@ function showHistory(){
    return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+source+(lag?' <strong style="color:#8a4b00">'+esc(lag)+'</strong>':"")+'</small>';
   }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
-  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(chartDays===n?"active":"")+'" aria-pressed="'+(chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot tech-osc-plot">'+svg+techOscControls(c.oscillator,oscSetting,100*((panel[1].end+panel[2].start)/2)/svgBottom)+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel};
+  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head"><div><strong>三層技術分析圖｜上・中・下</strong><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div><div class="technical-stack-top-actions">'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍">'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(!rangeCustom&&chartDays===n?"active":"")+'" aria-pressed="'+(!rangeCustom&&chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出全螢幕":"⛶ 全螢幕") +'</button></div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot tech-osc-plot">'+svg+techOscControls(c.oscillator,oscSetting,100*((panel[1].end+panel[2].start)/2)/svgBottom)+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+overlayButtons+reportMenu+centerNote+'</aside></div>'+rangeNavigator(navDays,start,end)+readouts+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
  chartContext={start,end,series,dates:[...new Set([...uniqueDays,...technicalStack.sessionScale.days])].sort(),x:X,timelineDays,technicalStack};
  const counts=series.map(s=>s.label+":"+s.rows.length).join("｜");
- note.textContent="顯示範圍："+(longWindow?(chartDays==="max"?"Max 全部歷史":"最近 "+chartWindows[chartDays]):"最近 "+chartDays+" 個已收盤台股交易日")+"（"+(longWindow?new Date(start).toISOString().slice(0,10):windowSessions[0]||"—")+" 至 "+(longWindow?new Date(end).toISOString().slice(0,10):windowSessions.at(-1)||"—")+"）；盤中暫定 K 線可能另顯示當日。外資買賣超及外資累積買賣超均採用 market-history.json 的逐日資料。外資累積值以 2025/11/20 收盤為零，切換圖表區間時沿用同一基準。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
+ note.textContent="顯示範圍："+(customIndices?"自訂區間":longWindow?(chartDays==="max"?"Max 全部歷史":"最近 "+chartWindows[chartDays]):"最近 "+chartDays+" 個已收盤台股交易日")+"（"+(longWindow?new Date(start).toISOString().slice(0,10):windowSessions[0]||"—")+" 至 "+(longWindow?new Date(end).toISOString().slice(0,10):windowSessions.at(-1)||"—")+"）；盤中暫定 K 線可能另顯示當日。外資買賣超及外資累積買賣超均採用 market-history.json 的逐日資料。外資累積值以 2025/11/20 收盤為零，切換圖表區間時沿用同一基準。個別指標可獨立開關 MA5／MA20／MA60／MA240；各均線依最近 5／20／60／240 筆有效觀測計算，無足夠資料時顯示「—」、不造值。Y 軸恢復 2026/11/18 原始比例：SVG 高度 190，繪圖跨度 116；指標各自顯示原始單位，不修改原始資料，圖表期間也不刪除永久歷史母檔。"+(chartMode==="indexed"?" 個別原始值可切換起點=100，買賣超及利差維持原單位。":"")+(marketHistoryError?" 歷史資料提示："+marketHistoryError:"");
  if(technicalStack.curveMode)ustCurveSelect(ustCursor,host);
  if(chartContext.dates.length)syncChartCursor(chartCursorDate||chartContext.dates.at(-1));
  else{$("crossCursorDate").textContent="無可比較日期";$("crossCursorCoverage").textContent="等待歷史資料"}
@@ -2290,6 +2396,7 @@ function selectCursorAtPointer(evt,svg){
  syncChartCursor(date,isTech?svgX:null);
 }
 const crossHost=$("marketCrossCharts");
+installRangeEvents(crossHost);
 function clearChartDropTarget(){
  crossHost.querySelectorAll(".cross-row").forEach(row=>{
   row.classList.remove("cross-drop-before","cross-drop-after","cross-being-dragged");
@@ -2358,9 +2465,7 @@ crossHost.addEventListener("click",event=>{
  if(win){
   const n=win.dataset.techWindow;
   if(Object.hasOwn(chartWindows,n)){
-   chartDays=n;
-   document.querySelectorAll("[data-window]").forEach(b=>b.classList.toggle("active",b.dataset.window===n));
-   showHistory();
+   rangePreset(n);
   }
   event.preventDefault();return;
  }
@@ -2448,7 +2553,7 @@ crossHost.addEventListener("keydown",event=>{
  if(next){event.preventDefault();syncChartCursor(next)}
 });
 document.querySelectorAll("[data-window]").forEach(btn=>btn.addEventListener("click",()=>{
- chartDays=btn.dataset.window;document.querySelectorAll("[data-window]").forEach(b=>b.classList.toggle("active",b===btn));showHistory()
+ rangePreset(btn.dataset.window)
 }));
 document.querySelectorAll("[data-mode]").forEach(btn=>btn.addEventListener("click",()=>{
  chartMode=btn.dataset.mode;document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("active",b===btn));showHistory()
