@@ -76,9 +76,9 @@ def normalize(raw,day,tz,opens,closes):
             continue
     return [bytime[k] for k in sorted(bytime)]
 
-def yahoo(m,local):
+def yahoo(m,local,host="query1.finance.yahoo.com"):
     symbol=urllib.parse.quote(m["symbol"],safe="")
-    url=f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=5m&range=2d&includePrePost=false"
+    url=f"https://{host}/v8/finance/chart/{symbol}?interval=5m&range=2d&includePrePost=false"
     root=read_json(url)["chart"]
     if root.get("error"):raise ValueError("Yahoo chart error "+str(root["error"]))
     result=root["result"][0]
@@ -94,6 +94,57 @@ def yahoo(m,local):
         raw.append(candle)
     # Index 'volume' has no trustworthy TWD turnover monetary unit: exclude.
     return normalize(raw,local.date().isoformat(),m["tz"],m["open"],m["close"]),int(result.get("meta",{}).get("exchangeDataDelayedBy") or 0)
+
+def cnyes_taiex(m,local):
+    """Same public index chart source as Dashboard; use actual 5m bars only."""
+    start=int(dt.datetime.combine(local.date(),dt.time.min,tzinfo=TPE).timestamp())
+    params=urllib.parse.urlencode({"symbol":"TWS:TSE01:INDEX","resolution":"5",
+                                  "from":start,"to":int(local.timestamp())})
+    doc=read_json("https://ws.api.cnyes.com/ws/api/v1/charting/history?"+params)
+    data=doc.get("data") or {}
+    if not isinstance(data,dict):raise ValueError("invalid Cnyes chart response")
+    raw=[]
+    for i,t in enumerate(data.get("t") or []):
+        if number(t) is None:continue
+        b={"time":dt.datetime.fromtimestamp(float(t),UTC).isoformat()}
+        for field,col in (("open","o"),("high","h"),("low","l"),("close","c")):
+            a=data.get(col) or []
+            b[field]=a[i] if i<len(a) else None
+        raw.append(b)
+    return normalize(raw,local.date().isoformat(),m["tz"],m["open"],m["close"]),None
+
+def completed_session_rows(rows,now,m,local):
+    """Do not use a partial bar, stale date or incomplete opening OHLC."""
+    result=[b for b in rows if dt.datetime.fromisoformat(b["time"]).astimezone(UTC)
+            +dt.timedelta(minutes=5)<=now]
+    if not result:return []
+    first=dt.datetime.fromisoformat(result[0]["time"]).astimezone(m["tz"])
+    last=dt.datetime.fromisoformat(result[-1]["time"]).astimezone(UTC)
+    if first.date()!=local.date() or first.time()!=m["open"]:return []
+    # A missing intermediate 5m bar would make the daily high/low unreliable.
+    if any((dt.datetime.fromisoformat(b["time"])-dt.datetime.fromisoformat(a["time"])).total_seconds()!=300
+           for a,b in zip(result,result[1:])):return []
+    if not 0<=(now-last).total_seconds()<=55*60:return []
+    return result
+
+def select_price_source(name,m,local,now):
+    sources=[("Yahoo query1",lambda:yahoo(m,local,"query1.finance.yahoo.com")),
+             ("Yahoo query2",lambda:yahoo(m,local,"query2.finance.yahoo.com"))]
+    if name=="taiex":sources.append(("Cnyes",lambda:cnyes_taiex(m,local)))
+    best=([],None,None)
+    for label,fetch in sources:
+        try:
+            raw,delay=fetch()
+            rows=completed_session_rows(raw,now,m,local)
+            print(name,label,"same-session raw",len(raw),"eligible",len(rows),
+                  "last",rows[-1]["time"] if rows else None,flush=True)
+            if rows and (not best[0] or rows[-1]["time"]>best[0][-1]["time"]):
+                best=(rows,delay,label+" 5m index quote (delayed/indicative)")
+            # No additional source needed when the latest completed bar is fresh.
+            if rows and (now-dt.datetime.fromisoformat(rows[-1]["time"]).astimezone(UTC)).total_seconds()<600:break
+        except Exception as e:
+            print(name,label,"unavailable:",str(e)[:180],flush=True)
+    return best
 
 def verified_turnover(local,m):
     """Optional authenticated provider or trusted adapter, requiring explicit TWD currency.
@@ -186,16 +237,12 @@ def main():
     for name,m in MARKETS.items():
         active,local=session(m,now)
         if not active:continue
-        try:
-            rows,delay=yahoo(m,local)
-            mode="Yahoo Finance 5m index quote (delayed/indicative)"
-        except Exception as ex:
-            rows=[];delay=None
-            print(name+" Yahoo unavailable:",str(ex)[:180])
+        rows,delay,mode=select_price_source(name,m,local,now)
         if name=="taiex":
             try:
                 fr,fmode=verified_turnover(local,m)
-                if fr:
+                fr=completed_session_rows(fr,now,m,local)
+                if fr and (not rows or fr[-1]["time"]>=rows[-1]["time"]):
                     rows=fr
                     mode="Verified index 5m OHLC / TWD monetary turnover"
                     delay=0
@@ -215,6 +262,10 @@ def main():
         age=(now-last).total_seconds()/60
         if age>55 or age<-10:
             print(name,"stale last bar age(minutes):",round(age,1))
+            continue
+        prior=fresh.get(name,{})
+        if prior.get("date")==local.date().isoformat() and prior.get("latest",{}).get("lastCandleTime","")>rows[-1]["time"]:
+            print(name,"older candidate rejected; preserving newer same-day snapshot",flush=True)
             continue
         fresh[name]=summarise(rows,now,name,mode,delay)
         fresh[name]["quoteAgeMinutes"]=round(age,1)
