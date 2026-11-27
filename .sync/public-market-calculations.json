@@ -94,12 +94,12 @@
       "sha256": "3602e3cb17c7516675741a96c7ba4d8424877cf104e05d02dd1da2088a684d17"
     },
     "market-center-history.json": {
-      "gitBlobSha": "68f35c18ab369b85c516ebeb3eaad0da5c6bb7ae",
-      "sha256": "de81bf434e7d72099c2abd1c7d175cfdd4cdb44ad3470380f47c4ea228e9459f"
+      "gitBlobSha": "41ac4af09b1d5e194967f5b2db870db1a8bf693a",
+      "sha256": "ba695a725b06670c40020444a946a8c9ae5e5e2a9a7e48fc71da6bd33e88bdc5"
     },
     "market-history.json": {
-      "gitBlobSha": "b06528be85827978484ec17f623cf2d715dae6bf",
-      "sha256": "acfe6789c2d4e1df13612fccf64da5e3591161069536dac1eb10d1e4c7cfb89a"
+      "gitBlobSha": "e91fcec2b36bdeefc56687b75540fd96e126ecb4",
+      "sha256": "d9bfaf3038494bbde2fda96d5f65a4200d929859a7298fccd2bb84a6c5931af9"
     }
   },
   "method": {
@@ -112,16 +112,16 @@
   "methodVersion": "V13.2",
   "ratios": {
     "hyOas": {
-      "asOf": "2026-11-24",
+      "asOf": "2026-11-26",
       "baselineCount": 20,
-      "baselineEnd": "2026-11-23",
-      "baselineMean": 3.3795,
-      "baselineStart": "2026-10-27",
-      "latest": 3.72,
-      "latestMinusPrior20Mean": 0.3405,
-      "latestOverPrior20Mean": 1.10075455,
-      "previousDate": "2026-11-23",
-      "previousValue": 3.63,
+      "baselineEnd": "2026-11-25",
+      "baselineMean": 3.438,
+      "baselineStart": "2026-10-29",
+      "latest": 3.77,
+      "latestMinusPrior20Mean": 0.332,
+      "latestOverPrior20Mean": 1.09656777,
+      "previousDate": "2026-11-25",
+      "previousValue": 3.77,
       "status": "computed_from_archive",
       "unit": "percentage_points"
     },
@@ -140,16 +140,16 @@
       "unit": "index_points"
     },
     "singleBOas": {
-      "asOf": "2026-11-24",
+      "asOf": "2026-11-26",
       "baselineCount": 20,
-      "baselineEnd": "2026-11-23",
-      "baselineMean": 3.571,
-      "baselineStart": "2026-10-27",
-      "latest": 4.05,
-      "latestMinusPrior20Mean": 0.479,
-      "latestOverPrior20Mean": 1.1341361,
-      "previousDate": "2026-11-23",
-      "previousValue": 3.93,
+      "baselineEnd": "2026-11-25",
+      "baselineMean": 3.66,
+      "baselineStart": "2026-10-29",
+      "latest": 4.13,
+      "latestMinusPrior20Mean": 0.47,
+      "latestOverPrior20Mean": 1.1284153,
+      "previousDate": "2026-11-25",
+      "previousValue": 4.13,
       "status": "computed_from_archive",
       "unit": "percentage_points"
     },
