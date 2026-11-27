@@ -1,5 +1,9 @@
 name: Prepare verifiable ChatGPT Library JSON transfer
 on:
+  workflow_run:
+    workflows: ["Deploy Personal CIO Desk - Public Market Only"]
+    types: [completed]
+    branches: [main]
   push:
     branches: [main]
     paths:
@@ -18,9 +22,12 @@ concurrency:
   cancel-in-progress: false
 jobs:
   package:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - name: Decide whether a new artifact is needed
         id: gate
         env:
@@ -53,7 +60,7 @@ jobs:
               fresh=datetime.timedelta(0)<=age<datetime.timedelta(days=7)
             except (TypeError, ValueError): pass
           # Always rebuild after public-data pushes or explicit manual dispatch.
-          rebuild=os.environ["EVENT_NAME"]!="schedule" or not (same and fresh)
+          rebuild=os.environ["EVENT_NAME"] in ("push","workflow_dispatch") or not (same and fresh)
           with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as out:
             out.write("package="+str(rebuild).lower()+"\n")
           print(json.dumps({"decision":"PACKAGE" if rebuild else "SKIP_NO_CHANGE",
@@ -100,9 +107,9 @@ jobs:
         env:
           RUN_ID: ${{ github.run_id }}
           ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
-          HEAD_SHA: ${{ github.sha }}
         run: |
           mkdir -p .sync
+          export HEAD_SHA="$(git rev-parse HEAD)"
           python3 - <<'PY'
           import os,json,datetime,pathlib
           manifest=json.loads(pathlib.Path("library-transfer/transfer-checksums.json").read_text(encoding="utf-8"))
@@ -117,12 +124,26 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .sync/library-transfer-artifact.json
-          git diff --cached --quiet || (git commit -m 'Record library JSON transfer artifact [skip ci]' && git pull --rebase origin main && git push)
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record library JSON transfer artifact [skip ci]'
+          # Do not publish a pointer to an artifact older than current public inputs.
+          # A new source generation is picked up by the existing hourly rescue.
+          git fetch origin main
+          python3 - <<'PY'
+          import hashlib,json,pathlib,subprocess
+          manifest=json.loads(pathlib.Path(".sync/library-transfer-artifact.json").read_text())
+          for name,want in manifest["sourceBlobFingerprints"].items():
+              actual=subprocess.check_output(["git","rev-parse","origin/main:public/"+name],text=True).strip()
+              if actual!=want:
+                  raise SystemExit("STALE_PACKAGE_INPUT "+name+"; retry on next existing trigger")
+          PY
+          git rebase origin/main
+          git push origin HEAD:main
 
   research_history:
     # Independent result: never blocks the existing market transfer job.
     needs: package
-    if: always() && !cancelled()
+    if: always() && !cancelled() && github.event_name != 'workflow_run'
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -194,7 +215,7 @@ jobs:
 
   treasury_history:
     needs: package
-    if: always() && !cancelled()
+    if: always() && !cancelled() && github.event_name != 'workflow_run'
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:
@@ -280,7 +301,7 @@ jobs:
 
   treasury_recent:
     needs: treasury_history
-    if: always() && !cancelled()
+    if: always() && !cancelled() && github.event_name != 'workflow_run'
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:
