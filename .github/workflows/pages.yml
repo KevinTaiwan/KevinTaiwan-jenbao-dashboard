@@ -55,6 +55,7 @@ jobs:
         run: |
           python3 -m py_compile scripts/refresh_market_history.py scripts/sync_market_snapshot.py
           python3 -m unittest discover -s scripts/tests -p 'test_v18_hourly.py'
+          python3 -m unittest discover -s scripts/tests -p 'test_public_news_stage.py'
       - name: Refresh public market-history from official and attributable sources
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || contains(github.event.head_commit.message, '[refresh-all]') || contains(github.event.head_commit.message, '[refresh-hourly]') || contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]')
         env:
