@@ -141,7 +141,7 @@ jobs:
           import json
           import math
           from datetime import date
-          allowed={'market-center-history.json','index.html','market-data.json','market-history.json','index-ohlc-history.json','intraday-market.json','fedwatch-history.json','.nojekyll'}
+          allowed={'market-center-history.json','index.html','market-data.json','market-history.json','index-ohlc-history.json','intraday-market.json','fedwatch-history.json','public-news-events.json','.nojekyll'}
           files={p.name for p in Path('public').rglob('*') if p.is_file()}
           if files-allowed:raise SystemExit('Unsafe unexpected public files: '+repr(files-allowed))
           # Only the exact reviewed empty placeholder is approved for publication.
@@ -155,6 +155,14 @@ jobs:
               fw=json.loads(raw)
               if fw.get('audience')!='public-market' or fw.get('records')!=[] or fw.get('coverage',{}).get('observedTradingDays')!=0:
                   raise SystemExit('Invalid FedWatch placeholder')
+          # R10: only the reviewed empty public feed is allowed initially.
+          # Nonempty releases require independent source/rights/schema review.
+          news_path=Path('public/public-news-events.json')
+          if not news_path.is_file():
+              raise SystemExit('Missing public news placeholder')
+          news=json.loads(news_path.read_text(encoding='utf-8'))
+          if news != {"schemaVersion":1,"audience":"public-market","status":"not_approved","records":[]}:
+              raise SystemExit('Public news release not independently approved')
           center_path=Path('public/market-center-history.json')
           if center_path.exists():
               series=json.loads(center_path.read_text(encoding='utf-8'))
