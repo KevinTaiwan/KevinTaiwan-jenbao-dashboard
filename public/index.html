@@ -590,6 +590,12 @@ body.technical-fullscreen-active{overflow:hidden!important}
 .technical-stack-news-btn{box-sizing:border-box;height:24px;padding:4px 6px;border:1px solid #d4b46e;border-radius:6px;background:#fff8e5;color:#795315;font-size:10px;white-space:nowrap;cursor:pointer;line-height:1.35}
 .technical-stack-news-btn[aria-pressed="false"]{color:#627080;background:#f4f8fc;border-color:#96acbd}
 .tech-news-marker{cursor:pointer}.tech-news-marker:focus-visible{outline:2px solid #9b741f}
+.tech-news-headline,.tech-news-guide{visibility:hidden;pointer-events:none}
+.tech-news-marker:hover .tech-news-headline,.tech-news-marker:focus-visible .tech-news-headline,
+.tech-news-marker:hover .tech-news-guide,.tech-news-marker:focus-visible .tech-news-guide{visibility:visible}
+.tech-news-marker:hover .tech-news-dot,.tech-news-marker:focus-visible .tech-news-dot{fill:#e0a32d;stroke:#795315}
+.technical-stack-svg [data-tech-point],.technical-stack-svg [data-tech-hline]{pointer-events:none}
+@media(hover:none){.tech-news-marker:hover:not(:focus-visible) .tech-news-headline,.tech-news-marker:hover:not(:focus-visible) .tech-news-guide{visibility:hidden}}
 .tech-news-readout{padding:3px 7px;border:1px solid #e3ce9b;background:#fffaf0;color:#684b19;font-size:11px;line-height:1.4;max-height:64px;overflow:auto;flex:0 0 auto}
 .tech-news-item{display:block}.tech-news-readout a{color:#795315;text-decoration:underline;font-weight:600}
 .tech-news-readout button{font-size:10px;padding:1px 5px;margin:2px;border:1px solid #d4b46e;background:white;border-radius:3px;color:#795315}
@@ -1833,22 +1839,25 @@ function techNewsMarkers(events,primary,secondary,keys,x,panel){
   }
   for(const [date,related] of aligned){if(!groups.has(date))groups.set(date,[]);groups.get(date).push({date,related,event:e})}
  }
- let markup="",last=[-Infinity,-Infinity];
+ let markup="";
  for(const [day,items] of [...groups].sort((a,b)=>a[0].localeCompare(b[0]))){
-  const px=x(day),tx=rangeClamp(px,91,705),lane=last.findIndex(v=>tx-v>=108);
-  if(lane>=0)last[lane]=tx;
-  const y=panel.start+15+Math.max(0,lane)*14;
-  const label=items[0].event.title+(items.length>1?" +"+(items.length-1):"");
-  const title=items.map(({event:e,related})=>marketCursorDate(e.date)+"｜"+e.title+"｜"+e.summary+"｜"+e.source+"｜圖上 "+marketCursorDate(day)+"｜"+related.map(techSeriesName).join(" / ")).join("；");
-  markup+='<g data-tech-news-date="'+day+'" tabindex="0" role="button" aria-label="'+esc(title)+'" class="tech-news-marker"><title>'+esc(title)+'</title><line x1="'+px+'" x2="'+px+'" y1="'+panel.start+'" y2="'+panel.end+'" stroke="#946e24" stroke-width=".7" opacity=".55" stroke-dasharray="3 4" pointer-events="none"/><circle cx="'+px+'" cy="'+(panel.start+5)+'" r="4" fill="#c58a24" stroke="white" stroke-width=".8"/><circle cx="'+px+'" cy="'+(panel.start+5)+'" r="8" fill="transparent"/>'+
-  (lane>=0?'<rect x="'+(tx-51)+'" y="'+(y-8)+'" width="102" height="13" rx="2" fill="#fff8e5" stroke="#d4b46e" stroke-width=".5"/><text x="'+tx+'" y="'+(y+1)+'" text-anchor="middle" fill="#795315" font-size="8.5">'+esc(label)+'</text>':'')+'</g>';
+  const px=x(day),cy=panel.start+5;
+  const headlines=items.map(({event:e})=>e.title);
+  const title=headlines.join("；");
+  const width=Math.min(320,Math.max(100,...headlines.map(t=>Array.from(t).length*10+18)));
+  const tx=rangeClamp(px-width/2,40,756-width),ty=cy+12,height=8+headlines.length*14;
+  const headlineText=headlines.map((t,i)=>'<text x="'+(tx+8)+'" y="'+(ty+13+i*14)+'" fill="#795315" font-size="10" font-weight="600">'+esc(t)+'</text>').join("");
+  markup+='<g data-tech-news-date="'+day+'" tabindex="0" role="button" aria-label="'+esc(marketCursorDate(day)+" "+title+"；按下查看新聞")+'" class="tech-news-marker">'+
+   '<line class="tech-news-guide" x1="'+px+'" x2="'+px+'" y1="'+panel.start+'" y2="'+panel.end+'" stroke="#946e24" stroke-width=".7" opacity=".55" stroke-dasharray="3 4" pointer-events="none"/>'+
+   '<circle class="tech-news-dot" cx="'+px+'" cy="'+cy+'" r="4" fill="#c58a24" stroke="white" stroke-width=".8"/><circle cx="'+px+'" cy="'+cy+'" r="8" fill="transparent"/>'+
+   '<g class="tech-news-headline" aria-hidden="true" pointer-events="none"><rect x="'+tx+'" y="'+ty+'" width="'+width+'" height="'+height+'" rx="3" fill="#fff8e5" stroke="#d4b46e" stroke-width=".7"/>'+headlineText+'</g></g>';
  }
  return {groups,markup}
 }
-function techShowNews(host,news,selected){
- const el=host.querySelector("[data-tech-news-readout]");if(!el||!news)return;
- const day=techNewsPinned||selected,items=news.groups.get(day)||[];
- const key=(techNewsPinned?"p:":"h:")+day;
+function techShowNews(host,news){
+ const el=host.querySelector("[data-tech-news-readout]");if(!el)return;
+ const day=techNewsPinned,items=day?(news?.groups.get(day)||[]):[];
+ const key=items.length?"p:"+day:"closed";
  if(el.dataset.renderKey===key)return;
  el.dataset.renderKey=key;
  el.innerHTML=items.map(({date,related,event:e})=>'<span class="tech-news-item"><a href="'+esc(e.url)+'" target="_blank" rel="noopener noreferrer">'+esc(marketCursorDate(e.date)+" "+e.title)+'</a> '+esc(e.summary+"｜"+e.source+"｜圖上 "+marketCursorDate(date)+"｜"+related.map(techSeriesName).join(" / "))+'</span>').join("")+(techNewsPinned&&items.length?'<button type="button" data-tech-news-dismiss>關閉</button>':"");
@@ -1929,7 +1938,7 @@ function syncChartCursor(date,pointerX=null){
   techPutChange(host,"middle",mid?tech.changes.middle.get(selected):null,tech.c.middle);
   techPutChange(host,"bottom",bottom?tech.changes.bottom.get(selected):null,tech.c.oscillator);
   if(tech.paired)techPutChange(host,"right",rightRow?tech.changes.right.get(selected):null,tech.c.right,"右軸 ");
-  techShowNews(host,tech.news,selected);
+  techShowNews(host,tech.news);
   put("[data-tech-right-value]",cursorDay+"｜"+(rightRow?techReadout(tech.c.right,rightRow.value)+(tech.indexed?"（指數 "+historyFormat(rightRow.value*tech.rightScale,2)+"）":""):"無當日觀測"));
   const candle=tech.topCandles.find(r=>r.date===selected);
   const hover=technicalSvg.querySelector('[data-tech-hover="1"]');
@@ -2483,7 +2492,7 @@ function showHistory(){
     '<g data-tech-hover-compact visibility="hidden"><rect x="301" y="1" width="194" height="25" rx="3" fill="#f3f8fc" stroke="#a1b2c1" stroke-width=".7"/>'+
     '<text data-tech-compact-text x="398" y="11" text-anchor="middle" font-size="10" fill="#23435f" font-weight="700">—</text><text data-tech-compact-change x="398" y="22" text-anchor="middle" font-size="8.5" font-weight="600">—</text></g>'+
     '</g>';
-   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="-72 0 912 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="-72" y="0" width="912" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+maintenanceHint+priceLines+rightPlot+topRatio+midLines+midRatioLine+midRightAxis +missingMoney+oscLines+news.markup+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+'</svg>';
+   const svg='<svg class="cross-svg technical-stack-svg" data-tech-svg="1" viewBox="-72 0 912 '+svgBottom+'" preserveAspectRatio="none" role="img" aria-label="三層技術分析，與十四張圖共用時間游標"><rect x="-72" y="0" width="912" height="'+svgBottom+'" fill="#ffffff"/>'+grid+verticalGrid+labels+maintenanceHint+priceLines+rightPlot+topRatio+midLines+midRatioLine+midRightAxis +missingMoney+oscLines+cross+'<line class="cross-cursor-line" x1="38" x2="38" y1="22" y2="'+panel[2].end+'"/>'+xticks+hoverMarkup+news.markup+'</svg>';
   const latestDaily=topCandles.at(-1);
    const directNote='<div class="technical-current-day" role="status">'+esc(directQuoteStatus)+
       '｜資料查核 '+esc(formatTaipeiMarketTime(directQuoteCheckedAt))+
@@ -2515,7 +2524,7 @@ function showHistory(){
    return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+source+(lag?' <strong style="color:#8a4b00">'+esc(lag)+'</strong>':"")+'</small>';
   }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
-  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head technical-stack-head-with-ma"><div class="technical-stack-heading"><strong>三層技術分析圖｜上・中・下</strong><span class="technical-ui-revision">介面 1128-R5</span><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div>'+overlayButtons+'<div class="technical-stack-top-actions"><button type="button" class="technical-stack-news-btn" data-tech-news-toggle aria-pressed="'+techNewsEnabled+'" title="已核對的公開重大事件（選錄，非完整或即時新聞；日期配對不代表因果）">'+(techNewsEnabled?"新聞 ✓":"新聞")+(techNewsEnabled?" "+news.groups.size:"")+'</button>'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍"><span class="technical-stack-group-label">期間</span>'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(!rangeCustom&&chartDays===n?"active":"")+'" aria-pressed="'+(!rangeCustom&&chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出放大":"⛶ 放大（保留分頁）") +'</button>'+nativeFullscreenButton()+'</div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot tech-osc-plot">'+svg+techOscControls(c.oscillator,oscSetting,100*((panel[1].end+panel[2].start)/2)/svgBottom)+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+reportMenu+centerNote+'</aside></div>'+rangeNavigator(navDays,start,end)+readouts+'<div class="tech-news-readout" data-tech-news-readout hidden></div>'+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel,changes,news};
+  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head technical-stack-head-with-ma"><div class="technical-stack-heading"><strong>三層技術分析圖｜上・中・下</strong><span class="technical-ui-revision">介面 1128-R6</span><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div>'+overlayButtons+'<div class="technical-stack-top-actions"><button type="button" class="technical-stack-news-btn" data-tech-news-toggle aria-pressed="'+techNewsEnabled+'" title="黃金圓點：移入看頭條，點擊看新聞摘要與來源；公開事件選錄，非完整即時新聞">'+(techNewsEnabled?"新聞 ✓":"新聞")+(techNewsEnabled?" "+news.groups.size:"")+'</button>'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍"><span class="technical-stack-group-label">期間</span>'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(!rangeCustom&&chartDays===n?"active":"")+'" aria-pressed="'+(!rangeCustom&&chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出放大":"⛶ 放大（保留分頁）") +'</button>'+nativeFullscreenButton()+'</div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot tech-osc-plot">'+svg+techOscControls(c.oscillator,oscSetting,100*((panel[1].end+panel[2].start)/2)/svgBottom)+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+reportMenu+centerNote+'</aside></div>'+rangeNavigator(navDays,start,end)+readouts+'<div class="tech-news-readout" data-tech-news-readout hidden></div>'+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel,changes,news};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
@@ -2638,7 +2647,7 @@ crossHost.addEventListener("change",event=>{
 crossHost.addEventListener("click",event=>{
  const newsToggle=event.target.closest?.("[data-tech-news-toggle]");
  if(newsToggle){techNewsEnabled=!techNewsEnabled;techNewsPinned=null;try{localStorage.setItem("jb-tech-news",techNewsEnabled?"on":"off")}catch(e){}showHistory();event.preventDefault();return}
- if(event.target.closest?.("[data-tech-news-dismiss]")){techNewsPinned=null;techShowNews(crossHost,chartContext?.technicalStack?.news,chartCursorDate);return}
+ if(event.target.closest?.("[data-tech-news-dismiss]")){techNewsPinned=null;techShowNews(crossHost,chartContext?.technicalStack?.news);return}
  const newsMarker=event.target.closest?.("[data-tech-news-date]");
  if(newsMarker){techNewsSelect(newsMarker.dataset.techNewsDate);event.preventDefault();return}
  const reset=event.target.closest?.("[data-ust-reset]");if(reset){event.preventDefault();techSettings={...techSettings,curveDates:{month:"",year:""}};try{localStorage.setItem(TECH_STACK_KEY,JSON.stringify(techSettings))}catch(e){}showHistory();return}
@@ -2720,6 +2729,8 @@ crossHost.addEventListener("pointerdown",event=>{
  if(typeof event.preventDefault==="function")event.preventDefault();
 });
 crossHost.addEventListener("pointerover",event=>{
+ const marker=event.target.closest?.("[data-tech-news-date]");
+ if(marker&&event.pointerType!=="touch"&&chartPointerSvg===null){const day=marker.dataset.techNewsDate;syncChartCursor(day,chartContext?.technicalStack?.sessionScale.x(day));return}
  const svg=event.target.closest?.('svg[data-tech-svg="1"]');
  if(svg&&event.pointerType!=="touch"&&chartPointerSvg===null&&(!event.relatedTarget||!svg.contains(event.relatedTarget)))
   selectCursorAtPointer(event,svg);
