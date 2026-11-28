@@ -331,17 +331,6 @@ jobs:
               sys.exit(1)
           PY
 
-      - name: Live public news Chromium acceptance
-        id: news_browser
-        if: steps.news_live.outcome == 'success' && (github.event_name == 'push' || steps.pages_gate.outputs.deploy == 'true')
-        continue-on-error: true
-        timeout-minutes: 6
-        run: |
-          python3 -m venv /tmp/jenbao-news-browser
-          /tmp/jenbao-news-browser/bin/pip install --disable-pip-version-check playwright==1.56.0
-          /tmp/jenbao-news-browser/bin/python -m playwright install chromium
-          /tmp/jenbao-news-browser/bin/python scripts/check_live_news_browser.py
-
       - name: Compute public market statistics after validated deployment
         run: |
           python3 -m unittest discover -s scripts/tests -p 'test_public_market_calculations.py'
@@ -354,3 +343,25 @@ jobs:
             # Never rebase a derived cache onto different input data.
             git push origin HEAD:main
           fi
+
+  news-browser:
+    name: Live public news browser (Ubuntu 24.04)
+    needs: publish
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    timeout-minutes: 10
+    steps:
+      - name: Checkout current public deployment evidence
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Install supported Chromium
+        run: |
+          python3 -m venv /tmp/jenbao-news-browser
+          /tmp/jenbao-news-browser/bin/pip install --disable-pip-version-check playwright==1.56.0
+          /tmp/jenbao-news-browser/bin/python -m playwright install --with-deps chromium
+      - name: Verify live public site with real mouse events
+        run: /tmp/jenbao-news-browser/bin/python scripts/check_live_news_browser.py
