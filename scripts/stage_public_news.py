@@ -8,6 +8,9 @@ from validate_public_news import validate, sessions, reaction, stamp, require, s
 
 def sha(raw): return hashlib.sha256(raw).hexdigest()
 def encode(doc): return (json.dumps(doc, ensure_ascii=False, separators=(",",":"))+"\n").encode("utf-8")
+def embedded_json(doc):
+    # JSON inside an inline script must not allow an HTML closing script tag.
+    return encode(doc).decode("utf-8").strip().replace("<",r"\u003c").replace(">",r"\u003e").replace("&",r"\u0026").replace("\u2028",r"\u2028").replace("\u2029",r"\u2029")
 def read_checked(path, expected):
     raw=path.read_bytes()
     require(re.fullmatch(r"[0-9a-f]{64}",expected) and sha(raw)==expected,"input digest mismatch")
@@ -66,8 +69,10 @@ def stage(args):
     validate(raw,args.base_sha256,root)
     _,candidate=read_checked(private_path(args.candidate),args.candidate_sha256)
     _,review=read_checked(private_path(args.review),args.review_sha256)
-    require(review.get("batch_id")==candidate.get("batch_id") and review.get("candidate_sha256")==args.candidate_sha256,"review does not bind candidate")
-    approval=json.loads(private_path(args.approval).read_text()) if args.approval else None
+    require(candidate.get("project_id")=="MEDIA-DASHBOARD-R10.1" and candidate.get("schema_version")=="1.0","candidate contract mismatch")
+    require(review.get("project_id")==candidate["project_id"] and review.get("batch_id")==candidate.get("batch_id") and review.get("candidate_sha256")==args.candidate_sha256 and review.get("candidate_count")==candidate.get("record_count") and review.get("dashboard_public_sha256")==args.base_sha256 and review.get("public_release_enabled") is False,"review does not bind candidate and base")
+    require(bool(args.approval)==bool(args.approval_sha256),"approval file and digest must be supplied together")
+    approval=read_checked(private_path(args.approval),args.approval_sha256)[1] if args.approval else None
     selected=select_records(candidate,approval,args.candidate_sha256,args.review_sha256,args.base_sha256)
     if not selected:
         return {"status":"NO_UPDATE","accepted_count":0,"reason":"no independently approved events","base_sha256":args.base_sha256}
@@ -80,7 +85,7 @@ def stage(args):
     prefix,tail=html.split(marker,1)
     embedded,n=json.JSONDecoder().raw_decode(tail)
     require(embedded==base,"base fallback differs")
-    html=prefix+marker+output.decode("utf-8").strip()+tail[n:]
+    html=prefix+marker+embedded_json(merged)+tail[n:]
     wf=(repo/".github/workflows/pages.yml").read_text(encoding="utf-8")
     old="'--approved-sha256', '"+args.base_sha256+"'"
     require(wf.count(old)==1,"deployment pin mismatch")
@@ -93,7 +98,7 @@ def stage(args):
 def main():
     p=argparse.ArgumentParser()
     for k in ("repo","candidate","candidate-sha256","review","review-sha256","base-sha256","out"):p.add_argument("--"+k,required=True)
-    p.add_argument("--approval")
+    p.add_argument("--approval");p.add_argument("--approval-sha256")
     try:print(json.dumps(stage(p.parse_args()),ensure_ascii=False))
     except Exception as e:
         print("FAIL_CLOSED: "+type(e).__name__,file=sys.stderr);return 1
