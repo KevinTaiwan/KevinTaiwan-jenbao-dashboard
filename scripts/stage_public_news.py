@@ -2,7 +2,7 @@
 Private input/approval files and staging directory must remain outside the repository.
 The deployment workflow still independently pins the final approved digest.
 """
-import argparse, hashlib, json, re, sys
+import argparse, hashlib, json, os, re, sys
 from pathlib import Path
 from validate_public_news import validate, sessions, reaction, stamp, require, safe_url
 
@@ -58,6 +58,60 @@ def merge(base, additions):
         rows[e["eventId"]]=e;changed+=1
     return {**base,"records":list(rows.values())},changed
 
+# Only these three display files may enter a release commit.
+RELEASE_PATHS={"public-news-events.json":"public/public-news-events.json","index.html":"public/index.html","pages.yml":".github/workflows/pages.yml"}
+MANIFEST="private-transaction.json"
+
+def base_fingerprints(repo):
+    return {name:sha((repo/path).read_bytes()) for name,path in RELEASE_PATHS.items()}
+
+def transaction_receipt(base, payload, args, candidate, changed):
+    core={"schema_version":1,"audience":"private_release_transaction","batch_id":candidate["batch_id"],
+          "candidate_sha256":args.candidate_sha256,"review_sha256":args.review_sha256,"approval_sha256":args.approval_sha256,
+          "base_sha256":base,"output_sha256":{k:sha(v) for k,v in payload.items()},"changed_count":changed}
+    return {**core,"transaction_id":sha(encode(core))}
+
+def checked_bytes(path, expected):
+    require(not path.is_symlink() and path.is_file() and path.read_bytes()==expected,"unknown or partial transaction bytes")
+
+def write_once(path, data):
+    # A crash may leave partial bytes; a retry then stops instead of overwriting.
+    try:
+        with path.open("xb") as f:
+            f.write(data);f.flush();os.fsync(f.fileno())
+    except FileExistsError:
+        checked_bytes(path,data)
+    checked_bytes(path,data)
+
+def persist_transaction(out, payload, manifest):
+    require(set(payload)==set(RELEASE_PATHS),"unexpected release files")
+    require(not out.is_symlink(),"staging directory symlink")
+    out.mkdir(parents=True,exist_ok=True)
+    require(out.is_dir(),"staging path not a directory")
+    wanted={**payload,MANIFEST:encode(manifest)}
+    existing=set(p.name for p in out.iterdir())
+    require(existing<=set(wanted),"unexpected transaction files")
+    # A committed receipt must never be used to heal missing files silently.
+    if MANIFEST in existing:require(existing==set(wanted),"completed transaction missing files")
+    for name in existing:checked_bytes(out/name,wanted[name])
+    mode="REUSED" if MANIFEST in existing else "RECOVERED" if existing else "CREATED"
+    for name in payload:write_once(out/name,payload[name])
+    write_once(out/MANIFEST,wanted[MANIFEST])  # commit marker last
+    for name,raw in wanted.items():checked_bytes(out/name,raw)
+    return mode
+
+def verify_transaction(repo,out,expected_manifest):
+    require(not out.is_symlink() and out.is_dir(),"missing stage")
+    require(set(p.name for p in out.iterdir())==set(RELEASE_PATHS)|{MANIFEST},"incomplete or unexpected transaction files")
+    checked_bytes(out/MANIFEST,encode(expected_manifest))
+    core={k:v for k,v in expected_manifest.items() if k!="transaction_id"}
+    require(expected_manifest["transaction_id"]==sha(encode(core)),"transaction fingerprint mismatch")
+    require(base_fingerprints(repo)==expected_manifest["base_sha256"],"base changed; re-review and re-stage")
+    for name in RELEASE_PATHS:
+        path=out/name
+        require(not path.is_symlink() and path.is_file() and sha(path.read_bytes())==expected_manifest["output_sha256"][name],"staged output mismatch")
+    return True
+
 def stage(args):
     repo=Path(args.repo).resolve()
     def private_path(value):
@@ -65,7 +119,9 @@ def stage(args):
         require(not p.is_relative_to(repo),"private inputs/output must be outside repository")
         return p
     root=repo/"public"
+    base_files=base_fingerprints(repo)
     raw,base=read_checked(root/"public-news-events.json",args.base_sha256)
+    require(base_files["public-news-events.json"]==args.base_sha256,"base changed during read")
     validate(raw,args.base_sha256,root)
     _,candidate=read_checked(private_path(args.candidate),args.candidate_sha256)
     _,review=read_checked(private_path(args.review),args.review_sha256)
@@ -75,7 +131,7 @@ def stage(args):
     approval=read_checked(private_path(args.approval),args.approval_sha256)[1] if args.approval else None
     selected=select_records(candidate,approval,args.candidate_sha256,args.review_sha256,args.base_sha256)
     if not selected:
-        return {"status":"NO_UPDATE","accepted_count":0,"reason":"no independently approved events","base_sha256":args.base_sha256}
+        return {"status":"HOLD_NO_APPROVAL" if candidate["record_count"] else "NO_UPDATE","accepted_count":0,"reason":"no independently approved events","base_sha256":args.base_sha256}
     merged,changed=merge(base,[project(e,sessions(root)) for e in selected])
     if not changed:return {"status":"NO_UPDATE","accepted_count":0,"reason":"already published","base_sha256":args.base_sha256}
     output=encode(merged);digest=sha(output);validate(output,digest,root)
@@ -90,11 +146,13 @@ def stage(args):
     old="'--approved-sha256', '"+args.base_sha256+"'"
     require(wf.count(old)==1,"deployment pin mismatch")
     wf=wf.replace(old,"'--approved-sha256', '"+digest+"'")
-    out=private_path(args.out);out.mkdir(parents=True,exist_ok=False)
-    (out/"public-news-events.json").write_bytes(output)
-    (out/"index.html").write_text(html,encoding="utf-8")
-    (out/"pages.yml").write_text(wf,encoding="utf-8")
-    return {"status":"STAGED_NOT_PUBLISHED","accepted_count":changed,"total_count":len(merged["records"]),"public_sha256":digest,"base_sha256":args.base_sha256}
+    out=private_path(args.out)
+    require(base_fingerprints(repo)==base_files,"base changed during staging")
+    payload={"public-news-events.json":output,"index.html":html.encode("utf-8"),"pages.yml":wf.encode("utf-8")}
+    manifest=transaction_receipt(base_files,payload,args,candidate,changed)
+    mode=persist_transaction(out,payload,manifest)
+    verify_transaction(repo,out,manifest)
+    return {"status":"STAGED_NOT_PUBLISHED","stage_mode":mode,"transaction_id":manifest["transaction_id"],"accepted_count":changed,"total_count":len(merged["records"]),"public_sha256":digest,"base_sha256":args.base_sha256}
 def main():
     p=argparse.ArgumentParser()
     for k in ("repo","candidate","candidate-sha256","review","review-sha256","base-sha256","out"):p.add_argument("--"+k,required=True)

@@ -2,7 +2,7 @@ import sys, unittest, json, tempfile
 from types import SimpleNamespace
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from stage_public_news import select_records, merge, project, encode, sha, embedded_json, stage
+from stage_public_news import select_records, merge, project, encode, sha, embedded_json, stage, verify_transaction, MANIFEST
 
 class NewsStageTests(unittest.TestCase):
     def setUp(self):
@@ -77,7 +77,7 @@ class FullStageTests(unittest.TestCase):
     def approve(self):
         self.args.approval=str(self.apath);self.args.approval_sha256=sha(self.apath.read_bytes())
     def test_real_stage_no_approval_no_write(self):
-        r=stage(self.args);self.assertEqual(r["status"],"NO_UPDATE");self.assertFalse(self.out.exists());self.assertEqual((self.pub/"public-news-events.json").read_bytes(),self.base_raw)
+        r=stage(self.args);self.assertEqual(r["status"],"HOLD_NO_APPROVAL");self.assertFalse(self.out.exists());self.assertEqual((self.pub/"public-news-events.json").read_bytes(),self.base_raw)
     def test_real_stage_isolated_success(self):
         self.approve();r=stage(self.args);self.assertEqual(r["status"],"STAGED_NOT_PUBLISHED")
         raw=(self.out/"public-news-events.json").read_bytes();d=json.loads(raw)
@@ -104,5 +104,45 @@ class FullStageTests(unittest.TestCase):
         self.args.candidate=str(self.pub/"private.json")
         with self.assertRaises(ValueError):stage(self.args)
         self.assertFalse(self.out.exists())
+
+
+    def test_transaction_repeat(self):
+        self.approve();a=stage(self.args);b=stage(self.args)
+        self.assertEqual(a["stage_mode"],"CREATED")
+        self.assertEqual(b["stage_mode"],"REUSED")
+        self.assertEqual(a["transaction_id"],b["transaction_id"])
+    def test_transaction_recover_matching_partial(self):
+        self.approve();a=stage(self.args)
+        (self.out/MANIFEST).unlink();(self.out/"pages.yml").unlink()
+        b=stage(self.args)
+        self.assertEqual(b["stage_mode"],"RECOVERED")
+        self.assertEqual(a["transaction_id"],b["transaction_id"])
+    def test_transaction_conflict_preserved(self):
+        self.approve();self.out.mkdir();p=self.out/"index.html";p.write_bytes(b"unknown bytes")
+        with self.assertRaises(ValueError):stage(self.args)
+        self.assertEqual(p.read_bytes(),b"unknown bytes")
+        self.assertFalse((self.out/MANIFEST).exists())
+    def test_transaction_completed_missing_file(self):
+        self.approve();stage(self.args);(self.out/"pages.yml").unlink()
+        with self.assertRaises(ValueError):stage(self.args)
+        self.assertFalse((self.out/"pages.yml").exists())
+    def test_transaction_stale_html(self):
+        self.approve();stage(self.args);m=json.loads((self.out/MANIFEST).read_bytes())
+        (self.pub/"index.html").write_text("new front end")
+        with self.assertRaises(ValueError):verify_transaction(self.repo,self.out,m)
+    def test_transaction_tampered_output(self):
+        self.approve();stage(self.args);m=json.loads((self.out/MANIFEST).read_bytes())
+        (self.out/"pages.yml").write_text("tampered")
+        with self.assertRaises(ValueError):verify_transaction(self.repo,self.out,m)
+    def test_transaction_extra_file(self):
+        self.approve();stage(self.args);m=json.loads((self.out/MANIFEST).read_bytes())
+        (self.out/"private-candidate.json").write_text("private")
+        with self.assertRaises(ValueError):verify_transaction(self.repo,self.out,m)
+    def test_transaction_manifest_private(self):
+        self.approve();a=stage(self.args);m=json.loads((self.out/MANIFEST).read_bytes())
+        self.assertEqual(m["audience"],"private_release_transaction")
+        self.assertEqual(a["transaction_id"],m["transaction_id"])
+        self.assertTrue(verify_transaction(self.repo,self.out,m))
+        self.assertEqual(set(m["output_sha256"]),{"public-news-events.json","index.html","pages.yml"})
 
 if __name__=="__main__":unittest.main()
