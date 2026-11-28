@@ -158,6 +158,13 @@ jobs:
           # R10.3: exact reviewed public bytes independently pinned in workflow.
           import subprocess, sys
           subprocess.run([sys.executable, 'scripts/validate_public_news.py', '--approved-sha256', '26a2e03f56cc40d4e7fd4064656fe7f04fceed03bd3e9e5f6b72efd1542846e7'], check=True)
+          # Cold-start fallback must be exactly the separately approved public release.
+          html=Path('public/index.html').read_text(encoding='utf-8')
+          marker='const TECH_APPROVED_NEWS_SNAPSHOT='
+          if html.count(marker)!=1: raise SystemExit('Missing/duplicate news fallback')
+          embedded,_=json.JSONDecoder().raw_decode(html.split(marker,1)[1])
+          if embedded!=json.loads(Path('public/public-news-events.json').read_text(encoding='utf-8')):
+              raise SystemExit('News fallback differs from approved public file')
           center_path=Path('public/market-center-history.json')
           if center_path.exists():
               series=json.loads(center_path.read_text(encoding='utf-8'))
