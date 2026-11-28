@@ -6,12 +6,12 @@
     "index.html": "175dd257305245502d3a24f6a6b6466687269b5415495bb15975d9a20e1c25ca",
     "intraday-market.json": "151cec739fb559669b44476b182076ca7f7e691ff84791f57a67a48dfb286d77",
     "market-center-history.json": "85bf36a7483e56236d0f752c4551c8007fcf013ad8ae01bfb968270b7ff0add4",
-    "market-data.json": "2fc74e8922bf392cc9e7c44d85286576fe67b1759ece055353849ad46f8095aa",
-    "market-history.json": "8fb2efaa8e6bb9c1c912826704e1107fbb3cd0f63783d144ce110f0d7e494771"
+    "market-data.json": "4b9ed3a4af916b1bad06993a367ffb1e5a5a5992e5474f1ef6f20c321eb95f22",
+    "market-history.json": "af2c58476ac22788f792ec41d80a293c0853692edabdc7e1b515cd90f8623251"
   },
-  "publicFingerprint": "cfa01af9e5b7123ad315e922d04ac1c57989cd5b41c76151c3ddbb1d8d0dcfc4",
+  "publicFingerprint": "b479cb98cddf5f483b8107f6ec6fd22ca49e0786c72c6ff822b06314c1a68dcc",
   "schemaVersion": 1,
-  "workflowRunId": 46078395454,
-  "sourceCommit": "b04a026303d8c5fa36cb3a6fb7a3d613da827e7e",
-  "deployedAt": "2026-11-27T22:47:55.290592+00:00"
+  "workflowRunId": 46099949897,
+  "sourceCommit": "856ec8183bb37741190b997fa1b6ad65c83e524a",
+  "deployedAt": "2026-11-28T02:51:09.375335+00:00"
 }
