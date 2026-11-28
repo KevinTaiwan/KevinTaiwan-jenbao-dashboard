@@ -40,6 +40,27 @@ def run():
             top.select_option("taiex")
             host.locator('[data-tech-field="right"]').select_option("off")
             page.locator('[data-window="60"]').click()
+            def one_row():
+                top.select_option("taiexK")
+                host.locator('[data-tech-field="right"]').select_option("foreignCumulativeYi")
+                card=host.locator('[data-cross-row="technicalStack"]')
+                card.locator("[data-tech-fullscreen]").click()
+                expect(card).to_have_class(__import__("re").compile("technical-stack-fullscreen"))
+                controls=card.locator(".technical-stack-sidebar > .technical-stack-selectors > label")
+                expect(controls).to_have_count(6)
+                boxes=[controls.nth(i).bounding_box() for i in range(6)]
+                require(all(b is not None for b in boxes),"missing selector geometry")
+                require(max(b["y"] for b in boxes)-min(b["y"] for b in boxes)<=2,"desktop selectors not in one row")
+                require(all(boxes[i]["x"]+boxes[i]["width"]<=boxes[i+1]["x"]+1 for i in range(5)),"selectors overlap")
+                expect(card.locator(".technical-stack-sidebar > :not(.technical-stack-selectors)")).to_have_count(0)
+                plot=card.locator(".technical-stack-plot").bounding_box()
+                require(plot and plot["y"]>=max(b["y"]+b["height"] for b in boxes)-1,"chart overlaps controls")
+                require(plot["y"]-max(b["y"]+b["height"] for b in boxes)<20,"wasted vertical space below controls")
+                expect(card.locator(".technical-stack-source-details")).to_be_hidden()
+                card.locator("[data-tech-fullscreen]").click()
+                top.select_option("taiex")
+                host.locator('[data-tech-field="right"]').select_option("off")
+            check("desktop_single_row_controls",one_row)
             list_btn=host.locator("[data-tech-news-open]")
             detail=host.locator("[data-tech-news-readout]")
             tip=host.locator("[data-tech-news-tooltip]")
@@ -115,7 +136,7 @@ def run():
 if __name__=="__main__":
     try:run()
     except Exception as e:checks["setup"]={"status":"FAIL","error":str(e)[:600]}
-    required={"live_html","live_feed","news_list_all_approved","taiwan_gold_dot_hover","click_summary_and_links","mouse_drag","close_detail","us_market_date_alignment","no_page_errors"}
+    required={"live_html","live_feed","news_list_all_approved","taiwan_gold_dot_hover","click_summary_and_links","mouse_drag","close_detail","us_market_date_alignment","no_page_errors","desktop_single_row_controls"}
     passed=required<=checks.keys() and all(v["status"]=="PASS" for v in checks.values())
     receipt={"schemaVersion":1,"status":"PASS" if passed else "WARN","runId":os.environ.get("GITHUB_RUN_ID"),"checkedAt":datetime.datetime.now(datetime.timezone.utc).isoformat(),"browser":"Chromium / Playwright","mode":"live_public_site","checks":checks}
     line=json.dumps(receipt,ensure_ascii=False,sort_keys=True)
