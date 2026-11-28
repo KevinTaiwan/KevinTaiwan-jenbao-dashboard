@@ -1,22 +1,22 @@
 {
-  "bytes": 8169,
-  "dates": 226,
+  "bytes": 8205,
+  "dates": 227,
   "definition": "Daily Treasury par real yield curve, percent",
   "first": "2026-01-02",
   "full_year_boundary_check": false,
-  "last": "2026-11-25",
+  "last": "2026-11-27",
   "limitations": "No estimated fills, no FRED splice, no complete calendar or publication-time certification.",
   "provider": "US Department of the Treasury",
   "quality": "official_source_candidate",
   "series_id": "UST_PAR_REAL_2026",
-  "sha256": "5ca427c9eac12d60c2c65d01f58a5bd209ea78fb6a7e006e32a6d5736aa1abea",
+  "sha256": "c147cb6c2e382da03026499c014518f2826aa102abc73da09e1dffaf4cd42238",
   "source": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2026/all?_format=csv&field_tdr_date_value=2026&page=&type=daily_treasury_real_yield_curve",
-  "source_raw_sha256": "d2364714a93e328908b52a8f4f8292b547fd44316d373264c7b938f6099c1e6b",
+  "source_raw_sha256": "1e13624885932e55cd17dc94e8d906cdd4a5a45899a85c872097ba50afca0e5d",
   "valid_by_maturity": {
-    "10 yr": 226,
-    "20 yr": 226,
-    "30 yr": 226,
-    "5 yr": 226,
-    "7 yr": 226
+    "10 yr": 227,
+    "20 yr": 227,
+    "30 yr": 227,
+    "5 yr": 227,
+    "7 yr": 227
   }
 }
