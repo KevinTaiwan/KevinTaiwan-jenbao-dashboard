@@ -23,6 +23,7 @@ on:
       - 'scripts/tests/test_public_news_commit.py'
       - 'scripts/reconcile_public_news_release.py'
       - 'scripts/tests/test_public_news_reconcile.py'
+      - 'scripts/check_live_news_browser.py'
       - 'scripts/refresh_market_center_history.py'
       - 'scripts/backfill_twse_market_activity.py'
       - 'scripts/market_seed.json'
@@ -329,6 +330,17 @@ jobs:
               print("::warning::Public news live readback not verified; retain previous approved data.")
               sys.exit(1)
           PY
+
+      - name: Live public news Chromium acceptance
+        id: news_browser
+        if: steps.news_live.outcome == 'success' && (github.event_name == 'push' || steps.pages_gate.outputs.deploy == 'true')
+        continue-on-error: true
+        timeout-minutes: 6
+        run: |
+          python3 -m venv /tmp/jenbao-news-browser
+          /tmp/jenbao-news-browser/bin/pip install --disable-pip-version-check playwright==1.56.0
+          /tmp/jenbao-news-browser/bin/python -m playwright install chromium
+          /tmp/jenbao-news-browser/bin/python scripts/check_live_news_browser.py
 
       - name: Compute public market statistics after validated deployment
         run: |
