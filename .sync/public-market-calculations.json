@@ -98,8 +98,8 @@
       "sha256": "85bf36a7483e56236d0f752c4551c8007fcf013ad8ae01bfb968270b7ff0add4"
     },
     "market-history.json": {
-      "gitBlobSha": "c5115cfa86770852a292fc06300b2db18189bf6a",
-      "sha256": "8fb2efaa8e6bb9c1c912826704e1107fbb3cd0f63783d144ce110f0d7e494771"
+      "gitBlobSha": "000374da947ede681ebef6db3865781f164ac201",
+      "sha256": "af2c58476ac22788f792ec41d80a293c0853692edabdc7e1b515cd90f8623251"
     }
   },
   "method": {
@@ -168,16 +168,16 @@
       "unit": "basis_points"
     },
     "vix": {
-      "asOf": "2026-11-26",
+      "asOf": "2026-11-27",
       "baselineCount": 20,
-      "baselineEnd": "2026-11-25",
-      "baselineMean": 23.1215,
-      "baselineStart": "2026-10-29",
-      "latest": 26.8,
-      "latestMinusPrior20Mean": 3.6785,
-      "latestOverPrior20Mean": 1.15909435,
-      "previousDate": "2026-11-25",
-      "previousValue": 28.29,
+      "baselineEnd": "2026-11-26",
+      "baselineMean": 23.6015,
+      "baselineStart": "2026-10-30",
+      "latest": 23.81,
+      "latestMinusPrior20Mean": 0.2085,
+      "latestOverPrior20Mean": 1.00883418,
+      "previousDate": "2026-11-26",
+      "previousValue": 26.8,
       "status": "computed_from_archive",
       "unit": "index_points"
     }
