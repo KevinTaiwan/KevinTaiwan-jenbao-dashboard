@@ -155,14 +155,9 @@ jobs:
               fw=json.loads(raw)
               if fw.get('audience')!='public-market' or fw.get('records')!=[] or fw.get('coverage',{}).get('observedTradingDays')!=0:
                   raise SystemExit('Invalid FedWatch placeholder')
-          # R10: only the reviewed empty public feed is allowed initially.
-          # Nonempty releases require independent source/rights/schema review.
-          news_path=Path('public/public-news-events.json')
-          if not news_path.is_file():
-              raise SystemExit('Missing public news placeholder')
-          news=json.loads(news_path.read_text(encoding='utf-8'))
-          if news != {"schemaVersion":1,"audience":"public-market","status":"not_approved","records":[]}:
-              raise SystemExit('Public news release not independently approved')
+          # R10.3: exact reviewed public bytes independently pinned in workflow.
+          import subprocess, sys
+          subprocess.run([sys.executable, 'scripts/validate_public_news.py', '--approved-sha256', '26a2e03f56cc40d4e7fd4064656fe7f04fceed03bd3e9e5f6b72efd1542846e7'], check=True)
           center_path=Path('public/market-center-history.json')
           if center_path.exists():
               series=json.loads(center_path.read_text(encoding='utf-8'))

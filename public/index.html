@@ -1824,42 +1824,44 @@ function techPutChange(host,slot,c,key,prefix=""){
  // Independently checked public official releases. No private media or portfolio fields.
  // Starter coverage is selective, not a complete or automatically updated news archive.
 const TECH_PUBLIC_EVENTS=[{"date":"2026-01-28","kind":"fed","title":"FOMC 決議","summary":"公布貨幣政策聲明。","source":"Federal Reserve","url":"https://www.federalreserve.gov/newsevents/pressreleases/2026-press-fomc.htm","twNext":true,"usNext":false},{"date":"2026-03-18","kind":"fed","title":"FOMC 決議","summary":"公布貨幣政策聲明。","source":"Federal Reserve","url":"https://www.federalreserve.gov/newsevents/pressreleases/2026-press-fomc.htm","twNext":true,"usNext":false},{"date":"2026-04-29","kind":"fed","title":"FOMC 決議","summary":"公布貨幣政策聲明。","source":"Federal Reserve","url":"https://www.federalreserve.gov/newsevents/pressreleases/2026-press-fomc.htm","twNext":true,"usNext":false},{"date":"2026-06-17","kind":"fed","title":"FOMC 決議","summary":"公布貨幣政策聲明。","source":"Federal Reserve","url":"https://www.federalreserve.gov/newsevents/pressreleases/2026-press-fomc.htm","twNext":true,"usNext":false},{"date":"2026-07-29","kind":"fed","title":"FOMC 決議","summary":"公布貨幣政策聲明。","source":"Federal Reserve","url":"https://www.federalreserve.gov/newsevents/pressreleases/2026-press-fomc.htm","twNext":true,"usNext":false},{"date":"2026-09-16","kind":"fed","title":"Fed 升息","summary":"升息25bp至3.75%–4.00%。","source":"Federal Reserve","url":"https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm","twNext":true,"usNext":false},{"date":"2026-10-15","kind":"semi","title":"台積電 Q3 財報","summary":"第三季 EPS 29.43元，營收年增50.9%。","source":"TSMC","url":"https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-10/526b65af7305df2dde6b9ece6812b1fdf1e49f9b/3Q26%20EarningsRelease.pdf","twNext":true,"usNext":true},{"date":"2026-10-28","kind":"fed","title":"Fed 利率不變","summary":"維持政策利率3.75%–4.00%。","source":"Federal Reserve","url":"https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm","twNext":true,"usNext":false},{"date":"2026-11-17","kind":"semi","title":"NVIDIA Q3 財報","summary":"資料中心營收年增110%。","source":"NVIDIA","url":"https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-third-quarter-fiscal-2027","twNext":true,"usNext":true},{"date":"2026-11-18","kind":"fed","title":"FOMC 會議紀要","summary":"公布10月27–28日貨幣政策會議紀要。","source":"Federal Reserve","url":"https://www.federalreserve.gov/monetarypolicy/fomcminutes20261028.htm","twNext":true,"usNext":false}];
-// R10: separate approved public release from private media archives. Default deny.
+// R10.3: versioned public releases, never private candidate files.
+const TECH_NEWS_CATEGORIES=new Set(["monetary_policy","fiscal_policy","inflation","employment","economic_growth","trade_policy","market_regulation","semiconductor_earnings","ai_infrastructure","major_financial_event"]);
+const TECH_NEWS_SOURCE_HOSTS={"Federal Reserve":["www.federalreserve.gov","federalreserve.gov"],"US Treasury":["home.treasury.gov","www.treasury.gov","treasury.gov"],"BLS":["www.bls.gov","bls.gov"],"BEA":["www.bea.gov","bea.gov"],"USTR":["ustr.gov","www.ustr.gov"],"TWSE":["www.twse.com.tw","twse.com.tw"],"FSC":["www.fsc.gov.tw","fsc.gov.tw","law.fsc.gov.tw"],"TSMC":["investor.tsmc.com","pr.tsmc.com"],"NVIDIA":["nvidianews.nvidia.com","investor.nvidia.com"]};
 let techPublicNews=[],techPublicNewsState="pending",techPublicNewsLoading=null;
-const TECH_NEWS_HOSTS=new Set(["www.federalreserve.gov","federalreserve.gov","investor.tsmc.com","nvidianews.nvidia.com","www.twse.com.tw","ustr.gov","www.ustr.gov","www.bea.gov","www.bls.gov","www.treasury.gov","home.treasury.gov"]);
-function techNewsExactKeys(value,keys){
- return value!==null&&typeof value==="object"&&!Array.isArray(value)&&Object.keys(value).length===keys.length&&keys.every(k=>Object.hasOwn(value,k));
-}
-function techNewsSafeUrl(s){
- if(typeof s!=="string"||s.length>700)return false;
+function techNewsExactKeys(v,k){return v!==null&&typeof v==="object"&&!Array.isArray(v)&&Object.keys(v).length===k.length&&k.every(x=>Object.hasOwn(v,x))}
+function techNewsSafeUrl(s,source){
+ if(typeof s!=="string"||s.length>700||!Object.hasOwn(TECH_NEWS_SOURCE_HOSTS,source))return false;
  const m=/^https:\/\/([a-z0-9.-]+)\/[A-Za-z0-9_./%~+-]+$/.exec(s);
- return !!m&&m[0]===s&&TECH_NEWS_HOSTS.has(m[1])&&!/%(?:0[0-9a-f]|1[0-9a-f]|7f|5c|2f|3f|23)/i.test(s);
+ return !!m&&m[0]===s&&TECH_NEWS_SOURCE_HOSTS[source].includes(m[1])&&!/%(?:0[0-9a-f]|1[0-9a-f]|7f|5c|2f|3f|23)/i.test(s);
 }
 function techNewsValidDate(s){
  if(typeof s!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;
  const n=Date.parse(s+"T00:00:00Z");return Number.isFinite(n)&&new Date(n).toISOString().slice(0,10)===s&&s<=new Date().toISOString().slice(0,10);
 }
+function techNewsTime(s){return typeof s==="string"&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/.test(s)&&Number.isFinite(Date.parse(s))&&techNewsValidDate(s.slice(0,10))}
 function techNewsValidatePublic(doc){
- if(!techNewsExactKeys(doc,["schemaVersion","audience","status","records"])||doc.schemaVersion!==1||doc.audience!=="public-market"||!Array.isArray(doc.records)||doc.records.length>5000)throw Error("invalid public news envelope");
- if(doc.status==="not_approved"&&doc.records.length===0)return [];
- if(doc.status!=="approved_public_release"||!doc.records.length)throw Error("public news not approved");
- const fields=["date","kind","title","summary","source","url","twNext","usNext","publicationAllowed","quality"];
+ if(!techNewsExactKeys(doc,["schemaVersion","audience","status","records"])||doc.audience!=="public-market"||!Array.isArray(doc.records)||doc.records.length>5000)throw Error("invalid public news envelope");
+ if(doc.status==="not_approved"&&doc.schemaVersion===1&&doc.records.length===0)return [];
+ if(doc.schemaVersion!==2||doc.status!=="approved_public_release"||!doc.records.length)throw Error("public news not approved");
+ const fields=["eventId","revision","date","kind","title","summary","source","url","publishedAt","eventAt","effectiveAt","reactionDates","publicationAllowed","quality"],seen=new Set(),urls=new Set();
  const bounded=(s,max)=>typeof s==="string"&&s.trim().length>0&&s.length<=max&&!/[\u0000-\u001f\u007f]/.test(s);
  return doc.records.map(e=>{
-  if(!techNewsExactKeys(e,fields)||e.publicationAllowed!==true||e.quality!=="verified_public"||!techNewsValidDate(e.date)||!["fed","semi"].includes(e.kind)||!bounded(e.title,120)||!bounded(e.summary,350)||!bounded(e.source,80)||!techNewsSafeUrl(e.url)||typeof e.twNext!=="boolean"||typeof e.usNext!=="boolean")throw Error("unapproved public news record");
-  const {date,kind,title,summary,source,url,twNext,usNext}=e;return {date,kind,title,summary,source,url,twNext,usNext};
+  if(!techNewsExactKeys(e,fields)||e.publicationAllowed!==true||e.quality!=="verified_public"||!techNewsValidDate(e.date)||!TECH_NEWS_CATEGORIES.has(e.kind)||!bounded(e.title,120)||!bounded(e.summary,350)||!bounded(e.source,80)||!techNewsSafeUrl(e.url,e.source)||typeof e.eventId!=="string"||!/^[a-z0-9][a-z0-9-]{5,150}$/.test(e.eventId)||!Number.isSafeInteger(e.revision)||e.revision<1||!techNewsTime(e.publishedAt)||e.date!==e.publishedAt.slice(0,10)||[e.eventAt,e.effectiveAt].some(t=>t!==null&&!techNewsTime(t))||!techNewsExactKeys(e.reactionDates,["tw","us"])||Object.values(e.reactionDates).some(t=>t!==null&&!techNewsValidDate(t))||seen.has(e.eventId)||urls.has(e.url.replace(/\/$/,"")))throw Error("unapproved public news record");
+  seen.add(e.eventId);urls.add(e.url.replace(/\/$/,""));return {...e};
  });
 }
+function techNewsIdentity(e){
+ if(e.eventId)return e.eventId;
+ if(e.url.includes("fomcminutes20261028.htm"))return "fed-fomc-minutes-20261027-28-release-20261118";
+ return [e.date,e.kind,e.url.replace(/\/$/,"")].join("|");
+}
 function techNewsMerge(base,approved){
- const seen=new Set(),out=[];
- for(const e of [...base,...approved]){
-  const key=[e.date,e.kind,e.url].join("|");
-  if(seen.has(key))continue;seen.add(key);out.push(e);
- }
- return out.sort((a,b)=>a.date.localeCompare(b.date));
+ const out=new Map();
+ for(const e of [...base,...approved]){const key=techNewsIdentity(e),old=out.get(key);if(!old||(e.revision||0)>(old.revision||0))out.set(key,e)}
+ return [...out.values()].sort((a,b)=>a.date.localeCompare(b.date));
 }
 function techNewsFeedLabel(){
- return techPublicNewsState==="approved"?"公開新聞 "+techPublicNews.length+" 則":techPublicNewsState==="not_approved"?"選錄｜新增新聞待核准":techPublicNewsState==="error"?"選錄｜公開新聞來源異常":"選錄｜公開新聞待載入";
+ return techPublicNewsState==="approved"?"核准新聞 "+techPublicNews.length+" 則":techPublicNewsState==="stale"?"沿用上次核准 "+techPublicNews.length+" 則｜更新異常":techPublicNewsState==="not_approved"?"選錄｜新增新聞待核准":techPublicNewsState==="error"?"選錄｜公開新聞來源異常":"選錄｜公開新聞待載入";
 }
 function fetchTechPublicNews(){
  if(techPublicNewsLoading)return techPublicNewsLoading;
@@ -1867,8 +1869,11 @@ function fetchTechPublicNews(){
  techPublicNewsLoading=fetch("./public-news-events.json",{cache:"no-cache",credentials:"omit",signal:controller.signal}).then(async response=>{
   if(!response.ok)throw Error("HTTP "+response.status);
   const doc=await response.json(),next=techNewsValidatePublic(doc);
+  if(!next.length&&techPublicNews.length)throw Error("unexpected empty release");
+  const old=new Map(techPublicNews.map(e=>[e.eventId,e.revision]));
+  if(next.some(e=>old.has(e.eventId)&&e.revision<old.get(e.eventId)))throw Error("older revision");
   techPublicNews=next;techPublicNewsState=doc.status==="not_approved"?"not_approved":"approved";
- }).catch(()=>{techPublicNews=[];techPublicNewsState="error"}).finally(()=>{clearTimeout(timer);techPublicNewsLoading=null});
+ }).catch(()=>{techPublicNewsState=techPublicNews.length?"stale":"error"}).finally(()=>{clearTimeout(timer);techPublicNewsLoading=null});
  return techPublicNewsLoading;
 }
 let techNewsEnabled=true,techNewsPinned=null;
@@ -1878,11 +1883,12 @@ function techNewsGroup(key){
 }
 function techNewsRelated(kind,key){
  const g=techNewsGroup(key);
- if(kind==="semi")return /股票、ETF|法人、期貨與融資|成交與當沖|估值、獲利與外銷/.test(g);
- return kind==="fed"&&/股票、ETF|法人、期貨與融資|市場情緒|企業信用|政策利率|公債|殖利率|通膨預期|金融狀況|外匯|貴金屬與能源/.test(g);
+ if(["semi","semiconductor_earnings","ai_infrastructure","market_regulation"].includes(kind))return /股票、ETF|法人、期貨與融資|成交與當沖|估值、獲利與外銷/.test(g);
+ return (kind==="fed"||TECH_NEWS_CATEGORIES.has(kind))&&/股票、ETF|法人、期貨與融資|市場情緒|企業信用|政策利率|公債|殖利率|通膨預期|金融狀況|外匯|貴金屬與能源|經濟/.test(g);
 }
 function techNewsTarget(e,key){
  const group=techNewsGroup(key);
+ if(e.reactionDates)return group.startsWith("美國")?e.reactionDates.us:group.startsWith("台灣")?e.reactionDates.tw:null;
  const next=group.startsWith("美國")?e.usNext:e.twNext;
  return new Date(marketChartDate(e.date)+(next?86400000:0)).toISOString().slice(0,10);
 }
@@ -1894,7 +1900,9 @@ function techNewsMarkers(events,primary,secondary,keys,x,panel){
   for(let i=0;i<keys.length;i++){
    if(!techNewsRelated(e.kind,keys[i])||!ds[i].length)continue;
    const days=ds[i],target=techNewsTarget(e,keys[i]);
+   if(!target)continue;
    const date=days[rangeFind(days,target)];
+   if(e.reactionDates&&date!==target)continue;
    if(target<days[0]||!date||date<target||marketChartDate(date)-marketChartDate(target)>7*86400000)continue;
    if(!aligned.has(date))aligned.set(date,[]);aligned.get(date).push(keys[i]);
   }
@@ -2651,7 +2659,7 @@ function showHistory(){
    return '<small>'+esc(meta[0]+"｜"+meta[2]+"｜"+(rows?.length?rows.length+" 筆 · "+rows[0].date+" 至 "+rows.at(-1).date: (FEDWATCH_KEYS.includes(key)?"尚無已核實觀測":centerError||"載入中"))+(["月","季"].includes(meta[1])?"（日期為觀測期）":""))+source+(lag?' <strong style="color:#8a4b00">'+esc(lag)+'</strong>':"")+'</small>';
   }).join("<br>");
   const compareNote=paired?'<div style="color:'+rightColor+'">右軸｜'+esc(techSeriesName(c.right))+' · '+(indexed?'共同起點 100（'+base.date+'）':requestedIndex?'首個共同觀測日缺少正基值，顯示原始值':'原始值')+' <span data-tech-right-value></span></div>':"";
-  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head technical-stack-head-with-ma"><div class="technical-stack-heading"><strong>三層技術分析圖｜上・中・下</strong><span class="technical-ui-revision">介面 1128-R10</span><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div>'+overlayButtons+'<div class="technical-stack-top-actions"><button type="button" class="technical-stack-news-btn" data-tech-news-toggle aria-pressed="'+techNewsEnabled+'" title="黃金圓點：移入看頭條，點擊看新聞摘要與來源；公開事件選錄，非完整即時新聞">'+(techNewsEnabled?"新聞 ✓":"新聞")+(techNewsEnabled?" "+news.groups.size:"")+'</button><span class="tech-public-news-status" title="僅載入獨立核准的公開新聞，不直接讀取私人媒體資料。">'+esc(techNewsFeedLabel())+'</span>'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍"><span class="technical-stack-group-label">期間</span>'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(!rangeCustom&&chartDays===n?"active":"")+'" aria-pressed="'+(!rangeCustom&&chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出放大":"⛶ 放大（保留分頁）") +'</button>'+nativeFullscreenButton()+'</div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot tech-osc-plot">'+svg+'<div class="tech-news-tooltip" data-tech-news-tooltip role="tooltip" hidden></div>'+techOscControls(c.oscillator,oscSetting,100*((panel[1].end+panel[2].start)/2)/svgBottom)+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+reportMenu+centerNote+'</aside></div>'+rangeNavigator(navDays,start,end)+readouts+'<div class="tech-news-readout" data-tech-news-readout hidden></div>'+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel,changes,news};
+  return {sessionScale,topCandles,rightByDate,rightY,paired,indexed,leftScale,rightScale,markup:'<div class="cross-row technical-stack-row '+(compact?"technical-stack-compact":"technical-stack-standard")+(techFullscreen?" technical-stack-fullscreen":"")+(techFullscreen&&techControlsHidden?" technical-stack-controls-hidden":"")+'" data-cross-row="technicalStack"><div class="technical-stack-head technical-stack-head-with-ma"><div class="technical-stack-heading"><strong>三層技術分析圖｜上・中・下</strong><span class="technical-ui-revision">介面 1128-R10.3</span><span class="technical-theme-version">白底專業看盤 · 市場分類選單 v2026.11.23</span><div class="technical-stack-instructions">上、中層可選不同市場指標，共用日期游標</div></div>'+overlayButtons+'<div class="technical-stack-top-actions"><button type="button" class="technical-stack-news-btn" data-tech-news-toggle aria-pressed="'+techNewsEnabled+'" title="黃金圓點：移入看頭條，點擊看新聞摘要與來源；公開事件選錄，非完整即時新聞">'+(techNewsEnabled?"新聞 ✓":"新聞")+(techNewsEnabled?" "+news.groups.size:"")+'</button><span class="tech-public-news-status" title="僅載入獨立核准的公開新聞，不直接讀取私人媒體資料。">'+esc(techNewsFeedLabel())+'</span>'+chartSortControls("technicalStack","三層技術分析圖")+'<div class="technical-stack-fullscreen-windows" role="group" aria-label="全螢幕圖表時間範圍"><span class="technical-stack-group-label">期間</span>'+Object.keys(chartWindows).map(n=>'<button type="button" data-tech-window="'+n+'" class="'+(!rangeCustom&&chartDays===n?"active":"")+'" aria-pressed="'+(!rangeCustom&&chartDays===n)+'">'+chartWindows[n]+'</button>').join("")+'</div><button type="button" class="technical-stack-toggle-controls" data-tech-controls-toggle="1" aria-pressed="'+(!techControlsHidden)+'">'+(techControlsHidden?"顯示選單":"隱藏選單")+'</button><div class="technical-stack-layout-switch" role="group" aria-label="三層技術圖顯示模式"><button type="button" data-tech-layout="compact" class="'+(compact?"active":"")+'" aria-pressed="'+compact+'">緊湊</button><button type="button" data-tech-layout="standard" class="'+(!compact?"active":"")+'" aria-pressed="'+(!compact)+'">標準</button></div><button type="button" class="technical-stack-fullscreen-btn" data-tech-fullscreen="1" aria-pressed="'+techFullscreen+'">'+(techFullscreen?"⤢ 退出放大":"⛶ 放大（保留分頁）") +'</button>'+nativeFullscreenButton()+'</div></div>'+directNote+currentDayNote+'<div class="technical-stack-body"><div class="technical-stack-plot tech-osc-plot">'+svg+'<div class="tech-news-tooltip" data-tech-news-tooltip role="tooltip" hidden></div>'+techOscControls(c.oscillator,oscSetting,100*((panel[1].end+panel[2].start)/2)/svgBottom)+'</div><aside class="technical-stack-sidebar" aria-label="三層圖來源與均線設定">'+controls+(oscLegend?'<small class="tech-osc-legend">'+esc(oscLegend)+'</small>':"")+compareNote+reportMenu+centerNote+'</aside></div>'+rangeNavigator(navDays,start,end)+readouts+'<div class="tech-news-readout" data-tech-news-readout hidden></div>'+details+'</div>',top,middle,osc,bb,ma,c,bottomKey,oscParams,ys,panel,changes,news};
  })();
 
  host.innerHTML=chartOrder.map(k=>{if(k==="technicalStack")return technicalStack.markup;const selectedSeries=series.find(item=>item.key===k);return selectedSeries?renderRow(selectedSeries):""}).join("");
