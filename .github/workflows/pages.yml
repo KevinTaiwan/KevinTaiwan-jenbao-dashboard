@@ -305,6 +305,31 @@ jobs:
             exit 1
           fi
 
+      - name: Verify live public news HTTP readback
+        id: news_live
+        continue-on-error: true
+        timeout-minutes: 2
+        run: |
+          python3 - <<'PY'
+          import datetime, json, os, pathlib, sys
+          sys.path.insert(0,"scripts")
+          from reconcile_public_news_release import read_live
+          from stage_public_news import sha
+          expected=sha(pathlib.Path("public/public-news-events.json").read_bytes())
+          marker_path=pathlib.Path(".sync/pages-deployment.json")
+          marker=json.loads(marker_path.read_text(encoding="utf-8")) if marker_path.exists() else {}
+          marker_match=marker.get("publicFileSha256",{}).get("public-news-events.json")==expected
+          live=read_live(expected) if marker_match else {"status":"WARN","error_type":"DEPLOYMENT_MARKER_MISMATCH"}
+          receipt={"schemaVersion":1,"status":"PASS" if marker_match and live.get("status")=="PASS" and live.get("http_status")==200 and live.get("sha256")==expected else "WARN","checkRunId":int(os.environ["GITHUB_RUN_ID"]),"deploymentRunId":marker.get("workflowRunId"),"expectedSha256":expected,"deploymentMarkerMatch":marker_match,"live":live,"checkedAt":datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          line=json.dumps(receipt,sort_keys=True)
+          print("PUBLIC_NEWS_HTTP_RECEIPT "+line)
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a",encoding="utf-8") as f:
+              f.write("### Public news live readback\n\n"+line+"\n")
+          if receipt["status"]!="PASS":
+              print("::warning::Public news live readback not verified; retain previous approved data.")
+              sys.exit(1)
+          PY
+
       - name: Compute public market statistics after validated deployment
         run: |
           python3 -m unittest discover -s scripts/tests -p 'test_public_market_calculations.py'
