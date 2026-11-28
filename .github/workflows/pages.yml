@@ -21,6 +21,8 @@ on:
       - 'scripts/tests/test_public_news_stage.py'
       - 'scripts/prepare_public_news_commit.py'
       - 'scripts/tests/test_public_news_commit.py'
+      - 'scripts/reconcile_public_news_release.py'
+      - 'scripts/tests/test_public_news_reconcile.py'
       - 'scripts/refresh_market_center_history.py'
       - 'scripts/backfill_twse_market_activity.py'
       - 'scripts/market_seed.json'
@@ -62,6 +64,7 @@ jobs:
           python3 -m unittest discover -s scripts/tests -p 'test_v18_hourly.py'
           python3 -m unittest discover -s scripts/tests -p 'test_public_news_stage.py'
           python3 -m unittest discover -s scripts/tests -p 'test_public_news_commit.py'
+          python3 -m unittest discover -s scripts/tests -p 'test_public_news_reconcile.py'
       - name: Refresh public market-history from official and attributable sources
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' || contains(github.event.head_commit.message, '[refresh-all]') || contains(github.event.head_commit.message, '[refresh-hourly]') || contains(github.event.head_commit.message, '[refresh-yields]') || contains(github.event.head_commit.message, '[refresh-etfs]')
         env:
